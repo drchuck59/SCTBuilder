@@ -159,7 +159,8 @@ namespace SCTBuilder
             if (Mag.Trim().Length > 0)
             {
                 float tempFloat = Convert.ToSingle(Mag.Substring(0, Mag.Length - 1).Trim());
-                if (Extensions.Right(Mag, 1) == "W") tempFloat *= -1;
+                if (Extensions.Right(Mag, 1) == "W") 
+                    tempFloat *= -1;
                 return tempFloat;
             }
             else return 0f;

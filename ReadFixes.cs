@@ -210,7 +210,7 @@ namespace SCTBuilder
                                 Conversions.SS2DD(Line.Substring(565, 12)),    // Longitude
                                 tempARTCC,                                     // Responsible ARTCC
                                 Line.Substring(50, 20).Trim(),                 // State
-                                Conversions.MagVar(Line.Substring(586, 3)),
+                                Conversions.MagVar(Line.Substring(586, 3)),    // Magnetic Variation
                                 Line.Substring(183, 2),                        // Owner Type
                                 Line.Substring(185, 2) == "PU"                 // True if public
                                 };
@@ -433,10 +433,10 @@ namespace SCTBuilder
             }
             // Console.WriteLine("AWY rows read: " + AWY.Rows.Count.ToString());
         }
-        public static void FillSSD()
+        public static void FillStarDP()
         {
             DataTable SSD = Form1.SSD;
-            string FullFilename = GetFullPathname(FolderMgt.DataFolder, "SSD.txt");
+            string FullFilename = GetFullPathname(FolderMgt.DataFolder, "STARDP.txt");
             bool isSid; string Line; int Seqno = 0;
             Conversions S2D = new Conversions();
             using (StreamReader reader = new StreamReader(FullFilename))

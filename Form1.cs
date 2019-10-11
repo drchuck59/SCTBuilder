@@ -81,7 +81,7 @@ namespace SCTBuilder
                 ReadFixes.FillAPT();
                 ReadFixes.FillTWR();
                 ReadFixes.FillAWY();
-                ReadFixes.FillSSD();
+                ReadFixes.FillStarDP();
                 DataIsLoaded = true;
                 DataIsSelected = false;
             }

@@ -265,8 +265,8 @@ namespace SCTBuilder
                     sw.WriteLine("; " + row["FacilityID"].ToString());
                     FacID = row["FacilityID"].ToString();
                 }
-                strOut[0] = string.Format("{0,3}", row["BaseIdentifier"].ToString());
-                strOut[1] = string.Format("{0,3}", row["EndIdentifier"].ToString());
+                strOut[0] = row["BaseIdentifier"].ToString().Trim();
+                strOut[1] = row["EndIdentifier"].ToString().Trim();
                 strOut[2] = string.Format("{0,3:D3}", row["BaseHeading"].ToString());
                 strOut[3] = string.Format("{0,3:D3}", row["EndHeading"].ToString());
                 strOut[4] = Conversions.DecDeg2SCT(Convert.ToSingle(row["Latitude"]), true);
