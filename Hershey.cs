@@ -19,7 +19,7 @@ namespace SCTBuilder
                 if ((AsciiC - 32 >= 0) & (AsciiC - 32 < 95))
                     AsciiC -= 32;
                 else AsciiC = 10;     // 10 is '*' for 'error'
-                SmplxC = HersheyFont.Simplex[AsciiC];
+                SmplxC = RomanSimplex.Simplex[AsciiC];
                 Result += WriteChar(SmplxC, curLat, curLong, Angle, Scale);
                 curLong += ScaleX(PivotX(SmplxC[1], 0f, Angle), Scale);
                 curLat += ScaleY(PivotY(SmplxC[1], 0f, Angle), Scale);

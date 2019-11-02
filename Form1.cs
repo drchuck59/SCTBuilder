@@ -75,6 +75,7 @@ namespace SCTBuilder
             string Message;
             if (ReadFixes.FillCycleInfo() != -1)
             {
+                
                 ReadFixes.FillARB();
                 ReadFixes.FillVORNDB();
                 ReadFixes.FillFIX();
@@ -96,19 +97,17 @@ namespace SCTBuilder
         // Calls a load of all data and repopulates the form
         // Called by Load, DataFolder validated, and DatafolderButton
         {
-            LoadcboARTCC();
-            LoadcboAirport();
             lblCycleInfo.Text = CycleInfo.BuildCycleText();
             txtDataFolder.Text = FolderMgt.DataFolder;
             txtOutputFolder.Text = FolderMgt.OutputFolder;
             txtFacilityEngineer.Text = InfoSection.FacilityEngineer;
             txtAsstFacilityEngineer.Text = InfoSection.AsstFacilityEngineer;
-            //  This next lines may not find the Airport if it doesn't exist in the list, 
-            //  but the method won't throw an exception and won't call the OnChange event.
-            cboARTCC.SelectedItem = cboARTCC.Items.IndexOf(InfoSection.SponsorARTCC);
-            cboAirport.SelectedIndex = cboAirport.Items.IndexOf(InfoSection.DefaultAirport);
+            LoadCboARTCC();
+            LoadCboAirport();
             grpCircle.Visible = false;
             grpSquareLimits.Visible = false;
+            CboARTCC.SelectedIndex = CboARTCC.FindStringExact(InfoSection.SponsorARTCC);
+            CboAirport.SelectedIndex = CboAirport.FindStringExact(InfoSection.DefaultAirport);
             TestWriteSCT();
             DataIsSelected = false;
             cmdUpdateGrid.Enabled = cmdUpdateGrid.Visible = true;
@@ -117,18 +116,20 @@ namespace SCTBuilder
         private void HoldForm(bool FormIsFrozen)
         {
             lblUpdating.Visible = FormIsFrozen;
+            progressBar1.Visible = FormIsFrozen;
+            cmdUpdateGrid.Visible = !FormIsFrozen;
+            lblUpdating.Refresh();
+            cmdUpdateGrid.Refresh();
             txtDataFolder.Enabled = !FormIsFrozen;
             txtOutputFolder.Enabled = !FormIsFrozen;
-            cboARTCC.Enabled = !FormIsFrozen;
-            cboAirport.Enabled = !FormIsFrozen;
+            CboARTCC.Enabled = !FormIsFrozen;
+            CboAirport.Enabled = !FormIsFrozen;
             grpSelectionMethod.Enabled = !FormIsFrozen;
             cmdWriteSCT.Enabled = !FormIsFrozen;
             cmdInstructions.Enabled = !FormIsFrozen;
             cmdExit.Visible = !FormIsFrozen;
             chkbxShowAll.Enabled = !FormIsFrozen;
             tabControl1.Enabled = !FormIsFrozen;
-            Refresh();
-            Application.DoEvents();
         }
 
         private void LoadFixGrid()
@@ -138,40 +139,49 @@ namespace SCTBuilder
             {
                 DataIsSelected = true;
                 cmdUpdateGrid.Enabled = cmdUpdateGrid.Visible = false;
+                progressBar1.Value = 0;
                 string Filter = FixFilter();
-                // Console.WriteLine("Loading FixGrid Arpt...");
+                lblUpdating.Text = "Selecting Airports...";
+                progressBar1.Value += 10;
                 Setdgv(dgvAPT, APT, Filter);
-                // Console.WriteLine("Loading FixGrid VOR...");
+                lblUpdating.Text = "Selecting VORs...";
+                progressBar1.Value += 10;
                 Setdgv(dgvVOR, VOR, Filter);
-                // Console.WriteLine("Loading FixGrid NDB...");
+                lblUpdating.Text = "Selecting NDBs...";
+                progressBar1.Value += 10;
                 Setdgv(dgvNDB, NDB, Filter);
-                // Console.WriteLine("Loading FixGrid FIX...");
+                lblUpdating.Text = "Selecting FIXes...";
+                progressBar1.Value += 10;
                 Setdgv(dgvFIX, FIX, Filter);
-                // Console.WriteLine("Loading FixGrid RWY...");
+                lblUpdating.Text = "Selecting Runways...";
+                progressBar1.Value += 10;
                 Setdgv(dgvRWY, RWY, Filter);
-                // Console.WriteLine("Loading FixGrid ARB...");
+                lblUpdating.Text = "Selecting ARTCC boundaries...";
+                progressBar1.Value += 10;
                 Setdgv(dgvARB, ARB, Filter);
-                // Console.WriteLine("Loading FixGrid AWY...");
+                lblUpdating.Text = "Selecting Airways...";
+                progressBar1.Value += 10;
                 Setdgv(dgvAWY, AWY, Filter);
-                // Console.WriteLine("Loading FixGrid SSD...");
+                lblUpdating.Text = "Selecting SIDs & STARs (slow)...";
+                progressBar1.Value += 10;
                 LoadFixGridSSD(Filter);
                 UpdateGridCount();
                 cmdWriteSCT.Enabled = true;
             }
         }
-        private void LoadcboARTCC()
+        private void LoadCboARTCC()
         {
             DataView dvARB = new DataView(ARB)
             {
                 Sort = "ARTCC"
             };
             DataTable datacboARTCC = dvARB.ToTable(true, "ARTCC");
-            cboARTCC.DisplayMember = "ARTCC";
-            cboARTCC.ValueMember = "ARTCC";
-            cboARTCC.DataSource = datacboARTCC;
+            CboARTCC.DisplayMember = "ARTCC";
+            CboARTCC.ValueMember = "ARTCC";
+            CboARTCC.DataSource = datacboARTCC;
             dvARB.Dispose();
         }
-        private void LoadcboAirport()
+        private void LoadCboAirport()
         {
             // Get APTs we will use in the usual manner
             string filter = FixFilter();
@@ -198,12 +208,12 @@ namespace SCTBuilder
                 RowFilter = filter
             };
             DataTable dtAPT = dvAirports.ToTable(true, "ID", "FacilityID");
-            cboAirport.DisplayMember = "FacilityID";
-            cboAirport.ValueMember = "ID";
-            cboAirport.DataSource = dtAPT;
-            if (cboAirport.Items.Count == 0) cboAirport.Text = "";
-            dvAPT.Dispose();
+            CboAirport.DisplayMember = "FacilityID";
+            CboAirport.ValueMember = "ID";
+            CboAirport.DataSource = dtAPT;
+            if (CboAirport.Items.Count != 0) CboAirport.SelectedIndex = 0;
             dvAirports.Dispose();
+            dvAPT.Dispose();
         }
 
         private void Setdgv(DataGridView dgv, DataTable dt, string filter)
@@ -434,7 +444,7 @@ namespace SCTBuilder
                 {
                     default:
                     case "ARTCC":
-                        FilterString = " ([ARTCC] ='" + cboARTCC.GetItemText(cboARTCC.SelectedItem) + "')";
+                        FilterString = " ([ARTCC] ='" + CboARTCC.GetItemText(CboARTCC.SelectedItem) + "')";
                         break;
                     case "Square":
                         float NLat = AdjustedLatLong(txtLatNorth.Text, nudNorth.Value.ToString(), "N");
@@ -509,7 +519,7 @@ namespace SCTBuilder
             cmdUpdateGrid.Visible = !btnSquare.Checked;
             cmdUpdateGrid.Enabled = !btnSquare.Checked;
             if (btnARTCC.Checked)
-                if (cboARTCC.SelectedIndex == -1)
+                if (CboARTCC.SelectedIndex == -1)
                 {
                     string Message = "You must select an ARTCC before selecting this method.";
                     MessageBoxIcon icon = MessageBoxIcon.Information;
@@ -520,7 +530,7 @@ namespace SCTBuilder
                 else
                 {
                     FilterBy.Method = "ARTCC";
-                    FilterBy.Param1 = cboARTCC.GetItemText(cboARTCC.SelectedItem);
+                    FilterBy.Param1 = CboARTCC.GetItemText(CboARTCC.SelectedItem);
                 }
         }
 
@@ -530,47 +540,47 @@ namespace SCTBuilder
             cmdUpdateGrid.Visible = btnSquare.Checked;
             cmdUpdateGrid.Enabled = btnSquare.Checked;
             grpCircle.Visible = !btnSquare.Checked;
-            if (btnSquare.Checked)
+            if ((btnSquare.Checked) & (CboARTCC.SelectedIndex > -1))
+                UpdateSquare();
+        }
+
+        private void UpdateSquare()
+        {
+            string FilterARTCC = CboARTCC.GetItemText(CboARTCC.SelectedItem);
+            double LatNorth = double.MinValue;
+            double LongWest = double.MaxValue;
+            double LatSouth = double.MaxValue;
+            double LongEast = double.MinValue;
+            DataView dataview = new DataView(ARB);
+            string FilterString = "[ARTCC] = '" + FilterARTCC + "'";
+            dataview.RowFilter = FilterString;
+            foreach (DataRowView dataRow in dataview)
             {
-                if (cboARTCC.SelectedIndex > -1)
+                try
                 {
-                    string FilterARTCC = cboARTCC.GetItemText(cboARTCC.SelectedItem);
-                    double LatNorth = double.MinValue;
-                    double LongWest = double.MaxValue;
-                    double LatSouth = double.MaxValue;
-                    double LongEast = double.MinValue;
-                    DataView dataview = new DataView(ARB);
-                    string FilterString = "[ARTCC] = '" + FilterARTCC + "'";
-                    dataview.RowFilter = FilterString;
-                    foreach (DataRowView dataRow in dataview)
-                    {
-                        try
-                        {
-                            double Latitude = Convert.ToDouble(dataRow["Latitude"]);
-                            LatNorth = Math.Max(LatNorth, Latitude);
-                            LatSouth = Math.Min(LatSouth, Latitude);
-                            double Longitude = Convert.ToDouble(dataRow["Longitude"]);
-                            LongWest = Math.Min(LongWest, Longitude);
-                            LongEast = Math.Max(LongEast, Longitude);
-                        }
-                        catch
-                        {
-                            Console.WriteLine(dataRow[0] + "  " + dataRow[1] + "  " + dataRow[2] + "  " + dataRow[3]);
-                            Console.WriteLine(LatNorth + "  " + LongWest + "  " + LatSouth + "  " + LongEast);
-                        }
-                    }
-                    FilterBy.Method = "Square";
-                    FilterBy.Param1 = LatNorth;
-                    FilterBy.Param2 = LongWest;
-                    FilterBy.Param3 = LatSouth;
-                    FilterBy.Param4 = LongEast;
-                    txtLongEast.Text = Math.Round(LongEast, 6).ToString();
-                    txtLongWest.Text = Math.Round(LongWest, 6).ToString();
-                    txtLatNorth.Text = Math.Round(LatNorth, 6).ToString();
-                    txtLatSouth.Text = Math.Round(LatSouth, 6).ToString();
-                    dataview.Dispose();
+                    double Latitude = Convert.ToDouble(dataRow["Latitude"]);
+                    LatNorth = Math.Max(LatNorth, Latitude);
+                    LatSouth = Math.Min(LatSouth, Latitude);
+                    double Longitude = Convert.ToDouble(dataRow["Longitude"]);
+                    LongWest = Math.Min(LongWest, Longitude);
+                    LongEast = Math.Max(LongEast, Longitude);
+                }
+                catch
+                {
+                    Console.WriteLine(dataRow[0] + "  " + dataRow[1] + "  " + dataRow[2] + "  " + dataRow[3]);
+                    Console.WriteLine(LatNorth + "  " + LongWest + "  " + LatSouth + "  " + LongEast);
                 }
             }
+            FilterBy.Method = "Square";
+            FilterBy.Param1 = LatNorth;
+            FilterBy.Param2 = LongWest;
+            FilterBy.Param3 = LatSouth;
+            FilterBy.Param4 = LongEast;
+            txtLongEast.Text = Math.Round(LongEast, 6).ToString();
+            txtLongWest.Text = Math.Round(LongWest, 6).ToString();
+            txtLatNorth.Text = Math.Round(LatNorth, 6).ToString();
+            txtLatSouth.Text = Math.Round(LatSouth, 6).ToString();
+            dataview.Dispose();
         }
 
         private void BtnCircle_CheckedChanged(object sender, EventArgs e)
@@ -579,36 +589,14 @@ namespace SCTBuilder
             grpCircle.Visible = btnCircle.Checked;
         }
 
-        private void CboARTCC_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if ((cboARTCC.SelectedIndex != -1) & (cboARTCC.Items.Count > 0))
-            {
-                if (cboARTCC.GetItemText(cboARTCC.SelectedItem).ToString() != InfoSection.SponsorARTCC.ToString())
-                {
-                    btnClassB.Checked = true; btnClassC.Checked = false;
-                    LoadcboAirport();
-                }
-            }
-            DataIsSelected = false;
-            cmdUpdateGrid.Enabled = cmdUpdateGrid.Visible = true;
-        }
-
-        private void CboAirport_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if ((cboAirport.SelectedIndex != -1) & (cboAirport.Items.Count != 0) )
-            {
-                UpdateInfoSection();
-            }
-        }
-
         private void BtnClassB_CheckedChanged(object sender, EventArgs e)
         {
-            LoadcboAirport();
+            LoadCboAirport();
         }
 
         private void BtnClassC_CheckedChanged(object sender, EventArgs e)
         {
-            LoadcboAirport();
+            LoadCboAirport();
         }
 
         private void TxtOutputFolder_Leave(object sender, EventArgs e)
@@ -683,8 +671,8 @@ namespace SCTBuilder
             {
                 cmdUpdateGrid.Enabled = cmdUpdateGrid.Visible = false;
                 HoldForm(true);
-                LoadFixGrid();
                 UpdateInfoSection();
+                LoadFixGrid();
                 HoldForm(false);
             }
             SCToutput.WriteSCT();
@@ -703,17 +691,17 @@ namespace SCTBuilder
         private void UpdateInfoSection()
 
         {
-            if (cboAirport.Items.Count != 0)
+            if (CboAirport.Items.Count != 0)
             {
-                DataRow foundRow = APT.Rows.Find(cboAirport.SelectedValue.ToString());
                 //string cr = Environment.NewLine;
                 //string Message = "InfoSection Update Data" + cr + "Airport: " + cboAirport.GetItemText(cboAirport.SelectedItem).ToString() + cr +
                 //   "Latitude: " + Convert.ToSingle(foundRow["Latitude"].ToString()) + cr +
                 //   "Longitude: " + Convert.ToSingle(foundRow["Longitude"].ToString()) + cr +
                 //   "Mag Var: " + Convert.ToSingle(foundRow["MagVar"].ToString());
                 //MessageBox.Show(Message, "UpdateInfoSection", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                InfoSection.SponsorARTCC = cboARTCC.GetItemText(cboARTCC.SelectedItem).ToString();
-                InfoSection.DefaultAirport = cboAirport.GetItemText(cboAirport.SelectedItem).ToString();
+                InfoSection.SponsorARTCC = CboARTCC.GetItemText(CboARTCC.SelectedItem).ToString();
+                InfoSection.DefaultAirport = CboAirport.GetItemText(CboAirport.SelectedItem).ToString();
+                DataRow foundRow = APT.Rows.Find(CboAirport.SelectedValue.ToString());
                 InfoSection.DefaultCenterLatitude = Convert.ToSingle(foundRow["Latitude"].ToString());
                 InfoSection.DefaultCenterLongitude = Convert.ToSingle(foundRow["Longitude"].ToString());
                 InfoSection.MagneticVariation = Convert.ToSingle(foundRow["MagVar"].ToString());
@@ -801,12 +789,35 @@ namespace SCTBuilder
 
         private void CmdUpdateGrid_Click(object sender, EventArgs e)
         {
-            cmdUpdateGrid.Visible = false;
-            HoldForm(true);
-            Refresh();
-            LoadFixGrid();
-            HoldForm(false);
-            Refresh();
+            string Message = "You must at-least select an ARTCC and Airport";
+            MessageBoxButtons buttons = MessageBoxButtons.OK;
+            MessageBoxIcon icon = MessageBoxIcon.Exclamation;
+            if (TestUpdateGrid())
+            {
+                cmdUpdateGrid.Visible = false;
+                HoldForm(true);
+                UpdateInfoSection();
+                LoadFixGrid();
+                HoldForm(false);
+                Refresh();
+            }
+            else
+                MessageBox.Show(Message, VersionInfo.Title, buttons, icon);
+        }
+
+        private bool TestUpdateGrid()
+        {
+            return  (InfoSection.SponsorARTCC.Length != 0) &
+                    (InfoSection.DefaultAirport.Length != 0) &
+                    (InfoSection.DefaultCenterLatitude.ToString().Length != 0) &
+                    (InfoSection.DefaultCenterLongitude.ToString().Length != 0) &
+                    (InfoSection.MagneticVariation.ToString().Length != 0);
+        }
+        private void CboARTCC_Validated(object sender, EventArgs e)
+        {
+            if ((btnSquare.Checked) & (CboARTCC.SelectedIndex > -1))
+                UpdateSquare();
+            LoadCboAirport();
         }
     }
 }

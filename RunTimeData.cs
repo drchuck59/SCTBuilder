@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 
 namespace SCTBuilder
 {
-    public class HersheyFont
+    public class RomanSimplex
     {
         // Initialize jagged array of Simplex font vectors
         // At Scale = 1, 1 unit = 30 seconds DMS
+        // First value is # of vectors, second is width
         public static int[][] Simplex = new int[][]
         {
             // 0 Ascii 32 (<space>)
@@ -320,6 +321,18 @@ namespace SCTBuilder
                     3,6, 3,8, 4,11, 6,12, 8,12, 10,11, 14,8, 16,7, 18,7, 20,8, 21,10,
                     -1,-1, 3,8, 4,10, 6,11, 8,11, 10,10, 14,7, 16,6, 18,6, 20,7, 21,10, 21,12},
         };
+        public static int[][] Symbol = new int[][]
+            {
+            // 0 <4 point star>
+            new int[] { 9, 30,
+                    1,15, 12,18, 15,30, 18,18, 30,15, 18,12, 15,1, 12,12, 1,15},
+            // 1 <5 point star>
+            new int[] { 11, 30,
+               1,18, 12,18, 15,30, 18,18, 30,18, 18,12, 23,1, 15,7, 7,1, 12,12, 1,18 },
+            // 2 <Diamond>
+            new int[] { 5, 30,
+                1,15, 15,30, 30,15, 15,1, 1,15 },
+            };
     }
     public class TextColors
     {
