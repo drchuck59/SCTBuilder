@@ -23,6 +23,7 @@ namespace SCTBuilder
         static public DataTable AWY = new SCTdata.AWYDataTable();
         static public DataTable SSD = new SCTdata.SSDDataTable();
         static public DataTable Colors = new SCTdata.ColorDefsDataTable();
+        static public DataTable LocalSector = new SCTdata.LocalSectorsDataTable();
         static public DataSet SCT = new SCTdata();
         bool DataIsLoaded = false;
         bool DataIsSelected = false;
@@ -108,7 +109,7 @@ namespace SCTBuilder
             grpSquareLimits.Visible = false;
             CboARTCC.SelectedIndex = CboARTCC.FindStringExact(InfoSection.SponsorARTCC);
             CboAirport.SelectedIndex = CboAirport.FindStringExact(InfoSection.DefaultAirport);
-            TestWriteSCT();
+            cmdWriteSCT.Enabled = TestWriteSCT();   
             DataIsSelected = false;
             cmdUpdateGrid.Enabled = cmdUpdateGrid.Visible = true;
         }
@@ -531,6 +532,7 @@ namespace SCTBuilder
                 {
                     FilterBy.Method = "ARTCC";
                     FilterBy.Param1 = CboARTCC.GetItemText(CboARTCC.SelectedItem);
+                    cmdWriteSCT.Enabled = TestWriteSCT();
                 }
         }
 
@@ -592,30 +594,13 @@ namespace SCTBuilder
         private void BtnClassB_CheckedChanged(object sender, EventArgs e)
         {
             LoadCboAirport();
+            cmdWriteSCT.Enabled = TestWriteSCT();
         }
 
         private void BtnClassC_CheckedChanged(object sender, EventArgs e)
         {
             LoadCboAirport();
-        }
-
-        private void TxtOutputFolder_Leave(object sender, EventArgs e)
-        {
-            if (txtOutputFolder.TextLength > 0)
-            {
-                if (Directory.Exists(txtOutputFolder.Text))
-                {
-                    FolderMgt.OutputFolder = txtOutputFolder.Text;
-                }
-                else
-                {
-                    string message = "Invalid folder path. Consider using the folder finder button.";
-                    string caption = VersionInfo.Title;
-                    MessageBoxButtons buttons = MessageBoxButtons.OK;
-                    MessageBox.Show(message, caption, buttons);
-                    FolderMgt.OutputFolder = string.Empty;
-                }
-            }
+            cmdWriteSCT.Enabled = TestWriteSCT();
         }
 
         private void CmdOutputFolder_Click(object sender, EventArgs e)
@@ -634,6 +619,7 @@ namespace SCTBuilder
                 txtOutputFolder.Text = fBD.SelectedPath;
             }
             fBD.Dispose();
+            cmdWriteSCT.Enabled = TestWriteSCT();
         }
 
         private void CmdDataFolder_Click(object sender, EventArgs e)
@@ -680,13 +666,20 @@ namespace SCTBuilder
 
         private bool TestWriteSCT()
         {
+            Console.WriteLine("Data: " + FolderMgt.DataFolder.ToString());
+            Console.WriteLine("Output: " + FolderMgt.OutputFolder.ToString());
+            Console.WriteLine("ARTCC: " + InfoSection.SponsorARTCC.ToString());
+            Console.WriteLine("Airport: " + InfoSection.DefaultAirport.ToString());
+            Console.WriteLine("Latitude: " + InfoSection.DefaultCenterLatitude.ToString());
+            Console.WriteLine("Longitude: " + InfoSection.DefaultCenterLongitude.ToString());
+            Console.WriteLine("Mag Var: " + InfoSection.MagneticVariation.ToString());
             return (FolderMgt.OutputFolder.Length != 0) &
+                (FolderMgt.DataFolder.Length != 0) &
                 (InfoSection.SponsorARTCC.Length != 0) &
                 (InfoSection.DefaultAirport.Length != 0) &
                 (InfoSection.DefaultCenterLatitude.ToString().Length != 0) &
                 (InfoSection.DefaultCenterLongitude.ToString().Length != 0) &
                 (InfoSection.MagneticVariation.ToString().Length != 0);
-
         }
         private void UpdateInfoSection()
 
@@ -701,10 +694,6 @@ namespace SCTBuilder
                 //MessageBox.Show(Message, "UpdateInfoSection", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 InfoSection.SponsorARTCC = CboARTCC.GetItemText(CboARTCC.SelectedItem).ToString();
                 InfoSection.DefaultAirport = CboAirport.GetItemText(CboAirport.SelectedItem).ToString();
-                DataRow foundRow = APT.Rows.Find(CboAirport.SelectedValue.ToString());
-                InfoSection.DefaultCenterLatitude = Convert.ToSingle(foundRow["Latitude"].ToString());
-                InfoSection.DefaultCenterLongitude = Convert.ToSingle(foundRow["Longitude"].ToString());
-                InfoSection.MagneticVariation = Convert.ToSingle(foundRow["MagVar"].ToString());
             }
         }
 
@@ -742,9 +731,9 @@ namespace SCTBuilder
             }
             if (txtDataFolder.Text != FolderMgt.DataFolder)
                 CmdDataFolder_Click(sender, e);
-            cmdWriteSCT.Enabled = TestWriteSCT();
             DataIsSelected = false;
             cmdUpdateGrid.Enabled = cmdUpdateGrid.Visible = true;
+            cmdWriteSCT.Enabled = TestWriteSCT();
         }
 
         private void TxtDataFolder_Validating(object sender, CancelEventArgs e)
@@ -815,9 +804,38 @@ namespace SCTBuilder
         }
         private void CboARTCC_Validated(object sender, EventArgs e)
         {
-            if ((btnSquare.Checked) & (CboARTCC.SelectedIndex > -1))
-                UpdateSquare();
-            LoadCboAirport();
+            if (CboARTCC.SelectedIndex != -1)
+            {
+                InfoSection.SponsorARTCC = CboARTCC.Text.ToString();
+                if ((btnSquare.Checked) & (CboARTCC.SelectedIndex > -1))
+                    UpdateSquare();
+                LoadCboAirport();
+            }
+            cmdWriteSCT.Enabled = TestWriteSCT();
+        }
+
+        private void CboAirport_Validated(object sender, EventArgs e)
+        {
+            if (CboAirport.SelectedIndex != -1)
+            {
+                InfoSection.DefaultAirport = CboAirport.Text.ToString();
+            }
+            cmdWriteSCT.Enabled = TestWriteSCT();
+        }
+
+        private void LocalSectors_Click(object sender, EventArgs e)
+        {
+            if (ReadFixes.FillLocalSectors() )
+                SCToutput.WriteLS_SID(LocalSector);
+        }
+
+        private void TxtOutputFolder_Validated(object sender, EventArgs e)
+        {
+            if (txtOutputFolder.TextLength > 0)
+            {
+                FolderMgt.OutputFolder = txtOutputFolder.Text;
+            }
+            cmdWriteSCT.Enabled = TestWriteSCT();
         }
     }
 }

@@ -98,8 +98,7 @@ namespace SCTBuilder
                             Long = Convert.ToSingle(Line.Substring(410, 10).Trim()) / 3600;
                             if (Line.Substring(420, 1) == "W") Long *= -1;
                             if (Line.Substring(479, 4).Trim().Length != 0)
-                                Mag = (Line.Substring(483, 1) == "W" ? Convert.ToSingle(Line.Substring(479, 4).Trim()) * -1
-                                        : Convert.ToSingle(Line.Substring(479, 4).Trim()));
+                                Mag = Convert.ToSingle(Line.Substring(479, 4).Trim());
                             var FixItems = new List<object>
                                 {
                                     Line.Substring(4, 4).Trim() + Line.Substring(9, 20).Trim() + Line.Substring(72,40).Trim(), // ID
@@ -463,6 +462,122 @@ namespace SCTBuilder
                 }
             }
             // Console.WriteLine("SSD rows read: " + SSD.Rows.Count);
+        }
+        public static bool FillLocalSectors()
+        {
+            string Line; string Info; string SectorID = string.Empty; string SectorName = string.Empty;
+            string SectorAbbr= string.Empty; string SectorLevel = string.Empty; bool Exclude = false;
+            string SectorBase = string.Empty; string SectorTop = string.Empty; bool Success = true;
+            string Lat0; string Long0; bool PenUp = false; string Item; int LineNo = 0;
+            string FullFilename = GetFullPathname(FolderMgt.DataFolder, "LocalSectors.txt");
+            string Message = "Invalid context at/near LocalSectors.txt line "; string NewMessage = string.Empty;
+            MessageBoxButtons buttons = MessageBoxButtons.OK;
+            MessageBoxIcon icon = MessageBoxIcon.Warning;
+            int LatStart; int LongStart;
+            DataTable LS = Form1.LocalSector; Conversions S2D = new Conversions();
+            using (StreamReader reader = new StreamReader(FullFilename))
+            {
+                while ((Line = reader.ReadLine()) != null)
+                {
+                    LineNo++;
+                    if (Line.Trim().Length != 0)
+                    {
+                        if (Line.Substring(0, 1) != ";")
+                        {
+                            if (Line.Substring(0, 1) == "<")
+                            {
+                                Item = Line.Substring(Line.IndexOf("<") + 1, Line.IndexOf(">") - 1).Trim();
+                                Info = Line.Substring(Line.IndexOf(">") + 1, Line.Length - Line.IndexOf(">") - 1).Trim();
+                                switch (Item)
+                                {
+                                    case "SECTOR":
+                                        SectorID = Info;
+                                        break;
+                                    case "NAME":
+                                        SectorName = Info;
+                                        break;
+                                    case "ABBR":
+                                        SectorAbbr = Info;
+                                        break;
+                                    case "LEVEL":
+                                        SectorLevel = Info;
+                                        break;
+                                    case "BASE":
+                                        SectorBase = Info;
+                                        break;
+                                    case "TOP":
+                                        SectorTop = Info;
+                                        break;
+                                    case "NEXT":
+                                        PenUp = true;
+                                        Exclude = false;
+                                        break;
+                                    case "NOT":
+                                        Exclude = true;
+                                        break;
+                                    case "LL":
+                                        LatStart = Line.IndexOf(">") + 2;
+                                        LongStart = LatStart + 11;
+                                        if (Line.Length < LongStart+11)
+                                        {
+                                            NewMessage += Message + LineNo + Environment.NewLine + Line + Environment.NewLine;
+                                            MessageBox.Show(NewMessage, VersionInfo.Title, buttons, icon);
+                                            Success = false;
+                                            break;
+                                        }
+                                        Lat0 = Line.Substring(LatStart, 10).Trim();
+                                        Long0 = Line.Substring(LongStart, 11).Trim();
+                                        if ( !Extensions.IsNumeric(Extensions.Right(Lat0,1)) ^
+                                            !Extensions.IsNumeric(Extensions.Right(Long0, 1)) )
+                                        {
+                                            NewMessage += Message + LineNo + Environment.NewLine + Line + Environment.NewLine;
+                                            MessageBox.Show(NewMessage, VersionInfo.Title, buttons, icon);
+                                            Success = false;
+                                            break;
+                                        }
+                                        if (PenUp)
+                                        {
+                                            var NewItems = new List<object>
+                                            {
+                                                SectorID,
+                                                SectorName,
+                                                SectorAbbr,
+                                                SectorLevel,
+                                                SectorBase,
+                                                SectorTop,
+                                                -1f,
+                                                -1f,
+                                                Exclude,
+                                            };
+                                            AddFixes(LS, NewItems);
+                                            PenUp = false;
+                                        }
+                                        var FixItems = new List<object>
+                                        {
+                                            SectorID,
+                                            SectorName,
+                                            SectorAbbr,
+                                            SectorLevel,
+                                            SectorBase,
+                                            SectorTop,
+                                            S2D.String2DecDeg(Lat0," "),
+                                            S2D.String2DecDeg(Long0, " "),
+                                            Exclude,
+                                        };
+                                        AddFixes(LS, FixItems);
+                                        break;
+                                    default:
+                                        NewMessage += Message + LineNo + Environment.NewLine + Line + Environment.NewLine;
+                                        MessageBox.Show(NewMessage, VersionInfo.Title, buttons, icon);
+                                        Success = false;
+                                        break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            return Success;
         }
         private static string GetFullPathname(string DataFolder, string Filename)
         /// <summary>

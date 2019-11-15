@@ -369,10 +369,10 @@ namespace SCTBuilder
     public class InfoSection
     {
         private static readonly float NMlongitude = LatLongCalc.NMperLongDegree(DefaultCenterLatitude);
-        private static float centerLat;
-        private static float centerLong;
-        private static string Arpt;
-        private static string aRRTC;
+        private static readonly float centerLat = Conversions.DefaultLatitude(DefaultAirport);
+        private static readonly float centerLong = Conversions.DefaultLongitude(DefaultAirport);
+        private static readonly float magvar = Conversions.DefaultMagVar(DefaultAirport);
+
         public static string SectorName
         {
             get { return SponsorARTCC + "_" + CycleInfo.AIRAC.ToString(); }
@@ -386,70 +386,28 @@ namespace SCTBuilder
         }
         public static string FacilityEngineer { get; set; }
         public static string AsstFacilityEngineer { get; set; }
-        public static string SponsorARTCC
-        {
-            get
-            { return aRRTC; }
-            set
-            {
-                if (value.Length > 4)
-                {
-                    throw new ArgumentOutOfRangeException("Invalid ARRTC");
-                }
-                else
-                {
-                    aRRTC = value;
-                }
-            }
-        }
-        public static string DefaultAirport     // Ignored by VRC      
-        {
-            get
-            {
-                return Arpt;
-            }
-            set
-            {
-                Arpt = Conversions.ICOA(value);
-            }
-        }
+        public static string SponsorARTCC { get; set; }
+        public static string DefaultAirport { get; set; }   
         public static float DefaultCenterLatitude               // Latitude of default sector center point
         {
             get
             { return centerLat; }
-            set
-            {
-                if (value < -90 | value > 90)
-                {
-                    throw new ArgumentOutOfRangeException("Latitude must be -90 to 90 degrees.");
-                }
-                centerLat = value;
-            }
         }
         public static float DefaultCenterLongitude  // Longitude of default sector center point
         {
             get
             { return centerLong; }
-            set
-            {
-                if (value < -180 | value > 180)
-                {
-                    throw new ArgumentOutOfRangeException("Longitude must be -180 to 180 degrees.");
-                }
-                centerLong = value;
-            }
         }
         public static float NMperDegreeLatitude { get { return 60f; } } // Always 60 NM
         public static float NMperDegreeLongitude
         {
             get { return NMlongitude; }
         }
-        public static float MagneticVariation { get; set; }       // Varies by location
+        public static float MagneticVariation       // Varies by location
+        {
+            get
+            { return magvar; }
+        }
         public static float SectorScale { get { return 1f; } }      // Always 1, ignored in VRC
     }
-        public class FixTypes
-        {
-            public string Name { get; set; }
-        }
-
-    }
+} 

@@ -30,14 +30,68 @@ namespace SCTBuilder
             dT.Rows.Add(new object[] { "White ", 16777215 });
         }
     }
+
     public class Conversions
     // Convert a variety of strings 
     {
+        public static float DefaultLatitude(string Arpt)
+        {
+            float result;
+            DataView APTView = new DataView(Form1.APT)
+            {
+                RowFilter = "[FacilityID] = '" + Arpt + "'"
+            };
+            if (APTView.Count != 0)
+                result = Convert.ToSingle(APTView[0].Row["Latitude"]);
+            else
+                result = -1f;
+            APTView.Dispose();
+            return result;
+        }
+
+        public static float DefaultLongitude(string Arpt)
+        {
+            float result;
+            DataView APTView = new DataView(Form1.APT)
+            {
+                RowFilter = "[FacilityID] = '" + Arpt + "'"
+            };
+            if (APTView.Count != 0)
+                result = Convert.ToSingle(APTView[0].Row["Longitude"]);
+            else
+                result = -1f;
+            APTView.Dispose();
+            return result;
+        }
+
+        public static float DefaultMagVar(string Arpt)
+        {
+            float result;
+            DataView APTView = new DataView(Form1.APT)
+            {
+                RowFilter = "[FacilityID] = '" + Arpt + "'"
+            };
+            if (APTView.Count != 0)
+                result = Convert.ToSingle(APTView[0].Row["MagVar"]);
+            else
+                result = 0f;
+            APTView.Dispose();
+            return result;
+        }
         public static string ICOA(string Arpt)
         {
             string result;
             if ((Arpt.Length == 3) & !Arpt.Any(char.IsDigit))
                 result = "K" + Arpt;
+            else result = Arpt;
+            return result;
+        }
+
+        public static string RevICOA(string Arpt)
+        {
+            string result;
+            if ((Arpt.Length == 4) & !Arpt.Any(char.IsDigit))
+                result = Arpt.Substring(1, Arpt.Length - 1);
             else result = Arpt;
             return result;
         }
@@ -58,7 +112,7 @@ namespace SCTBuilder
                 if (DMS.Substring(0, 1).IsNumeric())
                 {
                     quadrant = Extensions.Right(DMS, 1);
-                    tempDMS = DMS.Substring(0, DMS.Length - 1);              // Strip off quadrant
+                    tempDMS = DMS.Substring(0, DMS.Length - 1).Trim();              // Strip off quadrant
                 }
                 else
                 {

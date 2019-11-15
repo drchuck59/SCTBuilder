@@ -23,6 +23,7 @@ namespace SCTBuilder
             DataTable ARB = Form1.ARB;
             DataTable AWY = Form1.AWY;
             DataTable SSD = Form1.SSD;
+            // DataTable LS = Form1.LocalSector;
             DataTable dtSTL = new SCTdata.StaticTextDataTable();
             DataTable dtColors = new SCTdata.ColorDefsDataTable();
             string path = FolderMgt.OutputFolder + "\\" +
@@ -98,6 +99,8 @@ namespace SCTBuilder
                     sw.WriteLine("[STAR]");
                     WriteSSD(SSD, sw, IsSID: false);
                     WriteLabels(dtSTL, sw);
+                    // Console.WriteLine("Local Sectors...");
+                    // WriteLS_SID(LS);
                 }
                 Console.WriteLine("End writing file");
                 Message = "Sector file written to" + path + "'";
@@ -608,7 +611,6 @@ namespace SCTBuilder
                 }
             }
         }
-
         private static void WriteLabels(DataTable dtSTL, StreamWriter sw)
         {
             string strText; string Lat; string Long; string TextColor;
@@ -624,6 +626,80 @@ namespace SCTBuilder
                 sw.WriteLine(strText + " " + Lat + " " + Long + " " + TextColor);
             }
         }
+
+        public static void WriteLS_SID(DataTable LS)
+        {
+            ///<summary
+            ///FE may build local sector files and have them written to the ARTCC, LOW ARTCC, or HIGH ARTCC
+            ///The text file must be configured as shown in the "LocalSectors.txt" file in the package.
+            ///</summary>
+            string Lat0 = string.Empty; string Long0 = string.Empty; string cr = Environment.NewLine;
+            string Lat1; string Long1; string blank = new string(' ', 27); string Line1; string Line2;
+            string LineLL;
+            string dummycoords = "N000.00.00.000 E000.00.00.000 N000.00.00.000 E000.00.00.000";
+            string path = FolderMgt.OutputFolder + "\\" + InfoSection.SponsorARTCC + "_LocalSectors.sct2";
+            var Low = new List<string>();
+            var High = new List<string>();
+            var Ultra = new List<string>();
+            Low.Add(cr + "[ARTCC LOW]");
+            High.Add(cr + "[ARTCC HIGH]");
+            Ultra.Add(cr + "[ARTCC ULTRA]");
+            foreach (DataRow dataRow in LS.Rows)
+            {
+                if (Convert.ToSingle(dataRow["Latitude"]) == -1f)
+                {
+                    Lat1 = Long1 = string.Empty;
+                    string Spaces = new string(' ', 27 - dataRow["SectorID"].ToString().Length -
+                                dataRow["Name"].ToString().Length - 1);
+                    Line1 = "; " + dataRow["SectorID"].ToString() + " " + dataRow["Name"].ToString() +
+                                " ARTCC-" + dataRow["Level"].ToString() + " From " + dataRow["Base"].ToString() +
+                                " to " + dataRow["Top"].ToString();
+                    Line2 = dataRow["SectorID"].ToString() + "_" + dataRow["Name"].ToString() +
+                                Spaces + dummycoords;
+                    switch (dataRow["Level"])
+                    {
+                        case "L":
+                            Low.Add(Line1);
+                            Low.Add(Line2);
+                            break;
+                        case "H":
+                            High.Add(Line1);
+                            High.Add(Line2);
+                            break;
+                        case "U":
+                            Ultra.Add(Line1);
+                            Ultra.Add(Line2);
+                            break;
+                    }
+                }
+                else
+                {
+                    Lat1 = Conversions.DecDeg2SCT(Convert.ToSingle(dataRow["Latitude"]), true);
+                    Long1 = Conversions.DecDeg2SCT(Convert.ToSingle(dataRow["Longitude"]), false);
+                }
+                if ((Lat0 != string.Empty) & (Lat1 != string.Empty))
+                {
+                    LineLL = blank + Lat0 + " " + Long0 + " " + Lat1 + " " + Long1;
+                    if (Convert.ToBoolean(dataRow["Exclude"])) LineLL += " Red";
+                    switch (dataRow["Level"])
+                    {
+                        case "L":
+                            Low.Add(LineLL);
+                            break;
+                        case "H":
+                            High.Add(LineLL);
+                            break;
+                        case "U":
+                            Ultra.Add(LineLL);
+                            break;
+                    }
+                }
+                Lat0 = Lat1; Long0 = Long1;
+            }
+            File.WriteAllLines(path, Low);
+            File.AppendAllLines(path, High);
+            File.AppendAllLines(path, Ultra);
+        }   
     }
 }
 

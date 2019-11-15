@@ -181,6 +181,21 @@
             </xs:sequence>
           </xs:complexType>
         </xs:element>
+        <xs:element name="LocalSectors" msprop:Generator_TableClassName="LocalSectorsDataTable" msprop:Generator_TableVarName="tableLocalSectors" msprop:Generator_RowChangedName="LocalSectorsRowChanged" msprop:Generator_TablePropName="LocalSectors" msprop:Generator_RowDeletingName="LocalSectorsRowDeleting" msprop:Generator_RowChangingName="LocalSectorsRowChanging" msprop:Generator_RowEvHandlerName="LocalSectorsRowChangeEventHandler" msprop:Generator_RowDeletedName="LocalSectorsRowDeleted" msprop:Generator_RowClassName="LocalSectorsRow" msprop:Generator_UserTableName="LocalSectors" msprop:Generator_RowEvArgName="LocalSectorsRowChangeEvent">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="SectorID" msprop:Generator_ColumnVarNameInTable="columnSectorID" msprop:Generator_ColumnPropNameInRow="SectorID" msprop:Generator_ColumnPropNameInTable="SectorIDColumn" msprop:Generator_UserColumnName="SectorID" type="xs:string" minOccurs="0" />
+              <xs:element name="Name" msprop:Generator_ColumnVarNameInTable="columnName" msprop:Generator_ColumnPropNameInRow="Name" msprop:Generator_ColumnPropNameInTable="NameColumn" msprop:Generator_UserColumnName="Name" type="xs:string" minOccurs="0" />
+              <xs:element name="Abbr" msprop:Generator_ColumnVarNameInTable="columnAbbr" msprop:Generator_ColumnPropNameInRow="Abbr" msprop:Generator_ColumnPropNameInTable="AbbrColumn" msprop:Generator_UserColumnName="Abbr" type="xs:string" minOccurs="0" />
+              <xs:element name="Level" msprop:Generator_ColumnVarNameInTable="columnLevel" msprop:Generator_ColumnPropNameInRow="Level" msprop:Generator_ColumnPropNameInTable="LevelColumn" msprop:Generator_UserColumnName="Level" type="xs:string" minOccurs="0" />
+              <xs:element name="Base" msprop:Generator_ColumnVarNameInTable="columnBase" msprop:Generator_ColumnPropNameInRow="Base" msprop:Generator_ColumnPropNameInTable="BaseColumn" msprop:Generator_UserColumnName="Base" type="xs:string" minOccurs="0" />
+              <xs:element name="Top" msprop:Generator_ColumnVarNameInTable="columnTop" msprop:Generator_ColumnPropNameInRow="Top" msprop:Generator_ColumnPropNameInTable="TopColumn" msprop:Generator_UserColumnName="Top" type="xs:string" minOccurs="0" />
+              <xs:element name="Latitude" msprop:Generator_ColumnVarNameInTable="columnLatitude" msprop:Generator_ColumnPropNameInRow="Latitude" msprop:Generator_ColumnPropNameInTable="LatitudeColumn" msprop:Generator_UserColumnName="Latitude" type="xs:float" minOccurs="0" />
+              <xs:element name="Longitude" msprop:Generator_ColumnVarNameInTable="columnLongitude" msprop:Generator_ColumnPropNameInRow="Longitude" msprop:Generator_ColumnPropNameInTable="LongitudeColumn" msprop:Generator_UserColumnName="Longitude" type="xs:float" minOccurs="0" />
+              <xs:element name="Exclude" msprop:Generator_ColumnVarNameInTable="columnExclude" msprop:Generator_ColumnPropNameInRow="Exclude" msprop:Generator_ColumnPropNameInTable="ExcludeColumn" msprop:Generator_UserColumnName="Exclude" type="xs:boolean" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
       </xs:choice>
     </xs:complexType>
     <xs:unique name="Constraint1" msdata:PrimaryKey="true">

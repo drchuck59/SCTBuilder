@@ -52,7 +52,7 @@ namespace SCTBuilder
                             FolderMgt.OutputFolder = string.Empty;
                         }
                         InfoSection.SponsorARTCC = sr.ReadLine();
-                        InfoSection.DefaultAirport = sr.ReadLine();
+                        InfoSection.DefaultAirport = Conversions.RevICOA(sr.ReadLine());
                         InfoSection.FacilityEngineer = sr.ReadLine();
                         if (InfoSection.FacilityEngineer.ToString().Length == 0)
                             result = false;
