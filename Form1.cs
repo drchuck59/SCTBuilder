@@ -135,35 +135,46 @@ namespace SCTBuilder
 
         private void LoadFixGrid()
         {
+            string Filter=string.Empty;
             cmdWriteSCT.Enabled = false;
             if (DataIsLoaded)
             {
                 DataIsSelected = true;
                 cmdUpdateGrid.Enabled = cmdUpdateGrid.Visible = false;
                 progressBar1.Value = 0;
-                string Filter = FixFilter();
-                lblUpdating.Text = "Selecting Airports...";
-                progressBar1.Value += 10;
-                Setdgv(dgvAPT, APT, Filter);
-                lblUpdating.Text = "Selecting VORs...";
-                progressBar1.Value += 10;
-                Setdgv(dgvVOR, VOR, Filter);
-                lblUpdating.Text = "Selecting NDBs...";
-                progressBar1.Value += 10;
-                Setdgv(dgvNDB, NDB, Filter);
-                lblUpdating.Text = "Selecting FIXes...";
-                progressBar1.Value += 10;
-                Setdgv(dgvFIX, FIX, Filter);
-                lblUpdating.Text = "Selecting Runways...";
-                progressBar1.Value += 10;
-                Setdgv(dgvRWY, RWY, Filter);
+                // ARB must always be selected by Sponsor ARTCC
+                Filter = FixFilter("ARTCC");
                 lblUpdating.Text = "Selecting ARTCC boundaries...";
                 progressBar1.Value += 10;
                 Setdgv(dgvARB, ARB, Filter);
+                // Everything else can be selected by user choice
+                Filter = FixFilter(FilterBy.Method);
+                lblUpdating.Text = "Selecting Airports...";
+                lblUpdating.Refresh();
+                progressBar1.Value += 10;
+                Setdgv(dgvAPT, APT, Filter);
+                lblUpdating.Text = "Selecting VORs...";
+                lblUpdating.Refresh();
+                progressBar1.Value += 10;
+                Setdgv(dgvVOR, VOR, Filter);
+                lblUpdating.Text = "Selecting NDBs...";
+                lblUpdating.Refresh();
+                progressBar1.Value += 10;
+                Setdgv(dgvNDB, NDB, Filter);
+                lblUpdating.Text = "Selecting FIXes...";
+                lblUpdating.Refresh();
+                progressBar1.Value += 10;
+                Setdgv(dgvFIX, FIX, Filter);
+                lblUpdating.Text = "Selecting Runways...";
+                lblUpdating.Refresh();
+                progressBar1.Value += 10;
+                Setdgv(dgvRWY, RWY, Filter);
                 lblUpdating.Text = "Selecting Airways...";
+                lblUpdating.Refresh();
                 progressBar1.Value += 10;
                 Setdgv(dgvAWY, AWY, Filter);
                 lblUpdating.Text = "Selecting SIDs & STARs (slow)...";
+                lblUpdating.Refresh();
                 progressBar1.Value += 10;
                 LoadFixGridSSD(Filter);
                 UpdateGridCount();
@@ -382,7 +393,7 @@ namespace SCTBuilder
                     break;
             }
         }
-            private void ColumnSortOrder(DataGridView dgv)
+        private void ColumnSortOrder(DataGridView dgv)
         {
             bool hasName = false;
             foreach (DataGridViewColumn dgvc in dgv.Columns)
@@ -435,13 +446,12 @@ namespace SCTBuilder
                 }
             }
         }
-
-        private string FixFilter()
+        private string FixFilter(string Method)
         {
             string FilterString=string.Empty;
             if (chkbxShowAll.Checked == false)
-            {
-                switch (FilterBy.Method)
+           
+                switch (Method)
                 {
                     default:
                     case "ARTCC":
@@ -459,7 +469,6 @@ namespace SCTBuilder
                             " AND ([Longitude] <= " + ELng.ToString() + ") )";
                         break;
                 }
-            }
             return FilterString;
         }
          
