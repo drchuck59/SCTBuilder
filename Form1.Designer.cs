@@ -107,6 +107,15 @@
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.cmdLocalSectors = new System.Windows.Forms.Button();
+            this.chkAPTs = new System.Windows.Forms.CheckBox();
+            this.chkVORs = new System.Windows.Forms.CheckBox();
+            this.chkNDBs = new System.Windows.Forms.CheckBox();
+            this.chkRWYs = new System.Windows.Forms.CheckBox();
+            this.chkFIXes = new System.Windows.Forms.CheckBox();
+            this.chkAWYs = new System.Windows.Forms.CheckBox();
+            this.chkSSDs = new System.Windows.Forms.CheckBox();
+            this.chkALL = new System.Windows.Forms.CheckBox();
+            this.chkARBs = new System.Windows.Forms.CheckBox();
             this.grpAirspaceClass.SuspendLayout();
             this.grpSelectionMethod.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
@@ -379,7 +388,7 @@
             this.cmdWriteSCT.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
             this.cmdWriteSCT.Enabled = false;
             this.cmdWriteSCT.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cmdWriteSCT.Location = new System.Drawing.Point(824, 25);
+            this.cmdWriteSCT.Location = new System.Drawing.Point(694, 25);
             this.cmdWriteSCT.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.cmdWriteSCT.Name = "cmdWriteSCT";
             this.cmdWriteSCT.Size = new System.Drawing.Size(123, 60);
@@ -480,7 +489,7 @@
             this.lblUpdating.AutoSize = true;
             this.lblUpdating.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(224)))), ((int)(((byte)(192)))));
             this.lblUpdating.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblUpdating.Location = new System.Drawing.Point(741, 176);
+            this.lblUpdating.Location = new System.Drawing.Point(741, 88);
             this.lblUpdating.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblUpdating.Name = "lblUpdating";
             this.lblUpdating.Size = new System.Drawing.Size(270, 29);
@@ -492,7 +501,7 @@
             // cmdUpdateGrid
             // 
             this.cmdUpdateGrid.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cmdUpdateGrid.Location = new System.Drawing.Point(741, 176);
+            this.cmdUpdateGrid.Location = new System.Drawing.Point(741, 88);
             this.cmdUpdateGrid.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.cmdUpdateGrid.Name = "cmdUpdateGrid";
             this.cmdUpdateGrid.Size = new System.Drawing.Size(373, 58);
@@ -1043,7 +1052,7 @@
             // 
             // progressBar1
             // 
-            this.progressBar1.Location = new System.Drawing.Point(741, 206);
+            this.progressBar1.Location = new System.Drawing.Point(741, 117);
             this.progressBar1.Margin = new System.Windows.Forms.Padding(4);
             this.progressBar1.Maximum = 80;
             this.progressBar1.Name = "progressBar1";
@@ -1052,13 +1061,122 @@
             // 
             // cmdLocalSectors
             // 
-            this.cmdLocalSectors.Location = new System.Drawing.Point(756, 110);
+            this.cmdLocalSectors.Location = new System.Drawing.Point(823, 25);
             this.cmdLocalSectors.Name = "cmdLocalSectors";
-            this.cmdLocalSectors.Size = new System.Drawing.Size(124, 55);
+            this.cmdLocalSectors.Size = new System.Drawing.Size(124, 60);
             this.cmdLocalSectors.TabIndex = 33;
             this.cmdLocalSectors.Text = "Add Local Sectors";
             this.cmdLocalSectors.UseVisualStyleBackColor = true;
             this.cmdLocalSectors.Click += new System.EventHandler(this.LocalSectors_Click);
+            // 
+            // chkAPTs
+            // 
+            this.chkAPTs.AutoSize = true;
+            this.chkAPTs.Checked = true;
+            this.chkAPTs.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkAPTs.Location = new System.Drawing.Point(746, 185);
+            this.chkAPTs.Name = "chkAPTs";
+            this.chkAPTs.Size = new System.Drawing.Size(79, 21);
+            this.chkAPTs.TabIndex = 34;
+            this.chkAPTs.Text = "Airports";
+            this.chkAPTs.UseVisualStyleBackColor = true;
+            // 
+            // chkVORs
+            // 
+            this.chkVORs.AutoSize = true;
+            this.chkVORs.Checked = true;
+            this.chkVORs.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkVORs.Location = new System.Drawing.Point(746, 209);
+            this.chkVORs.Name = "chkVORs";
+            this.chkVORs.Size = new System.Drawing.Size(67, 21);
+            this.chkVORs.TabIndex = 35;
+            this.chkVORs.Text = "VORs";
+            this.chkVORs.UseVisualStyleBackColor = true;
+            // 
+            // chkNDBs
+            // 
+            this.chkNDBs.AutoSize = true;
+            this.chkNDBs.Checked = true;
+            this.chkNDBs.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkNDBs.Location = new System.Drawing.Point(829, 209);
+            this.chkNDBs.Name = "chkNDBs";
+            this.chkNDBs.Size = new System.Drawing.Size(66, 21);
+            this.chkNDBs.TabIndex = 36;
+            this.chkNDBs.Text = "NDBs";
+            this.chkNDBs.UseVisualStyleBackColor = true;
+            // 
+            // chkRWYs
+            // 
+            this.chkRWYs.AutoSize = true;
+            this.chkRWYs.Checked = true;
+            this.chkRWYs.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkRWYs.Location = new System.Drawing.Point(829, 185);
+            this.chkRWYs.Name = "chkRWYs";
+            this.chkRWYs.Size = new System.Drawing.Size(87, 21);
+            this.chkRWYs.TabIndex = 37;
+            this.chkRWYs.Text = "Runways";
+            this.chkRWYs.UseVisualStyleBackColor = true;
+            // 
+            // chkFIXes
+            // 
+            this.chkFIXes.AutoSize = true;
+            this.chkFIXes.Checked = true;
+            this.chkFIXes.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkFIXes.Location = new System.Drawing.Point(918, 209);
+            this.chkFIXes.Name = "chkFIXes";
+            this.chkFIXes.Size = new System.Drawing.Size(62, 21);
+            this.chkFIXes.TabIndex = 38;
+            this.chkFIXes.Text = "Fixes";
+            this.chkFIXes.UseVisualStyleBackColor = true;
+            // 
+            // chkAWYs
+            // 
+            this.chkAWYs.AutoSize = true;
+            this.chkAWYs.Checked = true;
+            this.chkAWYs.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkAWYs.Location = new System.Drawing.Point(920, 185);
+            this.chkAWYs.Name = "chkAWYs";
+            this.chkAWYs.Size = new System.Drawing.Size(78, 21);
+            this.chkAWYs.TabIndex = 39;
+            this.chkAWYs.Text = "Airways";
+            this.chkAWYs.UseVisualStyleBackColor = true;
+            // 
+            // chkSSDs
+            // 
+            this.chkSSDs.AutoSize = true;
+            this.chkSSDs.Checked = true;
+            this.chkSSDs.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkSSDs.Location = new System.Drawing.Point(1002, 185);
+            this.chkSSDs.Name = "chkSSDs";
+            this.chkSSDs.Size = new System.Drawing.Size(107, 21);
+            this.chkSSDs.TabIndex = 40;
+            this.chkSSDs.Text = "SIDs/STARs";
+            this.chkSSDs.UseVisualStyleBackColor = true;
+            // 
+            // chkALL
+            // 
+            this.chkALL.AutoSize = true;
+            this.chkALL.Checked = true;
+            this.chkALL.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkALL.Location = new System.Drawing.Point(746, 158);
+            this.chkALL.Name = "chkALL";
+            this.chkALL.Size = new System.Drawing.Size(179, 21);
+            this.chkALL.TabIndex = 41;
+            this.chkALL.Text = "Output ALL SCT results";
+            this.chkALL.UseVisualStyleBackColor = true;
+            this.chkALL.CheckedChanged += new System.EventHandler(this.ChkALL_CheckedChanged);
+            // 
+            // chkARBs
+            // 
+            this.chkARBs.AutoSize = true;
+            this.chkARBs.Checked = true;
+            this.chkARBs.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkARBs.Location = new System.Drawing.Point(1002, 209);
+            this.chkARBs.Name = "chkARBs";
+            this.chkARBs.Size = new System.Drawing.Size(83, 21);
+            this.chkARBs.TabIndex = 42;
+            this.chkARBs.Text = "ARTCCs";
+            this.chkARBs.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
@@ -1069,6 +1187,15 @@
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(1173, 647);
             this.ControlBox = false;
+            this.Controls.Add(this.chkARBs);
+            this.Controls.Add(this.chkALL);
+            this.Controls.Add(this.chkSSDs);
+            this.Controls.Add(this.chkAWYs);
+            this.Controls.Add(this.chkFIXes);
+            this.Controls.Add(this.chkRWYs);
+            this.Controls.Add(this.chkNDBs);
+            this.Controls.Add(this.chkVORs);
+            this.Controls.Add(this.chkAPTs);
             this.Controls.Add(this.cmdLocalSectors);
             this.Controls.Add(this.cmdUpdateGrid);
             this.Controls.Add(this.cmdExit);
@@ -1223,6 +1350,15 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button cmdLocalSectors;
+        private System.Windows.Forms.CheckBox chkAPTs;
+        private System.Windows.Forms.CheckBox chkVORs;
+        private System.Windows.Forms.CheckBox chkNDBs;
+        private System.Windows.Forms.CheckBox chkRWYs;
+        private System.Windows.Forms.CheckBox chkFIXes;
+        private System.Windows.Forms.CheckBox chkAWYs;
+        private System.Windows.Forms.CheckBox chkSSDs;
+        private System.Windows.Forms.CheckBox chkALL;
+        private System.Windows.Forms.CheckBox chkARBs;
     }
 }
 

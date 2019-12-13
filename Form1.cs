@@ -133,9 +133,9 @@ namespace SCTBuilder
             tabControl1.Enabled = !FormIsFrozen;
         }
 
-        private void LoadFixGrid()
+        private void LoadFixGrid(bool LoadAllGrids = true)
         {
-            string Filter=string.Empty;
+            string Filter;
             cmdWriteSCT.Enabled = false;
             if (DataIsLoaded)
             {
@@ -143,40 +143,72 @@ namespace SCTBuilder
                 cmdUpdateGrid.Enabled = cmdUpdateGrid.Visible = false;
                 progressBar1.Value = 0;
                 // ARB must always be selected by Sponsor ARTCC
-                Filter = FixFilter("ARTCC");
-                lblUpdating.Text = "Selecting ARTCC boundaries...";
-                progressBar1.Value += 10;
-                Setdgv(dgvARB, ARB, Filter);
+                if (LoadAllGrids ^ SCTchecked.chkARB)
+                {
+                    Filter = FixFilter("ARTCC");
+                    lblUpdating.Text = "Selecting ARTCC boundaries...";
+                    progressBar1.Value += 10;
+                    Setdgv(dgvARB, ARB, Filter);
+                }
+                else DataIsSelected = false;
                 // Everything else can be selected by user choice
                 Filter = FixFilter(FilterBy.Method);
-                lblUpdating.Text = "Selecting Airports...";
-                lblUpdating.Refresh();
-                progressBar1.Value += 10;
-                Setdgv(dgvAPT, APT, Filter);
-                lblUpdating.Text = "Selecting VORs...";
-                lblUpdating.Refresh();
-                progressBar1.Value += 10;
-                Setdgv(dgvVOR, VOR, Filter);
-                lblUpdating.Text = "Selecting NDBs...";
-                lblUpdating.Refresh();
-                progressBar1.Value += 10;
-                Setdgv(dgvNDB, NDB, Filter);
-                lblUpdating.Text = "Selecting FIXes...";
-                lblUpdating.Refresh();
-                progressBar1.Value += 10;
-                Setdgv(dgvFIX, FIX, Filter);
-                lblUpdating.Text = "Selecting Runways...";
-                lblUpdating.Refresh();
-                progressBar1.Value += 10;
-                Setdgv(dgvRWY, RWY, Filter);
-                lblUpdating.Text = "Selecting Airways...";
-                lblUpdating.Refresh();
-                progressBar1.Value += 10;
-                Setdgv(dgvAWY, AWY, Filter);
-                lblUpdating.Text = "Selecting SIDs & STARs (slow)...";
-                lblUpdating.Refresh();
-                progressBar1.Value += 10;
-                LoadFixGridSSD(Filter);
+                if (LoadAllGrids ^ SCTchecked.chkAPT)
+                {
+                    lblUpdating.Text = "Selecting Airports...";
+                    lblUpdating.Refresh();
+                    progressBar1.Value += 10;
+                    Setdgv(dgvAPT, APT, Filter);
+                }
+                else DataIsSelected = false;
+                if (LoadAllGrids ^ SCTchecked.chkVOR)
+                {
+                    lblUpdating.Text = "Selecting VORs...";
+                    lblUpdating.Refresh();
+                    progressBar1.Value += 10;
+                    Setdgv(dgvVOR, VOR, Filter);
+                }
+                else DataIsSelected = false;
+                if (LoadAllGrids ^ SCTchecked.chkNDB)
+                {
+                    lblUpdating.Text = "Selecting NDBs...";
+                    lblUpdating.Refresh();
+                    progressBar1.Value += 10;
+                    Setdgv(dgvNDB, NDB, Filter);
+                }
+                else DataIsSelected = false;
+                if (LoadAllGrids ^ SCTchecked.chkFIX)
+                {
+                    lblUpdating.Text = "Selecting FIXes...";
+                    lblUpdating.Refresh();
+                    progressBar1.Value += 10;
+                    Setdgv(dgvFIX, FIX, Filter);
+                }
+                else DataIsSelected = false;
+                if (LoadAllGrids ^ SCTchecked.chkRWY)
+                {
+                    lblUpdating.Text = "Selecting Runways...";
+                    lblUpdating.Refresh();
+                    progressBar1.Value += 10;
+                    Setdgv(dgvRWY, RWY, Filter);
+                }
+                else DataIsSelected = false;
+                if (LoadAllGrids ^ SCTchecked.chkAWY)
+                {
+                    lblUpdating.Text = "Selecting Airways...";
+                    lblUpdating.Refresh();
+                    progressBar1.Value += 10;
+                    Setdgv(dgvAWY, AWY, Filter);
+                }
+                else DataIsSelected = false;
+                if (LoadAllGrids ^ SCTchecked.chkSSD)
+                {
+                    lblUpdating.Text = "Selecting SIDs & STARs (slow)...";
+                    lblUpdating.Refresh();
+                    progressBar1.Value += 10;
+                    LoadFixGridSSD(Filter);
+                }
+                else DataIsSelected = false;
                 UpdateGridCount();
                 cmdWriteSCT.Enabled = true;
             }
@@ -196,7 +228,7 @@ namespace SCTBuilder
         private void LoadCboAirport()
         {
             // Get APTs we will use in the usual manner
-            string filter = FixFilter();
+            string filter = FixFilter(FilterBy.Method);
             DataView dvAPT = new DataView(APT)
             {
                 RowFilter = filter,
@@ -662,12 +694,13 @@ namespace SCTBuilder
 
         private void CmdWriteSCT_Click(object sender, EventArgs e)
         {
+            SetChecked();
             if (!DataIsSelected)
             {
                 cmdUpdateGrid.Enabled = cmdUpdateGrid.Visible = false;
                 HoldForm(true);
                 UpdateInfoSection();
-                LoadFixGrid();
+                LoadFixGrid(false);
                 HoldForm(false);
             }
             SCToutput.WriteSCT();
@@ -795,7 +828,8 @@ namespace SCTBuilder
                 cmdUpdateGrid.Visible = false;
                 HoldForm(true);
                 UpdateInfoSection();
-                LoadFixGrid();
+                SetChecked();
+                LoadFixGrid(true);
                 HoldForm(false);
                 Refresh();
             }
@@ -845,6 +879,30 @@ namespace SCTBuilder
                 FolderMgt.OutputFolder = txtOutputFolder.Text;
             }
             cmdWriteSCT.Enabled = TestWriteSCT();
+        }
+
+        private void SetChecked()
+        {
+            SCTchecked.chkAPT = chkAPTs.Checked;
+            SCTchecked.chkARB = chkARBs.Checked;
+            SCTchecked.chkAWY = chkAWYs.Checked;
+            SCTchecked.chkFIX = chkFIXes.Checked;
+            SCTchecked.chkNDB = chkNDBs.Checked;
+            SCTchecked.chkRWY = chkRWYs.Checked;
+            SCTchecked.chkSSD = chkSSDs.Checked;
+            SCTchecked.chkVOR = chkVORs.Checked;
+        }
+
+        private void ChkALL_CheckedChanged(object sender, EventArgs e)
+        {
+            chkAPTs.Checked = chkALL.Checked;
+            chkARBs.Checked = chkALL.Checked;
+            chkAWYs.Checked = chkALL.Checked;
+            chkFIXes.Checked = chkALL.Checked;
+            chkNDBs.Checked = chkALL.Checked;
+            chkRWYs.Checked = chkALL.Checked;
+            chkSSDs.Checked = chkALL.Checked;
+            chkVORs.Checked = chkALL.Checked;
         }
     }
 }

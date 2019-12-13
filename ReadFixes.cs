@@ -4,7 +4,7 @@ using System.Globalization;
 using System.Windows.Forms;
 using System.Linq;
 using System.Collections.Generic;
-using System.Threading.Tasks;
+using System.Xml.Linq;
 using System.Data;
 
 namespace SCTBuilder
@@ -87,7 +87,7 @@ namespace SCTBuilder
                     switch (Line.Substring(0, 4))
                     {
                         case "NAV1":
-                            Lat = -1f; Long = -1f; Mag = 0f;
+                            Mag = 0f;
                             FixType = Line.Substring(8, 20).Trim();                     // FixType
                             if (Line.Substring(28, 4).Trim().Length == 0) break;        // Skip fixes with no ID
                             if (Line.Substring(533, 6).Trim().Length == 0) break;       // Skip fixes with no transmitter
@@ -139,7 +139,6 @@ namespace SCTBuilder
             DataTable FIXtable = Form1.FIX;
             if (FIXtable.Rows.Count != 0) FIXtable.Clear();     // Must start with empty tables
             string FullFilename = GetFullPathname(FolderMgt.DataFolder, "FIX.txt");
-            string FixType;
             Conversions S2D = new Conversions();
             using (StreamReader reader = new StreamReader(FullFilename))
             {
@@ -149,7 +148,6 @@ namespace SCTBuilder
                     switch (Line.Substring(0, 4))
                     {
                         case "FIX1":
-                            FixType = Line.Substring(213, 15).Trim();                     // FixType
                             if (Line.Substring(67, 14).Trim().Length == 0) break;
                             var FixItems = new List<object>
                                 {
@@ -287,7 +285,7 @@ namespace SCTBuilder
         {
             DataTable TWR = Form1.TWR;
             string FullFilename = GetFullPathname(FolderMgt.DataFolder, "TWR.txt");
-            string Line = string.Empty; string rowType;
+            string Line; string rowType;
             const string FacilityType = "GUBACH"; int FacType;
             string tempID = string.Empty; string tempFac = string.Empty; string tempName = string.Empty;
             float tempLat = 0f; float tempLong = 0f; string tempFreq = "122.8"; string tempClass = string.Empty;
@@ -374,7 +372,7 @@ namespace SCTBuilder
         {
             DataTable AWY = Form1.AWY;
             string FullFilename = GetFullPathname(FolderMgt.DataFolder, "AWY.txt");
-            string Line = string.Empty; string aNAVtype = string.Empty; string aNAVID;
+            string Line; string aNAVtype = string.Empty; string aNAVID;
             string aSeqNo = string.Empty; bool aFix; string aARTCC = string.Empty; string aMOCA = string.Empty;
             string aMEA = string.Empty; string aMAA = string.Empty; string atype = string.Empty;
             float aLat; float aLong; string aID = string.Empty;
@@ -447,12 +445,12 @@ namespace SCTBuilder
                     var FixItems = new List<object>
                     {
                         Line.Substring(0,5).Trim(),                         // Internal ID
-                        Line.Substring(30,6).Trim(),                        // NavAid
-                        Line.Substring(10,2).Trim(),                        // FixType
+                        Line.Substring(30,6).Trim(),                        // NavAid or Airport
+                        Line.Substring(10,2).Trim(),                        // FixType incl 'AA'
                         S2D.String2DecDeg(Line.Substring(13, 8).Trim()),    // Latitude
                         S2D.String2DecDeg(Line.Substring(21, 9).Trim()),    // Longitude
-                        Line.Substring(38, 13).Trim(),                      // StarCode
-                        Line.Substring(51, 110).Trim(),                     // StarName
+                        Line.Substring(38, 13).Trim(),                      // SSDCode
+                        Line.Substring(51, 110).Trim(),                     // SSDName
                         Seqno,                                              // Sequence Number (mine)
                         isSid                                               // Is a SID
                     };
@@ -578,6 +576,11 @@ namespace SCTBuilder
                 }
             }
             return Success;
+        }
+        private void FillAirSpace()
+        {
+            string FullFilename = GetFullPathname(FolderMgt.DataFolder, "openaip_airspace_united_states_us.xml");
+            XDocument doc = XDocument.Load(FullFilename);
         }
         private static string GetFullPathname(string DataFolder, string Filename)
         /// <summary>

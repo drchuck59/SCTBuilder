@@ -410,4 +410,15 @@ namespace SCTBuilder
         }
         public static float SectorScale { get { return 1f; } }      // Always 1, ignored in VRC
     }
+    public static class SCTchecked
+    {
+        public static bool chkARB { get; set; }
+        public static bool chkAPT { get; set; }
+        public static bool chkVOR { get; set; }
+        public static bool chkNDB { get; set; }
+        public static bool chkFIX { get; set; }
+        public static bool chkAWY { get; set; }
+        public static bool chkRWY { get; set; }
+        public static bool chkSSD { get; set; }
+    }
 } 
