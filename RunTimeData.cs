@@ -412,13 +412,13 @@ namespace SCTBuilder
     }
     public static class SCTchecked
     {
-        public static bool chkARB { get; set; }
-        public static bool chkAPT { get; set; }
-        public static bool chkVOR { get; set; }
-        public static bool chkNDB { get; set; }
-        public static bool chkFIX { get; set; }
-        public static bool chkAWY { get; set; }
-        public static bool chkRWY { get; set; }
-        public static bool chkSSD { get; set; }
+        public static bool ChkARB { get; set; }
+        public static bool ChkAPT { get; set; }
+        public static bool ChkVOR { get; set; }
+        public static bool ChkNDB { get; set; }
+        public static bool ChkFIX { get; set; }
+        public static bool ChkAWY { get; set; }
+        public static bool ChkRWY { get; set; }
+        public static bool ChkSSD { get; set; }
     }
 } 

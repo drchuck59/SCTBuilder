@@ -143,7 +143,7 @@ namespace SCTBuilder
                 cmdUpdateGrid.Enabled = cmdUpdateGrid.Visible = false;
                 progressBar1.Value = 0;
                 // ARB must always be selected by Sponsor ARTCC
-                if (LoadAllGrids ^ SCTchecked.chkARB)
+                if (LoadAllGrids ^ SCTchecked.ChkARB)
                 {
                     Filter = FixFilter("ARTCC");
                     lblUpdating.Text = "Selecting ARTCC boundaries...";
@@ -153,7 +153,7 @@ namespace SCTBuilder
                 else DataIsSelected = false;
                 // Everything else can be selected by user choice
                 Filter = FixFilter(FilterBy.Method);
-                if (LoadAllGrids ^ SCTchecked.chkAPT)
+                if (LoadAllGrids ^ SCTchecked.ChkAPT)
                 {
                     lblUpdating.Text = "Selecting Airports...";
                     lblUpdating.Refresh();
@@ -161,7 +161,7 @@ namespace SCTBuilder
                     Setdgv(dgvAPT, APT, Filter);
                 }
                 else DataIsSelected = false;
-                if (LoadAllGrids ^ SCTchecked.chkVOR)
+                if (LoadAllGrids ^ SCTchecked.ChkVOR)
                 {
                     lblUpdating.Text = "Selecting VORs...";
                     lblUpdating.Refresh();
@@ -169,7 +169,7 @@ namespace SCTBuilder
                     Setdgv(dgvVOR, VOR, Filter);
                 }
                 else DataIsSelected = false;
-                if (LoadAllGrids ^ SCTchecked.chkNDB)
+                if (LoadAllGrids ^ SCTchecked.ChkNDB)
                 {
                     lblUpdating.Text = "Selecting NDBs...";
                     lblUpdating.Refresh();
@@ -177,7 +177,7 @@ namespace SCTBuilder
                     Setdgv(dgvNDB, NDB, Filter);
                 }
                 else DataIsSelected = false;
-                if (LoadAllGrids ^ SCTchecked.chkFIX)
+                if (LoadAllGrids ^ SCTchecked.ChkFIX)
                 {
                     lblUpdating.Text = "Selecting FIXes...";
                     lblUpdating.Refresh();
@@ -185,7 +185,7 @@ namespace SCTBuilder
                     Setdgv(dgvFIX, FIX, Filter);
                 }
                 else DataIsSelected = false;
-                if (LoadAllGrids ^ SCTchecked.chkRWY)
+                if (LoadAllGrids ^ SCTchecked.ChkRWY)
                 {
                     lblUpdating.Text = "Selecting Runways...";
                     lblUpdating.Refresh();
@@ -193,7 +193,7 @@ namespace SCTBuilder
                     Setdgv(dgvRWY, RWY, Filter);
                 }
                 else DataIsSelected = false;
-                if (LoadAllGrids ^ SCTchecked.chkAWY)
+                if (LoadAllGrids ^ SCTchecked.ChkAWY)
                 {
                     lblUpdating.Text = "Selecting Airways...";
                     lblUpdating.Refresh();
@@ -201,7 +201,7 @@ namespace SCTBuilder
                     Setdgv(dgvAWY, AWY, Filter);
                 }
                 else DataIsSelected = false;
-                if (LoadAllGrids ^ SCTchecked.chkSSD)
+                if (LoadAllGrids ^ SCTchecked.ChkSSD)
                 {
                     lblUpdating.Text = "Selecting SIDs & STARs (slow)...";
                     lblUpdating.Refresh();
@@ -883,14 +883,14 @@ namespace SCTBuilder
 
         private void SetChecked()
         {
-            SCTchecked.chkAPT = chkAPTs.Checked;
-            SCTchecked.chkARB = chkARBs.Checked;
-            SCTchecked.chkAWY = chkAWYs.Checked;
-            SCTchecked.chkFIX = chkFIXes.Checked;
-            SCTchecked.chkNDB = chkNDBs.Checked;
-            SCTchecked.chkRWY = chkRWYs.Checked;
-            SCTchecked.chkSSD = chkSSDs.Checked;
-            SCTchecked.chkVOR = chkVORs.Checked;
+            SCTchecked.ChkAPT = chkAPTs.Checked;
+            SCTchecked.ChkARB = chkARBs.Checked;
+            SCTchecked.ChkAWY = chkAWYs.Checked;
+            SCTchecked.ChkFIX = chkFIXes.Checked;
+            SCTchecked.ChkNDB = chkNDBs.Checked;
+            SCTchecked.ChkRWY = chkRWYs.Checked;
+            SCTchecked.ChkSSD = chkSSDs.Checked;
+            SCTchecked.ChkVOR = chkVORs.Checked;
         }
 
         private void ChkALL_CheckedChanged(object sender, EventArgs e)

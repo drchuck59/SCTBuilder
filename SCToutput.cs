@@ -22,7 +22,6 @@ namespace SCTBuilder
             DataTable FIX = Form1.FIX;
             DataTable ARB = Form1.ARB;
             DataTable AWY = Form1.AWY;
-            DataTable SSD = Form1.SSD;
             // DataTable LS = Form1.LocalSector;
             DataTable dtSTL = new SCTdata.StaticTextDataTable();
             DataTable dtColors = new SCTdata.ColorDefsDataTable();
@@ -65,37 +64,37 @@ namespace SCTBuilder
                     Console.WriteLine("INFO section...");
                     sw.WriteLine("[INFO]");
                     WriteINFO(sw);
-                    if (SCTchecked.chkVOR)
+                    if (SCTchecked.ChkVOR)
                     {
                         Console.WriteLine("VORs...");
                         sw.WriteLine("[VOR]");
                         WriteVOR(VOR, sw);
                     }
-                    if (SCTchecked.chkNDB)
+                    if (SCTchecked.ChkNDB)
                     {
                         Console.WriteLine("NDBs...");
                         sw.WriteLine("[NDB]");
                         WriteNDB(NDB, sw);
                     }
-                    if (SCTchecked.chkAPT)
+                    if (SCTchecked.ChkAPT)
                     {
                         Console.WriteLine("Airports...");
                         sw.WriteLine("[AIRPORT]");
                         WriteAPT(APT, TWR, sw);
                     }
-                    if (SCTchecked.chkRWY)
+                    if (SCTchecked.ChkRWY)
                     {
                         Console.WriteLine("Airport Runways...");
                         sw.WriteLine("[RUNWAY]");
                         WriteRWY(RWY, sw, dtSTL);
                     }
-                    if (SCTchecked.chkFIX)
+                    if (SCTchecked.ChkFIX)
                     {
                         Console.WriteLine("Fixes...");
                         sw.WriteLine("[FIXES]");
                         WriteFixes(FIX, sw);
                     }
-                    if (SCTchecked.chkARB)
+                    if (SCTchecked.ChkARB)
                     {
                         Console.WriteLine("ARTCC...");
                         sw.WriteLine("[ARTCC HIGH]");
@@ -106,7 +105,7 @@ namespace SCTBuilder
                         sw.WriteLine("[ARTCC LOW]");
                         WriteARB(ARB, sw, "LOW");
                     }
-                    if (SCTchecked.chkAWY)
+                    if (SCTchecked.ChkAWY)
                     {
                         Console.WriteLine("AirWays...");
                         sw.WriteLine("[LOW AIRWAY]");
@@ -114,7 +113,7 @@ namespace SCTBuilder
                         sw.WriteLine("[HIGH AIRWAY]");
                         WriteAWY(AWY, sw, LOWawy: false);
                     }
-                    if (SCTchecked.chkSSD)
+                    if (SCTchecked.ChkSSD)
                     {
                         Console.WriteLine("SIDS and STARS...");
                         sw.WriteLine("[SID]");
@@ -308,6 +307,7 @@ namespace SCTBuilder
                 dtSTL.Rows.Add(new object[] { strOut[1].ToString(), strOut[6].ToString(), strOut[7].ToString(), RWYtextColor });
                 sw.WriteLine(LineOut);
             }
+            WriteLabels(dtSTL, sw);
             dataView.Dispose();
             sw.WriteLine();
         }
@@ -391,6 +391,7 @@ namespace SCTBuilder
             string SSDfilter;
             DataTable APTtable = Form1.APT;
             DataTable SSDtable = Form1.SSD;
+            DataTable A2Dtable = new SCTdata.APT2SSDDataTable();
             DataView dvAPT = new DataView(APTtable);
             DataView dvSSD = new DataView(SSDtable);
             char Mark = Convert.ToChar("=");
@@ -399,31 +400,30 @@ namespace SCTBuilder
             dvSSD.RowFilter = SSDfilter;
             dvSSD.Sort = "Sequence";
             // Build the table that will be used to sort and call the WriteSSD function
+            A2Dtable.Clear();           // Start with an empty table
+            DataView dvS2A = new DataView(A2Dtable);
             foreach (DataRowView SSDrow in dvSSD)
             {
                 dvAPT.RowFilter = "[FacilityID] = " + SSDrow["NavAid"].ToString();
                 // Check how to add rows to a dataview table
-                dvSSD2APT.AddNew();
-                //     SSDrow["ID"].ToString(), 
-                //     dvAPT[0]["ID"].ToString(),
-                //     dvAPT[0]["ARTCC"].ToString()
-                //    );
+                DataRowView newrow = dvS2A.AddNew();
+                newrow["SSD_FK"] = SSDrow["ID"].ToString();
+                newrow["APT_FK"] = dvAPT[0]["ID"].ToString();
+                newrow["ARTCC"] = dvAPT[0]["ARTCC"].ToString();
+                newrow.EndEdit();
             }
+            dvS2A.Sort = "ARTCC_FK, APT_FK, SSD_FK";
             // OK to write the Section header here since it's called only once
             string Section;
             if (IsSID) { Section = "SID"; } else { Section = "STAR"; }
             sw.WriteLine(SSDHeader(Section, Mark, 5));
 
             // Now use that table to call the WriteSSD
-            DataTable SSD2APT = new SCTdata.APT2SSDDataTable();
-            DataView dvS2A = new DataView(SSD2APT);
-            string curARTCC = string.Empty; string curSSDID = string.Empty;
-            dvS2A.Sort = "ARTCC_FK, APT_FK, SSD_FK";
             // Sponsor ARTTC first
-            dvS2A.RowFilter = "[ARTCC] = '" + InfoSection.SponsorARTCC.ToString() + "'";
-            sw.WriteLine(SSDHeader(dvS2A[0]["ARTCC"].ToString(), Mark, 4));
-
-            // Now loop the SSDIDs in the DV to write the data for Sponsor ARTCC
+            string curARTCC = InfoSection.SponsorARTCC.ToString();
+            dvS2A.RowFilter = "[ARTCC] = '" + curARTCC + "'";
+            sw.WriteLine(SSDHeader(curARTCC, Mark, 4));
+            // Loop the SSDIDs in the DV to write the data for Sponsor ARTCC
             string curAirportID = string.Empty;
             foreach (DataRow drS2A in dvS2A)
             {
@@ -431,15 +431,35 @@ namespace SCTBuilder
                 {
                     curAirportID = drS2A["APT_FK"].ToString();
                     dvAPT.Find(curAirportID);
-                    sw.WriteLine(SSDHeader(dvAPT[0]["FacilityID"].ToString(), Mark, 3));
+                    sw.WriteLine(SSDHeader(Conversions.ICOA(dvAPT[0]["FacilityID"].ToString()), Mark, 3));
                 }
                 WriteSSD(sw, drS2A["SSD_FK"].ToString(), IsSID);
             }
+
+            // All the other ARTCCs that may have been in the filter
+            dvS2A.RowFilter = "[ARTCC] != '" + curARTCC + "'";
+            // This loop adds the ARTCCs, but is otherwise as above
+            foreach (DataRow drS2A in dvS2A)
+            {
+                if (curARTCC != drS2A["ARTCC"].ToString())
+                {
+                    curARTCC = drS2A["ARTCC"].ToString();
+                    sw.WriteLine(SSDHeader(curARTCC, Mark, 4));
+                }
+                if (curAirportID != drS2A["APT_FK"].ToString())
+                {
+                    curAirportID = drS2A["APT_FK"].ToString();
+                    dvAPT.Find(curAirportID);
+                    sw.WriteLine(SSDHeader(Conversions.ICOA(dvAPT[0]["FacilityID"].ToString()), Mark, 3));
+                }
+                WriteSSD(sw, drS2A["SSD_FK"].ToString(), IsSID);
+            }
+            dvS2A.Dispose();
         }
 
         private static string SSDHeader(string Header, char Marker, int MarkerCount=0)
         {
-            string Mask; int factor;
+            string Mask; int factor; string result;
             if (MarkerCount != 0)
             {
                 Mask = new string(Marker, MarkerCount);
@@ -452,7 +472,10 @@ namespace SCTBuilder
             }
             string Spaces = new string(' ', 27 - Header.Length - (factor * MarkerCount));
             string DummyCoords = "N000.00.00.000 E000.00.00.000 N000.00.00.000 E000.00.00.000";
-            return Mask + Header + Mask + Spaces + DummyCoords;
+            result = Mask + Header;
+            if (MarkerCount != 0) result += Mask;
+            result += Spaces + DummyCoords;
+            return result;
         }
 
         private static void WriteSSD(StreamWriter sw, string SSDID, bool IsSID)
@@ -463,17 +486,18 @@ namespace SCTBuilder
             /// Also need to test the SSD labeling routine.
             /// </summary>
             DataTable SSD = Form1.SSD;
-            char Prefix; string ID0 = string.Empty;
+            char Prefix;
             string Lat0 = string.Empty; string Long0 = string.Empty;
             string Lat1; string Long1; string cr = Environment.NewLine;
             string Fix0 = string.Empty; string Fix1;
-            string SSDcode0 = string.Empty;
             string strLL = new string(' ', 27);
             string SSDfilter = "[ID] = '" + SSDID + "'"; 
             string SSDResult = string.Empty;
-            DataView dvSSD = new DataView(SSD);
-            dvSSD.RowFilter = SSDfilter;
-            dvSSD.Sort = "Sequence";
+            DataView dvSSD = new DataView(SSD)
+            {
+                RowFilter = SSDfilter,
+                Sort = "Sequence"
+            };
             if (IsSID) Prefix = Convert.ToChar("+"); else Prefix = Convert.ToChar("-");
             var SSDNames = new List<string>();
             // Write the SSD Header
@@ -499,8 +523,8 @@ namespace SCTBuilder
                 sw.WriteLine(SSDResult);
                 WriteFixNames(SSDNames, sw);
                 SSDNames.Clear();
-                SSDResult = string.Empty;
             }
+            dvSSD.Dispose();
         }
 
         private static List<string> ListFixes(List<string> Fixes, string NewFix)
