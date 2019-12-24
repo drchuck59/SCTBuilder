@@ -44,7 +44,7 @@ namespace SCTBuilder {
         
         private ColorDefsDataTable tableColorDefs;
         
-        private StaticTextDataTable tableStaticText;
+        private DrawLabelDataTable tableDrawLabel;
         
         private LocalSectorsDataTable tableLocalSectors;
         
@@ -108,8 +108,8 @@ namespace SCTBuilder {
                 if ((ds.Tables["ColorDefs"] != null)) {
                     base.Tables.Add(new ColorDefsDataTable(ds.Tables["ColorDefs"]));
                 }
-                if ((ds.Tables["StaticText"] != null)) {
-                    base.Tables.Add(new StaticTextDataTable(ds.Tables["StaticText"]));
+                if ((ds.Tables["DrawLabel"] != null)) {
+                    base.Tables.Add(new DrawLabelDataTable(ds.Tables["DrawLabel"]));
                 }
                 if ((ds.Tables["LocalSectors"] != null)) {
                     base.Tables.Add(new LocalSectorsDataTable(ds.Tables["LocalSectors"]));
@@ -239,9 +239,9 @@ namespace SCTBuilder {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
         [global::System.ComponentModel.Browsable(false)]
         [global::System.ComponentModel.DesignerSerializationVisibility(global::System.ComponentModel.DesignerSerializationVisibility.Content)]
-        public StaticTextDataTable StaticText {
+        public DrawLabelDataTable DrawLabel {
             get {
-                return this.tableStaticText;
+                return this.tableDrawLabel;
             }
         }
         
@@ -362,8 +362,8 @@ namespace SCTBuilder {
                 if ((ds.Tables["ColorDefs"] != null)) {
                     base.Tables.Add(new ColorDefsDataTable(ds.Tables["ColorDefs"]));
                 }
-                if ((ds.Tables["StaticText"] != null)) {
-                    base.Tables.Add(new StaticTextDataTable(ds.Tables["StaticText"]));
+                if ((ds.Tables["DrawLabel"] != null)) {
+                    base.Tables.Add(new DrawLabelDataTable(ds.Tables["DrawLabel"]));
                 }
                 if ((ds.Tables["LocalSectors"] != null)) {
                     base.Tables.Add(new LocalSectorsDataTable(ds.Tables["LocalSectors"]));
@@ -464,10 +464,10 @@ namespace SCTBuilder {
                     this.tableColorDefs.InitVars();
                 }
             }
-            this.tableStaticText = ((StaticTextDataTable)(base.Tables["StaticText"]));
+            this.tableDrawLabel = ((DrawLabelDataTable)(base.Tables["DrawLabel"]));
             if ((initTable == true)) {
-                if ((this.tableStaticText != null)) {
-                    this.tableStaticText.InitVars();
+                if ((this.tableDrawLabel != null)) {
+                    this.tableDrawLabel.InitVars();
                 }
             }
             this.tableLocalSectors = ((LocalSectorsDataTable)(base.Tables["LocalSectors"]));
@@ -512,8 +512,8 @@ namespace SCTBuilder {
             base.Tables.Add(this.tableSSD);
             this.tableColorDefs = new ColorDefsDataTable();
             base.Tables.Add(this.tableColorDefs);
-            this.tableStaticText = new StaticTextDataTable();
-            base.Tables.Add(this.tableStaticText);
+            this.tableDrawLabel = new DrawLabelDataTable();
+            base.Tables.Add(this.tableDrawLabel);
             this.tableLocalSectors = new LocalSectorsDataTable();
             base.Tables.Add(this.tableLocalSectors);
             this.tableAPT2SSD = new APT2SSDDataTable();
@@ -582,7 +582,7 @@ namespace SCTBuilder {
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-        private bool ShouldSerializeStaticText() {
+        private bool ShouldSerializeDrawLabel() {
             return false;
         }
         
@@ -684,7 +684,7 @@ namespace SCTBuilder {
         public delegate void ColorDefsRowChangeEventHandler(object sender, ColorDefsRowChangeEvent e);
         
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-        public delegate void StaticTextRowChangeEventHandler(object sender, StaticTextRowChangeEvent e);
+        public delegate void DrawLabelRowChangeEventHandler(object sender, DrawLabelRowChangeEvent e);
         
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
         public delegate void LocalSectorsRowChangeEventHandler(object sender, LocalSectorsRowChangeEvent e);
@@ -2262,7 +2262,11 @@ namespace SCTBuilder {
             
             private global::System.Data.DataColumn columnLongitude;
             
-            private global::System.Data.DataColumn columnFrequency;
+            private global::System.Data.DataColumn columnLCLfreq;
+            
+            private global::System.Data.DataColumn columnATISfreq;
+            
+            private global::System.Data.DataColumn _columnisD_ATIS;
             
             private global::System.Data.DataColumn columnClass;
             
@@ -2343,9 +2347,25 @@ namespace SCTBuilder {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public global::System.Data.DataColumn FrequencyColumn {
+            public global::System.Data.DataColumn LCLfreqColumn {
                 get {
-                    return this.columnFrequency;
+                    return this.columnLCLfreq;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn ATISfreqColumn {
+                get {
+                    return this.columnATISfreq;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn _isD_ATISColumn {
+                get {
+                    return this._columnisD_ATIS;
                 }
             }
             
@@ -2402,7 +2422,7 @@ namespace SCTBuilder {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public TWRRow AddTWRRow(string ID, string FacilityID, string Name, float Latitude, float Longitude, string Frequency, string Class, bool Selected) {
+            public TWRRow AddTWRRow(string ID, string FacilityID, string Name, float Latitude, float Longitude, string LCLfreq, string ATISfreq, bool _isD_ATIS, string Class, bool Selected) {
                 TWRRow rowTWRRow = ((TWRRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         ID,
@@ -2410,7 +2430,9 @@ namespace SCTBuilder {
                         Name,
                         Latitude,
                         Longitude,
-                        Frequency,
+                        LCLfreq,
+                        ATISfreq,
+                        _isD_ATIS,
                         Class,
                         Selected};
                 rowTWRRow.ItemArray = columnValuesArray;
@@ -2447,7 +2469,9 @@ namespace SCTBuilder {
                 this.columnName = base.Columns["Name"];
                 this.columnLatitude = base.Columns["Latitude"];
                 this.columnLongitude = base.Columns["Longitude"];
-                this.columnFrequency = base.Columns["Frequency"];
+                this.columnLCLfreq = base.Columns["LCLfreq"];
+                this.columnATISfreq = base.Columns["ATISfreq"];
+                this._columnisD_ATIS = base.Columns["isD-ATIS"];
                 this.columnClass = base.Columns["Class"];
                 this.columnSelected = base.Columns["Selected"];
             }
@@ -2465,8 +2489,14 @@ namespace SCTBuilder {
                 base.Columns.Add(this.columnLatitude);
                 this.columnLongitude = new global::System.Data.DataColumn("Longitude", typeof(float), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnLongitude);
-                this.columnFrequency = new global::System.Data.DataColumn("Frequency", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnFrequency);
+                this.columnLCLfreq = new global::System.Data.DataColumn("LCLfreq", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnLCLfreq);
+                this.columnATISfreq = new global::System.Data.DataColumn("ATISfreq", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnATISfreq);
+                this._columnisD_ATIS = new global::System.Data.DataColumn("isD-ATIS", typeof(bool), null, global::System.Data.MappingType.Element);
+                this._columnisD_ATIS.ExtendedProperties.Add("Generator_ColumnVarNameInTable", "_columnisD_ATIS");
+                this._columnisD_ATIS.ExtendedProperties.Add("Generator_UserColumnName", "isD-ATIS");
+                base.Columns.Add(this._columnisD_ATIS);
                 this.columnClass = new global::System.Data.DataColumn("Class", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnClass);
                 this.columnSelected = new global::System.Data.DataColumn("Selected", typeof(bool), null, global::System.Data.MappingType.Element);
@@ -4489,7 +4519,7 @@ namespace SCTBuilder {
         ///</summary>
         [global::System.Serializable()]
         [global::System.Xml.Serialization.XmlSchemaProviderAttribute("GetTypedTableSchema")]
-        public partial class StaticTextDataTable : global::System.Data.TypedTableBase<StaticTextRow> {
+        public partial class DrawLabelDataTable : global::System.Data.TypedTableBase<DrawLabelRow> {
             
             private global::System.Data.DataColumn columnLabelText;
             
@@ -4501,8 +4531,8 @@ namespace SCTBuilder {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public StaticTextDataTable() {
-                this.TableName = "StaticText";
+            public DrawLabelDataTable() {
+                this.TableName = "DrawLabel";
                 this.BeginInit();
                 this.InitClass();
                 this.EndInit();
@@ -4510,7 +4540,7 @@ namespace SCTBuilder {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            internal StaticTextDataTable(global::System.Data.DataTable table) {
+            internal DrawLabelDataTable(global::System.Data.DataTable table) {
                 this.TableName = table.TableName;
                 if ((table.CaseSensitive != table.DataSet.CaseSensitive)) {
                     this.CaseSensitive = table.CaseSensitive;
@@ -4527,7 +4557,7 @@ namespace SCTBuilder {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            protected StaticTextDataTable(global::System.Runtime.Serialization.SerializationInfo info, global::System.Runtime.Serialization.StreamingContext context) : 
+            protected DrawLabelDataTable(global::System.Runtime.Serialization.SerializationInfo info, global::System.Runtime.Serialization.StreamingContext context) : 
                     base(info, context) {
                 this.InitVars();
             }
@@ -4575,48 +4605,48 @@ namespace SCTBuilder {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public StaticTextRow this[int index] {
+            public DrawLabelRow this[int index] {
                 get {
-                    return ((StaticTextRow)(this.Rows[index]));
+                    return ((DrawLabelRow)(this.Rows[index]));
                 }
             }
             
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public event StaticTextRowChangeEventHandler StaticTextRowChanging;
+            public event DrawLabelRowChangeEventHandler DrawLabelRowChanging;
             
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public event StaticTextRowChangeEventHandler StaticTextRowChanged;
+            public event DrawLabelRowChangeEventHandler DrawLabelRowChanged;
             
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public event StaticTextRowChangeEventHandler StaticTextRowDeleting;
+            public event DrawLabelRowChangeEventHandler DrawLabelRowDeleting;
             
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public event StaticTextRowChangeEventHandler StaticTextRowDeleted;
+            public event DrawLabelRowChangeEventHandler DrawLabelRowDeleted;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public void AddStaticTextRow(StaticTextRow row) {
+            public void AddDrawLabelRow(DrawLabelRow row) {
                 this.Rows.Add(row);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public StaticTextRow AddStaticTextRow(string LabelText, string Latitude, string Longitude, string TextColor) {
-                StaticTextRow rowStaticTextRow = ((StaticTextRow)(this.NewRow()));
+            public DrawLabelRow AddDrawLabelRow(string LabelText, string Latitude, string Longitude, string TextColor) {
+                DrawLabelRow rowDrawLabelRow = ((DrawLabelRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         LabelText,
                         Latitude,
                         Longitude,
                         TextColor};
-                rowStaticTextRow.ItemArray = columnValuesArray;
-                this.Rows.Add(rowStaticTextRow);
-                return rowStaticTextRow;
+                rowDrawLabelRow.ItemArray = columnValuesArray;
+                this.Rows.Add(rowDrawLabelRow);
+                return rowDrawLabelRow;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public override global::System.Data.DataTable Clone() {
-                StaticTextDataTable cln = ((StaticTextDataTable)(base.Clone()));
+                DrawLabelDataTable cln = ((DrawLabelDataTable)(base.Clone()));
                 cln.InitVars();
                 return cln;
             }
@@ -4624,7 +4654,7 @@ namespace SCTBuilder {
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             protected override global::System.Data.DataTable CreateInstance() {
-                return new StaticTextDataTable();
+                return new DrawLabelDataTable();
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -4651,28 +4681,28 @@ namespace SCTBuilder {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public StaticTextRow NewStaticTextRow() {
-                return ((StaticTextRow)(this.NewRow()));
+            public DrawLabelRow NewDrawLabelRow() {
+                return ((DrawLabelRow)(this.NewRow()));
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             protected override global::System.Data.DataRow NewRowFromBuilder(global::System.Data.DataRowBuilder builder) {
-                return new StaticTextRow(builder);
+                return new DrawLabelRow(builder);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             protected override global::System.Type GetRowType() {
-                return typeof(StaticTextRow);
+                return typeof(DrawLabelRow);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             protected override void OnRowChanged(global::System.Data.DataRowChangeEventArgs e) {
                 base.OnRowChanged(e);
-                if ((this.StaticTextRowChanged != null)) {
-                    this.StaticTextRowChanged(this, new StaticTextRowChangeEvent(((StaticTextRow)(e.Row)), e.Action));
+                if ((this.DrawLabelRowChanged != null)) {
+                    this.DrawLabelRowChanged(this, new DrawLabelRowChangeEvent(((DrawLabelRow)(e.Row)), e.Action));
                 }
             }
             
@@ -4680,8 +4710,8 @@ namespace SCTBuilder {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             protected override void OnRowChanging(global::System.Data.DataRowChangeEventArgs e) {
                 base.OnRowChanging(e);
-                if ((this.StaticTextRowChanging != null)) {
-                    this.StaticTextRowChanging(this, new StaticTextRowChangeEvent(((StaticTextRow)(e.Row)), e.Action));
+                if ((this.DrawLabelRowChanging != null)) {
+                    this.DrawLabelRowChanging(this, new DrawLabelRowChangeEvent(((DrawLabelRow)(e.Row)), e.Action));
                 }
             }
             
@@ -4689,8 +4719,8 @@ namespace SCTBuilder {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             protected override void OnRowDeleted(global::System.Data.DataRowChangeEventArgs e) {
                 base.OnRowDeleted(e);
-                if ((this.StaticTextRowDeleted != null)) {
-                    this.StaticTextRowDeleted(this, new StaticTextRowChangeEvent(((StaticTextRow)(e.Row)), e.Action));
+                if ((this.DrawLabelRowDeleted != null)) {
+                    this.DrawLabelRowDeleted(this, new DrawLabelRowChangeEvent(((DrawLabelRow)(e.Row)), e.Action));
                 }
             }
             
@@ -4698,14 +4728,14 @@ namespace SCTBuilder {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             protected override void OnRowDeleting(global::System.Data.DataRowChangeEventArgs e) {
                 base.OnRowDeleting(e);
-                if ((this.StaticTextRowDeleting != null)) {
-                    this.StaticTextRowDeleting(this, new StaticTextRowChangeEvent(((StaticTextRow)(e.Row)), e.Action));
+                if ((this.DrawLabelRowDeleting != null)) {
+                    this.DrawLabelRowDeleting(this, new DrawLabelRowChangeEvent(((DrawLabelRow)(e.Row)), e.Action));
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public void RemoveStaticTextRow(StaticTextRow row) {
+            public void RemoveDrawLabelRow(DrawLabelRow row) {
                 this.Rows.Remove(row);
             }
             
@@ -4732,7 +4762,7 @@ namespace SCTBuilder {
                 type.Attributes.Add(attribute1);
                 global::System.Xml.Schema.XmlSchemaAttribute attribute2 = new global::System.Xml.Schema.XmlSchemaAttribute();
                 attribute2.Name = "tableTypeName";
-                attribute2.FixedValue = "StaticTextDataTable";
+                attribute2.FixedValue = "DrawLabelDataTable";
                 type.Attributes.Add(attribute2);
                 type.Particle = sequence;
                 global::System.Xml.Schema.XmlSchema dsSchema = ds.GetSchemaSerializable();
@@ -5145,6 +5175,8 @@ namespace SCTBuilder {
             
             private global::System.Data.DataColumn columnSSD_FK;
             
+            private global::System.Data.DataColumn columnAPT_FACID;
+            
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public APT2SSDDataTable() {
@@ -5204,6 +5236,14 @@ namespace SCTBuilder {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn APT_FACIDColumn {
+                get {
+                    return this.columnAPT_FACID;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             [global::System.ComponentModel.Browsable(false)]
             public int Count {
                 get {
@@ -5239,12 +5279,13 @@ namespace SCTBuilder {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public APT2SSDRow AddAPT2SSDRow(string ARTCC, string APT_FK, string SSD_FK) {
+            public APT2SSDRow AddAPT2SSDRow(string ARTCC, string APT_FK, string SSD_FK, string APT_FACID) {
                 APT2SSDRow rowAPT2SSDRow = ((APT2SSDRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         ARTCC,
                         APT_FK,
-                        SSD_FK};
+                        SSD_FK,
+                        APT_FACID};
                 rowAPT2SSDRow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowAPT2SSDRow);
                 return rowAPT2SSDRow;
@@ -5270,6 +5311,7 @@ namespace SCTBuilder {
                 this.columnARTCC = base.Columns["ARTCC"];
                 this.columnAPT_FK = base.Columns["APT_FK"];
                 this.columnSSD_FK = base.Columns["SSD_FK"];
+                this.columnAPT_FACID = base.Columns["APT_FACID"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -5281,6 +5323,8 @@ namespace SCTBuilder {
                 base.Columns.Add(this.columnAPT_FK);
                 this.columnSSD_FK = new global::System.Data.DataColumn("SSD_FK", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnSSD_FK);
+                this.columnAPT_FACID = new global::System.Data.DataColumn("APT_FACID", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnAPT_FACID);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -6683,17 +6727,49 @@ namespace SCTBuilder {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public string Frequency {
+            public string LCLfreq {
                 get {
                     try {
-                        return ((string)(this[this.tableTWR.FrequencyColumn]));
+                        return ((string)(this[this.tableTWR.LCLfreqColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'Frequency\' in table \'TWR\' is DBNull.", e);
+                        throw new global::System.Data.StrongTypingException("The value for column \'LCLfreq\' in table \'TWR\' is DBNull.", e);
                     }
                 }
                 set {
-                    this[this.tableTWR.FrequencyColumn] = value;
+                    this[this.tableTWR.LCLfreqColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public string ATISfreq {
+                get {
+                    try {
+                        return ((string)(this[this.tableTWR.ATISfreqColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'ATISfreq\' in table \'TWR\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableTWR.ATISfreqColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool _isD_ATIS {
+                get {
+                    try {
+                        return ((bool)(this[this.tableTWR._isD_ATISColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'isD-ATIS\' in table \'TWR\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableTWR._isD_ATISColumn] = value;
                 }
             }
             
@@ -6779,14 +6855,38 @@ namespace SCTBuilder {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public bool IsFrequencyNull() {
-                return this.IsNull(this.tableTWR.FrequencyColumn);
+            public bool IsLCLfreqNull() {
+                return this.IsNull(this.tableTWR.LCLfreqColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public void SetFrequencyNull() {
-                this[this.tableTWR.FrequencyColumn] = global::System.Convert.DBNull;
+            public void SetLCLfreqNull() {
+                this[this.tableTWR.LCLfreqColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsATISfreqNull() {
+                return this.IsNull(this.tableTWR.ATISfreqColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetATISfreqNull() {
+                this[this.tableTWR.ATISfreqColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool Is_isD_ATISNull() {
+                return this.IsNull(this.tableTWR._isD_ATISColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void Set_isD_ATISNull() {
+                this[this.tableTWR._isD_ATISColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -8179,15 +8279,15 @@ namespace SCTBuilder {
         /// <summary>
         ///Represents strongly named DataRow class.
         ///</summary>
-        public partial class StaticTextRow : global::System.Data.DataRow {
+        public partial class DrawLabelRow : global::System.Data.DataRow {
             
-            private StaticTextDataTable tableStaticText;
+            private DrawLabelDataTable tableDrawLabel;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            internal StaticTextRow(global::System.Data.DataRowBuilder rb) : 
+            internal DrawLabelRow(global::System.Data.DataRowBuilder rb) : 
                     base(rb) {
-                this.tableStaticText = ((StaticTextDataTable)(this.Table));
+                this.tableDrawLabel = ((DrawLabelDataTable)(this.Table));
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -8195,14 +8295,14 @@ namespace SCTBuilder {
             public string LabelText {
                 get {
                     try {
-                        return ((string)(this[this.tableStaticText.LabelTextColumn]));
+                        return ((string)(this[this.tableDrawLabel.LabelTextColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'LabelText\' in table \'StaticText\' is DBNull.", e);
+                        throw new global::System.Data.StrongTypingException("The value for column \'LabelText\' in table \'DrawLabel\' is DBNull.", e);
                     }
                 }
                 set {
-                    this[this.tableStaticText.LabelTextColumn] = value;
+                    this[this.tableDrawLabel.LabelTextColumn] = value;
                 }
             }
             
@@ -8211,14 +8311,14 @@ namespace SCTBuilder {
             public string Latitude {
                 get {
                     try {
-                        return ((string)(this[this.tableStaticText.LatitudeColumn]));
+                        return ((string)(this[this.tableDrawLabel.LatitudeColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'Latitude\' in table \'StaticText\' is DBNull.", e);
+                        throw new global::System.Data.StrongTypingException("The value for column \'Latitude\' in table \'DrawLabel\' is DBNull.", e);
                     }
                 }
                 set {
-                    this[this.tableStaticText.LatitudeColumn] = value;
+                    this[this.tableDrawLabel.LatitudeColumn] = value;
                 }
             }
             
@@ -8227,14 +8327,14 @@ namespace SCTBuilder {
             public string Longitude {
                 get {
                     try {
-                        return ((string)(this[this.tableStaticText.LongitudeColumn]));
+                        return ((string)(this[this.tableDrawLabel.LongitudeColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'Longitude\' in table \'StaticText\' is DBNull.", e);
+                        throw new global::System.Data.StrongTypingException("The value for column \'Longitude\' in table \'DrawLabel\' is DBNull.", e);
                     }
                 }
                 set {
-                    this[this.tableStaticText.LongitudeColumn] = value;
+                    this[this.tableDrawLabel.LongitudeColumn] = value;
                 }
             }
             
@@ -8243,63 +8343,63 @@ namespace SCTBuilder {
             public string TextColor {
                 get {
                     try {
-                        return ((string)(this[this.tableStaticText.TextColorColumn]));
+                        return ((string)(this[this.tableDrawLabel.TextColorColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'TextColor\' in table \'StaticText\' is DBNull.", e);
+                        throw new global::System.Data.StrongTypingException("The value for column \'TextColor\' in table \'DrawLabel\' is DBNull.", e);
                     }
                 }
                 set {
-                    this[this.tableStaticText.TextColorColumn] = value;
+                    this[this.tableDrawLabel.TextColorColumn] = value;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public bool IsLabelTextNull() {
-                return this.IsNull(this.tableStaticText.LabelTextColumn);
+                return this.IsNull(this.tableDrawLabel.LabelTextColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public void SetLabelTextNull() {
-                this[this.tableStaticText.LabelTextColumn] = global::System.Convert.DBNull;
+                this[this.tableDrawLabel.LabelTextColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public bool IsLatitudeNull() {
-                return this.IsNull(this.tableStaticText.LatitudeColumn);
+                return this.IsNull(this.tableDrawLabel.LatitudeColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public void SetLatitudeNull() {
-                this[this.tableStaticText.LatitudeColumn] = global::System.Convert.DBNull;
+                this[this.tableDrawLabel.LatitudeColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public bool IsLongitudeNull() {
-                return this.IsNull(this.tableStaticText.LongitudeColumn);
+                return this.IsNull(this.tableDrawLabel.LongitudeColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public void SetLongitudeNull() {
-                this[this.tableStaticText.LongitudeColumn] = global::System.Convert.DBNull;
+                this[this.tableDrawLabel.LongitudeColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public bool IsTextColorNull() {
-                return this.IsNull(this.tableStaticText.TextColorColumn);
+                return this.IsNull(this.tableDrawLabel.TextColorColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public void SetTextColorNull() {
-                this[this.tableStaticText.TextColorColumn] = global::System.Convert.DBNull;
+                this[this.tableDrawLabel.TextColorColumn] = global::System.Convert.DBNull;
             }
         }
         
@@ -8634,6 +8734,22 @@ namespace SCTBuilder {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public string APT_FACID {
+                get {
+                    try {
+                        return ((string)(this[this.tableAPT2SSD.APT_FACIDColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'APT_FACID\' in table \'APT2SSD\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableAPT2SSD.APT_FACIDColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public bool IsARTCCNull() {
                 return this.IsNull(this.tableAPT2SSD.ARTCCColumn);
             }
@@ -8666,6 +8782,18 @@ namespace SCTBuilder {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public void SetSSD_FKNull() {
                 this[this.tableAPT2SSD.SSD_FKColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsAPT_FACIDNull() {
+                return this.IsNull(this.tableAPT2SSD.APT_FACIDColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetAPT_FACIDNull() {
+                this[this.tableAPT2SSD.APT_FACIDColumn] = global::System.Convert.DBNull;
             }
         }
         
@@ -9013,22 +9141,22 @@ namespace SCTBuilder {
         ///Row event argument class
         ///</summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-        public class StaticTextRowChangeEvent : global::System.EventArgs {
+        public class DrawLabelRowChangeEvent : global::System.EventArgs {
             
-            private StaticTextRow eventRow;
+            private DrawLabelRow eventRow;
             
             private global::System.Data.DataRowAction eventAction;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public StaticTextRowChangeEvent(StaticTextRow row, global::System.Data.DataRowAction action) {
+            public DrawLabelRowChangeEvent(DrawLabelRow row, global::System.Data.DataRowAction action) {
                 this.eventRow = row;
                 this.eventAction = action;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public StaticTextRow Row {
+            public DrawLabelRow Row {
                 get {
                     return this.eventRow;
                 }

@@ -60,7 +60,7 @@ namespace SCTBuilder
                     if (Line.Substring(396, 1).Trim().Length == 0)       // If length > 0, do not use this coordinate)
                         AddFixes(arb, FixItems);
                 }
-                // Console.WriteLine("ARB rows read " + arb.Rows.Count.ToString());
+                Console.WriteLine("ARB rows read " + arb.Rows.Count.ToString());
             }
         }
         public static void FillVORNDB()
@@ -174,9 +174,8 @@ namespace SCTBuilder
             if (APTtable.Rows.Count != 0) APTtable.Clear();     // Must start with empty tables
             if (RWYtable.Rows.Count != 0) RWYtable.Clear();
             string FullFilename = GetFullPathname(FolderMgt.DataFolder, "APT.txt");
-            const string FacilityType = "GUBACH";       // Airport types = WHile we accept the first 3, on 'A' has runway data.
-                                                        // ID, ICOA, Name, Lat, Long, ARTCC, State, Mag, Pub, Open
-            int FacType = -1; string tempID = string.Empty; string tempBID = string.Empty;
+            char[] FacilityType = {'A', 'C', 'H' };     // Only interested in Airport, Seaplane, and Heliports
+            string FacType = string.Empty; string tempID = string.Empty; string tempBID = string.Empty;
             string tempRID = string.Empty; float tempLatB = 0f; float tempLongB = 0f; string tempFacID = string.Empty;
             float tempLatR = 0f; float tempLongR = 0f; float tempLength = 0f; bool tempOpen = false;
             float tempWidth = 0f; float tempHdgB = -1f; float tempHdgR = -1f; string tempRwyID; string tempRwyName = string.Empty;
@@ -192,16 +191,16 @@ namespace SCTBuilder
                         case "APT":
                             // Get the facility type
                             tempID = Line.Substring(3, 11).Trim();
-                            FacType = FacilityType.IndexOf(Extensions.Right(tempID, 1));
-                            tempOpen = (Line.Substring(840, 2).Trim() == "O");
-                            if ((FacType > 2) & (tempOpen))     // Only operational APTs of "A", "H" and "C"
+                            FacType = Extensions.Right(tempID, 1);
+                            tempOpen = Line.Substring(840, 2).Trim() == "O";
+
+                            if ((FacType.IndexOfAny(FacilityType) != -1) & (tempOpen))     // Only operational APTs of "A", "H" and "C"
                             {
                                 tempARTCC = Line.Substring(674, 4).Trim();
-                                tempFacID = Line.Substring(27, 4).Trim();
                                 var AptInfo = new List<object>
                                 {
-                                tempID,                                        // ID
-                                tempFacID,                                     // Facility ID
+                                tempID,                                        // ID (Landing Facility Site Number)
+                                Line.Substring(27, 4).Trim(),                  // Facility ID (ICOA)
                                 Line.Substring(133, 50).Trim(),                // Facility Name
                                 Conversions.SS2DD(Line.Substring(538, 12)),    // Latitude
                                 Conversions.SS2DD(Line.Substring(565, 12)),    // Longitude
@@ -216,9 +215,9 @@ namespace SCTBuilder
                             }
                             break;
                         case "RWY":
-                            // I only want real airports with real runways
+                            /// Only interested in Airport, Seaplane, and Heliports
                             tempRwyID = Line.Substring(3, 11).Trim();
-                            if ((tempRwyID == tempID) & tempOpen & (FacType == 3))
+                            if ((tempRwyID == tempID) & tempOpen & (FacType.IndexOfAny(FacilityType) != -1))
                             {
                                 if (
                                     (tempRwyName != Line.Substring(16, 7).Trim()) & // Don't duplicate RWY name (e.g, 18L/36R)
@@ -278,32 +277,33 @@ namespace SCTBuilder
                     }
                 }
             }
-            // Console.WriteLine("APT rows read: " + APTtable.Rows.Count.ToString());
-            // Console.WriteLine("RWY rows read: " + RWYtable.Rows.Count.ToString());
+            Console.WriteLine("APT rows read: " + APTtable.Rows.Count.ToString());
+            Console.WriteLine("RWY rows read: " + RWYtable.Rows.Count.ToString());
         }
         public static void FillTWR()
         {
             DataTable TWR = Form1.TWR;
             string FullFilename = GetFullPathname(FolderMgt.DataFolder, "TWR.txt");
-            string Line; string rowType;
-            const string FacilityType = "GUBACH"; int FacType;
+            string Line; string rowType; bool isATCT = false; bool LCLfound = false; int LineNo = 0;
+            char[] FacType = { 'A', 'C', 'H' };     // Only interested in Airport, Seaplane, and Heliports
             string tempID = string.Empty; string tempFac = string.Empty; string tempName = string.Empty;
-            float tempLat = 0f; float tempLong = 0f; string tempFreq = "122.8"; string tempClass = string.Empty;
-            bool bTWR1 = false; bool bTWR3 = false; bool bTWR8 = false;
+            float tempLat = 0f; float tempLong = 0f; string tempLCL = "122.8"; string tempATIS = string.Empty;
+            string tempClass = string.Empty; string Classes = "BCDE"; bool isDATIS = false; bool ATISfound = false;
             if (TWR.Rows.Count != 0) TWR.Clear();
 
             using (StreamReader reader = new StreamReader(FullFilename))
             {
-                while ((Line = reader.ReadLine()) != null)
+                while (!reader.EndOfStream)
                 {
+                    Line = reader.ReadLine().ToString();
+                    LineNo += 1;
                     rowType = Line.Substring(0, 4);
+
                     if (rowType == "TWR1")
-                    {
+                    { 
                         // Before we start a new set, see if we need to add the old one
-                        if (bTWR1)
+                        if (isATCT)
                         {
-                            if (!bTWR3) tempFreq = "122.8";
-                            if (!bTWR8) tempClass = "G";
                             //Console.WriteLine("ID " + tempID);
                             //Console.WriteLine("Fac " + tempFac);
                             //Console.WriteLine("Name " + tempName);
@@ -313,31 +313,35 @@ namespace SCTBuilder
                             //Console.WriteLine("Class " + tempClass);
                             var TWRItems = new List<object>
                                 {
-                                    tempID,
-                                    tempFac,
-                                    tempName,
-                                    tempLat,
-                                    tempLong,
-                                    tempFreq,
+                                    tempID,                     // Unique facility identifier (matches APT file)
+                                    tempFac,                    // Typical facility identifier
+                                    tempName,                   // Facility full name
+                                    tempLat,                    // Facility latitude
+                                    tempLong,                   // Facility longitude
+                                    tempLCL,                    // VHF LCL/P frequency
+                                    tempATIS,                   // VHF ATIS frequency
+                                    isDATIS,                  // True if D-ATIS
                                     tempClass
                                 };
                             // Console.WriteLine("Writing row");
                             AddFixes(TWR, TWRItems);
-                            bTWR1 = bTWR3 = bTWR8 = false;
-                            tempFreq = "122.8";
-                            tempClass = "G";
+                            isATCT = false;
+                            LCLfound = false;
+                            ATISfound = false;
+                            isDATIS = false;
+                            tempLCL = "122.8";      // Default if no frequency found for this airfield (e.g., private)
+                            tempClass = "G";        // Default if no Class found for this airfield (no TWR8 line)
                         }
-                        tempID = Line.Substring(18, 11).Trim();
+                        // Set up the TWR info line
+                        tempID = Line.Substring(18, 11).Trim(); // Airport ID site number (matches to APT file)
                         if (tempID.Length != 0)
                         {
-                            FacType = FacilityType.IndexOf(Extensions.Right(tempID, 1));
-                            if (FacType < 3)
+                            // Must be a facility with ATCT (some are TRACON or non-ATCT)
+                            isATCT = (Line.Substring(238, 12).IndexOf("NON") == -1) &
+                                    (Line.Substring(238, 12).IndexOf("ATCT") != -1) & 
+                                    (Line.Substring(564, 40).IndexOf("FEDERAL AVIATION ADMIN") != -1);
+                            if ((tempID.IndexOfAny(FacType) != -1) & isATCT)
                             {
-                                bTWR1 = false;      // Only operational APTs of "A", "H" and "C"
-                            }
-                            else
-                            {
-                                bTWR1 = true;
                                 tempFac = Line.Substring(4, 4).Trim();
                                 tempName = Line.Substring(104, 50).Trim();
                                 tempLat = Conversions.SS2DD(Line.Substring(168, 11).Trim());
@@ -345,29 +349,68 @@ namespace SCTBuilder
                             }
                         }
                     }
-                    if ((rowType == "TWR3") & bTWR1 & !bTWR3)           // Only set this value once
+                    if ((rowType == "TWR3") & isATCT)
                     {
-                        int loc1 = Line.IndexOf("LCL/P", 0, Line.Length, StringComparison.InvariantCulture);
-                        if (loc1 != -1)
+                        // Because the item we are looking for could be anywhere on the line,
+                        // but the frequency is in a fixed location, need to loop the locations of the line.
+                        if (!LCLfound) tempLCL = TWR3Freq(Line, "LCL/P");      // Tower Freq
+                        LCLfound = (tempLCL.Length != 0);
+                        // TEST...
+                        //if (!LCLfound)
+                        //{
+                        //    Console.WriteLine(tempID + " not found at TWR3");
+                        //    tempLCL = "122.8";
+                        //}
+                        //else Console.WriteLine(tempID + " found at TWR3");
+                        if (!ATISfound)
                         {
-                            tempFreq = Line.Substring(loc1 - 44, 44).Trim();
-                            int loc2 = tempFreq.IndexOf(";");
-                            if (loc2 != -1) tempFreq = Line.Substring(0, loc2 - 1).Trim();
-                            bTWR3 = true;
+                            tempATIS = TWR3Freq(Line, "ATIS");     // ATIS frequency
+                            ATISfound = (tempATIS.Length != 0);
+                            if (ATISfound & !isDATIS) isDATIS = TWR3isDatis(Line);         // Mark if digital ATIS
                         }
                     }
-                    if ((rowType == "TWR8") & bTWR1)
+                    if ((rowType == "TWR8") & isATCT)
                     {
-                        tempClass = "G";                                           // Airspace Class
-                        string Classes = "BCDE";
+                        // Airport airspace Class - ignore if we aren't saving this facility type
+                        // Find the first 'Y' position for the class, then apply that position to the Classes string
+                        // (Airfields can be multiple classes depending on hours; we only want most complex)
                         int loc2 = Line.IndexOf("Y", 8, 4);
-                        if (loc2 >= 0) tempClass = Classes[loc2 - 8].ToString();
-                        bTWR8 = true;
+                        if (loc2 != -1) tempClass = Classes[loc2 - 8].ToString();
                     }
                 }
             }
             // Console.WriteLine("TWR rows read: " + TWR.Rows.Count);
         }
+
+        private static string TWR3Freq(string Line, string Usage)
+        {
+            string Result = string.Empty; int loc1; 
+            int tab = 8;                                           // first frequency location
+            int tablength = 94; int freqlength = 44;               // Full field is 44+50, freq field is 44
+            while ((Result.Length == 0) & (tab + tablength < Line.Length))
+            {
+                loc1 = Line.IndexOf(Usage, tab, tablength);
+                if (loc1 != -1)
+                {
+                    Result = Line.Substring(tab, freqlength).Trim();
+                    loc1 = Result.IndexOf(";");
+                    if (loc1 != -1) 
+                        Result = Result.Substring(0, loc1 - 1).Trim();
+                    if (Convert.ToSingle(Result) > 137f)
+                        Result = string.Empty;
+                }
+                tab += tablength;
+            }
+            return Result;
+        }
+
+        private static bool TWR3isDatis(string Line)
+        {
+            int tab = 8;                                           // first frequency location
+            string Usage = "D-ATIS";
+            return (Line.IndexOf(Usage, tab) != -1);
+        }
+
         public static void FillAWY()
         {
             DataTable AWY = Form1.AWY;
@@ -428,7 +471,7 @@ namespace SCTBuilder
                     }
                 }
             }
-            // Console.WriteLine("AWY rows read: " + AWY.Rows.Count.ToString());
+            Console.WriteLine("AWY rows read: " + AWY.Rows.Count.ToString());
         }
         public static void FillStarDP()
         {
@@ -525,7 +568,7 @@ namespace SCTBuilder
                                         }
                                         Lat0 = Line.Substring(LatStart, 10).Trim();
                                         Long0 = Line.Substring(LongStart, 11).Trim();
-                                        if ( !Extensions.IsNumeric(Extensions.Right(Lat0,1)) ^
+                                        if ( !Extensions.IsNumeric(Extensions.Right(Lat0,1)) ||
                                             !Extensions.IsNumeric(Extensions.Right(Long0, 1)) )
                                         {
                                             NewMessage += Message + LineNo + Environment.NewLine + Line + Environment.NewLine;

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Data;
 using System.Linq;
-using System.Text;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace SCTBuilder
@@ -9,28 +9,33 @@ namespace SCTBuilder
     class SCTcommon
     {
         public static void DefineColorConstants(DataTable dT)
-        /// c# does not use #Define statements; must create a static table!
-        /// Sadly, there is no way to just load this data
+        // Color name, Decimal color code
         {
             if (dT.Rows.Count != 0) dT.Clear();
-            dT.Rows.Add(new object[] { "Black", 0 });
-            dT.Rows.Add(new object[] { "Maroon ", 128 });
-            dT.Rows.Add(new object[] { "Green ", 32768 });
-            dT.Rows.Add(new object[] { "Olive ", 32896 });
-            dT.Rows.Add(new object[] { "Navy ", 8388608 });
-            dT.Rows.Add(new object[] { "Purple ", 8388736 });
-            dT.Rows.Add(new object[] { "Teal ", 8421376 });
-            dT.Rows.Add(new object[] { "Grey ", 8421504 });
-            dT.Rows.Add(new object[] { "Silver ", 12632256 });
             dT.Rows.Add(new object[] { "Red ", 255 });
-            dT.Rows.Add(new object[] { "Lime ", 65280 });
+            dT.Rows.Add(new object[] { "Pink ", 16764108 });
+            dT.Rows.Add(new object[] { "Magenta ", 12648645 });
+            dT.Rows.Add(new object[] { "LtGray ", 10066329 });
+            dT.Rows.Add(new object[] { "MedGray ", 8421504 });
+            dT.Rows.Add(new object[] { "DkGray ", 8421504 });
+            dT.Rows.Add(new object[] { "BlueGray ", 6726856 });
             dT.Rows.Add(new object[] { "Blue ", 16711680 });
-            dT.Rows.Add(new object[] { "Fuchsia ", 16711935 });
-            dT.Rows.Add(new object[] { "Aqua ", 16776960 });
+            dT.Rows.Add(new object[] { "Yellow ", 65535 });
+            dT.Rows.Add(new object[] { "Teal ", 8421376 });
+            dT.Rows.Add(new object[] { "Aqua ", 50630 });
             dT.Rows.Add(new object[] { "White ", 16777215 });
+            dT.Rows.Add(new object[] { "LowBndry ", 13408665 });
+            dT.Rows.Add(new object[] { "HighBndry ", 7829367 });
+            dT.Rows.Add(new object[] { "c_coast ", 2631720 });
+            dT.Rows.Add(new object[] { "Runway ", 14737632 });
+            dT.Rows.Add(new object[] { "Text ", 14474460 });
+            dT.Rows.Add(new object[] { "Taxiway ", 10772514 });
+            dT.Rows.Add(new object[] { "Ramp ", 673153 });
+            dT.Rows.Add(new object[] { "Runway ", 14737632 });
+            dT.Rows.Add(new object[] { "Building ", 5196883 });
         }
     }
-
+  
     public class Conversions
     // Convert a variety of strings 
     {
@@ -78,10 +83,33 @@ namespace SCTBuilder
             APTView.Dispose();
             return result;
         }
+
+        public static float AdjustedLatLong(string LL, string nud, string LLedge)
+        {
+            float result = Convert.ToSingle(LL);
+            float offset = Convert.ToSingle(nud);
+            switch (LLedge)
+            {
+                case "N":
+                    result += offset / InfoSection.NMperDegreeLongitude;
+                    break;
+                case "E":
+                    result += offset / InfoSection.NMperDegreeLatitude;
+                    break;
+                case "S":
+                    result -= offset / InfoSection.NMperDegreeLongitude;
+                    break;
+                case "W":
+                    result -= offset / InfoSection.NMperDegreeLatitude;
+                    break;
+            }
+            return result;
+        }
+
         public static string ICOA(string Arpt)
         {
             string result;
-            if ((Arpt.Length == 3) & !Arpt.Any(char.IsDigit))
+            if ((Arpt.Length == 3) && !Arpt.Any(char.IsDigit))
                 result = "K" + Arpt;
             else result = Arpt;
             return result;
@@ -90,7 +118,7 @@ namespace SCTBuilder
         public static string RevICOA(string Arpt)
         {
             string result;
-            if ((Arpt.Length == 4) & !Arpt.Any(char.IsDigit))
+            if ((Arpt.Length == 4) && !Arpt.Any(char.IsDigit))
                 result = Arpt.Substring(1, Arpt.Length - 1);
             else result = Arpt;
             return result;
@@ -157,7 +185,7 @@ namespace SCTBuilder
             }
             return result;
         }
-        public static string DecDeg2SCT(float DecDeg, Boolean IsLatitude = false)
+        public static string DecDeg2SCT(float DecDeg, bool IsLatitude)
         {
             string quadrant;
             string result;     // An empty string indicates an error occurred
@@ -212,10 +240,7 @@ namespace SCTBuilder
         {
             if (Mag.Trim().Length > 0)
             {
-                float tempFloat = Convert.ToSingle(Mag.Substring(0, Mag.Length - 1).Trim());
-                if (Extensions.Right(Mag, 1) == "W") 
-                    tempFloat *= -1;
-                return tempFloat;
+                return Convert.ToSingle(Mag.Substring(0, Mag.Length - 1).Trim());
             }
             else return 0f;
         }

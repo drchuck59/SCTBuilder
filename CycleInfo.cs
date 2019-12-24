@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
-using System.Linq;
+using System.Xml;
+using System.Xml.Linq;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -13,7 +14,47 @@ namespace SCTBuilder
         public static DateTime CycleStart;
         public static DateTime CycleEnd;
 
-        public static bool GetINIfile()
+        public static void WriteINIxml()
+        {
+            XmlWriter xml = XmlWriter.Create(FolderMgt.INIxml);
+            xml.WriteStartDocument();
+            xml.WriteStartElement("SCT_Builder");
+            WriteXmlElement(xml, "Version", VersionInfo.Title.ToString());
+            WriteXmlElement(xml, "AIRAC", AIRAC.ToString());
+            WriteXmlElement(xml, "CycleStart", CycleStart.ToString());
+            WriteXmlElement(xml, "CycleEnd", CycleEnd.ToString());
+            WriteXmlElement(xml, "DataFolder", FolderMgt.DataFolder.ToString());
+            WriteXmlElement(xml, "OutputFolder", FolderMgt.OutputFolder.ToString());
+            WriteXmlElement(xml, "SponsorARTCC", InfoSection.SponsorARTCC.ToString());
+            WriteXmlElement(xml, "DefaultAirport", InfoSection.DefaultAirport.ToString());
+            WriteXmlElement(xml, "FacilityEngineer", InfoSection.FacilityEngineer.ToString());
+            WriteXmlElement(xml, "AsstFacilityEngineer", InfoSection.AsstFacilityEngineer.ToString());
+            xml.WriteEndDocument();
+            xml.Close();
+        }
+        private static void WriteXmlElement(XmlWriter xml, string Element, string Value)
+        {
+            xml.WriteStartElement(Element);
+            xml.WriteString(Value);
+            xml.WriteEndElement();
+        }
+        public static void WriteINI()
+        {
+            using (StreamWriter sw = new StreamWriter(FolderMgt.INIfile))
+            {
+                sw.WriteLine(VersionInfo.Title.ToString());
+                sw.WriteLine(CycleInfo.AIRAC.ToString());
+                sw.WriteLine(CycleInfo.CycleStart.ToString());
+                sw.WriteLine(CycleInfo.CycleEnd.ToString());
+                sw.WriteLine(FolderMgt.DataFolder.ToString());
+                sw.WriteLine(FolderMgt.OutputFolder.ToString());
+                sw.WriteLine(InfoSection.SponsorARTCC.ToString());
+                sw.WriteLine(InfoSection.DefaultAirport);
+                sw.WriteLine(InfoSection.FacilityEngineer.ToString());
+                sw.WriteLine(InfoSection.AsstFacilityEngineer.ToString());
+            }
+        }
+        public static bool ReadINI()
         ///<summary>
         /// Reads the INI file.  If corrupted, resets the INI file to startup.
         /// Returns a boolean reporting a successful read. ANY error = false.
@@ -92,8 +133,57 @@ namespace SCTBuilder
                 result = false;
             }
             return result;
-
         }
+
+        public static void ReadINIxml()
+        {
+            if (File.Exists(FolderMgt.INIxml))
+            {
+                XmlDocument doc = new XmlDocument();
+                doc.Load(FolderMgt.INIxml);
+                foreach(XmlNode node in doc.DocumentElement)
+                {
+                    if (node.Name != "Version")
+                    {
+                        string value = node.InnerText;
+                        switch (node.Name)
+                        {
+                            case "AIRAC":
+                                AIRAC = Convert.ToInt32(value);
+                                break;
+                            case "CycleStart":
+                                CycleStart = Convert.ToDateTime(value);
+                                break;
+                            case "CycleEnd":
+                                CycleEnd = Convert.ToDateTime(value);
+                                break;
+                            case "DataFolder":
+                                FolderMgt.DataFolder = value;
+                                break;
+                            case "OutputFolder":
+                                FolderMgt.OutputFolder = value;
+                                break;
+                            case "SponsorARTCC":
+                                InfoSection.SponsorARTCC = value;
+                                break;
+                            case "DefaultAirport":
+                                InfoSection.DefaultAirport = value;
+                                break;
+                            case "FacilityEngineer":
+                                InfoSection.FacilityEngineer = value;
+                                break;
+                            case "AsstFacilityEngineer":
+                                InfoSection.AsstFacilityEngineer = value;
+                                break;
+                            default:
+                                break;
+
+                        }
+                    }
+                }
+            }
+        }
+
         private static void ResetCycleInfo()
         {
             AIRAC = 1503;

@@ -353,6 +353,7 @@ namespace SCTBuilder
         public static string DataFolder { get; set; }
         public static string OutputFolder { get; set; }
         // public static string OutputFilter{ get; set; }
+        public static readonly string INIxml = ".\\SCTbuilder.xml";
     }
     public class VersionInfo                            // Internal information
     {
@@ -368,11 +369,6 @@ namespace SCTBuilder
     }
     public class InfoSection
     {
-        private static readonly float NMlongitude = LatLongCalc.NMperLongDegree(DefaultCenterLatitude);
-        private static readonly float centerLat = Conversions.DefaultLatitude(DefaultAirport);
-        private static readonly float centerLong = Conversions.DefaultLongitude(DefaultAirport);
-        private static readonly float magvar = Conversions.DefaultMagVar(DefaultAirport);
-
         public static string SectorName
         {
             get { return SponsorARTCC + "_" + CycleInfo.AIRAC.ToString(); }
@@ -391,22 +387,37 @@ namespace SCTBuilder
         public static float DefaultCenterLatitude               // Latitude of default sector center point
         {
             get
-            { return centerLat; }
+            { if (DefaultAirport.Length != 0)
+                    return Conversions.DefaultLatitude(DefaultAirport);
+                else return -1;
+            }
         }
         public static float DefaultCenterLongitude  // Longitude of default sector center point
         {
             get
-            { return centerLong; }
+            {
+                if (DefaultAirport.Length != 0)
+                    return Conversions.DefaultLongitude(DefaultAirport);
+                else return -1;
+            }
         }
         public static float NMperDegreeLatitude { get { return 60f; } } // Always 60 NM
         public static float NMperDegreeLongitude
         {
-            get { return NMlongitude; }
+            get 
+            { 
+                if (DefaultCenterLatitude != -1)
+                return LatLongCalc.NMperLongDegree(DefaultCenterLatitude);
+            else return 60f; }
         }
         public static float MagneticVariation       // Varies by location
         {
             get
-            { return magvar; }
+            { 
+                if (DefaultAirport.Length != 0)
+                    return Conversions.DefaultMagVar(DefaultAirport);
+                else return 0;
+            }
         }
         public static float SectorScale { get { return 1f; } }      // Always 1, ignored in VRC
     }
@@ -420,5 +431,7 @@ namespace SCTBuilder
         public static bool ChkAWY { get; set; }
         public static bool ChkRWY { get; set; }
         public static bool ChkSSD { get; set; }
+        public static bool ChkALL { get; set; }
+        public static bool ChkSSDname { get; set; }
     }
 } 

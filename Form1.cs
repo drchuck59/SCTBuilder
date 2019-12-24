@@ -10,7 +10,7 @@ using System.ComponentModel;
 using System.Collections.Generic;
 
 namespace SCTBuilder
-{
+{  
     public partial class Form1 : Form
     {
         static public DataTable ARB = new SCTdata.ARBDataTable();
@@ -40,6 +40,7 @@ namespace SCTBuilder
             SCT.Tables.Add(SSD);
             SCT.Tables.Add(Colors);
             SCTcommon.DefineColorConstants(Colors);
+            Console.WriteLine("Exiting Form1");
         }
 
         private void CmdInstructions_Click(object sender, EventArgs e)
@@ -52,12 +53,14 @@ namespace SCTBuilder
         private void Form1_Load(object sender, EventArgs e)
         {
             // Eventually text colors will be modifiable by user
+            Console.WriteLine("Form1_Load...");
             TextColors.RWYTextColor = "White";
             TextColors.SSDTextColor = "Green";
             Form Instructions = new FormInstructions();
             DataIsLoaded = false;
-            if (CycleInfo.GetINIfile())
+            if (File.Exists(FolderMgt.INIxml))
             {
+                CycleInfo.ReadINIxml();
                 HoldForm(true);
                 LoadData();
                 LoadForm();
@@ -74,13 +77,15 @@ namespace SCTBuilder
         private void LoadData()
         {
             string Message;
+            lblUpdating.Text = "Loading data from FAA files";
+            lblUpdating.Visible = true;
+            UseWaitCursor = true;
             if (ReadFixes.FillCycleInfo() != -1)
             {
-                
                 ReadFixes.FillARB();
                 ReadFixes.FillVORNDB();
                 ReadFixes.FillFIX();
-                ReadFixes.FillAPT();
+                ReadFixes.FillAPT();        // Includes RWY table
                 ReadFixes.FillTWR();
                 ReadFixes.FillAWY();
                 ReadFixes.FillStarDP();
@@ -92,45 +97,56 @@ namespace SCTBuilder
                 Message = "File Data error - missing data files in folder.";
                 MessageBox.Show(Message, VersionInfo.Title, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+            lblUpdating.Visible = false;
+            UseWaitCursor = false;
         }
 
         private void LoadForm()
         // Calls a load of all data and repopulates the form
         // Called by Load, DataFolder validated, and DatafolderButton
         {
+            Console.WriteLine("LoadForm...");
             lblCycleInfo.Text = CycleInfo.BuildCycleText();
             txtDataFolder.Text = FolderMgt.DataFolder;
             txtOutputFolder.Text = FolderMgt.OutputFolder;
             txtFacilityEngineer.Text = InfoSection.FacilityEngineer;
             txtAsstFacilityEngineer.Text = InfoSection.AsstFacilityEngineer;
             LoadCboARTCC();
-            LoadCboAirport();
+            CboARTCC.SelectedIndex = CboARTCC.FindStringExact(InfoSection.SponsorARTCC);
+            FilterBy.Method = "ARTCC";
+            FilterBy.Param1 = CboARTCC.GetItemText(CboARTCC.SelectedItem);
             grpCircle.Visible = false;
             grpSquareLimits.Visible = false;
-            CboARTCC.SelectedIndex = CboARTCC.FindStringExact(InfoSection.SponsorARTCC);
+            LoadCboAirport();
             CboAirport.SelectedIndex = CboAirport.FindStringExact(InfoSection.DefaultAirport);
-            cmdWriteSCT.Enabled = TestWriteSCT();   
+            cmdWriteSCT.Enabled = TestWriteSCT();
             DataIsSelected = false;
             cmdUpdateGrid.Enabled = cmdUpdateGrid.Visible = true;
+            Refresh();
         }
 
         private void HoldForm(bool FormIsFrozen)
         {
             lblUpdating.Visible = FormIsFrozen;
-            progressBar1.Visible = FormIsFrozen;
-            cmdUpdateGrid.Visible = !FormIsFrozen;
+            //progressBar1.Visible = FormIsFrozen;
+            //cmdUpdateGrid.Visible = !FormIsFrozen;
+            //cmdUpdateGrid.Refresh();
+            //txtDataFolder.Enabled = !FormIsFrozen;
+            //txtOutputFolder.Enabled = !FormIsFrozen;
+            //CboARTCC.Enabled = !FormIsFrozen;
+            //CboAirport.Enabled = !FormIsFrozen;
+            //grpSelectionMethod.Enabled = !FormIsFrozen;
+            //cmdWriteSCT.Enabled = !FormIsFrozen;
+            //cmdInstructions.Enabled = !FormIsFrozen;
+            //cmdExit.Visible = !FormIsFrozen;
+            //chkbxShowAll.Enabled = !FormIsFrozen;
+            //tabControl1.Enabled = !FormIsFrozen;
+        }
+
+        private void UpdateLabel(string text)
+        {
+            lblUpdating.Text = text;
             lblUpdating.Refresh();
-            cmdUpdateGrid.Refresh();
-            txtDataFolder.Enabled = !FormIsFrozen;
-            txtOutputFolder.Enabled = !FormIsFrozen;
-            CboARTCC.Enabled = !FormIsFrozen;
-            CboAirport.Enabled = !FormIsFrozen;
-            grpSelectionMethod.Enabled = !FormIsFrozen;
-            cmdWriteSCT.Enabled = !FormIsFrozen;
-            cmdInstructions.Enabled = !FormIsFrozen;
-            cmdExit.Visible = !FormIsFrozen;
-            chkbxShowAll.Enabled = !FormIsFrozen;
-            tabControl1.Enabled = !FormIsFrozen;
         }
 
         private void LoadFixGrid(bool LoadAllGrids = true)
@@ -141,72 +157,56 @@ namespace SCTBuilder
             {
                 DataIsSelected = true;
                 cmdUpdateGrid.Enabled = cmdUpdateGrid.Visible = false;
-                progressBar1.Value = 0;
                 // ARB must always be selected by Sponsor ARTCC
-                if (LoadAllGrids ^ SCTchecked.ChkARB)
+                if (LoadAllGrids || SCTchecked.ChkARB)
                 {
                     Filter = FixFilter("ARTCC");
-                    lblUpdating.Text = "Selecting ARTCC boundaries...";
-                    progressBar1.Value += 10;
+                    UpdateLabel("Selecting ARTCC boundaries...");
                     Setdgv(dgvARB, ARB, Filter);
                 }
                 else DataIsSelected = false;
                 // Everything else can be selected by user choice
                 Filter = FixFilter(FilterBy.Method);
-                if (LoadAllGrids ^ SCTchecked.ChkAPT)
+                if (LoadAllGrids || SCTchecked.ChkAPT)
                 {
-                    lblUpdating.Text = "Selecting Airports...";
-                    lblUpdating.Refresh();
-                    progressBar1.Value += 10;
+                    UpdateLabel("Selecting Airports...");
                     Setdgv(dgvAPT, APT, Filter);
                 }
                 else DataIsSelected = false;
-                if (LoadAllGrids ^ SCTchecked.ChkVOR)
+                if (LoadAllGrids || SCTchecked.ChkVOR)
                 {
-                    lblUpdating.Text = "Selecting VORs...";
-                    lblUpdating.Refresh();
-                    progressBar1.Value += 10;
+                    UpdateLabel("Selecting VORs...");
                     Setdgv(dgvVOR, VOR, Filter);
                 }
                 else DataIsSelected = false;
-                if (LoadAllGrids ^ SCTchecked.ChkNDB)
+                if (LoadAllGrids || SCTchecked.ChkNDB)
                 {
-                    lblUpdating.Text = "Selecting NDBs...";
-                    lblUpdating.Refresh();
-                    progressBar1.Value += 10;
+                    UpdateLabel("Selecting NDBs...");
                     Setdgv(dgvNDB, NDB, Filter);
                 }
                 else DataIsSelected = false;
-                if (LoadAllGrids ^ SCTchecked.ChkFIX)
+                if (LoadAllGrids || SCTchecked.ChkFIX)
                 {
-                    lblUpdating.Text = "Selecting FIXes...";
-                    lblUpdating.Refresh();
-                    progressBar1.Value += 10;
+                    UpdateLabel("Selecting FIXes...");
                     Setdgv(dgvFIX, FIX, Filter);
                 }
                 else DataIsSelected = false;
-                if (LoadAllGrids ^ SCTchecked.ChkRWY)
+                if (LoadAllGrids || SCTchecked.ChkRWY)
                 {
-                    lblUpdating.Text = "Selecting Runways...";
-                    lblUpdating.Refresh();
-                    progressBar1.Value += 10;
+                    UpdateLabel("Selecting Runways...");
                     Setdgv(dgvRWY, RWY, Filter);
                 }
                 else DataIsSelected = false;
-                if (LoadAllGrids ^ SCTchecked.ChkAWY)
+                if (LoadAllGrids || SCTchecked.ChkAWY)
                 {
-                    lblUpdating.Text = "Selecting Airways...";
-                    lblUpdating.Refresh();
-                    progressBar1.Value += 10;
+                    UpdateLabel("Selecting Airways...");
                     Setdgv(dgvAWY, AWY, Filter);
                 }
                 else DataIsSelected = false;
-                if (LoadAllGrids ^ SCTchecked.ChkSSD)
+                if (LoadAllGrids || SCTchecked.ChkSSD)
                 {
-                    lblUpdating.Text = "Selecting SIDs & STARs (slow)...";
-                    lblUpdating.Refresh();
-                    progressBar1.Value += 10;
-                    LoadFixGridSSD(Filter);
+                    UpdateLabel("Selecting SIDs && STARs (slow)...");
+                    SetdgvSSD(Filter);
                 }
                 else DataIsSelected = false;
                 UpdateGridCount();
@@ -251,9 +251,9 @@ namespace SCTBuilder
             {
                 RowFilter = filter
             };
-            DataTable dtAPT = dvAirports.ToTable(true, "ID", "FacilityID");
+            DataTable dtAPT = dvAirports.ToTable(true, "FacilityID");
             CboAirport.DisplayMember = "FacilityID";
-            CboAirport.ValueMember = "ID";
+            CboAirport.ValueMember = "FacilityID";
             CboAirport.DataSource = dtAPT;
             if (CboAirport.Items.Count != 0) CboAirport.SelectedIndex = 0;
             dvAirports.Dispose();
@@ -265,6 +265,8 @@ namespace SCTBuilder
             DataView dataView = new DataView(dt);
             ClearSelected(dataView);
             dataView.RowFilter = filter;
+            Console.WriteLine(dgv.Name + " has " + dgv.Rows.Count + " in filter " + filter);
+            Console.WriteLine(dt.TableName + " has " + dt.Rows.Count + " rows available.");
             SetSelected(dataView);
             dgv.DataSource = dt;
             ColumnSortOrder(dgv);
@@ -307,7 +309,7 @@ namespace SCTBuilder
             // dgv.AutoResizeColumns();
             dataView.Dispose();
         }
-        private void LoadFixGridSSD(string filter)
+        private void SetdgvSSD(string filter)
         {
             // This one is different and gets [Selected] based upon included APTs
             // To make this one faster, use a DataView rather than the dataviewgrid
@@ -373,6 +375,7 @@ namespace SCTBuilder
             // If the filter is applied, selected boxes are true
             // otherwise, ALL the selected boxes are false
             // But if the ShowAll box is checked, ignore the update
+            Console.WriteLine("Current filter: " + dv.RowFilter + " for " + dv.Count + " rows.");
             dv.RowFilter = "";
             foreach (DataRowView row in dv)
             {
@@ -490,10 +493,10 @@ namespace SCTBuilder
                         FilterString = " ([ARTCC] ='" + CboARTCC.GetItemText(CboARTCC.SelectedItem) + "')";
                         break;
                     case "Square":
-                        float NLat = AdjustedLatLong(txtLatNorth.Text, nudNorth.Value.ToString(), "N");
-                        float SLat = AdjustedLatLong(txtLatSouth.Text, nudSouth.Value.ToString(), "S");
-                        float WLng = AdjustedLatLong(txtLongWest.Text, nudWest.Value.ToString(), "W");
-                        float ELng = AdjustedLatLong(txtLongEast.Text, nudEast.Value.ToString(), "E");
+                        float NLat = Conversions.AdjustedLatLong(txtLatNorth.Text, nudNorth.Value.ToString(), "N");
+                        float SLat = Conversions.AdjustedLatLong(txtLatSouth.Text, nudSouth.Value.ToString(), "S");
+                        float WLng = Conversions.AdjustedLatLong(txtLongWest.Text, nudWest.Value.ToString(), "W");
+                        float ELng = Conversions.AdjustedLatLong(txtLongEast.Text, nudEast.Value.ToString(), "E");
                         FilterString = FilterString +
                             " ( ([Latitude] >= " + SLat.ToString() + ")" +
                             " AND ([Latitude] <= " + NLat.ToString() + ")" +
@@ -504,27 +507,6 @@ namespace SCTBuilder
             return FilterString;
         }
          
-        private float AdjustedLatLong (string LL, string nud, string LLedge)
-        {
-            float result = Convert.ToSingle(LL);
-            float offset = Convert.ToSingle(nud);
-            switch (LLedge)
-            {
-                case "N":
-                    result += offset / InfoSection.NMperDegreeLongitude;
-                    break;
-                case "E":
-                    result += offset / InfoSection.NMperDegreeLatitude;
-                    break;
-                case "S":
-                    result -= offset / InfoSection.NMperDegreeLongitude;
-                    break;
-                case "W":
-                    result -= offset / InfoSection.NMperDegreeLatitude;
-                    break;
-            }
-            return result;
-        }
             private void PictureBox2_Click(object sender, EventArgs e)
         {
             System.Diagnostics.Process.Start("https://zjxartcc.org");
@@ -583,7 +565,7 @@ namespace SCTBuilder
             cmdUpdateGrid.Visible = btnSquare.Checked;
             cmdUpdateGrid.Enabled = btnSquare.Checked;
             grpCircle.Visible = !btnSquare.Checked;
-            if ((btnSquare.Checked) & (CboARTCC.SelectedIndex > -1))
+            if ((btnSquare.Checked) && (CboARTCC.SelectedIndex > -1))
                 UpdateSquare();
         }
 
@@ -715,12 +697,12 @@ namespace SCTBuilder
             Console.WriteLine("Latitude: " + InfoSection.DefaultCenterLatitude.ToString());
             Console.WriteLine("Longitude: " + InfoSection.DefaultCenterLongitude.ToString());
             Console.WriteLine("Mag Var: " + InfoSection.MagneticVariation.ToString());
-            return (FolderMgt.OutputFolder.Length != 0) &
-                (FolderMgt.DataFolder.Length != 0) &
-                (InfoSection.SponsorARTCC.Length != 0) &
-                (InfoSection.DefaultAirport.Length != 0) &
-                (InfoSection.DefaultCenterLatitude.ToString().Length != 0) &
-                (InfoSection.DefaultCenterLongitude.ToString().Length != 0) &
+            return (FolderMgt.OutputFolder.Length != 0) &&
+                (FolderMgt.DataFolder.Length != 0) &&
+                (InfoSection.SponsorARTCC.Length != 0) &&
+                (InfoSection.DefaultAirport.Length != 0) &&
+                (InfoSection.DefaultCenterLatitude.ToString().Length != 0) &&
+                (InfoSection.DefaultCenterLongitude.ToString().Length != 0) &&
                 (InfoSection.MagneticVariation.ToString().Length != 0);
         }
         private void UpdateInfoSection()
@@ -780,6 +762,7 @@ namespace SCTBuilder
 
         private void TxtDataFolder_Validating(object sender, CancelEventArgs e)
         {
+            Console.WriteLine("TxtDataFolder_Validating...");
             if (txtDataFolder.TextLength > 0)
             {
                 if (Directory.Exists(txtDataFolder.Text))
@@ -802,30 +785,20 @@ namespace SCTBuilder
 
         private void CmdExit_Click(object sender, EventArgs e)
         {
-            using (StreamWriter sw = new StreamWriter(FolderMgt.INIfile))
-            {
-                sw.WriteLine(VersionInfo.Title.ToString());
-                sw.WriteLine(CycleInfo.AIRAC.ToString());
-                sw.WriteLine(CycleInfo.CycleStart.ToString());
-                sw.WriteLine(CycleInfo.CycleEnd.ToString());
-                sw.WriteLine(FolderMgt.DataFolder.ToString());
-                sw.WriteLine(FolderMgt.OutputFolder.ToString());
-                sw.WriteLine(InfoSection.SponsorARTCC.ToString());
-                sw.WriteLine(InfoSection.DefaultAirport);
-                sw.WriteLine(InfoSection.FacilityEngineer.ToString());
-                sw.WriteLine(InfoSection.AsstFacilityEngineer.ToString());
-            }
+            CycleInfo.WriteINIxml();
             Application.Exit();
         }
 
         private void CmdUpdateGrid_Click(object sender, EventArgs e)
         {
+            Console.WriteLine("cmdUpdateGrid_Click...");
             string Message = "You must at-least select an ARTCC and Airport";
             MessageBoxButtons buttons = MessageBoxButtons.OK;
             MessageBoxIcon icon = MessageBoxIcon.Exclamation;
             if (TestUpdateGrid())
             {
                 cmdUpdateGrid.Visible = false;
+                cmdUpdateGrid.Refresh();
                 HoldForm(true);
                 UpdateInfoSection();
                 SetChecked();
@@ -839,18 +812,21 @@ namespace SCTBuilder
 
         private bool TestUpdateGrid()
         {
-            return  (InfoSection.SponsorARTCC.Length != 0) &
-                    (InfoSection.DefaultAirport.Length != 0) &
-                    (InfoSection.DefaultCenterLatitude.ToString().Length != 0) &
-                    (InfoSection.DefaultCenterLongitude.ToString().Length != 0) &
+            bool Result;
+            Result = (InfoSection.SponsorARTCC.Length != 0) &&
+                    (InfoSection.DefaultAirport.Length != 0) &&
+                    (InfoSection.DefaultCenterLatitude.ToString().Length != 0) &&
+                    (InfoSection.DefaultCenterLongitude.ToString().Length != 0) &&
                     (InfoSection.MagneticVariation.ToString().Length != 0);
+            Console.WriteLine ("TestUpdateGrid is " + Result.ToString());
+            return Result;
         }
         private void CboARTCC_Validated(object sender, EventArgs e)
         {
             if (CboARTCC.SelectedIndex != -1)
             {
                 InfoSection.SponsorARTCC = CboARTCC.Text.ToString();
-                if ((btnSquare.Checked) & (CboARTCC.SelectedIndex > -1))
+                if ((btnSquare.Checked) && (CboARTCC.SelectedIndex > -1))
                     UpdateSquare();
                 LoadCboAirport();
             }
@@ -868,6 +844,7 @@ namespace SCTBuilder
 
         private void LocalSectors_Click(object sender, EventArgs e)
         {
+            Console.WriteLine("LocalSectors_Click...");
             if (ReadFixes.FillLocalSectors() )
                 SCToutput.WriteLS_SID(LocalSector);
         }
@@ -883,6 +860,7 @@ namespace SCTBuilder
 
         private void SetChecked()
         {
+            Console.WriteLine("SetChecked...");
             SCTchecked.ChkAPT = chkAPTs.Checked;
             SCTchecked.ChkARB = chkARBs.Checked;
             SCTchecked.ChkAWY = chkAWYs.Checked;
@@ -891,18 +869,36 @@ namespace SCTBuilder
             SCTchecked.ChkRWY = chkRWYs.Checked;
             SCTchecked.ChkSSD = chkSSDs.Checked;
             SCTchecked.ChkVOR = chkVORs.Checked;
+            SCTchecked.ChkALL = chkALL.Checked;
+            SCTchecked.ChkSSDname = chkSSDName.Checked;
         }
 
         private void ChkALL_CheckedChanged(object sender, EventArgs e)
         {
-            chkAPTs.Checked = chkALL.Checked;
-            chkARBs.Checked = chkALL.Checked;
-            chkAWYs.Checked = chkALL.Checked;
-            chkFIXes.Checked = chkALL.Checked;
-            chkNDBs.Checked = chkALL.Checked;
-            chkRWYs.Checked = chkALL.Checked;
-            chkSSDs.Checked = chkALL.Checked;
-            chkVORs.Checked = chkALL.Checked;
+            string cr = Environment.NewLine;
+            if (chkALL.Checked)
+            {
+                chkAPTs.Checked = chkALL.Checked;
+                chkARBs.Checked = chkALL.Checked;
+                chkAWYs.Checked = chkALL.Checked;
+                chkFIXes.Checked = chkALL.Checked;
+                chkNDBs.Checked = chkALL.Checked;
+                chkRWYs.Checked = chkALL.Checked;
+                chkSSDs.Checked = chkALL.Checked;
+                chkVORs.Checked = chkALL.Checked;
+                lblFilesWarning.Text = "A text file (.txt) will be written for" + cr +
+                                        "each item checked. You can review " + cr +
+                                        "and place in your SCT2 file.";
+            }
+            else
+                lblFilesWarning.Text = "All checked items will be written to" + cr +
+                                        "a single SCT2 file.";
+            lblFilesWarning.Refresh();
+        }
+
+        private void ChkSSDs_CheckedChanged(object sender, EventArgs e)
+        {
+            chkSSDName.Visible = chkSSDs.Checked;
         }
     }
 }
