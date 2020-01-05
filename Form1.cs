@@ -22,6 +22,8 @@ namespace SCTBuilder
         static public DataTable TWR = new SCTdata.TWRDataTable();
         static public DataTable AWY = new SCTdata.AWYDataTable();
         static public DataTable SSD = new SCTdata.SSDDataTable();
+        static public DataTable SUA = new SCTdata.SUADataTable();
+        static public DataTable Polygon = new SCTdata.SUA_PolygonDataTable();
         static public DataTable Colors = new SCTdata.ColorDefsDataTable();
         static public DataTable LocalSector = new SCTdata.LocalSectorsDataTable();
         static public DataSet SCT = new SCTdata();
@@ -61,6 +63,7 @@ namespace SCTBuilder
             if (File.Exists(FolderMgt.INIxml))
             {
                 CycleInfo.ReadINIxml();
+                GetChecked();
                 HoldForm(true);
                 LoadData();
                 LoadForm();
@@ -114,7 +117,7 @@ namespace SCTBuilder
             LoadCboARTCC();
             CboARTCC.SelectedIndex = CboARTCC.FindStringExact(InfoSection.SponsorARTCC);
             FilterBy.Method = "ARTCC";
-            FilterBy.Param1 = CboARTCC.GetItemText(CboARTCC.SelectedItem);
+            FilterBy.NorthLimit = CboARTCC.GetItemText(CboARTCC.SelectedItem);
             grpCircle.Visible = false;
             grpSquareLimits.Visible = false;
             LoadCboAirport();
@@ -149,16 +152,17 @@ namespace SCTBuilder
             lblUpdating.Refresh();
         }
 
-        private void LoadFixGrid(bool LoadAllGrids = true)
+        private void LoadFixGrid()
         {
             string Filter;
             cmdWriteSCT.Enabled = false;
+            SetChecked();
             if (DataIsLoaded)
             {
                 DataIsSelected = true;
                 cmdUpdateGrid.Enabled = cmdUpdateGrid.Visible = false;
                 // ARB must always be selected by Sponsor ARTCC
-                if (LoadAllGrids || SCTchecked.ChkARB)
+                if (SCTchecked.ChkARB)
                 {
                     Filter = FixFilter("ARTCC");
                     UpdateLabel("Selecting ARTCC boundaries...");
@@ -167,52 +171,109 @@ namespace SCTBuilder
                 else DataIsSelected = false;
                 // Everything else can be selected by user choice
                 Filter = FixFilter(FilterBy.Method);
-                if (LoadAllGrids || SCTchecked.ChkAPT)
+                if (SCTchecked.ChkAPT)
                 {
                     UpdateLabel("Selecting Airports...");
                     Setdgv(dgvAPT, APT, Filter);
                 }
                 else DataIsSelected = false;
-                if (LoadAllGrids || SCTchecked.ChkVOR)
+                if (SCTchecked.ChkVOR)
                 {
                     UpdateLabel("Selecting VORs...");
                     Setdgv(dgvVOR, VOR, Filter);
                 }
                 else DataIsSelected = false;
-                if (LoadAllGrids || SCTchecked.ChkNDB)
+                if (SCTchecked.ChkNDB)
                 {
                     UpdateLabel("Selecting NDBs...");
                     Setdgv(dgvNDB, NDB, Filter);
                 }
                 else DataIsSelected = false;
-                if (LoadAllGrids || SCTchecked.ChkFIX)
+                if (SCTchecked.ChkFIX)
                 {
                     UpdateLabel("Selecting FIXes...");
                     Setdgv(dgvFIX, FIX, Filter);
                 }
                 else DataIsSelected = false;
-                if (LoadAllGrids || SCTchecked.ChkRWY)
+                if (SCTchecked.ChkRWY)
                 {
                     UpdateLabel("Selecting Runways...");
                     Setdgv(dgvRWY, RWY, Filter);
                 }
                 else DataIsSelected = false;
-                if (LoadAllGrids || SCTchecked.ChkAWY)
+                if (SCTchecked.ChkAWY)
                 {
                     UpdateLabel("Selecting Airways...");
                     Setdgv(dgvAWY, AWY, Filter);
                 }
                 else DataIsSelected = false;
-                if (LoadAllGrids || SCTchecked.ChkSSD)
+                if (SCTchecked.ChkSSD)
                 {
                     UpdateLabel("Selecting SIDs && STARs (slow)...");
                     SetdgvSSD(Filter);
                 }
                 else DataIsSelected = false;
+                if (SCTchecked.ChkSUA) SetdgvSUA();
                 UpdateGridCount();
                 cmdWriteSCT.Enabled = true;
             }
         }
+
+        private void SetdgvSUA()
+        {
+
+            DataView dvSUA = new DataView(SUA);
+            foreach (DataRowView rowView in dvSUA) rowView["Selected"] = false;
+            dvSUA.RowFilter = SetSUAfilter();
+            foreach (DataRowView rowView in dvSUA) rowView["Selected"] = true;
+            DataTable dtgv = dvSUA.ToTable(true, "Selected", "Category", "Name", "ID");
+            dgvSUA.DataSource = dtgv;
+        }
+
+        private string SetSUAfilter()
+        {
+            UpdateSquare();
+            string Filter = " ( ([Latitude_North] <= " + FilterBy.NorthLimit.ToString() + ")" +
+                            " AND  ([Latitude_South] >= " + FilterBy.SouthLimit.ToString() + ")" +
+                            " AND ([Longitude_East] <= " + FilterBy.EastLimit.ToString() + ")" +
+                            " AND ([Longitude_West] >= " + FilterBy.WestLimit.ToString() + ") )";
+            string AddlFilter = string.Empty; 
+            if (SCTchecked.ChkSUA_ClassB)
+            {
+                AddlFilter += "([Category] = 'B')";
+            }
+            if (SCTchecked.ChkSUA_ClassC)
+            {
+                if (AddlFilter.Length != 0) AddlFilter += " OR ";
+                AddlFilter += "([Category] = 'C')";
+            }
+            if (SCTchecked.ChkSUA_ClassD)
+            {
+                if (AddlFilter.Length != 0) AddlFilter += " OR ";
+                AddlFilter += "([Category] = 'D')";
+            }
+            if (SCTchecked.ChkSUA_Restricted)
+            {
+                if (AddlFilter.Length != 0) AddlFilter += " OR ";
+                AddlFilter += "([Category] = 'RESTRICTED')";
+            }
+            if (SCTchecked.ChkSUA_Prohibited)
+            {
+                if (AddlFilter.Length != 0) AddlFilter += " OR ";
+                AddlFilter += "([Category] = 'PROHIBITED')";
+            }
+            if (SCTchecked.ChkSUA_Danger)
+            {
+                if (AddlFilter.Length != 0) AddlFilter += " OR ";
+                AddlFilter += "([Category] = 'DANGER')";
+            }
+            if (AddlFilter.Length != 0)
+                AddlFilter = "AND ( " + AddlFilter + " )";
+            Console.WriteLine(Filter);
+            Console.WriteLine(AddlFilter);
+            return Filter + AddlFilter;
+        }
+
         private void LoadCboARTCC()
         {
             DataView dvARB = new DataView(ARB)
@@ -491,17 +552,18 @@ namespace SCTBuilder
                     default:
                     case "ARTCC":
                         FilterString = " ([ARTCC] ='" + CboARTCC.GetItemText(CboARTCC.SelectedItem) + "')";
+                        UpdateSquare();             // Calculates the limits N/S/E/W of selected ARTCC
                         break;
                     case "Square":
-                        float NLat = Conversions.AdjustedLatLong(txtLatNorth.Text, nudNorth.Value.ToString(), "N");
-                        float SLat = Conversions.AdjustedLatLong(txtLatSouth.Text, nudSouth.Value.ToString(), "S");
-                        float WLng = Conversions.AdjustedLatLong(txtLongWest.Text, nudWest.Value.ToString(), "W");
-                        float ELng = Conversions.AdjustedLatLong(txtLongEast.Text, nudEast.Value.ToString(), "E");
+                        FilterBy.NorthLimit = Conversions.AdjustedLatLong(txtLatNorth.Text, nudNorth.Value.ToString(), "N");
+                        FilterBy.SouthLimit = Conversions.AdjustedLatLong(txtLatSouth.Text, nudSouth.Value.ToString(), "S");
+                        FilterBy.EastLimit = Conversions.AdjustedLatLong(txtLongEast.Text, nudWest.Value.ToString(), "W");
+                        FilterBy.WestLimit = Conversions.AdjustedLatLong(txtLongWest.Text, nudEast.Value.ToString(), "E");
                         FilterString = FilterString +
-                            " ( ([Latitude] >= " + SLat.ToString() + ")" +
-                            " AND ([Latitude] <= " + NLat.ToString() + ")" +
-                            " AND ([Longitude] >= " + WLng.ToString() + ")" +
-                            " AND ([Longitude] <= " + ELng.ToString() + ") )";
+                            " ( ([Latitude] <= " + FilterBy.NorthLimit.ToString() + ")" +
+                            " AND  ([Latitude] >= " + FilterBy.SouthLimit.ToString() + ")" +
+                            " AND ([Longitude] <= " + FilterBy.EastLimit.ToString() + ")" +
+                            " AND ([Longitude] >= " + FilterBy.WestLimit.ToString() + ") )";
                         break;
                 }
             return FilterString;
@@ -554,7 +616,7 @@ namespace SCTBuilder
                 else
                 {
                     FilterBy.Method = "ARTCC";
-                    FilterBy.Param1 = CboARTCC.GetItemText(CboARTCC.SelectedItem);
+                    FilterBy.NorthLimit = CboARTCC.GetItemText(CboARTCC.SelectedItem);
                     cmdWriteSCT.Enabled = TestWriteSCT();
                 }
         }
@@ -597,10 +659,10 @@ namespace SCTBuilder
                 }
             }
             FilterBy.Method = "Square";
-            FilterBy.Param1 = LatNorth;
-            FilterBy.Param2 = LongWest;
-            FilterBy.Param3 = LatSouth;
-            FilterBy.Param4 = LongEast;
+            FilterBy.NorthLimit = LatNorth;
+            FilterBy.SouthLimit = LatSouth;
+            FilterBy.EastLimit = LongEast;
+            FilterBy.WestLimit = LongWest;
             txtLongEast.Text = Math.Round(LongEast, 6).ToString();
             txtLongWest.Text = Math.Round(LongWest, 6).ToString();
             txtLatNorth.Text = Math.Round(LatNorth, 6).ToString();
@@ -670,19 +732,14 @@ namespace SCTBuilder
             cmdWriteSCT.Enabled = TestWriteSCT();
         }
 
-        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
-        {
-        }
-
         private void CmdWriteSCT_Click(object sender, EventArgs e)
         {
-            SetChecked();
             if (!DataIsSelected)
             {
                 cmdUpdateGrid.Enabled = cmdUpdateGrid.Visible = false;
                 HoldForm(true);
                 UpdateInfoSection();
-                LoadFixGrid(false);
+                LoadFixGrid();
                 HoldForm(false);
             }
             SCToutput.WriteSCT();
@@ -785,6 +842,7 @@ namespace SCTBuilder
 
         private void CmdExit_Click(object sender, EventArgs e)
         {
+            SetChecked();
             CycleInfo.WriteINIxml();
             Application.Exit();
         }
@@ -802,7 +860,7 @@ namespace SCTBuilder
                 HoldForm(true);
                 UpdateInfoSection();
                 SetChecked();
-                LoadFixGrid(true);
+                LoadFixGrid();
                 HoldForm(false);
                 Refresh();
             }
@@ -826,7 +884,7 @@ namespace SCTBuilder
             if (CboARTCC.SelectedIndex != -1)
             {
                 InfoSection.SponsorARTCC = CboARTCC.Text.ToString();
-                if ((btnSquare.Checked) && (CboARTCC.SelectedIndex > -1))
+                if (btnSquare.Checked && (CboARTCC.SelectedIndex > -1))
                     UpdateSquare();
                 LoadCboAirport();
             }
@@ -871,6 +929,35 @@ namespace SCTBuilder
             SCTchecked.ChkVOR = chkVORs.Checked;
             SCTchecked.ChkALL = chkALL.Checked;
             SCTchecked.ChkSSDname = chkSSDName.Checked;
+            SCTchecked.ChkSUA = ChkSUA.Checked;
+            SCTchecked.ChkSUA_ClassB = chkSUA_ClassB.Checked;
+            SCTchecked.ChkSUA_ClassC = chkSUA_ClassC.Checked;
+            SCTchecked.ChkSUA_ClassD = chkSUA_ClassD.Checked;
+            SCTchecked.ChkSUA_Danger = chkSUA_Danger.Checked;
+            SCTchecked.ChkSUA_Prohibited = chkSUA_Prohibited.Checked;
+            SCTchecked.ChkSUA_Restricted = chkSUA_Restricted.Checked;
+        }
+
+        private void GetChecked()
+        {
+            Console.WriteLine("GetChecked...");
+            chkAPTs.Checked = SCTchecked.ChkAPT;
+            chkARBs.Checked = SCTchecked.ChkARB;
+            chkAWYs.Checked = SCTchecked.ChkAWY;
+            chkFIXes.Checked = SCTchecked.ChkFIX;
+            chkNDBs.Checked = SCTchecked.ChkNDB;
+            chkRWYs.Checked = SCTchecked.ChkRWY;
+            chkSSDs.Checked = SCTchecked.ChkSSD;
+            chkVORs.Checked = SCTchecked.ChkVOR;
+            chkALL.Checked = SCTchecked.ChkALL;
+            chkSSDName.Checked = SCTchecked.ChkSSDname;
+            ChkSUA.Checked = SCTchecked.ChkSUA;
+            chkSUA_ClassB.Checked = SCTchecked.ChkSUA_ClassB;
+            chkSUA_ClassC.Checked = SCTchecked.ChkSUA_ClassC;
+            chkSUA_ClassD.Checked = SCTchecked.ChkSUA_ClassD;
+            chkSUA_Danger.Checked = SCTchecked.ChkSUA_Danger;
+            chkSUA_Prohibited.Checked = SCTchecked.ChkSUA_Prohibited;
+            chkSUA_Restricted.Checked = SCTchecked.ChkSUA_Restricted;
         }
 
         private void ChkALL_CheckedChanged(object sender, EventArgs e)
@@ -899,6 +986,21 @@ namespace SCTBuilder
         private void ChkSSDs_CheckedChanged(object sender, EventArgs e)
         {
             chkSSDName.Visible = chkSSDs.Checked;
+        }
+
+        private void CmdAddSUAs_Click(object sender, EventArgs e)
+        {
+            ReadFixes.FillAirSpace();
+        }
+
+        private void ChkSUA_CheckedChanged(object sender, EventArgs e)
+        {
+            panelSUAs.Visible = ChkSUA.Checked;
+        }
+
+        private void ChkOverwrite_CheckedChanged(object sender, EventArgs e)
+        {
+            SCTchecked.ChkConfirmOverwrite = chkOverwrite.Checked;
         }
     }
 }

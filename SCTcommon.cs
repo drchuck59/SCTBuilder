@@ -244,7 +244,81 @@ namespace SCTBuilder
             }
             else return 0f;
         }
+        public static void BuildPolygon(string Polygon, string ID)
+        {
+            string tempPoly = Polygon; float Latitude; float Longitude;
+            DataTable dtPoly = Form1.Polygon; int loc1; string Lat1; string Long1;
+            DataView dvPoly = new DataView(dtPoly); int Counter = 0; string temp1;
+            while (tempPoly.Length != 0)
+            {
+                Counter++;
+                loc1 = tempPoly.IndexOf(", ");
+                if (loc1 != -1)
+                {
+                    temp1 = tempPoly.Substring(0, loc1).Trim();
+                    Long1 = temp1.Substring(0, temp1.IndexOf(" "));
+                    Lat1 = temp1.Substring(temp1.IndexOf(" ") + 1);
+                    Latitude = Convert.ToSingle(Lat1);
+                    Longitude = Convert.ToSingle(Long1);
+                    tempPoly = tempPoly.Substring(loc1 + 2);
+                    // Console.WriteLine(ID + " " + Latitude + " " + Longitude);
+                }
+                else
+                {
+                    temp1 = tempPoly;               // Last coordinate in string
+                    Long1 = temp1.Substring(0, temp1.IndexOf(" "));
+                    Lat1 = temp1.Substring(temp1.IndexOf(" ") + 1);
+                    Latitude = Convert.ToSingle(Lat1);
+                    Longitude = Convert.ToSingle(Long1);
+                    tempPoly = string.Empty;
+                    // Console.WriteLine(ID + " " + Latitude + " " + Longitude);
+                }
+                DataRowView newrow = dvPoly.AddNew();
+                newrow["SUA_FK"] = ID;
+                newrow["Sequence"] = Counter;
+                newrow["Latitude"] = Latitude;
+                newrow["Longitude"] = Longitude;
+                newrow.EndEdit();
+            }
+            // Console.WriteLine("Added " + Counter + " rows to table (now has " + dtPoly.Rows.Count + " rows).");
+        }
+        public static void BorderCoord(string Polygon, out float North, out float South, out float East, out float West)
+        {
+            // Returns the quadrant-most coordinate for a given polygon
+            string tempPoly = Polygon; int loc1; string temp1;
+            string Lat1; string Long1; float Latitude; float Longitude;
+            North = -1; South = 1; East = -1f; West = 1f;
+            while (tempPoly.Length != 0)
+            {
+                loc1 = tempPoly.IndexOf(", ");
+                if (loc1 != -1)
+                {
+                    temp1 = tempPoly.Substring(0, loc1).Trim();
+                    Long1 = temp1.Substring(0, temp1.IndexOf(" "));
+                    Lat1 = temp1.Substring(temp1.IndexOf(" ") + 1);
+                    Latitude = Convert.ToSingle(Lat1);
+                    Longitude = Convert.ToSingle(Long1);
+                    tempPoly = tempPoly.Substring(loc1 + 2);
+                    // Console.WriteLine(ID + " " + Latitude + " " + Longitude);
+                }
+                else
+                {
+                    temp1 = tempPoly;               // Last coordinate in string
+                    Long1 = temp1.Substring(0, temp1.IndexOf(" "));
+                    Lat1 = temp1.Substring(temp1.IndexOf(" ") + 1);
+                    Latitude = Convert.ToSingle(Lat1);
+                    Longitude = Convert.ToSingle(Long1);
+                    tempPoly = string.Empty;
+                    // Console.WriteLine(ID + " " + Latitude + " " + Longitude);
+                }
+                North = Math.Max(North, Latitude);
+                South = Math.Min(South, Latitude);
+                East = Math.Max(East, Longitude);
+                West = Math.Min(West, Longitude);
+            }
+        }
     }
+
     public static class Extensions
     {
         /// <summary>
@@ -260,6 +334,7 @@ namespace SCTBuilder
         {
             return float.TryParse(text, out float test);
         }
+
         public static string Left(this string value, int maxLength)
         {
             if (string.IsNullOrEmpty(value)) return value;

@@ -362,10 +362,14 @@ namespace SCTBuilder
     public class FilterBy                               // Filter source for SCT2 output
     {
         public static string Method { get; set; }
-        public static object Param1 { get; set; }
-        public static object Param2 { get; set; }
-        public static object Param3 { get; set; }
-        public static object Param4 { get; set; }
+        public static object NorthLimit { get; set; }
+        public static object SouthLimit { get; set; }
+        public static object EastLimit { get; set; }
+        public static object WestLimit { get; set; }
+        public static object NorthOffset { get; set; }
+        public static object SouthOffset { get; set; }
+        public static object EastOffset { get; set; }
+        public static object WestOffset { get; set; }
     }
     public class InfoSection
     {
@@ -433,5 +437,13 @@ namespace SCTBuilder
         public static bool ChkSSD { get; set; }
         public static bool ChkALL { get; set; }
         public static bool ChkSSDname { get; set; }
+        public static bool ChkSUA { get; set; }
+        public static bool ChkSUA_ClassB { get; set; }
+        public static bool ChkSUA_ClassC { get; set; }
+        public static bool ChkSUA_ClassD { get; set; }
+        public static bool ChkSUA_Danger { get; set; }
+        public static bool ChkSUA_Prohibited { get; set; }
+        public static bool ChkSUA_Restricted { get; set; }
+        public static bool ChkConfirmOverwrite { get; set; }
     }
 } 

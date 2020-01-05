@@ -15,7 +15,7 @@ namespace SCTBuilder
         {
             // DataTable LS = Form1.LocalSector;
             var TextFiles = new List<string>();
-            string Message = string.Empty;
+            string Message;
             MessageBoxButtons buttons = MessageBoxButtons.OK;
             MessageBoxIcon icon = MessageBoxIcon.Information;
             string PartialPath = FolderMgt.OutputFolder + "\\" +
@@ -118,6 +118,13 @@ namespace SCTBuilder
                 WriteSIDSTAR(path, UseName:SCTchecked.ChkSSDname, IsSID: false);
                 TextFiles.Add(path);
             }
+            path = CheckFile(PartialPath, "SUA");
+            if (path != string.Empty)
+            {
+                Console.WriteLine("SUAs...");
+                WriteSUA(path);
+                // TextFiles.Add(path);
+            }
             path = CheckFile(PartialPath, CycleInfo.AIRAC.ToString(),".sct2");
             if (SCTchecked.ChkALL && path != string.Empty)
             {
@@ -150,11 +157,15 @@ namespace SCTBuilder
             string path = PartialPath + file + type;
             if (File.Exists(path))
             {
-                Message = "OK to overwrite " + path + "?";
-                icon = MessageBoxIcon.Question;
-                buttons = MessageBoxButtons.YesNo;
-                SystemSounds.Question.Play();
-                result = MessageBox.Show(Message, caption, buttons, icon);
+                if (SCTchecked.ChkConfirmOverwrite)
+                {
+                    Message = "OK to overwrite " + path + "?";
+                    icon = MessageBoxIcon.Question;
+                    buttons = MessageBoxButtons.YesNo;
+                    SystemSounds.Question.Play();
+                    result = MessageBox.Show(Message, caption, buttons, icon);
+                }
+                else result = DialogResult.Yes;
                 if (result == DialogResult.Yes)
                 {
                     File.Delete(path);
@@ -312,7 +323,10 @@ namespace SCTBuilder
                     }
                     else
                     {
-                        LCL = "122.8";
+                        if (Convert.ToBoolean(row["Public"]))
+                            LCL = "122.8";
+                        else
+                            LCL = "0";
                         ATIS = string.Empty;
                     }
                     strOut[1] = LCL.PadRight(7);
@@ -371,7 +385,6 @@ namespace SCTBuilder
                 RowFilter = "[Selected]",
                 Sort = "FacilityID, BaseIdentifier"
             };
-            Console.WriteLine("RWYs found: " + dvRWY.Count);
             Output += "[RUNWAY]" + cr;
             using (StreamWriter sw = new StreamWriter(path))
             {
@@ -391,7 +404,7 @@ namespace SCTBuilder
                     strOut[6] = Conversions.DecDeg2SCT(Convert.ToSingle(row["EndLatitude"]), true);
                     strOut[7] = Conversions.DecDeg2SCT(Convert.ToSingle(row["EndLongitude"]), false);
                     Output += strOut[0] + " " + strOut[1] + " " + strOut[2] + " " + strOut[3] + " "
-                        + strOut[4] + " " + strOut[5] + " " + strOut[6] + " " + strOut[7] + cr;
+                        + strOut[4] + " " + strOut[5] + " " + strOut[6] + " " + strOut[7] + strOut[8] + cr;
                     DRAW.Rows.Add(new object[] { strOut[0].ToString(), strOut[4].ToString(), strOut[5].ToString(), RWYtextColor });
                     DRAW.Rows.Add(new object[] { strOut[1].ToString(), strOut[6].ToString(), strOut[7].ToString(), RWYtextColor });
                 }
@@ -559,12 +572,17 @@ namespace SCTBuilder
                 // All the other ARTCCs that may have been in the filter
                 dvA2D.RowFilter = "[ARTCC] <> '" + curARTCC + "'";
                 // This loop adds the ARTCCs, skip if no other ARTCCs
+                DialogResult Result;
                 if (dvA2D.Count != 0)
                 {
-                    string Message = "There are " + dvA2D.Count.ToString();
-                    if (IsSID) Message += " SIDs "; else Message += " STARs ";
-                    Message += "in other ARTCCs.  They could make the sector file very large. Do you want them generated?";
-                    DialogResult Result = MessageBox.Show(Message, VersionInfo.Title, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                    if (SCTchecked.ChkConfirmOverwrite == true)
+                    {
+                        string Message = "There are " + dvA2D.Count.ToString();
+                        if (IsSID) Message += " SIDs "; else Message += " STARs ";
+                        Message += "in other ARTCCs.  They could make the sector file very large. Do you want them generated?";
+                        Result = MessageBox.Show(Message, VersionInfo.Title, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                    }
+                    else Result = DialogResult.Yes;
                     if (Result == DialogResult.Yes)
                     {
                         curARTCC = string.Empty;
@@ -825,9 +843,11 @@ namespace SCTBuilder
 
         private static void WriteLabels(DataTable dtSTL, StreamWriter sw)
         {
-            string strText; string Lat; string Long; string TextColor;
+            string strText; string Lat; string Long; string TextColor; string Comment;
+            string Output;
             // string colorValue = dtColors.Rows[0]["ColorValue"].ToString();
             sw.WriteLine("[LABELS]");
+            sw.WriteLine("; Runway labels");
             foreach (DataRow row in dtSTL.AsEnumerable())
             {
                 strText = row["LabelText"].ToString();
@@ -835,7 +855,14 @@ namespace SCTBuilder
                 Lat = row["Latitude"].ToString();
                 Long = row["Longitude"].ToString();
                 TextColor = row["TextColor"].ToString();
-                sw.WriteLine(strText + " " + Lat + " " + Long + " " + TextColor);
+                if (row["Comment"].ToString().Length != 0)
+                {
+                    Comment = row["Comment"].ToString();
+                    Output = strText + " " + Lat + " " + Long + " " + TextColor + Comment;
+                }
+                else
+                    Output = strText + " " + Lat + " " + Long + " " + TextColor;
+                sw.WriteLine(Output);
             }
         }
 
@@ -911,7 +938,11 @@ namespace SCTBuilder
             File.WriteAllLines(path, Low);
             File.AppendAllLines(path, High);
             File.AppendAllLines(path, Ultra);
-        }   
+        }
+        private static void WriteSUA(string path)
+        {
+            
+        }
     }
 }
 

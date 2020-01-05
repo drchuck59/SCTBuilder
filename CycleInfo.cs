@@ -29,6 +29,23 @@ namespace SCTBuilder
             WriteXmlElement(xml, "DefaultAirport", InfoSection.DefaultAirport.ToString());
             WriteXmlElement(xml, "FacilityEngineer", InfoSection.FacilityEngineer.ToString());
             WriteXmlElement(xml, "AsstFacilityEngineer", InfoSection.AsstFacilityEngineer.ToString());
+            WriteXmlElement(xml, "ChkAll", SCTchecked.ChkALL.ToString());
+            WriteXmlElement(xml, "ChkAPT", SCTchecked.ChkAPT.ToString());
+            WriteXmlElement(xml, "ChkARB", SCTchecked.ChkARB.ToString());
+            WriteXmlElement(xml, "ChkAWY", SCTchecked.ChkAWY.ToString());
+            WriteXmlElement(xml, "ChkFIX", SCTchecked.ChkFIX.ToString());
+            WriteXmlElement(xml, "ChkNDB", SCTchecked.ChkNDB.ToString());
+            WriteXmlElement(xml, "ChkRWY", SCTchecked.ChkRWY.ToString());
+            WriteXmlElement(xml, "ChkSSD", SCTchecked.ChkSSD.ToString());
+            WriteXmlElement(xml, "ChkSSDname", SCTchecked.ChkSSDname.ToString());
+            WriteXmlElement(xml, "ChkSUA", SCTchecked.ChkSUA.ToString());
+            WriteXmlElement(xml, "ChkSUA_ClassB", SCTchecked.ChkSUA_ClassB.ToString());
+            WriteXmlElement(xml, "ChkSUA_ClassC", SCTchecked.ChkSUA_ClassC.ToString());
+            WriteXmlElement(xml, "ChkSUA_ClassD", SCTchecked.ChkSUA_ClassD.ToString());
+            WriteXmlElement(xml, "ChkSUA_Danger", SCTchecked.ChkSUA_Danger.ToString());
+            WriteXmlElement(xml, "ChkSUA_Prohibited", SCTchecked.ChkSUA_Prohibited.ToString());
+            WriteXmlElement(xml, "ChkSUA_Restricted", SCTchecked.ChkSUA_Restricted.ToString());
+            WriteXmlElement(xml, "ChkVOR", SCTchecked.ChkVOR.ToString());
             xml.WriteEndDocument();
             xml.Close();
         }
@@ -38,102 +55,6 @@ namespace SCTBuilder
             xml.WriteString(Value);
             xml.WriteEndElement();
         }
-        public static void WriteINI()
-        {
-            using (StreamWriter sw = new StreamWriter(FolderMgt.INIfile))
-            {
-                sw.WriteLine(VersionInfo.Title.ToString());
-                sw.WriteLine(CycleInfo.AIRAC.ToString());
-                sw.WriteLine(CycleInfo.CycleStart.ToString());
-                sw.WriteLine(CycleInfo.CycleEnd.ToString());
-                sw.WriteLine(FolderMgt.DataFolder.ToString());
-                sw.WriteLine(FolderMgt.OutputFolder.ToString());
-                sw.WriteLine(InfoSection.SponsorARTCC.ToString());
-                sw.WriteLine(InfoSection.DefaultAirport);
-                sw.WriteLine(InfoSection.FacilityEngineer.ToString());
-                sw.WriteLine(InfoSection.AsstFacilityEngineer.ToString());
-            }
-        }
-        public static bool ReadINI()
-        ///<summary>
-        /// Reads the INI file.  If corrupted, resets the INI file to startup.
-        /// Returns a boolean reporting a successful read. ANY error = false.
-        /// </summary>
-        {
-            bool result = true;
-            if (File.Exists(FolderMgt.INIfile))
-            {
-                try
-                {
-                    using (StreamReader sr = new StreamReader(FolderMgt.INIfile))
-                    {
-                        string Message = sr.ReadLine();
-                        if (VersionInfo.Title != Message)
-                        {
-                            Message = "INI file version " + Message + " differs from program version " +
-                                VersionInfo.Title;
-                            MessageBoxButtons buttons = MessageBoxButtons.OK;
-                            MessageBoxIcon icon = MessageBoxIcon.Warning;
-                            string caption = VersionInfo.Title;
-                            MessageBox.Show(Message, caption, buttons, icon);
-                        }
-                        AIRAC = Convert.ToInt16(sr.ReadLine());
-                        CycleStart = Convert.ToDateTime(sr.ReadLine());
-                        CycleEnd = Convert.ToDateTime(sr.ReadLine());
-                        FolderMgt.DataFolder = sr.ReadLine();
-                        // Test for valid Data file folder
-                        if (!Directory.Exists(FolderMgt.DataFolder))
-                        {
-                            FolderMgt.DataFolder = string.Empty;
-                            result = false;
-                        }
-                        FolderMgt.OutputFolder = sr.ReadLine();
-                        if (!Directory.Exists(FolderMgt.OutputFolder))
-                        {
-                            FolderMgt.OutputFolder = string.Empty;
-                        }
-                        InfoSection.SponsorARTCC = sr.ReadLine();
-                        InfoSection.DefaultAirport = Conversions.RevICOA(sr.ReadLine());
-                        InfoSection.FacilityEngineer = sr.ReadLine();
-                        if (InfoSection.FacilityEngineer.ToString().Length == 0)
-                            result = false;
-                        InfoSection.AsstFacilityEngineer = sr.ReadLine();
-                    }
-                    if (!result)
-                    {
-                        string Message = "Invalid data found in initialization file." +
-                            Environment.NewLine + "You will be prompted to obtain and download data file";
-                        MessageBoxButtons buttons = MessageBoxButtons.OK;
-                        MessageBoxIcon icon = MessageBoxIcon.Exclamation;
-                        MessageBox.Show(Message, VersionInfo.Title, buttons, icon);
-                        ResetCycleInfo();
-                        result = false;
-                    }
-                }
-                catch
-                {
-                    string Message = "Invalid data found in initialization file." +
-                        Environment.NewLine + "You will be prompted to obtain and download data file";
-                    MessageBoxButtons buttons = MessageBoxButtons.OK;
-                    MessageBoxIcon icon = MessageBoxIcon.Exclamation;
-                    MessageBox.Show(Message, VersionInfo.Title, buttons, icon);
-                    ResetCycleInfo();
-                    result = false;
-                }
-            }
-            else
-            // No INI file exists
-            {
-                ResetCycleInfo();
-                string Message = "No initialization file found." +
-                    Environment.NewLine + "You will be prompted to obtain and download data file";
-                MessageBoxButtons buttons = MessageBoxButtons.OK;
-                MessageBoxIcon icon = MessageBoxIcon.Exclamation;
-                MessageBox.Show(Message, VersionInfo.Title, buttons, icon);
-                result = false;
-            }
-            return result;
-        }
 
         public static void ReadINIxml()
         {
@@ -141,7 +62,7 @@ namespace SCTBuilder
             {
                 XmlDocument doc = new XmlDocument();
                 doc.Load(FolderMgt.INIxml);
-                foreach(XmlNode node in doc.DocumentElement)
+                foreach (XmlNode node in doc.DocumentElement)
                 {
                     if (node.Name != "Version")
                     {
@@ -175,6 +96,57 @@ namespace SCTBuilder
                             case "AsstFacilityEngineer":
                                 InfoSection.AsstFacilityEngineer = value;
                                 break;
+                            case "ChkALL":
+                                SCTchecked.ChkALL = Convert.ToBoolean(value);
+                                break;
+                            case "ChkAPT":
+                                SCTchecked.ChkAPT = Convert.ToBoolean(value);
+                                break;
+                            case "ChkARB":
+                                SCTchecked.ChkARB = Convert.ToBoolean(value);
+                                break;
+                            case "ChkAWY":
+                                SCTchecked.ChkAWY = Convert.ToBoolean(value);
+                                break;
+                            case "ChkFIX":
+                                SCTchecked.ChkFIX = Convert.ToBoolean(value);
+                                break;
+                            case "ChkNDB":
+                                SCTchecked.ChkNDB = Convert.ToBoolean(value);
+                                break;
+                            case "ChkRWY":
+                                SCTchecked.ChkRWY = Convert.ToBoolean(value);
+                                break;
+                            case "ChkSSD":
+                                SCTchecked.ChkSSD = Convert.ToBoolean(value);
+                                break;
+                            case "ChkSSDname":
+                                SCTchecked.ChkSSDname = Convert.ToBoolean(value);
+                                break;
+                            case "ChkSUA":
+                                SCTchecked.ChkSUA = Convert.ToBoolean(value);
+                                break;
+                            case "ChkSUA_ClassB":
+                                SCTchecked.ChkSUA_ClassB = Convert.ToBoolean(value);
+                                break;
+                            case "ChkSUA_ClassC":
+                                SCTchecked.ChkSUA_ClassC = Convert.ToBoolean(value);
+                                break;
+                            case "ChkSUA_ClassD":
+                                SCTchecked.ChkSUA_ClassD = Convert.ToBoolean(value);
+                                break;
+                            case "ChkSUA_Danger":
+                                SCTchecked.ChkSUA_Danger = Convert.ToBoolean(value);
+                                break;
+                            case "ChkSUA_Prohibited":
+                                SCTchecked.ChkSUA_Prohibited = Convert.ToBoolean(value);
+                                break;
+                            case "ChkSUA_Restricted":
+                                SCTchecked.ChkSUA_Restricted = Convert.ToBoolean(value);
+                                break;
+                            case "ChkVOR":
+                                SCTchecked.ChkVOR = Convert.ToBoolean(value);
+                                break;
                             default:
                                 break;
 
@@ -182,6 +154,8 @@ namespace SCTBuilder
                     }
                 }
             }
+            else
+                ResetCycleInfo();
         }
 
         private static void ResetCycleInfo()

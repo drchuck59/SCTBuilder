@@ -4,7 +4,7 @@ using System.Globalization;
 using System.Windows.Forms;
 using System.Linq;
 using System.Collections.Generic;
-using System.Xml.Linq;
+using System.Xml;
 using System.Data;
 
 namespace SCTBuilder
@@ -14,8 +14,8 @@ namespace SCTBuilder
         public static int FillCycleInfo()
         {
             string FullFilename = GetFullPathname(FolderMgt.DataFolder, "NATFIX.txt");
-            if (FullFilename.IndexOf("ERROR",0) == -1)
-                {
+            if (FullFilename.IndexOf("ERROR", 0) == -1)
+            {
                 string Line = string.Empty;
                 using (StreamReader reader = new StreamReader(FullFilename))
                 {
@@ -174,7 +174,7 @@ namespace SCTBuilder
             if (APTtable.Rows.Count != 0) APTtable.Clear();     // Must start with empty tables
             if (RWYtable.Rows.Count != 0) RWYtable.Clear();
             string FullFilename = GetFullPathname(FolderMgt.DataFolder, "APT.txt");
-            char[] FacilityType = {'A', 'C', 'H' };     // Only interested in Airport, Seaplane, and Heliports
+            char[] FacilityType = { 'A', 'C', 'H' };     // Only interested in Airport, Seaplane, and Heliports
             string FacType = string.Empty; string tempID = string.Empty; string tempBID = string.Empty;
             string tempRID = string.Empty; float tempLatB = 0f; float tempLongB = 0f; string tempFacID = string.Empty;
             float tempLatR = 0f; float tempLongR = 0f; float tempLength = 0f; bool tempOpen = false;
@@ -300,17 +300,13 @@ namespace SCTBuilder
                     rowType = Line.Substring(0, 4);
 
                     if (rowType == "TWR1")
-                    { 
+                    {
                         // Before we start a new set, see if we need to add the old one
                         if (isATCT)
                         {
-                            //Console.WriteLine("ID " + tempID);
-                            //Console.WriteLine("Fac " + tempFac);
-                            //Console.WriteLine("Name " + tempName);
-                            //Console.WriteLine("Lat " + tempLat.ToString());
-                            //Console.WriteLine("Long " + tempLong.ToString());
-                            //Console.WriteLine("Freq " + tempFreq);
-                            //Console.WriteLine("Class " + tempClass);
+                            // It's possible to have an empty tempLCL, which VRC can't accept
+                            // E.g., this can occur with a MIL TWR having no VHF frequency
+                            if (tempLCL.Length == 0) tempLCL = "122.8";
                             var TWRItems = new List<object>
                                 {
                                     tempID,                     // Unique facility identifier (matches APT file)
@@ -320,10 +316,9 @@ namespace SCTBuilder
                                     tempLong,                   // Facility longitude
                                     tempLCL,                    // VHF LCL/P frequency
                                     tempATIS,                   // VHF ATIS frequency
-                                    isDATIS,                  // True if D-ATIS
+                                    isDATIS,                    // True if D-ATIS
                                     tempClass
                                 };
-                            // Console.WriteLine("Writing row");
                             AddFixes(TWR, TWRItems);
                             isATCT = false;
                             LCLfound = false;
@@ -338,8 +333,7 @@ namespace SCTBuilder
                         {
                             // Must be a facility with ATCT (some are TRACON or non-ATCT)
                             isATCT = (Line.Substring(238, 12).IndexOf("NON") == -1) &
-                                    (Line.Substring(238, 12).IndexOf("ATCT") != -1) & 
-                                    (Line.Substring(564, 40).IndexOf("FEDERAL AVIATION ADMIN") != -1);
+                                    (Line.Substring(238, 12).IndexOf("ATCT") != -1);
                             if ((tempID.IndexOfAny(FacType) != -1) & isATCT)
                             {
                                 tempFac = Line.Substring(4, 4).Trim();
@@ -353,15 +347,11 @@ namespace SCTBuilder
                     {
                         // Because the item we are looking for could be anywhere on the line,
                         // but the frequency is in a fixed location, need to loop the locations of the line.
-                        if (!LCLfound) tempLCL = TWR3Freq(Line, "LCL/P");      // Tower Freq
-                        LCLfound = (tempLCL.Length != 0);
-                        // TEST...
-                        //if (!LCLfound)
-                        //{
-                        //    Console.WriteLine(tempID + " not found at TWR3");
-                        //    tempLCL = "122.8";
-                        //}
-                        //else Console.WriteLine(tempID + " found at TWR3");
+                        if (!LCLfound)
+                        {
+                            tempLCL = TWR3Freq(Line, "LCL/P");      // Tower Freq
+                            LCLfound = (tempLCL.Length != 0);
+                        }
                         if (!ATISfound)
                         {
                             tempATIS = TWR3Freq(Line, "ATIS");     // ATIS frequency
@@ -384,7 +374,7 @@ namespace SCTBuilder
 
         private static string TWR3Freq(string Line, string Usage)
         {
-            string Result = string.Empty; int loc1; 
+            string Result = string.Empty; int loc1;
             int tab = 8;                                           // first frequency location
             int tablength = 94; int freqlength = 44;               // Full field is 44+50, freq field is 44
             while ((Result.Length == 0) & (tab + tablength < Line.Length))
@@ -394,9 +384,19 @@ namespace SCTBuilder
                 {
                     Result = Line.Substring(tab, freqlength).Trim();
                     loc1 = Result.IndexOf(";");
-                    if (loc1 != -1) 
+                    if (loc1 != -1)
                         Result = Result.Substring(0, loc1 - 1).Trim();
-                    if (Convert.ToSingle(Result) > 137f)
+                    // Some entries have a character suffix on the freq
+                    bool canConvert = false; decimal testResult = 0;
+                    while (!canConvert)
+                    {
+                        canConvert = decimal.TryParse(Result, out testResult);
+                        if (!canConvert)
+                        {
+                            Result = Result.Substring(0, Result.Length - 1);
+                        }
+                    }
+                    if ((Convert.ToSingle(Result) > 137f) ^ (Convert.ToSingle(Result) < 108f))
                         Result = string.Empty;
                 }
                 tab += tablength;
@@ -507,7 +507,7 @@ namespace SCTBuilder
         public static bool FillLocalSectors()
         {
             string Line; string Info; string SectorID = string.Empty; string SectorName = string.Empty;
-            string SectorAbbr= string.Empty; string SectorLevel = string.Empty; bool Exclude = false;
+            string SectorAbbr = string.Empty; string SectorLevel = string.Empty; bool Exclude = false;
             string SectorBase = string.Empty; string SectorTop = string.Empty; bool Success = true;
             string Lat0; string Long0; bool PenUp = false; string Item; int LineNo = 0;
             string FullFilename = GetFullPathname(FolderMgt.DataFolder, "LocalSectors.txt");
@@ -559,7 +559,7 @@ namespace SCTBuilder
                                     case "LL":
                                         LatStart = Line.IndexOf(">") + 2;
                                         LongStart = LatStart + 11;
-                                        if (Line.Length < LongStart+11)
+                                        if (Line.Length < LongStart + 11)
                                         {
                                             NewMessage += Message + LineNo + Environment.NewLine + Line + Environment.NewLine;
                                             MessageBox.Show(NewMessage, VersionInfo.Title, buttons, icon);
@@ -568,8 +568,8 @@ namespace SCTBuilder
                                         }
                                         Lat0 = Line.Substring(LatStart, 10).Trim();
                                         Long0 = Line.Substring(LongStart, 11).Trim();
-                                        if ( !Extensions.IsNumeric(Extensions.Right(Lat0,1)) ||
-                                            !Extensions.IsNumeric(Extensions.Right(Long0, 1)) )
+                                        if (!Extensions.IsNumeric(Extensions.Right(Lat0, 1)) ||
+                                            !Extensions.IsNumeric(Extensions.Right(Long0, 1)))
                                         {
                                             NewMessage += Message + LineNo + Environment.NewLine + Line + Environment.NewLine;
                                             MessageBox.Show(NewMessage, VersionInfo.Title, buttons, icon);
@@ -620,11 +620,7 @@ namespace SCTBuilder
             }
             return Success;
         }
-        private void FillAirSpace()
-        {
-            string FullFilename = GetFullPathname(FolderMgt.DataFolder, "openaip_airspace_united_states_us.xml");
-            XDocument doc = XDocument.Load(FullFilename);
-        }
+
         private static string GetFullPathname(string DataFolder, string Filename)
         /// <summary>
         /// Checks that the data exists, returns an error if not found
@@ -648,6 +644,91 @@ namespace SCTBuilder
         private static void AddFixes(DataTable dT, List<object> FixItems)
         {
             dT.Rows.Add(FixItems.ToArray());
+        }
+
+        public static void FillAirSpace()
+        {
+            string FullFilename = GetFullPathname(FolderMgt.DataFolder, "openaip_airspace_united_states_us.aip");
+            DataTable SUA = Form1.SUA;
+            DataView dvSUA = new DataView(SUA);
+            string Category = string.Empty; string ID = string.Empty; 
+            string Country = string.Empty; string Name = string.Empty;
+            string AltLimitTop = string.Empty; string AltLimitTop_Ref = string.Empty;
+            string AltLimitTop_Unit = string.Empty; string AltLimitBottom = string.Empty;
+            string AltLimitBottom_Ref = string.Empty; string AltLimitBottom_Unit = string.Empty;
+            string Polygon = string.Empty; 
+            XmlReader xmlReader = XmlReader.Create(FullFilename);
+            while (!xmlReader.EOF)
+            {
+                xmlReader.Read();
+                if (xmlReader.NodeType == XmlNodeType.Element)
+                {
+                    switch (xmlReader.Name)
+                    {
+                        case "ASP":
+                            Category=xmlReader.GetAttribute("CATEGORY");
+                            break;
+                        case "ID":
+                            xmlReader.Read();
+                            ID=xmlReader.Value;
+                            break;
+                        case "COUNTRY":
+                            xmlReader.Read();
+                            Country = xmlReader.Value;
+                            break;
+                        case "NAME":
+                            xmlReader.Read();
+                            Name = xmlReader.Value;
+                            break;
+                        case "ALTLIMIT_TOP":
+                            AltLimitTop_Ref = xmlReader.GetAttribute("REFERENCE");
+                            while (xmlReader.Name != "ALT")
+                                xmlReader.Read();
+                            AltLimitTop_Unit=xmlReader.GetAttribute("UNIT");
+                            xmlReader.Read();
+                            AltLimitTop = xmlReader.Value;
+                            break;
+                        case "ALTLIMIT_BOTTOM":
+                            AltLimitBottom_Ref = xmlReader.GetAttribute("REFERENCE");
+                            while (xmlReader.Name != "ALT")
+                                xmlReader.Read();
+                            AltLimitBottom_Unit=xmlReader.GetAttribute("UNIT");
+                            xmlReader.Read();
+                            AltLimitBottom = xmlReader.Value;
+                            break;
+                        case "POLYGON":
+                            xmlReader.Read();
+                            Polygon = xmlReader.Value;
+                            break;
+                    }
+                }
+                if ((xmlReader.NodeType == XmlNodeType.EndElement) & (xmlReader.Name == "ASP") )
+                {
+                    DataRowView newrow = dvSUA.AddNew();
+                    newrow["ID"] = ID;
+                    newrow["Category"] = Category;
+                    newrow["Country"] = Country;
+                    newrow["Name"] = Name;
+                    newrow["AltLimit_Top"] = AltLimitTop;
+                    newrow["AltLimit_Top_Ref"] = AltLimitTop_Ref;
+                    newrow["AltLimit_Top_Unit"] = AltLimitTop_Unit;
+                    newrow["AltLimit_Bottom"] = AltLimitBottom;
+                    newrow["AltLimit_Bottom_Ref"] = AltLimitBottom_Ref;
+                    newrow["AltLimit_Bottom_Unit"] = AltLimitBottom_Unit;
+                    newrow["Polygon"] = Polygon;
+                    // Find the limit of this polygon for later use in selecting airspaces
+                    Conversions.BorderCoord(Polygon, out float North, out float South, out float East, out float West);
+                    newrow["Latitude_North"] = North;
+                    newrow["Latitude_South"] = South;
+                    newrow["Longitude_East"] = East;
+                    newrow["Longitude_West"] = West;
+                    newrow.EndEdit();
+                }
+            }
+            //DataTable dataTable = dvSUA.ToTable(true, "Category");
+            //foreach (DataRow dataRow in dataTable.Rows)
+            //    Console.WriteLine(dataRow[0]);
+            //dataTable.Dispose();
         }
     }
 }

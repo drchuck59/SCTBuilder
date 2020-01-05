@@ -62,6 +62,7 @@
             this.lblUpdating = new System.Windows.Forms.Label();
             this.cmdUpdateGrid = new System.Windows.Forms.Button();
             this.lblFilesWarning = new System.Windows.Forms.Label();
+            this.chkSSDName = new System.Windows.Forms.CheckBox();
             this.cboARTCC_label = new System.Windows.Forms.Label();
             this.cboAirport_label = new System.Windows.Forms.Label();
             this.labelInfoSection = new System.Windows.Forms.Label();
@@ -102,6 +103,8 @@
             this.dgvSTAR = new System.Windows.Forms.DataGridView();
             this.tabPage9 = new System.Windows.Forms.TabPage();
             this.dgvARB = new System.Windows.Forms.DataGridView();
+            this.tabPage10 = new System.Windows.Forms.TabPage();
+            this.dgvSUA = new System.Windows.Forms.DataGridView();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.lblLogo = new System.Windows.Forms.Label();
             this.cmdExit = new System.Windows.Forms.Button();
@@ -116,8 +119,19 @@
             this.chkSSDs = new System.Windows.Forms.CheckBox();
             this.chkALL = new System.Windows.Forms.CheckBox();
             this.chkARBs = new System.Windows.Forms.CheckBox();
-            this.chkSSDName = new System.Windows.Forms.CheckBox();
-            this.panel1 = new System.Windows.Forms.Panel();
+            this.panelSCTsections = new System.Windows.Forms.Panel();
+            this.ChkSUA = new System.Windows.Forms.CheckBox();
+            this.cmdAddSUAs = new System.Windows.Forms.Button();
+            this.panelSUAs = new System.Windows.Forms.Panel();
+            this.chkSUA_Danger = new System.Windows.Forms.CheckBox();
+            this.chkSUA_Prohibited = new System.Windows.Forms.CheckBox();
+            this.chkSUA_Restricted = new System.Windows.Forms.CheckBox();
+            this.chkSUA_ClassD = new System.Windows.Forms.CheckBox();
+            this.chkSUA_ClassC = new System.Windows.Forms.CheckBox();
+            this.chkSUA_ClassB = new System.Windows.Forms.CheckBox();
+            this.label6 = new System.Windows.Forms.Label();
+            this.chkOverwrite = new System.Windows.Forms.CheckBox();
+            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             this.grpAirspaceClass.SuspendLayout();
             this.grpSelectionMethod.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
@@ -146,8 +160,11 @@
             ((System.ComponentModel.ISupportInitialize)(this.dgvSTAR)).BeginInit();
             this.tabPage9.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvARB)).BeginInit();
+            this.tabPage10.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvSUA)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
-            this.panel1.SuspendLayout();
+            this.panelSCTsections.SuspendLayout();
+            this.panelSUAs.SuspendLayout();
             this.SuspendLayout();
             // 
             // lblInfoSection_Caption
@@ -524,7 +541,7 @@
             this.lblFilesWarning.BackColor = System.Drawing.Color.Yellow;
             this.lblFilesWarning.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblFilesWarning.ImageAlign = System.Drawing.ContentAlignment.BottomLeft;
-            this.lblFilesWarning.Location = new System.Drawing.Point(395, 321);
+            this.lblFilesWarning.Location = new System.Drawing.Point(410, 151);
             this.lblFilesWarning.Name = "lblFilesWarning";
             this.lblFilesWarning.Size = new System.Drawing.Size(192, 30);
             this.lblFilesWarning.TabIndex = 43;
@@ -532,6 +549,21 @@
             this.lblFilesWarning.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
             this.toolTip1.SetToolTip(this.lblFilesWarning, "Check \'Write entire SCT file\' to generate sct2 file");
             this.lblFilesWarning.Visible = false;
+            // 
+            // chkSSDName
+            // 
+            this.chkSSDName.AutoSize = true;
+            this.chkSSDName.Checked = true;
+            this.chkSSDName.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkSSDName.Location = new System.Drawing.Point(85, 81);
+            this.chkSSDName.Margin = new System.Windows.Forms.Padding(2);
+            this.chkSSDName.Name = "chkSSDName";
+            this.chkSSDName.Size = new System.Drawing.Size(90, 17);
+            this.chkSSDName.TabIndex = 44;
+            this.chkSSDName.Text = "Use full name";
+            this.toolTip1.SetToolTip(this.chkSSDName, "If checked, SCT diagrams will use full name for SIDs/STARs. If UNchecked, will us" +
+        "e the abbreviation.");
+            this.chkSSDName.UseVisualStyleBackColor = true;
             // 
             // cboARTCC_label
             // 
@@ -784,7 +816,7 @@
             this.label1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(227)))), ((int)(((byte)(246)))));
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.label1.Location = new System.Drawing.Point(25, 124);
+            this.label1.Location = new System.Drawing.Point(25, 131);
             this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(85, 18);
@@ -802,6 +834,7 @@
             this.tabControl1.Controls.Add(this.tabPage7);
             this.tabControl1.Controls.Add(this.tabPage8);
             this.tabControl1.Controls.Add(this.tabPage9);
+            this.tabControl1.Controls.Add(this.tabPage10);
             this.tabControl1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tabControl1.Location = new System.Drawing.Point(649, 116);
             this.tabControl1.Margin = new System.Windows.Forms.Padding(2);
@@ -1044,6 +1077,31 @@
             this.dgvARB.Size = new System.Drawing.Size(456, 302);
             this.dgvARB.TabIndex = 3;
             // 
+            // tabPage10
+            // 
+            this.tabPage10.Controls.Add(this.dgvSUA);
+            this.tabPage10.Location = new System.Drawing.Point(4, 26);
+            this.tabPage10.Name = "tabPage10";
+            this.tabPage10.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage10.Size = new System.Drawing.Size(458, 308);
+            this.tabPage10.TabIndex = 9;
+            this.tabPage10.Text = "SUAs";
+            this.tabPage10.UseVisualStyleBackColor = true;
+            // 
+            // dgvSUA
+            // 
+            this.dgvSUA.AllowUserToAddRows = false;
+            this.dgvSUA.AllowUserToDeleteRows = false;
+            this.dgvSUA.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvSUA.Location = new System.Drawing.Point(1, 3);
+            this.dgvSUA.Margin = new System.Windows.Forms.Padding(2);
+            this.dgvSUA.Name = "dgvSUA";
+            this.dgvSUA.RowHeadersVisible = false;
+            this.dgvSUA.RowHeadersWidth = 51;
+            this.dgvSUA.RowTemplate.Height = 24;
+            this.dgvSUA.Size = new System.Drawing.Size(456, 302);
+            this.dgvSUA.TabIndex = 4;
+            // 
             // pictureBox2
             // 
             this.pictureBox2.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pictureBox2.BackgroundImage")));
@@ -1071,7 +1129,7 @@
             // 
             this.cmdExit.BackColor = System.Drawing.Color.Red;
             this.cmdExit.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cmdExit.Location = new System.Drawing.Point(544, 14);
+            this.cmdExit.Location = new System.Drawing.Point(1052, 14);
             this.cmdExit.Margin = new System.Windows.Forms.Padding(2);
             this.cmdExit.Name = "cmdExit";
             this.cmdExit.Size = new System.Drawing.Size(76, 49);
@@ -1210,48 +1268,174 @@
             this.chkARBs.Text = "ARTCCs";
             this.chkARBs.UseVisualStyleBackColor = true;
             // 
-            // chkSSDName
+            // panelSCTsections
             // 
-            this.chkSSDName.AutoSize = true;
-            this.chkSSDName.Checked = true;
-            this.chkSSDName.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkSSDName.Location = new System.Drawing.Point(85, 81);
-            this.chkSSDName.Margin = new System.Windows.Forms.Padding(2);
-            this.chkSSDName.Name = "chkSSDName";
-            this.chkSSDName.Size = new System.Drawing.Size(90, 17);
-            this.chkSSDName.TabIndex = 44;
-            this.chkSSDName.Text = "Use full name";
-            this.toolTip1.SetToolTip(this.chkSSDName, "If checked, SCT diagrams will use full name for SIDs/STARs. If UNchecked, will us" +
-        "e the abbreviation.");
-            this.chkSSDName.UseVisualStyleBackColor = true;
+            this.panelSCTsections.Controls.Add(this.ChkSUA);
+            this.panelSCTsections.Controls.Add(this.chkALL);
+            this.panelSCTsections.Controls.Add(this.chkSSDName);
+            this.panelSCTsections.Controls.Add(this.chkARBs);
+            this.panelSCTsections.Controls.Add(this.chkAPTs);
+            this.panelSCTsections.Controls.Add(this.chkSSDs);
+            this.panelSCTsections.Controls.Add(this.chkRWYs);
+            this.panelSCTsections.Controls.Add(this.chkAWYs);
+            this.panelSCTsections.Controls.Add(this.chkVORs);
+            this.panelSCTsections.Controls.Add(this.chkFIXes);
+            this.panelSCTsections.Controls.Add(this.chkNDBs);
+            this.panelSCTsections.Location = new System.Drawing.Point(408, 182);
+            this.panelSCTsections.Name = "panelSCTsections";
+            this.panelSCTsections.Size = new System.Drawing.Size(200, 126);
+            this.panelSCTsections.TabIndex = 45;
             // 
-            // panel1
+            // ChkSUA
             // 
-            this.panel1.Controls.Add(this.chkALL);
-            this.panel1.Controls.Add(this.chkSSDName);
-            this.panel1.Controls.Add(this.chkARBs);
-            this.panel1.Controls.Add(this.chkAPTs);
-            this.panel1.Controls.Add(this.chkSSDs);
-            this.panel1.Controls.Add(this.chkRWYs);
-            this.panel1.Controls.Add(this.chkAWYs);
-            this.panel1.Controls.Add(this.chkVORs);
-            this.panel1.Controls.Add(this.chkFIXes);
-            this.panel1.Controls.Add(this.chkNDBs);
-            this.panel1.Location = new System.Drawing.Point(393, 352);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(200, 126);
-            this.panel1.TabIndex = 45;
+            this.ChkSUA.AutoSize = true;
+            this.ChkSUA.Location = new System.Drawing.Point(66, 101);
+            this.ChkSUA.Name = "ChkSUA";
+            this.ChkSUA.Size = new System.Drawing.Size(127, 17);
+            this.ChkSUA.TabIndex = 45;
+            this.ChkSUA.Text = "Special Use Airspace";
+            this.ChkSUA.UseVisualStyleBackColor = true;
+            this.ChkSUA.CheckedChanged += new System.EventHandler(this.ChkSUA_CheckedChanged);
+            // 
+            // cmdAddSUAs
+            // 
+            this.cmdAddSUAs.Location = new System.Drawing.Point(459, 67);
+            this.cmdAddSUAs.Margin = new System.Windows.Forms.Padding(2);
+            this.cmdAddSUAs.Name = "cmdAddSUAs";
+            this.cmdAddSUAs.Size = new System.Drawing.Size(93, 49);
+            this.cmdAddSUAs.TabIndex = 46;
+            this.cmdAddSUAs.Text = "Add SUAs (test)";
+            this.cmdAddSUAs.UseVisualStyleBackColor = true;
+            this.cmdAddSUAs.Click += new System.EventHandler(this.CmdAddSUAs_Click);
+            // 
+            // panelSUAs
+            // 
+            this.panelSUAs.Controls.Add(this.chkSUA_Danger);
+            this.panelSUAs.Controls.Add(this.chkSUA_Prohibited);
+            this.panelSUAs.Controls.Add(this.chkSUA_Restricted);
+            this.panelSUAs.Controls.Add(this.chkSUA_ClassD);
+            this.panelSUAs.Controls.Add(this.chkSUA_ClassC);
+            this.panelSUAs.Controls.Add(this.chkSUA_ClassB);
+            this.panelSUAs.Controls.Add(this.label6);
+            this.panelSUAs.Location = new System.Drawing.Point(426, 312);
+            this.panelSUAs.Name = "panelSUAs";
+            this.panelSUAs.Size = new System.Drawing.Size(182, 90);
+            this.panelSUAs.TabIndex = 47;
+            this.panelSUAs.Visible = false;
+            // 
+            // chkSUA_Danger
+            // 
+            this.chkSUA_Danger.AutoSize = true;
+            this.chkSUA_Danger.Location = new System.Drawing.Point(83, 61);
+            this.chkSUA_Danger.Name = "chkSUA_Danger";
+            this.chkSUA_Danger.Size = new System.Drawing.Size(61, 17);
+            this.chkSUA_Danger.TabIndex = 6;
+            this.chkSUA_Danger.Text = "Danger";
+            this.chkSUA_Danger.UseVisualStyleBackColor = true;
+            // 
+            // chkSUA_Prohibited
+            // 
+            this.chkSUA_Prohibited.AutoSize = true;
+            this.chkSUA_Prohibited.Location = new System.Drawing.Point(83, 43);
+            this.chkSUA_Prohibited.Name = "chkSUA_Prohibited";
+            this.chkSUA_Prohibited.Size = new System.Drawing.Size(73, 17);
+            this.chkSUA_Prohibited.TabIndex = 5;
+            this.chkSUA_Prohibited.Text = "Prohibited";
+            this.chkSUA_Prohibited.UseVisualStyleBackColor = true;
+            // 
+            // chkSUA_Restricted
+            // 
+            this.chkSUA_Restricted.AutoSize = true;
+            this.chkSUA_Restricted.Location = new System.Drawing.Point(83, 25);
+            this.chkSUA_Restricted.Name = "chkSUA_Restricted";
+            this.chkSUA_Restricted.Size = new System.Drawing.Size(74, 17);
+            this.chkSUA_Restricted.TabIndex = 4;
+            this.chkSUA_Restricted.Text = "Restricted";
+            this.chkSUA_Restricted.UseVisualStyleBackColor = true;
+            // 
+            // chkSUA_ClassD
+            // 
+            this.chkSUA_ClassD.AutoSize = true;
+            this.chkSUA_ClassD.Checked = true;
+            this.chkSUA_ClassD.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkSUA_ClassD.Location = new System.Drawing.Point(15, 61);
+            this.chkSUA_ClassD.Name = "chkSUA_ClassD";
+            this.chkSUA_ClassD.Size = new System.Drawing.Size(62, 17);
+            this.chkSUA_ClassD.TabIndex = 3;
+            this.chkSUA_ClassD.Text = "Class D";
+            this.chkSUA_ClassD.UseVisualStyleBackColor = true;
+            // 
+            // chkSUA_ClassC
+            // 
+            this.chkSUA_ClassC.AutoSize = true;
+            this.chkSUA_ClassC.Checked = true;
+            this.chkSUA_ClassC.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkSUA_ClassC.Location = new System.Drawing.Point(15, 42);
+            this.chkSUA_ClassC.Name = "chkSUA_ClassC";
+            this.chkSUA_ClassC.Size = new System.Drawing.Size(61, 17);
+            this.chkSUA_ClassC.TabIndex = 2;
+            this.chkSUA_ClassC.Text = "Class C";
+            this.chkSUA_ClassC.UseVisualStyleBackColor = true;
+            // 
+            // chkSUA_ClassB
+            // 
+            this.chkSUA_ClassB.AutoSize = true;
+            this.chkSUA_ClassB.Checked = true;
+            this.chkSUA_ClassB.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkSUA_ClassB.Location = new System.Drawing.Point(15, 25);
+            this.chkSUA_ClassB.Name = "chkSUA_ClassB";
+            this.chkSUA_ClassB.Size = new System.Drawing.Size(61, 17);
+            this.chkSUA_ClassB.TabIndex = 1;
+            this.chkSUA_ClassB.Text = "Class B";
+            this.chkSUA_ClassB.UseVisualStyleBackColor = true;
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(4, 4);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(128, 13);
+            this.label6.TabIndex = 0;
+            this.label6.Text = "Select SUAs to be written";
+            // 
+            // chkOverwrite
+            // 
+            this.chkOverwrite.AutoSize = true;
+            this.chkOverwrite.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.chkOverwrite.Location = new System.Drawing.Point(358, 122);
+            this.chkOverwrite.Name = "chkOverwrite";
+            this.chkOverwrite.Size = new System.Drawing.Size(170, 20);
+            this.chkOverwrite.TabIndex = 48;
+            this.chkOverwrite.Text = "Confirm overwrite of files";
+            this.chkOverwrite.UseVisualStyleBackColor = true;
+            this.chkOverwrite.CheckedChanged += new System.EventHandler(this.ChkOverwrite_CheckedChanged);
+            // 
+            // linkLabel1
+            // 
+            this.linkLabel1.AutoSize = true;
+            this.linkLabel1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.linkLabel1.Location = new System.Drawing.Point(4, 83);
+            this.linkLabel1.Name = "linkLabel1";
+            this.linkLabel1.Size = new System.Drawing.Size(119, 16);
+            this.linkLabel1.TabIndex = 49;
+            this.linkLabel1.TabStop = true;
+            this.linkLabel1.Text = "FAA 28-day NASR";
+            this.toolTip1.SetToolTip(this.linkLabel1, "Open FAA 28-day NASR subscription");
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(227)))), ((int)(((byte)(246)))));
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
             this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(1139, 526);
             this.ControlBox = false;
-            this.Controls.Add(this.panel1);
+            this.Controls.Add(this.linkLabel1);
+            this.Controls.Add(this.chkOverwrite);
+            this.Controls.Add(this.panelSUAs);
+            this.Controls.Add(this.cmdAddSUAs);
+            this.Controls.Add(this.panelSCTsections);
             this.Controls.Add(this.lblFilesWarning);
             this.Controls.Add(this.cmdLocalSectors);
             this.Controls.Add(this.cmdUpdateGrid);
@@ -1321,9 +1505,13 @@
             ((System.ComponentModel.ISupportInitialize)(this.dgvSTAR)).EndInit();
             this.tabPage9.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgvARB)).EndInit();
+            this.tabPage10.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dgvSUA)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
+            this.panelSCTsections.ResumeLayout(false);
+            this.panelSCTsections.PerformLayout();
+            this.panelSUAs.ResumeLayout(false);
+            this.panelSUAs.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1418,7 +1606,21 @@
         private System.Windows.Forms.CheckBox chkARBs;
         private System.Windows.Forms.Label lblFilesWarning;
         private System.Windows.Forms.CheckBox chkSSDName;
-        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Panel panelSCTsections;
+        private System.Windows.Forms.Button cmdAddSUAs;
+        private System.Windows.Forms.CheckBox ChkSUA;
+        private System.Windows.Forms.Panel panelSUAs;
+        private System.Windows.Forms.CheckBox chkSUA_Danger;
+        private System.Windows.Forms.CheckBox chkSUA_Prohibited;
+        private System.Windows.Forms.CheckBox chkSUA_Restricted;
+        private System.Windows.Forms.CheckBox chkSUA_ClassD;
+        private System.Windows.Forms.CheckBox chkSUA_ClassC;
+        private System.Windows.Forms.CheckBox chkSUA_ClassB;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.TabPage tabPage10;
+        private System.Windows.Forms.DataGridView dgvSUA;
+        private System.Windows.Forms.CheckBox chkOverwrite;
+        private System.Windows.Forms.LinkLabel linkLabel1;
     }
 }
 
