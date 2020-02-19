@@ -124,18 +124,25 @@ namespace SCTBuilder
             return result;
         }
 
-        public float String2DecDeg(string DMS, string Delim = "")
+        public static float String2DecDeg(string DMS, string Delim = "")
         /// <summary>
         /// Returns a Decimal degrees value from the OpenAIG formatted string
         /// OpenAIG is [#]##:##:##? 
         /// FAA is [#]##-##-##.##?
+        /// VRC is ?###.##.##.###  (Leading zero for latitudes)
         ///     where ? is the quadrant
         /// </summary>
+        // If possible, find the delimiter
         {
             float result = -1; float DD; float MM; float SS; string quadrant;
-            string tempDMS; float factor;
+            string tempDMS; float factor; string newDelim;
             if (DMS.Length > 5)
             {
+                // Check that caller didn't "forget" the delim (or may not know it)
+                newDelim = FindDelimiter(DMS);
+                if (Delim.Length != 0)
+                    if (newDelim != Delim) return result;       // Result is still -1
+
                 // Sometimes the quadrant is in the front and other times in the back!
                 if (DMS.Substring(0, 1).IsNumeric())
                 {
@@ -147,19 +154,13 @@ namespace SCTBuilder
                     quadrant = DMS.Substring(0, 1);
                     tempDMS = DMS.Substring(1, DMS.Length - 1);
                 }
-                if (Delim != "")
-                {
-                    int loc1 = tempDMS.IndexOf(Delim, 0, tempDMS.Length, StringComparison.CurrentCulture); // end of DD
-                    int loc2 = tempDMS.IndexOf(Delim, loc1 + 1, tempDMS.Length - loc1 - 1, StringComparison.CurrentCulture);   // End of MM
-                    DD = float.Parse(tempDMS.Substring(0, loc1));
-                    MM = float.Parse(tempDMS.Substring(loc1 + 1, loc2 - loc1 - 1));
-                    SS = float.Parse(tempDMS.Substring(loc2 + 1, tempDMS.Length - loc2 - 1));
-                    result = LatLongCalc.DMS2DecDeg(DD, MM, SS, quadrant);
-                }
-                else
+                // Now that we know the real Delim, use it to find the values
+                if (newDelim.Length == 0)
+                // Truely no delimiter
                 {
                     if (quadrant == "W" || quadrant == "E")
                     {
+                        // Longitudinal conversion
                         DD = float.Parse(tempDMS.Substring(0, 3));
                         MM = float.Parse(tempDMS.Substring(3, 2));
                         SS = float.Parse(tempDMS.Substring(5, 2));
@@ -171,10 +172,11 @@ namespace SCTBuilder
                     }
                     else
                     {
+                        // Latitude conversion
                         DD = float.Parse(tempDMS.Substring(0, 2));
                         MM = float.Parse(tempDMS.Substring(2, 2));
                         SS = float.Parse(tempDMS.Substring(4, 2));
-                        if (DMS.Length > 6)                         // Add faction of seconds if they exist
+                        if (DMS.Length > 6)                         // Add fraction of seconds if they exist
                         {
                             factor = (float)Math.Pow(10f, Convert.ToSingle(tempDMS.Length - 6));
                             SS += float.Parse(tempDMS.Substring(5, 2)) / factor;
@@ -182,14 +184,48 @@ namespace SCTBuilder
                     }
                     result = LatLongCalc.DMS2DecDeg(DD, MM, SS, quadrant);
                 }
+                else
+                // Has a delimiter
+                {
+                    int loc1 = tempDMS.IndexOf(newDelim, 0, tempDMS.Length, StringComparison.CurrentCulture); // end of DD
+                    int loc2 = tempDMS.IndexOf(newDelim, loc1 + 1, tempDMS.Length - loc1 - 1, StringComparison.CurrentCulture);   // End of MM
+                    DD = float.Parse(tempDMS.Substring(0, loc1));
+                    MM = float.Parse(tempDMS.Substring(loc1 + 1, loc2 - loc1 - 1));
+                    SS = float.Parse(tempDMS.Substring(loc2 + 1, tempDMS.Length - loc2 - 1));
+                    result = LatLongCalc.DMS2DecDeg(DD, MM, SS, quadrant);
+                }
+                // Last step: Ensure the result value falls within the range of the latitude or longitude
+                switch (quadrant)
+                {
+                    case "N":
+                    case "S":
+                        if (Math.Abs(result) > 90) result = -1;
+                        break;
+                    case "E":
+                    case "W":
+                        if (Math.Abs(result) > 180) result = -1;
+                        break;
+                }
             }
             return result;
         }
-        public static string DecDeg2SCT(float DecDeg, bool IsLatitude)
+
+        private static string FindDelimiter(string DMS)
+        {
+            // The delimiter must occur within 4 characters (?###^)
+            string result = string.Empty;
+            if ( (DMS.IndexOf('.') > -1) && (DMS.IndexOf('.') < 5) ) result = ".";
+            if ((DMS.IndexOf(':') > -1) && (DMS.IndexOf(':') < 5)) result = ":";
+            if ((DMS.IndexOf('-') > -1) && (DMS.IndexOf('-') < 5)) result = "-";
+            if ((DMS.IndexOf(' ') > -1) && (DMS.IndexOf(' ') < 5)) result = " ";
+            return result;
+        }
+
+        public static string DecDeg2SCT(double DecDeg, bool IsLatitude)
         {
             string quadrant;
             string result;     // An empty string indicates an error occurred
-            float tempDecDeg;
+            double tempDecDeg;
             if (DecDeg < 0)     // Tests for S or W quadrants
             {
                 if (IsLatitude)
@@ -215,15 +251,15 @@ namespace SCTBuilder
             tempDecDeg = Math.Abs(DecDeg);
             int DD = (int)Math.Floor(tempDecDeg);     // Need integer value WITHOUT rounding
             string strDD = DD.ToString("000");          // This cannot be done in one step
-            float tmpDecDeg = (tempDecDeg - DD) * 60;
+            double tmpDecDeg = (tempDecDeg - DD) * 60;
             int MM = (int)Math.Floor(tmpDecDeg);
             string strMM = MM.ToString("00");
-            float SS = (tmpDecDeg - MM) * 60;
+            double SS = (tmpDecDeg - MM) * 60;
             string strSS = SS.ToString("00.000");
             result = quadrant + strDD + "." + strMM + "." + strSS;
             return result;
         }
-        public static float SS2DD(string seconds)
+        public static float Seconds2DecDeg(string seconds)
         {
             if (seconds.Length == 0) return -1;
             try
@@ -231,12 +267,12 @@ namespace SCTBuilder
                 float DD = Convert.ToSingle(Extensions.Left(seconds, seconds.Length - 1));
                 DD /= 3600f;
                 string s = Extensions.Right(seconds, 1);
-                if ("SW".IndexOf(s) != -1) DD *= -1;
+                if ("SW".IndexOf(s) != -1) DD *= -1;    // Invert if southern latitude or west longitude
                 return DD;
             }
             catch { return -1f; }
         }
-        public static float MagVar(string Mag)
+        public static float MagVar2DecMag(string Mag)
         {
             if (Mag.Trim().Length > 0)
             {
@@ -244,8 +280,9 @@ namespace SCTBuilder
             }
             else return 0f;
         }
-        public static void BuildPolygon(string Polygon, string ID)
+        public static void BuildSUAPolygon(string Polygon, string ID)
         {
+            // For a given SUA [ID], use the imported local SUA file to create the SID-Star
             string tempPoly = Polygon; float Latitude; float Longitude;
             DataTable dtPoly = Form1.Polygon; int loc1; string Lat1; string Long1;
             DataView dvPoly = new DataView(dtPoly); int Counter = 0; string temp1;
@@ -346,5 +383,75 @@ namespace SCTBuilder
                    );
         }
 
+    }
+
+    public static class SCTstrings
+    {
+        public static string VORNDBout(string[] strOut)
+        {
+            string result = strOut[0] + " " + strOut[1] + " " +
+                        strOut[2] + " " + strOut[3] + " ;" + strOut[4];
+            return result;
+        }
+        public static string APTout(string[] strOut)
+        {
+            string result = strOut[0] + " " + strOut[1] + " " + strOut[2] + " " +
+                            strOut[3] + " " + " ;" + strOut[4] + strOut[5] + strOut[6];
+            return result;
+        }
+        public static string FIXout(string[] strOut)
+        {
+            string result = strOut[0] + " " + strOut[2] + " " + strOut[3] + " ;" + strOut[4];
+            return result;
+        }
+        public static string RWYout(string[] strOut)
+        {
+            string result = strOut[0] + " " + strOut[1] + " " + strOut[2] + " " + strOut[3] + " "
+                        + strOut[4] + " " + strOut[5] + " " + strOut[6] + " " + strOut[7] + Environment.NewLine;
+            return result;
+        }
+        public static string AWYout(string Awy, string StartLat, 
+            string StartLong, string EndLat, string EndLong,
+            string NavAid0, string NavAid1, bool UseFix = false)
+        {
+            string result;
+            string str = new string(' ', 27 - Awy.Length);
+            if (!UseFix)
+                result = Awy + str + StartLat + " " + StartLong + " " +
+                    EndLat + " " + EndLong + "; " + NavAid0 + " " + NavAid1;
+            else
+                result = Awy + str + NavAid0 + " " + NavAid0 + " " +
+                    NavAid1 + " " + NavAid1;
+            return result;
+        }
+        public static string SSDout(string StartLat,
+            string StartLong, string EndLat, string EndLong,
+            string NavAid0 = "", string NavAid1 = "", bool UseFix = false)
+            // Lat/longs are assumed to be in SCT format!!
+        {
+            string str = new string(' ', 27);
+            string result;
+            if (!UseFix)
+                result = str + StartLat + " " + StartLong + " " + EndLat + " " + EndLong +
+                    "; " + NavAid0 + NavAid1;
+            else
+                result = str + NavAid0 + " " + NavAid0 + " " + NavAid1 + " " + NavAid1;
+            return result;
+        }
+        public static string BoundaryOut(string prefix, string StartLat,
+            string StartLong, string EndLat, string EndLong,
+            string suffix = "")
+        {
+            string result = prefix + " " + StartLat + " " + StartLong + " " +
+                                        EndLat + " " + EndLong;
+            if (suffix.Length != 0) result += "; " + suffix;
+            return result;
+        }
+        public static string LabelOut(string label, string Lat, string Long, string Color, string Comment = "")
+        {
+            string strText = "\"" + label.Trim() + "\"";
+            string result = strText + " " + Lat + " " + Long + " " + Color + Comment;
+            return result;
+        }
     }
 }

@@ -238,7 +238,7 @@ namespace SCTBuilder
         }
         private static void WriteVOR(string path)
         {
-            string[] strOut = new string[5]; string LineOut;
+            string[] strOut = new string[5];
             DataView dataView = new DataView(Form1.VOR)
             {
                 RowFilter = "[Selected]",
@@ -255,11 +255,8 @@ namespace SCTBuilder
                     strOut[2] = Conversions.DecDeg2SCT(Convert.ToSingle(row["Latitude"]), true);
                     strOut[3] = Conversions.DecDeg2SCT(Convert.ToSingle(row["Longitude"]), false);
                     strOut[4] = row["Name"].ToString();
-                    LineOut = strOut[0] + " " + strOut[1] + " " +
-                        strOut[2] + " " + strOut[3] + " ;" + strOut[4];
-
-                    if (!LineOut.Contains("-1 "))       // Do NOT write VORs having no fix
-                        sw.WriteLine(LineOut);
+                    if (!(strOut[2] + strOut[3]).Contains("-1 "))      // Do NOT write VORs having no fix
+                        sw.WriteLine(SCTstrings.VORNDBout(strOut));
                 }
                 dataView.Dispose();
             }
@@ -286,15 +283,15 @@ namespace SCTBuilder
                     strOut[4] = row["Name"].ToString();
                     LineOut = strOut[0] + " " + strOut[1] + " " +
                         strOut[2] + " " + strOut[3] + " ;" + strOut[4];
-                    if (!LineOut.Contains("-1 "))       // Do NOT write NDBs having no fix
-                        sw.WriteLine(LineOut);
+                    if (!(strOut[2] + strOut[3]).Contains("-1 "))      // Do NOT write VORs having no fix
+                        sw.WriteLine(SCTstrings.VORNDBout(strOut));
                 }
                 dataView.Dispose();
             }
         }
         private static void WriteAPT(string path)
         {
-            string[] strOut = new string[7]; string LineOut; string ATIStype = "ATIS";
+            string[] strOut = new string[7]; string ATIStype = "ATIS";
             DataTable APT = Form1.APT;
             DataTable TWR = Form1.TWR;
             DataView dvTWR = new DataView(TWR);
@@ -337,19 +334,18 @@ namespace SCTBuilder
                         strOut[5] = " (Public) ";
                     else
                         strOut[5] = " {Private} ";
-                    strOut[6] = ATIS;
-                    LineOut = strOut[0] + " " + strOut[1] + " " + strOut[2] + " " +
-                        strOut[3] + " " + " ;" + strOut[4] + strOut[5];
-                    if (ATIS.Length != 0) LineOut += ATIStype + strOut[6];
-                    if (!LineOut.Contains("-1 "))       // Do NOT write airports having no fix
-                        sw.WriteLine(LineOut);
+                    strOut[6] = ATIS; 
+                    if (ATIS.Length != 0) strOut[6] += ATIStype + strOut[6];
+                        else strOut[6] = string.Empty;
+                    if (!(strOut[2] + " " + strOut[3]).Contains("-1 "))      // Do NOT write VORs having no fix
+                        sw.WriteLine(SCTstrings.APTout(strOut));
                 }
             }
             dvAPT.Dispose();
         }
         private static void WriteFixes(string path)
         {
-            string[] strOut = new string[5]; string LineOut;
+            string[] strOut = new string[5];
             DataTable FIX = Form1.FIX;
             DataView dataView = new DataView(FIX)
             {
@@ -366,8 +362,7 @@ namespace SCTBuilder
                     strOut[2] = Conversions.DecDeg2SCT(Convert.ToSingle(row["Latitude"]), true);
                     strOut[3] = Conversions.DecDeg2SCT(Convert.ToSingle(row["Longitude"]), false);
                     strOut[4] = row["Use"].ToString();
-                    LineOut = strOut[0] + " " + strOut[2] + " " + strOut[3] + " ;" + strOut[4];
-                    sw.WriteLine(LineOut);
+                    sw.WriteLine(SCTstrings.FIXout(strOut));
                 }
             }
             dataView.Dispose();
@@ -377,7 +372,7 @@ namespace SCTBuilder
         {
             string[] strOut = new string[8]; string FacID = string.Empty;
             string RWYtextColor = TextColors.RWYTextColor;
-            string Output = Environment.NewLine; string cr = Environment.NewLine;
+            string cr = Environment.NewLine; bool FirstLine = true;
             DataTable DRAW = new SCTdata.DrawLabelDataTable();
             DataTable RWY = Form1.RWY;
             DataView dvRWY = new DataView(RWY)
@@ -385,7 +380,6 @@ namespace SCTBuilder
                 RowFilter = "[Selected]",
                 Sort = "FacilityID, BaseIdentifier"
             };
-            Output += "[RUNWAY]" + cr;
             using (StreamWriter sw = new StreamWriter(path))
             {
                 foreach (DataRowView row in dvRWY)
@@ -394,6 +388,11 @@ namespace SCTBuilder
                     {
                         sw.WriteLine("; " + row["FacilityID"].ToString());
                         FacID = row["FacilityID"].ToString();
+                        if (FirstLine)
+                        {
+                            sw.WriteLine(cr + "[RUNWAY]");
+                            FirstLine = false;
+                        }
                     }
                     strOut[0] = row["BaseIdentifier"].ToString().Trim().PadRight(3);
                     strOut[1] = row["EndIdentifier"].ToString().Trim().PadRight(3);
@@ -403,12 +402,10 @@ namespace SCTBuilder
                     strOut[5] = Conversions.DecDeg2SCT(Convert.ToSingle(row["Longitude"]), false);
                     strOut[6] = Conversions.DecDeg2SCT(Convert.ToSingle(row["EndLatitude"]), true);
                     strOut[7] = Conversions.DecDeg2SCT(Convert.ToSingle(row["EndLongitude"]), false);
-                    Output += strOut[0] + " " + strOut[1] + " " + strOut[2] + " " + strOut[3] + " "
-                        + strOut[4] + " " + strOut[5] + " " + strOut[6] + " " + strOut[7] + strOut[8] + cr;
+                    sw.WriteLine(SCTstrings.RWYout(strOut));
                     DRAW.Rows.Add(new object[] { strOut[0].ToString(), strOut[4].ToString(), strOut[5].ToString(), RWYtextColor });
                     DRAW.Rows.Add(new object[] { strOut[1].ToString(), strOut[6].ToString(), strOut[7].ToString(), RWYtextColor });
                 }
-                sw.WriteLine(Output);
                 WriteLabels(DRAW, sw);
             }
             dvRWY.Dispose();
@@ -416,8 +413,8 @@ namespace SCTBuilder
         private static void WriteAWY(string path, bool LOWawy = true)
         {
             DataTable AWY = Form1.AWY;
-            string LineOut; string CurAwy = string.Empty; string PrevAwy = string.Empty;
-            string FirstNavAid = string.Empty; string SecondNavIad = string.Empty;
+            string CurAwy = string.Empty; string PrevAwy = string.Empty;
+            string NavAid0 = string.Empty; string NavAid1 = string.Empty;
             string Lat0 = string.Empty; string Long0 = string.Empty;
             string Lat1 = string.Empty; string Long1 = string.Empty;
             string filter = "[Selected] AND ";
@@ -446,7 +443,7 @@ namespace SCTBuilder
                         if (CurAwy.Length == 0)                               // Initialize loop
                         {
                             CurAwy = row["AWYID"].ToString();
-                            FirstNavAid = row["NAVAID"].ToString();
+                            NavAid0 = row["NAVAID"].ToString();
                             Lat0 = Conversions.DecDeg2SCT(Convert.ToSingle(row["Latitude"]), true);
                             Long0 = Conversions.DecDeg2SCT(Convert.ToSingle(row["Longitude"]), false);
                             PrevAwy = CurAwy;
@@ -456,25 +453,21 @@ namespace SCTBuilder
                             CurAwy = row["AWYID"].ToString(); ;
                             if (CurAwy == PrevAwy)                          // If the new row is the same airway...
                             {
-                                if (SecondNavIad.Length != 0)                  // Write the line
+                                if (NavAid1.Length != 0)                  // Write the line
                                 {
                                     string str = new string(' ', 27 - CurAwy.Length);
-                                    if ((FirstNavAid.Length != 0) && (SecondNavIad.Length != 0))     // For the rare occurence of an empty row NavAid, e.g., J1
+                                    if ((NavAid0.Length != 0) && (NavAid1.Length != 0))     // For the rare occurence of an empty row NavAid, e.g., J1
                                     {
-                                        LineOut = CurAwy + str;
-                                        LineOut += Lat0 + " " + Long0 + " ";
-                                        LineOut += Lat1 + " " + Long1;
-                                        LineOut += "; " + FirstNavAid + " " + SecondNavIad;
-                                        sw.WriteLine(LineOut);
+                                        sw.WriteLine(SCTstrings.AWYout(CurAwy, Lat0, Long0, Lat1, Long1, NavAid0, NavAid1));
                                     }
-                                    FirstNavAid = SecondNavIad;
+                                    NavAid0 = NavAid1;
                                     Lat0 = Lat1;
                                     Long0 = Long1;
-                                    SecondNavIad = string.Empty;
+                                    NavAid1 = string.Empty;
                                 }
                                 else
                                 {
-                                    SecondNavIad = row["NAVAID"].ToString();
+                                    NavAid1 = row["NAVAID"].ToString();
                                     Lat1 = Conversions.DecDeg2SCT(Convert.ToSingle(row["Latitude"]), true);
                                     Long1 = Conversions.DecDeg2SCT(Convert.ToSingle(row["Longitude"]), false);
                                 }
@@ -482,10 +475,10 @@ namespace SCTBuilder
                             else
                             {
                                 PrevAwy = CurAwy;                           // This is a new airway
-                                FirstNavAid = row["NAVAID"].ToString();
+                                NavAid0 = row["NAVAID"].ToString();
                                 Lat0 = Conversions.DecDeg2SCT(Convert.ToSingle(row["Latitude"]), true);
                                 Long0 = Conversions.DecDeg2SCT(Convert.ToSingle(row["Longitude"]), false);
-                                SecondNavIad = string.Empty;
+                                NavAid1 = string.Empty;
                             }
                         }
                     }
@@ -624,7 +617,7 @@ namespace SCTBuilder
             return result;
         }
 
-        private static void WriteSSD(StreamWriter sw, string SSDID, bool UseName, bool IsSID)
+        public static void WriteSSD(StreamWriter sw, string SSDID, bool UseName, bool IsSID)
         {
             ///<summary>
             /// Everything works.  Need to find a way to add the FIXes from the SSDs outside
@@ -761,7 +754,7 @@ namespace SCTBuilder
             string ARBname; string HL;  string filter; string Sector;
             string Lat1; string Long1; string Descr1; string Descr0 = string.Empty;
             string Lat0 = string.Empty; string Long0 = string.Empty;
-            string LatFirst = string.Empty; string LongFirst = string.Empty;
+            string LatFirst; string LongFirst;
             string Output = Environment.NewLine; string cr = Environment.NewLine;
             if (High)
             {
@@ -813,13 +806,11 @@ namespace SCTBuilder
                             Lat1 = Conversions.DecDeg2SCT(Convert.ToSingle(ARBdataRowView["Latitude"]), true);
                             Long1 = Conversions.DecDeg2SCT(Convert.ToSingle(ARBdataRowView["Longitude"]), false);
                             if ((FacID0.Length != 0) && (FacID0 == FacID1))
-                                Output += FacID1+HL + " " + Lat0 + " " + Long0 + " " +
-                                        Lat1 + " " + Long1 + "; " + Descr0 +  cr;
+                                Output += SCTstrings.BoundaryOut(FacID1 + HL, Lat0, Long0, Lat1, Long1, Descr0) + cr;
                         }
                         if (Descr1.IndexOf("POINT OF BEGINNING") != -1)    // Last line in this group
                         {
-                            Output += FacID1 + HL + " " + Lat1 + " " + Long1 + " " +
-                                        LatFirst + " " + LongFirst + "; " + Descr1;
+                            Output += SCTstrings.BoundaryOut(FacID1 + HL, Lat0, Long0, Lat1, Long1, Descr0) + cr;
 
                             sw.WriteLine(Output);
                             Lat1 = Long1 = FacID1 = Descr1 = Output = string.Empty;
@@ -851,17 +842,16 @@ namespace SCTBuilder
             foreach (DataRow row in dtSTL.AsEnumerable())
             {
                 strText = row["LabelText"].ToString();
-                strText = "\"" + strText.Trim() + "\"";
                 Lat = row["Latitude"].ToString();
                 Long = row["Longitude"].ToString();
                 TextColor = row["TextColor"].ToString();
                 if (row["Comment"].ToString().Length != 0)
                 {
                     Comment = row["Comment"].ToString();
-                    Output = strText + " " + Lat + " " + Long + " " + TextColor + Comment;
+                    Output = SCTstrings.LabelOut(strText, Lat, Long, TextColor, Comment);
                 }
                 else
-                    Output = strText + " " + Lat + " " + Long + " " + TextColor;
+                    Output = SCTstrings.LabelOut(strText, Lat, Long, TextColor);
                 sw.WriteLine(Output);
             }
         }

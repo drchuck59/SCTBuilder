@@ -9,7 +9,7 @@ using System.Data;
 
 namespace SCTBuilder
 {
-    public class ReadFixes
+    public class ReadNASR
     {
         public static int FillCycleInfo()
         {
@@ -41,7 +41,6 @@ namespace SCTBuilder
             DataTable arb = Form1.ARB;
             if (arb.Rows.Count != 0) arb.Clear();     // Must start with empty table
             string FullFilename = GetFullPathname(FolderMgt.DataFolder, "ARB.txt");
-            Conversions S2D = new Conversions();
             using (StreamReader reader = new StreamReader(FullFilename))
             {
                 string Line = string.Empty;
@@ -52,8 +51,8 @@ namespace SCTBuilder
                         Line.Substring(0, 3),             // ARTCC
                         Line.Substring(12, 40).Trim(),    // Name
                         Line.Substring(52, 10).Trim(),    // Boundary type (H/L/Boundary, etc.)
-                        S2D.String2DecDeg(Line.Substring(62, 14).Trim(), "-"),  // Latitude
-                        S2D.String2DecDeg(Line.Substring(76, 14).Trim(), "-"),  // Longitude
+                        Conversions.String2DecDeg(Line.Substring(62, 14).Trim(), "-"),  // Latitude
+                        Conversions.String2DecDeg(Line.Substring(76, 14).Trim(), "-"),  // Longitude
                         Line.Substring(90, 300).Trim(),   // Decode Name
                         Convert.ToInt32(Line.Substring(390, 6).Trim())    // Sequence number
                     };
@@ -139,7 +138,6 @@ namespace SCTBuilder
             DataTable FIXtable = Form1.FIX;
             if (FIXtable.Rows.Count != 0) FIXtable.Clear();     // Must start with empty tables
             string FullFilename = GetFullPathname(FolderMgt.DataFolder, "FIX.txt");
-            Conversions S2D = new Conversions();
             using (StreamReader reader = new StreamReader(FullFilename))
             {
                 string Line = string.Empty;
@@ -152,8 +150,8 @@ namespace SCTBuilder
                             var FixItems = new List<object>
                                 {
                                     Line.Substring(4, 30).Trim(),                            // ID
-                                    S2D.String2DecDeg(Line.Substring(66, 14).Trim(),"-"),      // Latitude
-                                    S2D.String2DecDeg(Line.Substring(80, 14).Trim(),"-"),      // Longitude
+                                    Conversions.String2DecDeg(Line.Substring(66, 14).Trim(),"-"),      // Latitude
+                                    Conversions.String2DecDeg(Line.Substring(80, 14).Trim(),"-"),      // Longitude
                                     Line.Substring(237, 4).Trim(),                          // ARTCC
                                     Line.Substring(34, 30).Trim(),                          // State
                                     Line.Substring(213, 15).Trim(),                         // Use
@@ -194,7 +192,7 @@ namespace SCTBuilder
                             FacType = Extensions.Right(tempID, 1);
                             tempOpen = Line.Substring(840, 2).Trim() == "O";
 
-                            if ((FacType.IndexOfAny(FacilityType) != -1) & (tempOpen))     // Only operational APTs of "A", "H" and "C"
+                            if ((FacType.IndexOfAny(FacilityType) != -1) && (tempOpen))     // Only operational APTs of "A", "H" and "C"
                             {
                                 tempARTCC = Line.Substring(674, 4).Trim();
                                 var AptInfo = new List<object>
@@ -202,11 +200,11 @@ namespace SCTBuilder
                                 tempID,                                        // ID (Landing Facility Site Number)
                                 Line.Substring(27, 4).Trim(),                  // Facility ID (ICOA)
                                 Line.Substring(133, 50).Trim(),                // Facility Name
-                                Conversions.SS2DD(Line.Substring(538, 12)),    // Latitude
-                                Conversions.SS2DD(Line.Substring(565, 12)),    // Longitude
+                                Conversions.Seconds2DecDeg(Line.Substring(538, 12)),    // Latitude
+                                Conversions.Seconds2DecDeg(Line.Substring(565, 12)),    // Longitude
                                 tempARTCC,                                     // Responsible ARTCC
                                 Line.Substring(50, 20).Trim(),                 // State
-                                Conversions.MagVar(Line.Substring(586, 3)),    // Magnetic Variation
+                                Conversions.MagVar2DecMag(Line.Substring(586, 3)),    // Magnetic Variation
                                 Line.Substring(183, 2),                        // Owner Type
                                 Line.Substring(185, 2) == "PU"                 // True if public
                                 };
@@ -217,34 +215,34 @@ namespace SCTBuilder
                         case "RWY":
                             /// Only interested in Airport, Seaplane, and Heliports
                             tempRwyID = Line.Substring(3, 11).Trim();
-                            if ((tempRwyID == tempID) & tempOpen & (FacType.IndexOfAny(FacilityType) != -1))
+                            if ((tempRwyID == tempID) && tempOpen && (FacType.IndexOfAny(FacilityType) != -1))
                             {
                                 if (
-                                    (tempRwyName != Line.Substring(16, 7).Trim()) & // Don't duplicate RWY name (e.g, 18L/36R)
-                                    (Line.Substring(23, 5).Trim().Length != 0) &    // tempLength
-                                    (Line.Substring(28, 4).Trim().Length != 0) &    // tempWidth
-                                    (Line.Substring(65, 3).Trim().Length != 0) &    // tempBID
-                                    (Line.Substring(68, 3).Trim().Length != 0) &    // tempHdgB
-                                    (Line.Substring(142, 7).Trim().Length != 0) &   // tempElevB
-                                    (Line.Substring(287, 3).Trim().Length != 0) &   // tempRID
-                                    (Line.Substring(290, 3).Trim().Length != 0) &  // tempHdgR
+                                    (tempRwyName != Line.Substring(16, 7).Trim()) && // Don't duplicate RWY name (e.g, 18L/36R)
+                                    (Line.Substring(23, 5).Trim().Length != 0) &&    // tempLength
+                                    (Line.Substring(28, 4).Trim().Length != 0) &&    // tempWidth
+                                    (Line.Substring(65, 3).Trim().Length != 0) &&    // tempBID
+                                    (Line.Substring(68, 3).Trim().Length != 0) &&    // tempHdgB
+                                    (Line.Substring(142, 7).Trim().Length != 0) &&   // tempElevB
+                                    (Line.Substring(287, 3).Trim().Length != 0) &&   // tempRID
+                                    (Line.Substring(290, 3).Trim().Length != 0) &&  // tempHdgR
                                     (Line.Substring(364, 7).Trim().Length != 0))   // tempElevR
                                 {
                                     tempRwyName = Line.Substring(16, 7).Trim();
                                     tempLength = Convert.ToSingle(Line.Substring(23, 5).Trim());
                                     tempWidth = Convert.ToSingle(Line.Substring(28, 4).Trim());
                                     tempBID = Line.Substring(65, 3).Trim();
-                                    tempHdgB = LatLongCalc.GetBearing(Line.Substring(68, 3).Trim(), tempBID);
-                                    tempLatB = Conversions.SS2DD(Line.Substring(103, 12).Trim());   // Latitude
+                                    tempHdgB = LatLongCalc.RWYBearing(Line.Substring(68, 3).Trim(), tempBID);
+                                    tempLatB = Conversions.Seconds2DecDeg(Line.Substring(103, 12).Trim());   // Latitude
                                     if (tempLatB == -1) tempOpen = false;
-                                    tempLongB = Conversions.SS2DD(Line.Substring(130, 12).Trim());  // Longitude
+                                    tempLongB = Conversions.Seconds2DecDeg(Line.Substring(130, 12).Trim());  // Longitude
                                     if (tempLongB == -1) tempOpen = false;
                                     tempElevB = Convert.ToSingle(Line.Substring(142, 7).Trim());
                                     tempRID = Line.Substring(287, 3).Trim();
-                                    tempHdgR = LatLongCalc.GetBearing(Line.Substring(290, 3).Trim(), tempRID);
-                                    tempLatR = Conversions.SS2DD(Line.Substring(325, 12).Trim());   // EndLatitude
+                                    tempHdgR = LatLongCalc.RWYBearing(Line.Substring(290, 3).Trim(), tempRID);
+                                    tempLatR = Conversions.Seconds2DecDeg(Line.Substring(325, 12).Trim());   // EndLatitude
                                     if (tempLatR == -1) tempOpen = false;
-                                    tempLongR = Conversions.SS2DD(Line.Substring(352, 12).Trim());  // EndLongitude
+                                    tempLongR = Conversions.Seconds2DecDeg(Line.Substring(352, 12).Trim());  // EndLongitude
                                     if (tempLongR == -1) tempOpen = false;
                                     tempElevR = Convert.ToSingle(Line.Substring(364, 7).Trim());
                                 }
@@ -334,16 +332,16 @@ namespace SCTBuilder
                             // Must be a facility with ATCT (some are TRACON or non-ATCT)
                             isATCT = (Line.Substring(238, 12).IndexOf("NON") == -1) &
                                     (Line.Substring(238, 12).IndexOf("ATCT") != -1);
-                            if ((tempID.IndexOfAny(FacType) != -1) & isATCT)
+                            if ((tempID.IndexOfAny(FacType) != -1) && isATCT)
                             {
                                 tempFac = Line.Substring(4, 4).Trim();
                                 tempName = Line.Substring(104, 50).Trim();
-                                tempLat = Conversions.SS2DD(Line.Substring(168, 11).Trim());
-                                tempLong = Conversions.SS2DD(Line.Substring(193, 11).Trim());
+                                tempLat = Conversions.Seconds2DecDeg(Line.Substring(168, 11).Trim());
+                                tempLong = Conversions.Seconds2DecDeg(Line.Substring(193, 11).Trim());
                             }
                         }
                     }
-                    if ((rowType == "TWR3") & isATCT)
+                    if ((rowType == "TWR3") && isATCT)
                     {
                         // Because the item we are looking for could be anywhere on the line,
                         // but the frequency is in a fixed location, need to loop the locations of the line.
@@ -356,10 +354,10 @@ namespace SCTBuilder
                         {
                             tempATIS = TWR3Freq(Line, "ATIS");     // ATIS frequency
                             ATISfound = (tempATIS.Length != 0);
-                            if (ATISfound & !isDATIS) isDATIS = TWR3isDatis(Line);         // Mark if digital ATIS
+                            if (ATISfound && !isDATIS) isDATIS = TWR3isDatis(Line);         // Mark if digital ATIS
                         }
                     }
-                    if ((rowType == "TWR8") & isATCT)
+                    if ((rowType == "TWR8") && isATCT)
                     {
                         // Airport airspace Class - ignore if we aren't saving this facility type
                         // Find the first 'Y' position for the class, then apply that position to the Classes string
@@ -377,7 +375,7 @@ namespace SCTBuilder
             string Result = string.Empty; int loc1;
             int tab = 8;                                           // first frequency location
             int tablength = 94; int freqlength = 44;               // Full field is 44+50, freq field is 44
-            while ((Result.Length == 0) & (tab + tablength < Line.Length))
+            while ((Result.Length == 0) && (tab + tablength < Line.Length))
             {
                 loc1 = Line.IndexOf(Usage, tab, tablength);
                 if (loc1 != -1)
@@ -387,7 +385,7 @@ namespace SCTBuilder
                     if (loc1 != -1)
                         Result = Result.Substring(0, loc1 - 1).Trim();
                     // Some entries have a character suffix on the freq
-                    bool canConvert = false; decimal testResult = 0;
+                    bool canConvert = false; decimal testResult;
                     while (!canConvert)
                     {
                         canConvert = decimal.TryParse(Result, out testResult);
@@ -396,7 +394,7 @@ namespace SCTBuilder
                             Result = Result.Substring(0, Result.Length - 1);
                         }
                     }
-                    if ((Convert.ToSingle(Result) > 137f) ^ (Convert.ToSingle(Result) < 108f))
+                    if ((Convert.ToSingle(Result) > 137f) || (Convert.ToSingle(Result) < 108f))
                         Result = string.Empty;
                 }
                 tab += tablength;
@@ -419,7 +417,6 @@ namespace SCTBuilder
             string aSeqNo = string.Empty; bool aFix; string aARTCC = string.Empty; string aMOCA = string.Empty;
             string aMEA = string.Empty; string aMAA = string.Empty; string atype = string.Empty;
             float aLat; float aLong; string aID = string.Empty;
-            Conversions S2D = new Conversions();
             using (StreamReader reader = new StreamReader(FullFilename))
             {
                 while ((Line = reader.ReadLine()) != null)
@@ -444,8 +441,8 @@ namespace SCTBuilder
                             { aNAVID = Line.Substring(15, 30).Trim(); }
                             else
                             { aNAVID = Line.Substring(116, 4).Trim(); }
-                            aLat = S2D.String2DecDeg(Line.Substring(83, 14).Trim(), "-");      // Latitude
-                            aLong = S2D.String2DecDeg(Line.Substring(97, 14).Trim(), "-");      // Longitude
+                            aLat = Conversions.String2DecDeg(Line.Substring(83, 14).Trim(), "-");      // Latitude
+                            aLong = Conversions.String2DecDeg(Line.Substring(97, 14).Trim(), "-");      // Longitude
                             var FixItems = new List<object>
                             {
                                 aID,
@@ -478,7 +475,6 @@ namespace SCTBuilder
             DataTable SSD = Form1.SSD;
             string FullFilename = GetFullPathname(FolderMgt.DataFolder, "STARDP.txt");
             bool isSid; string Line; int Seqno = 0;
-            Conversions S2D = new Conversions();
             using (StreamReader reader = new StreamReader(FullFilename))
             {
                 while ((Line = reader.ReadLine()) != null)
@@ -490,8 +486,8 @@ namespace SCTBuilder
                         Line.Substring(0,5).Trim(),                         // Internal ID
                         Line.Substring(30,6).Trim(),                        // NavAid or Airport
                         Line.Substring(10,2).Trim(),                        // FixType incl 'AA'
-                        S2D.String2DecDeg(Line.Substring(13, 8).Trim()),    // Latitude
-                        S2D.String2DecDeg(Line.Substring(21, 9).Trim()),    // Longitude
+                        Conversions.String2DecDeg(Line.Substring(13, 8).Trim()),    // Latitude
+                        Conversions.String2DecDeg(Line.Substring(21, 9).Trim()),    // Longitude
                         Line.Substring(38, 13).Trim(),                      // SSDCode
                         Line.Substring(51, 110).Trim(),                     // SSDName
                         Seqno,                                              // Sequence Number (mine)
@@ -515,7 +511,7 @@ namespace SCTBuilder
             MessageBoxButtons buttons = MessageBoxButtons.OK;
             MessageBoxIcon icon = MessageBoxIcon.Warning;
             int LatStart; int LongStart;
-            DataTable LS = Form1.LocalSector; Conversions S2D = new Conversions();
+            DataTable LS = Form1.LocalSector; 
             using (StreamReader reader = new StreamReader(FullFilename))
             {
                 while ((Line = reader.ReadLine()) != null)
@@ -601,8 +597,8 @@ namespace SCTBuilder
                                             SectorLevel,
                                             SectorBase,
                                             SectorTop,
-                                            S2D.String2DecDeg(Lat0," "),
-                                            S2D.String2DecDeg(Long0, " "),
+                                            Conversions.String2DecDeg(Lat0," "),
+                                            Conversions.String2DecDeg(Long0, " "),
                                             Exclude,
                                         };
                                         AddFixes(LS, FixItems);
@@ -702,7 +698,7 @@ namespace SCTBuilder
                             break;
                     }
                 }
-                if ((xmlReader.NodeType == XmlNodeType.EndElement) & (xmlReader.Name == "ASP") )
+                if ((xmlReader.NodeType == XmlNodeType.EndElement) && (xmlReader.Name == "ASP") )
                 {
                     DataRowView newrow = dvSUA.AddNew();
                     newrow["ID"] = ID;

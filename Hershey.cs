@@ -75,13 +75,13 @@ namespace SCTBuilder
 
         private static float PivotX(float X, float Y, float Angle)
         {
-            float RadAngle = Angle * (float)Math.PI / 180f;
+            double RadAngle = LatLongCalc.Deg2Rad(Angle);
             return (X * Convert.ToSingle(Math.Cos(RadAngle))) - (Y * Convert.ToSingle(Math.Sin(RadAngle)));
         }
 
         private static float PivotY(float X, float Y, float Angle)
         {
-            float RadAngle = Angle * (float)Math.PI / 180f;
+            double RadAngle = LatLongCalc.Deg2Rad(Angle);
             return (Y * Convert.ToSingle(Math.Cos(RadAngle))) + (X * Convert.ToSingle(Math.Sin(RadAngle)));
         }
         private static float ScaleX(float DistNM, float Scale)

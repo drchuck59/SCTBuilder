@@ -69,7 +69,7 @@ namespace SCTBuilder
                 LoadForm();
                 HoldForm(false);
                 DataIsSelected = false;
-                cmdUpdateGrid.Visible = cmdUpdateGrid.Enabled = true;
+                SCTtoolStripButton.Enabled = gridViewToolStripButton.Enabled = true;
             }
             else
             {
@@ -83,15 +83,15 @@ namespace SCTBuilder
             lblUpdating.Text = "Loading data from FAA files";
             lblUpdating.Visible = true;
             UseWaitCursor = true;
-            if (ReadFixes.FillCycleInfo() != -1)
+            if (ReadNASR.FillCycleInfo() != -1)
             {
-                ReadFixes.FillARB();
-                ReadFixes.FillVORNDB();
-                ReadFixes.FillFIX();
-                ReadFixes.FillAPT();        // Includes RWY table
-                ReadFixes.FillTWR();
-                ReadFixes.FillAWY();
-                ReadFixes.FillStarDP();
+                ReadNASR.FillARB();
+                ReadNASR.FillVORNDB();
+                ReadNASR.FillFIX();
+                ReadNASR.FillAPT();        // Includes RWY table
+                ReadNASR.FillTWR();
+                ReadNASR.FillAWY();
+                ReadNASR.FillStarDP();
                 DataIsLoaded = true;
                 DataIsSelected = false;
             }
@@ -122,9 +122,9 @@ namespace SCTBuilder
             grpSquareLimits.Visible = false;
             LoadCboAirport();
             CboAirport.SelectedIndex = CboAirport.FindStringExact(InfoSection.DefaultAirport);
-            cmdWriteSCT.Enabled = TestWriteSCT();
+            SCTtoolStripButton.Enabled = TestWriteSCT();
             DataIsSelected = false;
-            cmdUpdateGrid.Enabled = cmdUpdateGrid.Visible = true;
+            gridViewToolStripButton.Enabled = true;
             Refresh();
         }
 
@@ -132,14 +132,14 @@ namespace SCTBuilder
         {
             lblUpdating.Visible = FormIsFrozen;
             //progressBar1.Visible = FormIsFrozen;
-            //cmdUpdateGrid.Visible = !FormIsFrozen;
-            //cmdUpdateGrid.Refresh();
+            //gridViewToolStripButton.Visible = !FormIsFrozen;
+            //gridViewToolStripButton.Refresh();
             //txtDataFolder.Enabled = !FormIsFrozen;
             //txtOutputFolder.Enabled = !FormIsFrozen;
             //CboARTCC.Enabled = !FormIsFrozen;
             //CboAirport.Enabled = !FormIsFrozen;
             //grpSelectionMethod.Enabled = !FormIsFrozen;
-            //cmdWriteSCT.Enabled = !FormIsFrozen;
+            //SCTtoolStripButton.Enabled = !FormIsFrozen;
             //cmdInstructions.Enabled = !FormIsFrozen;
             //cmdExit.Visible = !FormIsFrozen;
             //chkbxShowAll.Enabled = !FormIsFrozen;
@@ -155,12 +155,12 @@ namespace SCTBuilder
         private void LoadFixGrid()
         {
             string Filter;
-            cmdWriteSCT.Enabled = false;
+            SCTtoolStripButton.Enabled = false;
             SetChecked();
             if (DataIsLoaded)
             {
                 DataIsSelected = true;
-                cmdUpdateGrid.Enabled = cmdUpdateGrid.Visible = false;
+                gridViewToolStripButton.Enabled = false;
                 // ARB must always be selected by Sponsor ARTCC
                 if (SCTchecked.ChkARB)
                 {
@@ -215,7 +215,7 @@ namespace SCTBuilder
                 else DataIsSelected = false;
                 if (SCTchecked.ChkSUA) SetdgvSUA();
                 UpdateGridCount();
-                cmdWriteSCT.Enabled = true;
+                SCTtoolStripButton.Enabled = true;
             }
         }
 
@@ -583,7 +583,7 @@ namespace SCTBuilder
         private void TxtFacilityEngineer_Validated(object sender, EventArgs e)
         {
             InfoSection.FacilityEngineer = txtFacilityEngineer.Text;
-            cmdWriteSCT.Enabled = TestWriteSCT();
+            SCTtoolStripButton.Enabled = TestWriteSCT();
         }
 
         private void TxtFacilityEngineer_Validating(object sender, CancelEventArgs e)
@@ -602,8 +602,7 @@ namespace SCTBuilder
         {
             grpSquareLimits.Visible = !btnARTCC.Checked;
             grpCircle.Visible = !btnARTCC.Checked;
-            cmdUpdateGrid.Visible = !btnSquare.Checked;
-            cmdUpdateGrid.Enabled = !btnSquare.Checked;
+            gridViewToolStripButton.Enabled = !btnSquare.Checked;
             if (btnARTCC.Checked)
                 if (CboARTCC.SelectedIndex == -1)
                 {
@@ -617,15 +616,14 @@ namespace SCTBuilder
                 {
                     FilterBy.Method = "ARTCC";
                     FilterBy.NorthLimit = CboARTCC.GetItemText(CboARTCC.SelectedItem);
-                    cmdWriteSCT.Enabled = TestWriteSCT();
+                    SCTtoolStripButton.Enabled = TestWriteSCT();
                 }
         }
 
         private void BtnSquare_CheckedChanged(object sender, EventArgs e)
         {
             grpSquareLimits.Visible = btnSquare.Checked;
-            cmdUpdateGrid.Visible = btnSquare.Checked;
-            cmdUpdateGrid.Enabled = btnSquare.Checked;
+            gridViewToolStripButton.Enabled = btnSquare.Checked;
             grpCircle.Visible = !btnSquare.Checked;
             if ((btnSquare.Checked) && (CboARTCC.SelectedIndex > -1))
                 UpdateSquare();
@@ -679,13 +677,13 @@ namespace SCTBuilder
         private void BtnClassB_CheckedChanged(object sender, EventArgs e)
         {
             LoadCboAirport();
-            cmdWriteSCT.Enabled = TestWriteSCT();
+            SCTtoolStripButton.Enabled = TestWriteSCT();
         }
 
         private void BtnClassC_CheckedChanged(object sender, EventArgs e)
         {
             LoadCboAirport();
-            cmdWriteSCT.Enabled = TestWriteSCT();
+            SCTtoolStripButton.Enabled = TestWriteSCT();
         }
 
         private void CmdOutputFolder_Click(object sender, EventArgs e)
@@ -704,7 +702,7 @@ namespace SCTBuilder
                 txtOutputFolder.Text = fBD.SelectedPath;
             }
             fBD.Dispose();
-            cmdWriteSCT.Enabled = TestWriteSCT();
+            SCTtoolStripButton.Enabled = TestWriteSCT();
         }
 
         private void CmdDataFolder_Click(object sender, EventArgs e)
@@ -728,15 +726,15 @@ namespace SCTBuilder
             }
             fBD.Dispose();
             DataIsSelected = false;
-            cmdUpdateGrid.Enabled = cmdUpdateGrid.Visible = true;
-            cmdWriteSCT.Enabled = TestWriteSCT();
+            gridViewToolStripButton.Enabled = true;
+            SCTtoolStripButton.Enabled = TestWriteSCT();
         }
 
         private void CmdWriteSCT_Click(object sender, EventArgs e)
         {
             if (!DataIsSelected)
             {
-                cmdUpdateGrid.Enabled = cmdUpdateGrid.Visible = false;
+                gridViewToolStripButton.Enabled = false;
                 HoldForm(true);
                 UpdateInfoSection();
                 LoadFixGrid();
@@ -813,8 +811,8 @@ namespace SCTBuilder
             if (txtDataFolder.Text != FolderMgt.DataFolder)
                 CmdDataFolder_Click(sender, e);
             DataIsSelected = false;
-            cmdUpdateGrid.Enabled = cmdUpdateGrid.Visible = true;
-            cmdWriteSCT.Enabled = TestWriteSCT();
+            gridViewToolStripButton.Enabled = true;
+            SCTtoolStripButton.Enabled = TestWriteSCT();
         }
 
         private void TxtDataFolder_Validating(object sender, CancelEventArgs e)
@@ -855,8 +853,6 @@ namespace SCTBuilder
             MessageBoxIcon icon = MessageBoxIcon.Exclamation;
             if (TestUpdateGrid())
             {
-                cmdUpdateGrid.Visible = false;
-                cmdUpdateGrid.Refresh();
                 HoldForm(true);
                 UpdateInfoSection();
                 SetChecked();
@@ -888,7 +884,7 @@ namespace SCTBuilder
                     UpdateSquare();
                 LoadCboAirport();
             }
-            cmdWriteSCT.Enabled = TestWriteSCT();
+            SCTtoolStripButton.Enabled = TestWriteSCT();
         }
 
         private void CboAirport_Validated(object sender, EventArgs e)
@@ -897,13 +893,13 @@ namespace SCTBuilder
             {
                 InfoSection.DefaultAirport = CboAirport.Text.ToString();
             }
-            cmdWriteSCT.Enabled = TestWriteSCT();
+            SCTtoolStripButton.Enabled = TestWriteSCT();
         }
 
         private void LocalSectors_Click(object sender, EventArgs e)
         {
             Console.WriteLine("LocalSectors_Click...");
-            if (ReadFixes.FillLocalSectors() )
+            if (ReadNASR.FillLocalSectors() )
                 SCToutput.WriteLS_SID(LocalSector);
         }
 
@@ -913,7 +909,7 @@ namespace SCTBuilder
             {
                 FolderMgt.OutputFolder = txtOutputFolder.Text;
             }
-            cmdWriteSCT.Enabled = TestWriteSCT();
+            SCTtoolStripButton.Enabled = TestWriteSCT();
         }
 
         private void SetChecked()
@@ -990,7 +986,7 @@ namespace SCTBuilder
 
         private void CmdAddSUAs_Click(object sender, EventArgs e)
         {
-            ReadFixes.FillAirSpace();
+            ReadNASR.FillAirSpace();
         }
 
         private void ChkSUA_CheckedChanged(object sender, EventArgs e)
@@ -1001,6 +997,33 @@ namespace SCTBuilder
         private void ChkOverwrite_CheckedChanged(object sender, EventArgs e)
         {
             SCTchecked.ChkConfirmOverwrite = chkOverwrite.Checked;
+        }
+
+        private void GoToFAA28dayNASRToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string url = "https://www.faa.gov/air_traffic/flight_info/aeronav/aero_data/NASR_Subscription/";
+            System.Diagnostics.Process.Start(url);
+        }
+
+        private void AboutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Form form = new About();
+            form.ShowDialog(this);
+            form.Dispose(); 
+        }
+
+        private void XML2SCTToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Form form = new XML2SCT();
+            form.ShowDialog(this);
+            form.Dispose();
+        }
+
+        private void LineGeneratorToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Form form = new LineGenerator();
+            form.ShowDialog(this);
+            form.Dispose();
         }
     }
 }
