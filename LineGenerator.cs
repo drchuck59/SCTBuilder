@@ -12,6 +12,16 @@ namespace SCTBuilder
 {
     public partial class LineGenerator : Form
     {
+        double StartLat;
+        double StartLon;
+        double EndLat;
+        double EndLon;
+        int TrueBrg;     // From the Lat-Long coordinates
+        char CalcType;
+        char DashType;
+        double Distance;
+        double CalcDist;
+        int CalcBrg;     // True brg from the Calculator
         public LineGenerator()
         {
             InitializeComponent();
@@ -19,7 +29,6 @@ namespace SCTBuilder
 
         private void LineGenerator_Load(object sender, EventArgs e)
         {
-
         }
 
         private void Copy2ClipboardButton_Click(object sender, EventArgs e)
@@ -206,7 +215,10 @@ namespace SCTBuilder
                     Msg = "Value must be 0 to 360.";
                 }
                 else
+                {
                     CalcBearingTextBox.Text = test.ToString();
+                    if (CalcMagVarTextBox.TextLength != 0) TrueBrg = test + Convert.ToInt32(CalcMagVarTextBox.Text);
+                }
                 //}
                 if (Msg.Length != 0)
                 {
@@ -255,24 +267,18 @@ namespace SCTBuilder
             CopyStart2EndButton.Enabled = (StartLatitudeTextBox.TextLength != 0) && (StartLongitudeTextBox.TextLength != 0);
             CopyEnd2StartButton.Enabled = (EndLatitudeTextBox.TextLength != 0) && (EndLongitudeTextBox.TextLength != 0);
             SwitchStartEndButton.Enabled = CopyEnd2StartButton.Enabled | CopyStart2EndButton.Enabled;
-            AddLineButton.Enabled = CopyEnd2StartButton.Enabled && CopyStart2EndButton.Enabled;
+            bool chkDash = DashedLineRadioButton.Checked && (DashedLineLengthTextBox.TextLength != 0);
+            AddLineButton.Enabled = CopyEnd2StartButton.Enabled && CopyStart2EndButton.Enabled && chkDash;
             AddNextButton.Enabled = AddLineButton.Enabled;
-            if (AddNextButton.Enabled)
+            if (AddLineButton.Enabled)
             {
-                float Lat1 = Conversions.String2DecDeg(StartLatitudeTextBox.Text);
-                float Lon1 = Conversions.String2DecDeg(StartLongitudeTextBox.Text);
-                float Lat2 = Conversions.String2DecDeg(EndLatitudeTextBox.Text);
-                float Lon2 = Conversions.String2DecDeg(EndLongitudeTextBox.Text);
-                char Type = 'N';
-                decimal Brg = Convert.ToDecimal(LatLongCalc.Bearing(Lat1, Lon1, Lat2, Lon2));
-                decimal Dist = Convert.ToDecimal(LatLongCalc.Distance(Lat1, Lon1, Lat2, Lon2, Type));
-                LineBrgTextBox.Text = decimal.Round(Brg, 2, MidpointRounding.AwayFromZero).ToString();
-                LineDistTextBox.Text = decimal.Round(Dist, 2, MidpointRounding.AwayFromZero).ToString();
+                DispBrgTextBox.Text = decimal.Round(Convert.ToDecimal(TrueBrg), 2, MidpointRounding.AwayFromZero).ToString();
+                DispDistTextBox.Text = decimal.Round(Convert.ToDecimal(CalcDist), 2, MidpointRounding.AwayFromZero).ToString();
             }
             else
             {
-                LineBrgTextBox.Text = string.Empty;
-                LineDistTextBox.Text = string.Empty;
+                DispBrgTextBox.Text = string.Empty;
+                DispDistTextBox.Text = string.Empty;
             }
         }
 
@@ -293,29 +299,6 @@ namespace SCTBuilder
                 string Msg = "Prefix may not be longer than 26 characters.";
                 SendMessage(Msg, icon);
                 PrefixTextBox.Text = string.Empty;
-            }
-        }
-
-        private void DashedLineLengthTextBox_TextChanged(object sender, EventArgs e)
-        {
-            MessageBoxIcon icon = MessageBoxIcon.Warning;
-            if (CalcDistanceTextBox.TextLength != 0)
-            {
-                string Msg = "Value must be a number in a range from 0.25 to 10.";
-                if (!Extensions.IsNumeric(CalcMagVarTextBox.Text))
-                {
-                    SendMessage(Msg, icon);
-                    CalcDistanceTextBox.Text = string.Empty;
-                }
-                else
-                {
-                    float dist = Convert.ToSingle(CalcDistanceTextBox.Text);
-                    if ((dist < 0.25) | (dist > 10f))
-                    {
-                        SendMessage(Msg, icon);
-                        CalcDistanceTextBox.Text = string.Empty;
-                    }
-                }
             }
         }
 
@@ -378,22 +361,21 @@ namespace SCTBuilder
             /// In the US, the agonic line is roughly along the Mississippi river
             /// In aviation, maps, GPS and runways use true bearings
             double trueBrg = Convert.ToDouble(CalcBearingTextBox.Text) + Convert.ToDouble(CalcMagVarTextBox.Text);
-            double Lat1 = Conversions.String2DecDeg(StartLatitudeTextBox.Text);
-            double Lon1 = Conversions.String2DecDeg(StartLongitudeTextBox.Text);
             double Dist = Convert.ToDouble(CalcDistanceTextBox.Text);
             double[] CalcLocation =
-                LatLongCalc.CalcLocation(Lat1, Lon1, DistanceAdjust(Dist), trueBrg);
-            double Lat2 = CalcLocation[0];
-            double Lon2 = CalcLocation[1];
-            EndLatitudeTextBox.Text = Conversions.DecDeg2SCT(Lat2, true);
-            EndLongitudeTextBox.Text = Conversions.DecDeg2SCT(Lon2, false);
+                LatLongCalc.CalcLocation(StartLat, StartLon, DistanceAdjust(Dist), trueBrg);
+            EndLat = CalcLocation[0];
+            EndLon = CalcLocation[1];
+            EndLatitudeTextBox.Text = Conversions.DecDeg2SCT(EndLat, true);
+            EndLongitudeTextBox.Text = Conversions.DecDeg2SCT(EndLon, false);
             EndFixTextBox.Text = string.Empty;
             UpdateCopyButtons();
         }
 
         private double DistanceAdjust(double Distance)
         {
-            if (CalcDistSMRadioButton.Checked) return Distance * 1.15078;
+            // Convert from Statute Miles
+            if (CalcDistNMRadioButton.Checked) return Distance * 0.868976;
             if (CalcDistMeterRadioButton.Checked) return Distance * 1852;
             if (CalcDistFeetRadioButton.Checked) return Distance * 6076.12;
             return Distance;
@@ -434,13 +416,18 @@ namespace SCTBuilder
                             + cr + "your latitude is out of range (-90 to 90)."
                             + cr + "Click the question mark for help on formats.";
                     }
-                    else StartLatitudeTextBox.Text = Conversions.DecDeg2SCT(testvalue, true);
+                    else
+                    {
+                        StartLatitudeTextBox.Text = Conversions.DecDeg2SCT(testvalue, true);
+                        StartLat = Conversions.String2DecDeg(StartLatitudeTextBox.Text);
+                    }
                 }
 
                 if (Msg.Length != 0)
                 {
                     SendMessage(Msg, icon);
                     StartLatitudeTextBox.Text = string.Empty;
+                    StartLat = 0;
                 }
             }
             UpdateCopyButtons();
@@ -470,12 +457,17 @@ namespace SCTBuilder
                             + cr + "your longitude is out of range (-180 to 180)."
                             + cr + "Click the question mark for help on formats.";
                     }
-                    else StartLongitudeTextBox.Text = Conversions.DecDeg2SCT(testvalue, false);
+                    else
+                    {
+                        StartLongitudeTextBox.Text = Conversions.DecDeg2SCT(testvalue, false);
+                        StartLon = Conversions.String2DecDeg(StartLongitudeTextBox.Text);
+                    }
                 }
                 if (Msg.Length != 0)
                 {
                     SendMessage(Msg, icon);
                     StartLongitudeTextBox.Text = string.Empty;
+                    StartLon = 0;
                 }
             }
             UpdateCopyButtons();
@@ -495,7 +487,11 @@ namespace SCTBuilder
                     {
                         Msg = "Latitude value must fall between -90 and 90.";
                     }
-                    else EndLatitudeTextBox.Text = Conversions.DecDeg2SCT(testvalue, false);
+                    else
+                    {
+                        EndLatitudeTextBox.Text = Conversions.DecDeg2SCT(testvalue, false);
+                        EndLat = Conversions.String2DecDeg(EndLatitudeTextBox.Text);
+                    }
                 }
                 else
                 {
@@ -511,6 +507,7 @@ namespace SCTBuilder
                 {
                     SendMessage(Msg, icon);
                     EndLatitudeTextBox.Text = string.Empty;
+                    EndLat = 0;
                 }
             }
             UpdateCopyButtons();
@@ -540,12 +537,17 @@ namespace SCTBuilder
                             + cr + "your longitude is out of range (-180 to 180)."
                             + cr + "Click the question mark for help on formats.";
                     }
-                    else EndLongitudeTextBox.Text = Conversions.DecDeg2SCT(testvalue, false);
+                    else
+                    {
+                        EndLongitudeTextBox.Text = Conversions.DecDeg2SCT(testvalue, false);
+                        EndLon = Conversions.String2DecDeg(EndLongitudeTextBox.Text);
+                    }
                 }
                 if (Msg.Length != 0)
                 {
                     SendMessage(Msg, icon);
                     EndLongitudeTextBox.Text = string.Empty;
+                    EndLon = 0;
                 }
             }
             UpdateCopyButtons();
@@ -558,8 +560,9 @@ namespace SCTBuilder
 
         private void AddLine()
         {
-            // Need to add intelligent commenting here ; FIX FIX or ; Comment
-            string cr = Environment.NewLine;
+            // There is no error checking for valid data, as that is done to enable buttons
+            string cr = Environment.NewLine; string result = string.Empty;
+            MessageBoxIcon icon = MessageBoxIcon.Warning; string Msg;
             if (SSDRadioButton.Checked)
             {
                 OutputTextBox.Text += SCTstrings.SSDout(StartLatitudeTextBox.Text, StartLongitudeTextBox.Text,
@@ -567,15 +570,54 @@ namespace SCTBuilder
             }
             if (AirwayRadioButton.Checked)
             {
-                OutputTextBox.Text += SCTstrings.AWYout(PrefixTextBox.Text, StartLatitudeTextBox.Text, 
-                    StartLongitudeTextBox.Text, EndLatitudeTextBox.Text, EndLongitudeTextBox.Text, 
-                    StartFixTextBox.Text, EndFixTextBox.Text, UseFIXNamesCheckBox.Checked) + cr;
+                if (PrefixTextBox.TextLength != 0)
+                    // if solid, just write the line
+                    if (!DashedLineRadioButton.Checked)
+                    {
+                        OutputTextBox.Text += SCTstrings.AWYout(PrefixTextBox.Text, StartLatitudeTextBox.Text,
+                            StartLongitudeTextBox.Text, EndLatitudeTextBox.Text, EndLongitudeTextBox.Text,
+                            StartFixTextBox.Text, EndFixTextBox.Text, UseFIXNamesCheckBox.Checked);
+                    }
+                    else          // Run a loop to generate the output
+                    {
+                        double FirstLat = StartLat;
+                        double FirstLon = StartLon;
+                        double NextDist = 0;
+                        while (NextDist <= Distance)
+                        {
+                            double[] CalcLocation = LatLongCalc.CalcLocation(FirstLat, FirstLon, DistanceAdjust(CalcDist), CalcBrg);
+                            double NextLat = CalcLocation[0];
+                            double NextLon = CalcLocation[1];
+                            OutputTextBox.Text += SCTstrings.AWYout(PrefixTextBox.Text,
+                                Conversions.DecDeg2SCT(FirstLat, true), Conversions.DecDeg2SCT(FirstLon, true),
+                                Conversions.DecDeg2SCT(NextLat, true), Conversions.DecDeg2SCT(NextLon, true),
+                                StartFixTextBox.Text, EndFixTextBox.Text, UseFIXNamesCheckBox.Checked);
+                            OutputTextBox.Text += cr;
+                            FirstLat = NextLat; FirstLon = NextLon;
+                            NextDist = +CalcDist;
+                        }
+                    }
+                else
+                    {
+                        Msg = "The Airway identifier is required for this format." + cr + "(Place in the prefix text box.)";
+                        SendMessage(Msg, icon);
+                        PrefixTextBox.Focus();
+                    }
+
             }
             if (ARTCCRadioButton.Checked)
             {
-                OutputTextBox.Text += SCTstrings.BoundaryOut(PrefixTextBox.Text, StartLatitudeTextBox.Text,
-                    StartLongitudeTextBox.Text, EndLatitudeTextBox.Text, EndLongitudeTextBox.Text);
+                if (PrefixTextBox.TextLength != 0)
+                    OutputTextBox.Text += SCTstrings.BoundaryOut(PrefixTextBox.Text, StartLatitudeTextBox.Text,
+                        StartLongitudeTextBox.Text, EndLatitudeTextBox.Text, EndLongitudeTextBox.Text);
+                {
+                    Msg = "The ARTCC identifier is required for this format." + cr + "(Place in the prefix text box.)";
+                    SendMessage(Msg, icon);
+                    PrefixTextBox.Focus();
+                }
             }
+            if (SuffixTextBox.TextLength != 0) OutputTextBox.Text += SuffixTextBox.Text;
+            OutputTextBox.Text += cr;
         }
 
         private void AirwayRadioButton_CheckedChanged(object sender, EventArgs e)
@@ -590,8 +632,43 @@ namespace SCTBuilder
                 PrefixLabel.Text = "Prefix Req'd";
         }
 
-        private void SSDRadioButton_CheckedChanged(object sender, EventArgs e)
+        private void DashedLineRadioButton_CheckedChanged(object sender, EventArgs e)
         {
+            DashedLineLengthTextBox.Enabled = DashFtRadioButton.Enabled =
+                DashMeterRadioButton.Enabled = DashNMRadioButton.Enabled =
+                DashSMRadioButton.Enabled = DashedLineRadioButton.Checked;
+        }
+
+        private void DashedLineLengthTextBox_TextChanged(object sender, EventArgs e)
+        {
+            double Dist = Convert.ToDouble(DashedLineLengthTextBox.Text);
+            if (Dist > Distance / 2)
+            {
+                MessageBoxIcon icon = MessageBoxIcon.Warning;
+                string Msg = "Interval cannot be more than 1/2 of total distance.";
+                SendMessage(Msg, icon);
+                DashedLineLengthTextBox.Text = (Distance / 2).ToString("0.0");
+            }
+        }
+
+        private void DashSMRadioButton_CheckedChanged(object sender, EventArgs e)
+        {
+            if (DashSMRadioButton.Checked) DashType = 'S';
+        }
+
+        private void DashFtRadioButton_CheckedChanged(object sender, EventArgs e)
+        {
+            if (DashFtRadioButton.Checked) DashType = 'f';
+        }
+
+        private void DashNMRadioButton_CheckedChanged(object sender, EventArgs e)
+        {
+            if (DashNMRadioButton.Checked) DashType = 'N';
+        }
+
+        private void DashMeterRadioButton_CheckedChanged(object sender, EventArgs e)
+        {
+            if (DashMeterRadioButton.Checked) DashType = 'm';
         }
     }
 }
