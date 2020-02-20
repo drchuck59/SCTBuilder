@@ -250,7 +250,10 @@ namespace SCTBuilder
                         "and cannot exceed -140 to 140.";
                 }
                 else
+                {
                     CalcMagVarTextBox.Text = test.ToString();
+                    if (CalcBearingTextBox.TextLength != 0) CalcBrg = test + Convert.ToInt32(CalcBearingTextBox.Text);
+                }
                 //}
                 if (Msg.Length != 0)
                 {
@@ -363,7 +366,7 @@ namespace SCTBuilder
             double trueBrg = Convert.ToDouble(CalcBearingTextBox.Text) + Convert.ToDouble(CalcMagVarTextBox.Text);
             double Dist = Convert.ToDouble(CalcDistanceTextBox.Text);
             double[] CalcLocation =
-                LatLongCalc.CalcLocation(StartLat, StartLon, DistanceAdjust(Dist), trueBrg);
+                LatLongCalc.CalcLocation(StartLat, StartLon, DistanceAdjust(Dist, CalcType), trueBrg);
             EndLat = CalcLocation[0];
             EndLon = CalcLocation[1];
             EndLatitudeTextBox.Text = Conversions.DecDeg2SCT(EndLat, true);
@@ -372,13 +375,27 @@ namespace SCTBuilder
             UpdateCopyButtons();
         }
 
-        private double DistanceAdjust(double Distance)
+        private double DistanceAdjust(double Distance, char Type)
         {
             // Convert from Statute Miles
-            if (CalcDistNMRadioButton.Checked) return Distance * 0.868976;
-            if (CalcDistMeterRadioButton.Checked) return Distance * 1852;
-            if (CalcDistFeetRadioButton.Checked) return Distance * 6076.12;
-            return Distance;
+            double result;
+            switch (Type)
+            {
+                case 'N':
+                    result = Distance * 0.868976;
+                    break;
+                case 'm':
+                    result = Distance * 1852;
+                    break;
+                case 'f':
+                    result = Distance * 6076.12;
+                    break;
+                case 'S':
+                default:
+                    result = Distance;
+                    break;
+            }
+            return result;
         }
 
         private void ColorValueTextBox_MouseDoubleClick(object sender, MouseEventArgs e)
@@ -585,7 +602,7 @@ namespace SCTBuilder
                         double NextDist = 0;
                         while (NextDist <= Distance)
                         {
-                            double[] CalcLocation = LatLongCalc.CalcLocation(FirstLat, FirstLon, DistanceAdjust(CalcDist), CalcBrg);
+                            double[] CalcLocation = LatLongCalc.CalcLocation(FirstLat, FirstLon, DistanceAdjust(CalcDist, DashType), CalcBrg);
                             double NextLat = CalcLocation[0];
                             double NextLon = CalcLocation[1];
                             OutputTextBox.Text += SCTstrings.AWYout(PrefixTextBox.Text,
@@ -669,6 +686,26 @@ namespace SCTBuilder
         private void DashMeterRadioButton_CheckedChanged(object sender, EventArgs e)
         {
             if (DashMeterRadioButton.Checked) DashType = 'm';
+        }
+
+        private void CalcDistSMRadioButton_CheckedChanged(object sender, EventArgs e)
+        {
+            if (CalcDistSMRadioButton.Checked) CalcType = 'S';
+        }
+
+        private void CalcDistFeetRadioButton_CheckedChanged(object sender, EventArgs e)
+        {
+            if (CalcDistFeetRadioButton.Checked) CalcType = 'f';
+        }
+
+        private void CalcDistNMRadioButton_CheckedChanged(object sender, EventArgs e)
+        {
+            if (CalcDistNMRadioButton.Checked) CalcType = 'N';
+        }
+
+        private void CalcDistMeterRadioButton_CheckedChanged(object sender, EventArgs e)
+        {
+            if (CalcDistMeterRadioButton.Checked) CalcType = 'm';
         }
     }
 }

@@ -423,6 +423,7 @@
             this.CalcDistFeetRadioButton.TabIndex = 2;
             this.CalcDistFeetRadioButton.Text = "ft";
             this.CalcDistFeetRadioButton.UseVisualStyleBackColor = true;
+            this.CalcDistFeetRadioButton.CheckedChanged += new System.EventHandler(this.CalcDistFeetRadioButton_CheckedChanged);
             // 
             // CalcDistMeterRadioButton
             // 
@@ -434,6 +435,7 @@
             this.CalcDistMeterRadioButton.TabIndex = 4;
             this.CalcDistMeterRadioButton.Text = "m";
             this.CalcDistMeterRadioButton.UseVisualStyleBackColor = true;
+            this.CalcDistMeterRadioButton.CheckedChanged += new System.EventHandler(this.CalcDistMeterRadioButton_CheckedChanged);
             // 
             // CalcDistSMRadioButton
             // 
@@ -447,6 +449,7 @@
             this.CalcDistSMRadioButton.TabStop = true;
             this.CalcDistSMRadioButton.Text = "SM";
             this.CalcDistSMRadioButton.UseVisualStyleBackColor = true;
+            this.CalcDistSMRadioButton.CheckedChanged += new System.EventHandler(this.CalcDistSMRadioButton_CheckedChanged);
             // 
             // CalcDistNMRadioButton
             // 
@@ -458,6 +461,7 @@
             this.CalcDistNMRadioButton.TabIndex = 3;
             this.CalcDistNMRadioButton.Text = "NM";
             this.CalcDistNMRadioButton.UseVisualStyleBackColor = true;
+            this.CalcDistNMRadioButton.CheckedChanged += new System.EventHandler(this.CalcDistNMRadioButton_CheckedChanged);
             // 
             // CalcDistanceTextBox
             // 
