@@ -7,10 +7,10 @@ namespace SCTBuilder
 {
     public class Hershey
     {
-        public static string DrawHF(string Message, float Lat, float Long, float Angle, float Scale)
+        public static string DrawHF(string Message, double Lat, double Long, double Angle, double Scale)
         {
-            float curLat = Lat;
-            float curLong = Long;
+            double curLat = Lat;
+            double curLong = Long;
             string space = new string(' ', 27);
             int AsciiC; int[] SmplxC; string Result = string.Empty;
             foreach (char c in Message)
@@ -28,11 +28,11 @@ namespace SCTBuilder
             return space + "; " + Message + Environment.NewLine + Result;
         }
 
-        private static string WriteChar(int[] hFont, float Lat, float Long, float Angle, float Scale)
+        private static string WriteChar(int[] hFont, double Lat, double Long, double Angle, double Scale)
         {
             // Each vector needs to be (a) rotate to the angle of the line of text and (b) Scaled
             // One unit vector = 1 second or 90-100 feet.  Use the Scale function to adjust.
-            string Result = string.Empty; float X; float Y; float VectorLat; float VectorLong;
+            string Result = string.Empty; double X; double Y; double VectorLat; double VectorLong;
             string DrawStart = string.Empty; string DrawEnd;
             string cr = Environment.NewLine; string space = new string(' ', 27);
             // Console.WriteLine("Passed " + ((hFont.Length - 2) / 2) + " vectors");
@@ -73,23 +73,23 @@ namespace SCTBuilder
             return Result;                                      // Lat Long string to draw ONE character!  (Sheesh)
         }
 
-        private static float PivotX(float X, float Y, float Angle)
+        private static double PivotX(double X, double Y, double Angle)
         {
             double RadAngle = LatLongCalc.Deg2Rad(Angle);
             return (X * Convert.ToSingle(Math.Cos(RadAngle))) - (Y * Convert.ToSingle(Math.Sin(RadAngle)));
         }
 
-        private static float PivotY(float X, float Y, float Angle)
+        private static double PivotY(double X, double Y, double Angle)
         {
             double RadAngle = LatLongCalc.Deg2Rad(Angle);
-            return (Y * Convert.ToSingle(Math.Cos(RadAngle))) + (X * Convert.ToSingle(Math.Sin(RadAngle)));
+            return (Y * Convert.ToDouble(Math.Cos(RadAngle))) + (X * Convert.ToDouble(Math.Sin(RadAngle)));
         }
-        private static float ScaleX(float DistNM, float Scale)
+        private static double ScaleX(double DistNM, double Scale)
         {
             return DistNM / InfoSection.NMperDegreeLongitude * Scale;
         }
 
-        private static float ScaleY(float DistNM, float Scale)
+        private static double ScaleY(double DistNM, double Scale)
         {
             return DistNM / InfoSection.NMperDegreeLatitude * Scale;
         }

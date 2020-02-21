@@ -73,7 +73,7 @@ namespace SCTBuilder
             if (VORtable.Rows.Count != 0) VORtable.Clear();     // Must start with empty tables
             if (NDBtable.Rows.Count != 0) NDBtable.Clear();
             string FullFilename = GetFullPathname(FolderMgt.DataFolder, "NAV.txt");
-            string FixType; float Lat; float Long; float Mag;
+            string FixType; double Lat; double Long; double Mag;
             using (StreamReader reader = new StreamReader(FullFilename))
             {
                 string Temp = DateTime.Now.ToString("yyyyMMdd");
@@ -174,10 +174,10 @@ namespace SCTBuilder
             string FullFilename = GetFullPathname(FolderMgt.DataFolder, "APT.txt");
             char[] FacilityType = { 'A', 'C', 'H' };     // Only interested in Airport, Seaplane, and Heliports
             string FacType = string.Empty; string tempID = string.Empty; string tempBID = string.Empty;
-            string tempRID = string.Empty; float tempLatB = 0f; float tempLongB = 0f; string tempFacID = string.Empty;
-            float tempLatR = 0f; float tempLongR = 0f; float tempLength = 0f; bool tempOpen = false;
-            float tempWidth = 0f; float tempHdgB = -1f; float tempHdgR = -1f; string tempRwyID; string tempRwyName = string.Empty;
-            float tempElevB = 0f; float tempElevR = 0f; string tempARTCC = string.Empty;
+            string tempRID = string.Empty; double tempLatB = 0f; double tempLongB = 0f; string tempFacID = string.Empty;
+            double tempLatR = 0f; double tempLongR = 0f; double tempLength = 0f; bool tempOpen = false;
+            double tempWidth = 0f; double tempHdgB = -1f; double tempHdgR = -1f; string tempRwyID; string tempRwyName = string.Empty;
+            double tempElevB = 0f; double tempElevR = 0f; string tempARTCC = string.Empty;
             using (StreamReader reader = new StreamReader(FullFilename))
             {
                 string Line = string.Empty;
@@ -285,7 +285,7 @@ namespace SCTBuilder
             string Line; string rowType; bool isATCT = false; bool LCLfound = false; int LineNo = 0;
             char[] FacType = { 'A', 'C', 'H' };     // Only interested in Airport, Seaplane, and Heliports
             string tempID = string.Empty; string tempFac = string.Empty; string tempName = string.Empty;
-            float tempLat = 0f; float tempLong = 0f; string tempLCL = "122.8"; string tempATIS = string.Empty;
+            double tempLat = 0f; double tempLong = 0f; string tempLCL = "122.8"; string tempATIS = string.Empty;
             string tempClass = string.Empty; string Classes = "BCDE"; bool isDATIS = false; bool ATISfound = false;
             if (TWR.Rows.Count != 0) TWR.Clear();
 
@@ -416,7 +416,7 @@ namespace SCTBuilder
             string Line; string aNAVtype = string.Empty; string aNAVID;
             string aSeqNo = string.Empty; bool aFix; string aARTCC = string.Empty; string aMOCA = string.Empty;
             string aMEA = string.Empty; string aMAA = string.Empty; string atype = string.Empty;
-            float aLat; float aLong; string aID = string.Empty;
+            double aLat; double aLong; string aID = string.Empty;
             using (StreamReader reader = new StreamReader(FullFilename))
             {
                 while ((Line = reader.ReadLine()) != null)
@@ -713,7 +713,7 @@ namespace SCTBuilder
                     newrow["AltLimit_Bottom_Unit"] = AltLimitBottom_Unit;
                     newrow["Polygon"] = Polygon;
                     // Find the limit of this polygon for later use in selecting airspaces
-                    Conversions.BorderCoord(Polygon, out float North, out float South, out float East, out float West);
+                    Conversions.BorderCoord(Polygon, out double North, out double South, out double East, out double West);
                     newrow["Latitude_North"] = North;
                     newrow["Latitude_South"] = South;
                     newrow["Longitude_East"] = East;

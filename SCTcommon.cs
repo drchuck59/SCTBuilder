@@ -39,9 +39,9 @@ namespace SCTBuilder
     public class Conversions
     // Convert a variety of strings 
     {
-        public static float DefaultLatitude(string Arpt)
+        public static double DefaultLatitude(string Arpt)
         {
-            float result;
+            double result;
             DataView APTView = new DataView(Form1.APT)
             {
                 RowFilter = "[FacilityID] = '" + Arpt + "'"
@@ -54,9 +54,9 @@ namespace SCTBuilder
             return result;
         }
 
-        public static float DefaultLongitude(string Arpt)
+        public static double DefaultLongitude(string Arpt)
         {
-            float result;
+            double result;
             DataView APTView = new DataView(Form1.APT)
             {
                 RowFilter = "[FacilityID] = '" + Arpt + "'"
@@ -69,9 +69,9 @@ namespace SCTBuilder
             return result;
         }
 
-        public static float DefaultMagVar(string Arpt)
+        public static double DefaultMagVar(string Arpt)
         {
-            float result;
+            double result;
             DataView APTView = new DataView(Form1.APT)
             {
                 RowFilter = "[FacilityID] = '" + Arpt + "'"
@@ -84,10 +84,10 @@ namespace SCTBuilder
             return result;
         }
 
-        public static float AdjustedLatLong(string LL, string nud, string LLedge)
+        public static double AdjustedLatLong(string LL, string nud, string LLedge)
         {
-            float result = Convert.ToSingle(LL);
-            float offset = Convert.ToSingle(nud);
+            double result = Convert.ToSingle(LL);
+            double offset = Convert.ToSingle(nud);
             switch (LLedge)
             {
                 case "N":
@@ -124,7 +124,7 @@ namespace SCTBuilder
             return result;
         }
 
-        public static float String2DecDeg(string DMS, string Delim = "")
+        public static double String2DecDeg(string DMS, string Delim = "")
         /// <summary>
         /// Returns a Decimal degrees value from the OpenAIG formatted string
         /// OpenAIG is [#]##:##:##? 
@@ -134,8 +134,8 @@ namespace SCTBuilder
         /// </summary>
         // If possible, find the delimiter
         {
-            float result = -1; float DD; float MM; float SS; string quadrant;
-            string tempDMS; float factor; string newDelim;
+            double result = -1; double DD; double MM; double SS; string quadrant;
+            string tempDMS; double factor; string newDelim;
             if (DMS.Length > 5)
             {
                 // Check that caller didn't "forget" the delim (or may not know it)
@@ -161,25 +161,25 @@ namespace SCTBuilder
                     if (quadrant == "W" || quadrant == "E")
                     {
                         // Longitudinal conversion
-                        DD = float.Parse(tempDMS.Substring(0, 3));
-                        MM = float.Parse(tempDMS.Substring(3, 2));
-                        SS = float.Parse(tempDMS.Substring(5, 2));
+                        DD = double.Parse(tempDMS.Substring(0, 3));
+                        MM = double.Parse(tempDMS.Substring(3, 2));
+                        SS = double.Parse(tempDMS.Substring(5, 2));
                         if (DMS.Length > 7)                         // Add faction of seconds if they exist
                         {
-                            factor = (float)Math.Pow(10f, Convert.ToSingle(tempDMS.Length - 7));
-                            SS += float.Parse(tempDMS.Substring(6, 2)) / factor;
+                            factor = (double)Math.Pow(10f, Convert.ToSingle(tempDMS.Length - 7));
+                            SS += double.Parse(tempDMS.Substring(6, 2)) / factor;
                         }
                     }
                     else
                     {
                         // Latitude conversion
-                        DD = float.Parse(tempDMS.Substring(0, 2));
-                        MM = float.Parse(tempDMS.Substring(2, 2));
-                        SS = float.Parse(tempDMS.Substring(4, 2));
+                        DD = double.Parse(tempDMS.Substring(0, 2));
+                        MM = double.Parse(tempDMS.Substring(2, 2));
+                        SS = double.Parse(tempDMS.Substring(4, 2));
                         if (DMS.Length > 6)                         // Add fraction of seconds if they exist
                         {
-                            factor = (float)Math.Pow(10f, Convert.ToSingle(tempDMS.Length - 6));
-                            SS += float.Parse(tempDMS.Substring(5, 2)) / factor;
+                            factor = (double)Math.Pow(10f, Convert.ToSingle(tempDMS.Length - 6));
+                            SS += double.Parse(tempDMS.Substring(5, 2)) / factor;
                         }
                     }
                     result = LatLongCalc.DMS2DecDeg(DD, MM, SS, quadrant);
@@ -189,9 +189,9 @@ namespace SCTBuilder
                 {
                     int loc1 = tempDMS.IndexOf(newDelim, 0, tempDMS.Length, StringComparison.CurrentCulture); // end of DD
                     int loc2 = tempDMS.IndexOf(newDelim, loc1 + 1, tempDMS.Length - loc1 - 1, StringComparison.CurrentCulture);   // End of MM
-                    DD = float.Parse(tempDMS.Substring(0, loc1));
-                    MM = float.Parse(tempDMS.Substring(loc1 + 1, loc2 - loc1 - 1));
-                    SS = float.Parse(tempDMS.Substring(loc2 + 1, tempDMS.Length - loc2 - 1));
+                    DD = double.Parse(tempDMS.Substring(0, loc1));
+                    MM = double.Parse(tempDMS.Substring(loc1 + 1, loc2 - loc1 - 1));
+                    SS = double.Parse(tempDMS.Substring(loc2 + 1, tempDMS.Length - loc2 - 1));
                     result = LatLongCalc.DMS2DecDeg(DD, MM, SS, quadrant);
                 }
                 // Last step: Ensure the result value falls within the range of the latitude or longitude
@@ -259,12 +259,12 @@ namespace SCTBuilder
             result = quadrant + strDD + "." + strMM + "." + strSS;
             return result;
         }
-        public static float Seconds2DecDeg(string seconds)
+        public static double Seconds2DecDeg(string seconds)
         {
             if (seconds.Length == 0) return -1;
             try
             {
-                float DD = Convert.ToSingle(Extensions.Left(seconds, seconds.Length - 1));
+                double DD = Convert.ToSingle(Extensions.Left(seconds, seconds.Length - 1));
                 DD /= 3600f;
                 string s = Extensions.Right(seconds, 1);
                 if ("SW".IndexOf(s) != -1) DD *= -1;    // Invert if southern latitude or west longitude
@@ -272,7 +272,7 @@ namespace SCTBuilder
             }
             catch { return -1f; }
         }
-        public static float MagVar2DecMag(string Mag)
+        public static double MagVar2DecMag(string Mag)
         {
             if (Mag.Trim().Length > 0)
             {
@@ -283,7 +283,7 @@ namespace SCTBuilder
         public static void BuildSUAPolygon(string Polygon, string ID)
         {
             // For a given SUA [ID], use the imported local SUA file to create the SID-Star
-            string tempPoly = Polygon; float Latitude; float Longitude;
+            string tempPoly = Polygon; double Latitude; double Longitude;
             DataTable dtPoly = Form1.Polygon; int loc1; string Lat1; string Long1;
             DataView dvPoly = new DataView(dtPoly); int Counter = 0; string temp1;
             while (tempPoly.Length != 0)
@@ -319,11 +319,11 @@ namespace SCTBuilder
             }
             // Console.WriteLine("Added " + Counter + " rows to table (now has " + dtPoly.Rows.Count + " rows).");
         }
-        public static void BorderCoord(string Polygon, out float North, out float South, out float East, out float West)
+        public static void BorderCoord(string Polygon, out double North, out double South, out double East, out double West)
         {
             // Returns the quadrant-most coordinate for a given polygon
             string tempPoly = Polygon; int loc1; string temp1;
-            string Lat1; string Long1; float Latitude; float Longitude;
+            string Lat1; string Long1; double Latitude; double Longitude;
             North = -1; South = 1; East = -1f; West = 1f;
             while (tempPoly.Length != 0)
             {
@@ -369,7 +369,7 @@ namespace SCTBuilder
         }
         public static bool IsNumeric(this string text)
         {
-            return float.TryParse(text, out float test);
+            return double.TryParse(text, out double test);
         }
 
         public static string Left(this string value, int maxLength)

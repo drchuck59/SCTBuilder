@@ -20,21 +20,14 @@ namespace SCTBuilder
     }
     class LatLongCalc
     {
-        public static float NMperLongDegree(float Latitude = 200)
+        public static double NMperLongDegree(double Latitude)
         {
-            if (Latitude != 200)
-            {
-                // Assumes all Lat/Longs are in Decimal degrees!
-                const double rad = Math.PI / 180;
-                float NMatEquator = 69.172f;
-                float radLatitude = Convert.ToSingle(Latitude * rad);
-                float result = Convert.ToSingle(Math.Cos(radLatitude) * NMatEquator);
+                // Assumes all Lat/Longs are in Decimal degrees
+                double Lat = Deg2Rad(Latitude);
+                double result = Math.Cos(Lat) * EarthRadius('N');
                 return result;
-            }
-            else return 0f;
-
         }
-        public static float RWYBearing(string Heading, string RwyID)
+        public static double RWYBearing(string Heading, string RwyID)
         {
             if (RwyID.Length == 0) return -1;
             if (Heading.Length == 0)
@@ -58,32 +51,10 @@ namespace SCTBuilder
                 return Convert.ToSingle(Heading);
             }
         }
-        private static float CompassBearing(CompassPoints c)
+
+        public static double DMS2DecDeg(double DD, double MM, double SS, string quadrant)
         {
-            switch (c)
-            {
-                default:
-                case CompassPoints.N:
-                    return 360f;
-                case CompassPoints.NE:
-                    return 45f;
-                case CompassPoints.E:
-                    return 90f;
-                case CompassPoints.SE:
-                    return 135f;
-                case CompassPoints.S:
-                    return 180f;
-                case CompassPoints.SW:
-                    return 235f;
-                case CompassPoints.W:
-                    return 270;
-                case CompassPoints.NW:
-                    return 315f;
-            }
-        }
-        public static float DMS2DecDeg(float DD, float MM, float SS, string quadrant)
-        {
-            float result;
+            double result;
             switch (quadrant)
             {
                 case "W":

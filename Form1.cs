@@ -745,20 +745,20 @@ namespace SCTBuilder
 
         private bool TestWriteSCT()
         {
-            Console.WriteLine("Data: " + FolderMgt.DataFolder.ToString());
-            Console.WriteLine("Output: " + FolderMgt.OutputFolder.ToString());
-            Console.WriteLine("ARTCC: " + InfoSection.SponsorARTCC.ToString());
-            Console.WriteLine("Airport: " + InfoSection.DefaultAirport.ToString());
-            Console.WriteLine("Latitude: " + InfoSection.DefaultCenterLatitude.ToString());
-            Console.WriteLine("Longitude: " + InfoSection.DefaultCenterLongitude.ToString());
-            Console.WriteLine("Mag Var: " + InfoSection.MagneticVariation.ToString());
-            return (FolderMgt.OutputFolder.Length != 0) &&
-                (FolderMgt.DataFolder.Length != 0) &&
-                (InfoSection.SponsorARTCC.Length != 0) &&
-                (InfoSection.DefaultAirport.Length != 0) &&
-                (InfoSection.DefaultCenterLatitude.ToString().Length != 0) &&
-                (InfoSection.DefaultCenterLongitude.ToString().Length != 0) &&
-                (InfoSection.MagneticVariation.ToString().Length != 0);
+            //Console.WriteLine("Data: " + FolderMgt.DataFolder.ToString());
+            //Console.WriteLine("Output: " + FolderMgt.OutputFolder.ToString());
+            //Console.WriteLine("ARTCC: " + InfoSection.SponsorARTCC.ToString());
+            //Console.WriteLine("Airport: " + InfoSection.DefaultAirport.ToString());
+            //Console.WriteLine("Latitude: " + InfoSection.DefaultCenterLatitude.ToString());
+            //Console.WriteLine("Longitude: " + InfoSection.DefaultCenterLongitude.ToString());
+            //Console.WriteLine("Mag Var: " + InfoSection.MagneticVariation.ToString());
+            return !(string.IsNullOrEmpty(FolderMgt.DataFolder.ToString()) ||
+                string.IsNullOrEmpty(FolderMgt.OutputFolder.ToString()) ||
+                string.IsNullOrEmpty(InfoSection.SponsorARTCC.ToString()) ||
+                string.IsNullOrEmpty(InfoSection.DefaultAirport) ||
+                string.IsNullOrEmpty(InfoSection.DefaultCenterLatitude.ToString()) ||
+                string.IsNullOrEmpty(InfoSection.DefaultCenterLongitude.ToString()) ||
+                string.IsNullOrEmpty(InfoSection.MagneticVariation.ToString()));
         }
         private void UpdateInfoSection()
 

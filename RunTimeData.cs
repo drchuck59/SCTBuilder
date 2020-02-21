@@ -349,10 +349,20 @@ namespace SCTBuilder
     }
     public class FolderMgt
     {
+        private static string outputFolder = string.Empty;
+        private static string dataFolder = string.Empty;
         public static readonly string INIfile = ".\\SCTbuilder.ini";
-        public static string DataFolder { get; set; }
-        public static string OutputFolder { get; set; }
-        // public static string OutputFilter{ get; set; }
+        public static string DataFolder
+        {
+            get { return dataFolder; }
+            set { dataFolder = value; }
+        }
+public static string OutputFolder
+        {
+            get { return outputFolder; }
+            set { outputFolder = value; }
+        }
+            
         public static readonly string INIxml = ".\\SCTbuilder.xml";
     }
     public class VersionInfo                            // Internal information
@@ -373,6 +383,10 @@ namespace SCTBuilder
     }
     public class InfoSection
     {
+        private static string fe = string.Empty;
+        private static string afe = string.Empty;
+        private static string artcc = string.Empty;
+        private static string apt = string.Empty;
         public static string SectorName
         {
             get { return SponsorARTCC + "_" + CycleInfo.AIRAC.ToString(); }
@@ -384,11 +398,27 @@ namespace SCTBuilder
                 return SponsorARTCC + "_xx_OBS";
             }
         }
-        public static string FacilityEngineer { get; set; }
-        public static string AsstFacilityEngineer { get; set; }
-        public static string SponsorARTCC { get; set; }
-        public static string DefaultAirport { get; set; }   
-        public static float DefaultCenterLatitude               // Latitude of default sector center point
+        public static string FacilityEngineer 
+        {
+            get { return fe; }
+            set { fe = value; }
+        }
+        public static string AsstFacilityEngineer
+        {
+            get { return afe; }
+            set { afe = value; }
+        }
+        public static string SponsorARTCC
+        {
+            get { return artcc; }
+            set { artcc = value; }
+        }
+        public static string DefaultAirport
+        {
+            get { return apt; }
+            set { apt = value; }
+        }
+        public static double DefaultCenterLatitude               // Latitude of default sector center point
         {
             get
             { if (DefaultAirport.Length != 0)
@@ -396,7 +426,7 @@ namespace SCTBuilder
                 else return -1;
             }
         }
-        public static float DefaultCenterLongitude  // Longitude of default sector center point
+        public static double DefaultCenterLongitude  // Longitude of default sector center point
         {
             get
             {
@@ -405,8 +435,8 @@ namespace SCTBuilder
                 else return -1;
             }
         }
-        public static float NMperDegreeLatitude { get { return 60f; } } // Always 60 NM
-        public static float NMperDegreeLongitude
+        public static double NMperDegreeLatitude { get { return 60f; } } // Always 60 NM
+        public static double NMperDegreeLongitude
         {
             get 
             { 
@@ -414,7 +444,7 @@ namespace SCTBuilder
                 return LatLongCalc.NMperLongDegree(DefaultCenterLatitude);
             else return 60f; }
         }
-        public static float MagneticVariation       // Varies by location
+        public static double MagneticVariation       // Varies by location
         {
             get
             { 
@@ -423,7 +453,7 @@ namespace SCTBuilder
                 else return 0;
             }
         }
-        public static float SectorScale { get { return 1f; } }      // Always 1, ignored in VRC
+        public static double SectorScale { get { return 1f; } }      // Always 1, ignored in VRC
     }
     public static class SCTchecked
     {

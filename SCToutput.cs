@@ -122,7 +122,7 @@ namespace SCTBuilder
             if (path != string.Empty)
             {
                 Console.WriteLine("SUAs...");
-                WriteSUA(path);
+                WriteSUA();
                 // TextFiles.Add(path);
             }
             path = CheckFile(PartialPath, CycleInfo.AIRAC.ToString(),".sct2");
@@ -701,10 +701,10 @@ namespace SCTBuilder
 
         private static void WriteFixNames(List<string> FixNames, StreamWriter sw)
         {
-            float Angle = 0f;
-            float Scale = 0.025f;
-            float Latitude = 0f;
-            float Longitude = 0f;
+            double Angle = 0f;
+            double Scale = 0.025f;
+            double Latitude = 0f;
+            double Longitude = 0f;
             string Filter;
             DataView dvFIX = new DataView(Form1.FIX);
             DataView dvVOR = new DataView(Form1.VOR);
@@ -929,7 +929,7 @@ namespace SCTBuilder
             File.AppendAllLines(path, High);
             File.AppendAllLines(path, Ultra);
         }
-        private static void WriteSUA(string path)
+        private static void WriteSUA()
         {
             
         }

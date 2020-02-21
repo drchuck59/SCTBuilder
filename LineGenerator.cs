@@ -16,7 +16,7 @@ namespace SCTBuilder
         double StartLon;
         double EndLat;
         double EndLon;
-        int TrueBrg;     // From the Lat-Long coordinates
+        double LineBrg;     // From the Lat-Long coordinates
         char CalcType;
         char DashType;
         double Distance;
@@ -217,7 +217,7 @@ namespace SCTBuilder
                 else
                 {
                     CalcBearingTextBox.Text = test.ToString();
-                    if (CalcMagVarTextBox.TextLength != 0) TrueBrg = test + Convert.ToInt32(CalcMagVarTextBox.Text);
+                    if (CalcMagVarTextBox.TextLength != 0) LineBrg = test + Convert.ToInt32(CalcMagVarTextBox.Text);
                 }
                 //}
                 if (Msg.Length != 0)
@@ -275,11 +275,14 @@ namespace SCTBuilder
             AddNextButton.Enabled = AddLineButton.Enabled;
             if (AddLineButton.Enabled)
             {
-                DispBrgTextBox.Text = decimal.Round(Convert.ToDecimal(TrueBrg), 2, MidpointRounding.AwayFromZero).ToString();
-                DispDistTextBox.Text = decimal.Round(Convert.ToDecimal(CalcDist), 2, MidpointRounding.AwayFromZero).ToString();
+                Distance = LatLongCalc.Distance(StartLat, StartLon, EndLat, EndLon, 'N');
+                
+                DispBrgTextBox.Text = decimal.Round(Convert.ToDecimal(LineBrg), 2, MidpointRounding.AwayFromZero).ToString();
+                DispDistTextBox.Text = decimal.Round(Convert.ToDecimal(Distance), 2, MidpointRounding.AwayFromZero).ToString();
             }
             else
             {
+                Distance = 0;
                 DispBrgTextBox.Text = string.Empty;
                 DispDistTextBox.Text = string.Empty;
             }
@@ -348,6 +351,8 @@ namespace SCTBuilder
 
         private void CalcDistanceTextBox_Validated(object sender, EventArgs e)
         {
+            if (!string.IsNullOrEmpty(CalcDistanceTextBox.Text))
+                CalcDist = Convert.ToDouble(CalcDistanceTextBox.Text);
             UpdateCalcButton();
         }
 
@@ -363,10 +368,9 @@ namespace SCTBuilder
             ///     Magnetic bearing - deviation = Compass bearing
             /// In the US, the agonic line is roughly along the Mississippi river
             /// In aviation, maps, GPS and runways use true bearings
-            double trueBrg = Convert.ToDouble(CalcBearingTextBox.Text) + Convert.ToDouble(CalcMagVarTextBox.Text);
-            double Dist = Convert.ToDouble(CalcDistanceTextBox.Text);
+            LineBrg = Convert.ToDouble(CalcBearingTextBox.Text) + Convert.ToDouble(CalcMagVarTextBox.Text);
             double[] CalcLocation =
-                LatLongCalc.CalcLocation(StartLat, StartLon, DistanceAdjust(Dist, CalcType), trueBrg);
+                LatLongCalc.CalcLocation(StartLat, StartLon, DistanceAdjust(CalcDist, CalcType), LineBrg);
             EndLat = CalcLocation[0];
             EndLon = CalcLocation[1];
             EndLatitudeTextBox.Text = Conversions.DecDeg2SCT(EndLat, true);
@@ -578,7 +582,7 @@ namespace SCTBuilder
         private void AddLine()
         {
             // There is no error checking for valid data, as that is done to enable buttons
-            string cr = Environment.NewLine; string result = string.Empty;
+            string cr = Environment.NewLine;
             MessageBoxIcon icon = MessageBoxIcon.Warning; string Msg;
             if (SSDRadioButton.Checked)
             {
