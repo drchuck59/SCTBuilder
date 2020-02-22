@@ -118,8 +118,7 @@ namespace SCTBuilder
             CboARTCC.SelectedIndex = CboARTCC.FindStringExact(InfoSection.SponsorARTCC);
             FilterBy.Method = "ARTCC";
             FilterBy.NorthLimit = CboARTCC.GetItemText(CboARTCC.SelectedItem);
-            grpCircle.Visible = false;
-            grpSquareLimits.Visible = false;
+            FilterGroupBox.Visible = false;
             LoadCboAirport();
             CboAirport.SelectedIndex = CboAirport.FindStringExact(InfoSection.DefaultAirport);
             SCTtoolStripButton.Enabled = TestWriteSCT();
@@ -295,29 +294,11 @@ namespace SCTBuilder
                 RowFilter = filter,
                 Sort = "FacilityID"
             };
-            // Move into a table and add the missing column Class
-            DataTable dtAirports = dvAPT.ToTable(false, "ID", "FacilityID", "Latitude", "Longitude", "MagVar");
-            dtAirports.Columns.Add("Class", typeof(string));
-            // Loop the TWR table to add the Class airspace
-            DataRow foundrow;
-            foreach (DataRow dataRow in dtAirports.AsEnumerable())
-            {
-                foundrow = TWR.Rows.Find(dataRow["ID"]);
-                if (foundrow != null)
-                    dataRow["Class"] = foundrow["Class"];
-            }
             // Create the dataview, filtering by the selected class
-            filter = "([Class] = '" + GetClass() + "')";
-            DataView dvAirports = new DataView(dtAirports)
-            {
-                RowFilter = filter
-            };
-            DataTable dtAPT = dvAirports.ToTable(true, "FacilityID");
             CboAirport.DisplayMember = "FacilityID";
-            CboAirport.ValueMember = "FacilityID";
-            CboAirport.DataSource = dtAPT;
+            CboAirport.ValueMember = "ID";
+            CboAirport.DataSource = dvAPT;
             if (CboAirport.Items.Count != 0) CboAirport.SelectedIndex = 0;
-            dvAirports.Dispose();
             dvAPT.Dispose();
         }
 
@@ -574,12 +555,6 @@ namespace SCTBuilder
             System.Diagnostics.Process.Start("https://zjxartcc.org");
         }
 
-        private string GetClass()
-        {
-            if (btnClassC.Checked) return "C";
-            else return "B";
-        }
-
         private void TxtFacilityEngineer_Validated(object sender, EventArgs e)
         {
             InfoSection.FacilityEngineer = txtFacilityEngineer.Text;
@@ -596,37 +571,6 @@ namespace SCTBuilder
                 MessageBox.Show(Message, VersionInfo.Title, buttons, icon);
                 txtFacilityEngineer.Text = "Facility Engineer Name";
             }
-        }
-
-        private void BtnARTCC_CheckedChanged(object sender, EventArgs e)
-        {
-            grpSquareLimits.Visible = !btnARTCC.Checked;
-            grpCircle.Visible = !btnARTCC.Checked;
-            gridViewToolStripButton.Enabled = !btnSquare.Checked;
-            if (btnARTCC.Checked)
-                if (CboARTCC.SelectedIndex == -1)
-                {
-                    string Message = "You must select an ARTCC before selecting this method.";
-                    MessageBoxIcon icon = MessageBoxIcon.Information;
-                    MessageBoxButtons buttons = MessageBoxButtons.OK;
-                    MessageBox.Show(Message, VersionInfo.Title, buttons, icon);
-                    btnARTCC.Checked = false;
-                }
-                else
-                {
-                    FilterBy.Method = "ARTCC";
-                    FilterBy.NorthLimit = CboARTCC.GetItemText(CboARTCC.SelectedItem);
-                    SCTtoolStripButton.Enabled = TestWriteSCT();
-                }
-        }
-
-        private void BtnSquare_CheckedChanged(object sender, EventArgs e)
-        {
-            grpSquareLimits.Visible = btnSquare.Checked;
-            gridViewToolStripButton.Enabled = btnSquare.Checked;
-            grpCircle.Visible = !btnSquare.Checked;
-            if ((btnSquare.Checked) && (CboARTCC.SelectedIndex > -1))
-                UpdateSquare();
         }
 
         private void UpdateSquare()
@@ -666,24 +610,6 @@ namespace SCTBuilder
             txtLatNorth.Text = Math.Round(LatNorth, 6).ToString();
             txtLatSouth.Text = Math.Round(LatSouth, 6).ToString();
             dataview.Dispose();
-        }
-
-        private void BtnCircle_CheckedChanged(object sender, EventArgs e)
-        {
-            grpSquareLimits.Visible = !btnCircle.Checked;
-            grpCircle.Visible = btnCircle.Checked;
-        }
-
-        private void BtnClassB_CheckedChanged(object sender, EventArgs e)
-        {
-            LoadCboAirport();
-            SCTtoolStripButton.Enabled = TestWriteSCT();
-        }
-
-        private void BtnClassC_CheckedChanged(object sender, EventArgs e)
-        {
-            LoadCboAirport();
-            SCTtoolStripButton.Enabled = TestWriteSCT();
         }
 
         private void CmdOutputFolder_Click(object sender, EventArgs e)
@@ -805,8 +731,7 @@ namespace SCTBuilder
                 LoadForm();
                 // LoadFixGrid();
                 FolderMgt.DataFolder = txtDataFolder.Text;
-                grpCircle.Visible = false;
-                grpSquareLimits.Visible = false;
+                FilterGroupBox.Visible = false;
             }
             if (txtDataFolder.Text != FolderMgt.DataFolder)
                 CmdDataFolder_Click(sender, e);
@@ -880,8 +805,6 @@ namespace SCTBuilder
             if (CboARTCC.SelectedIndex != -1)
             {
                 InfoSection.SponsorARTCC = CboARTCC.Text.ToString();
-                if (btnSquare.Checked && (CboARTCC.SelectedIndex > -1))
-                    UpdateSquare();
                 LoadCboAirport();
             }
             SCTtoolStripButton.Enabled = TestWriteSCT();
@@ -994,11 +917,6 @@ namespace SCTBuilder
             panelSUAs.Visible = ChkSUA.Checked;
         }
 
-        private void ChkOverwrite_CheckedChanged(object sender, EventArgs e)
-        {
-            SCTchecked.ChkConfirmOverwrite = chkOverwrite.Checked;
-        }
-
         private void GoToFAA28dayNASRToolStripMenuItem_Click(object sender, EventArgs e)
         {
             string url = "https://www.faa.gov/air_traffic/flight_info/aeronav/aero_data/NASR_Subscription/";
@@ -1024,6 +942,11 @@ namespace SCTBuilder
             Form form = new LineGenerator();
             form.ShowDialog(this);
             form.Dispose();
+        }
+
+        private void confirmOverwriteOfFilesToolStripMenuItem_CheckedChanged(object sender, EventArgs e)
+        {
+            SCTchecked.ChkConfirmOverwrite = confirmOverwriteOfFilesToolStripMenuItem.Checked;
         }
     }
 }
