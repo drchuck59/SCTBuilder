@@ -84,6 +84,9 @@
       <HintPath>packages\System.Collections.Immutable.1.7.0\lib\netstandard2.0\System.Collections.Immutable.dll</HintPath>
     </Reference>
     <Reference Include="System.Core" />
+    <Reference Include="System.Data.Linq" />
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.Memory, Version=4.0.1.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>packages\System.Memory.4.5.3\lib\netstandard2.0\System.Memory.dll</HintPath>
     </Reference>
@@ -120,18 +123,18 @@
     <Compile Include="About.Designer.cs">
       <DependentUpon>About.cs</DependentUpon>
     </Compile>
+    <Compile Include="AIRACUpdateForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AIRACUpdateForm.Designer.cs">
+      <DependentUpon>AIRACUpdateForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="CycleInfo.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
-    </Compile>
-    <Compile Include="FormInstructions.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="FormInstructions.Designer.cs">
-      <DependentUpon>FormInstructions.cs</DependentUpon>
     </Compile>
     <Compile Include="Hershey.cs" />
     <Compile Include="LatLongCalc.cs" />
@@ -173,9 +176,6 @@
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormInstructions.resx">
-      <DependentUpon>FormInstructions.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="LatLongHelp.resx">
       <DependentUpon>LatLongHelp.cs</DependentUpon>
     </EmbeddedResource>
@@ -196,6 +196,7 @@
     </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\app.manifest" />
+    <None Include="Properties\DataSources\FilterBy.datasource" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

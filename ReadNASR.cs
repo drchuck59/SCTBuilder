@@ -2,7 +2,6 @@
 using System.IO;
 using System.Globalization;
 using System.Windows.Forms;
-using System.Linq;
 using System.Collections.Generic;
 using System.Xml;
 using System.Data;
@@ -11,24 +10,39 @@ namespace SCTBuilder
 {
     public class ReadNASR
     {
-        public static int FillCycleInfo()
+
+        public static int GetNASR_AIRAC()
         {
-            string FullFilename = GetFullPathname(FolderMgt.DataFolder, "NATFIX.txt");
+            // Returns the AIRAC of the current FAA data text files
+            // Save the information if the read is successful
+            // Returns an error if the AIRAC is corrupted
+            // D:\OneDrive\Documents\vFE_Files\Resources\28DaySubscription_Effective_2020-02-27
+            string FullFilename = SCTcommon.GetFullPathname(FolderMgt.DataFolder, "NATFIX.txt");
+            int result = -1; string Msg;
+            string cr = Environment.NewLine;
             if (FullFilename.IndexOf("ERROR", 0) == -1)
             {
+                string ExpectedCycle = FullFilename.Substring(FullFilename.Length - 21, 10);
+                DateTime ExpectedDate = Convert.ToDateTime(ExpectedCycle);
                 string Line = string.Empty;
                 using (StreamReader reader = new StreamReader(FullFilename))
                 {
                     Line = reader.ReadLine();
                     Line = reader.ReadLine();
                 }
+                // Get the date in the NATFIX file
                 Line = Line.Substring(1, Line.Length - 1);
                 string strDate = Line.Substring(4, 2) + "/" + Line.Substring(6, 2) + "/" + Line.Substring(0, 4);
-                DateTime date = Convert.ToDateTime(strDate);
-                CycleInfo.FindAIRAC(date, SetCycleInfo: true);
-                return CycleInfo.AIRAC;
+                DateTime FoundDate = Convert.ToDateTime(strDate);
+                if (FoundDate != ExpectedDate)
+                {
+                    Msg = "** WARNING!  The AIRAC cycle date does not match the expected AIRAC! **" + cr +
+                        "You should update the data using the Update AIRAC button before continuing.";
+                    SCTcommon.SendMessage(Msg, MessageBoxIcon.Exclamation);
+                }
+                result = CycleInfo.AIRACfromDate(FoundDate, true);
             }
-            else return -1;
+            return result;
         }
         public static void FillARB()
         {
@@ -40,7 +54,7 @@ namespace SCTBuilder
             /// </summary>
             DataTable arb = Form1.ARB;
             if (arb.Rows.Count != 0) arb.Clear();     // Must start with empty table
-            string FullFilename = GetFullPathname(FolderMgt.DataFolder, "ARB.txt");
+            string FullFilename = SCTcommon.GetFullPathname(FolderMgt.DataFolder, "ARB.txt");
             using (StreamReader reader = new StreamReader(FullFilename))
             {
                 string Line = string.Empty;
@@ -72,7 +86,7 @@ namespace SCTBuilder
             DataTable NDBtable = Form1.NDB;
             if (VORtable.Rows.Count != 0) VORtable.Clear();     // Must start with empty tables
             if (NDBtable.Rows.Count != 0) NDBtable.Clear();
-            string FullFilename = GetFullPathname(FolderMgt.DataFolder, "NAV.txt");
+            string FullFilename = SCTcommon.GetFullPathname(FolderMgt.DataFolder, "NAV.txt");
             string FixType; double Lat; double Long; double Mag;
             using (StreamReader reader = new StreamReader(FullFilename))
             {
@@ -121,7 +135,7 @@ namespace SCTBuilder
                             if (Line.Substring(0, 1) == "'")
                                 Temp = Line.Substring(1, Line.Length - 1);
                             Temp = Temp.Substring(0, 4) + "-" + Temp.Substring(4, 2) + "-" + Temp.Substring(6, 2);
-                            CycleInfo.FindAIRAC(
+                            CycleInfo.AIRACfromDate(
                                 DateTime.ParseExact(Temp, "yyyy-MM-dd", CultureInfo.CurrentCulture), true);
                             break;
                         default:
@@ -137,7 +151,7 @@ namespace SCTBuilder
             // MessageBox.Show("Filling FIX", VersionInfo.Title, MessageBoxButtons.OK, MessageBoxIcon.Information);
             DataTable FIXtable = Form1.FIX;
             if (FIXtable.Rows.Count != 0) FIXtable.Clear();     // Must start with empty tables
-            string FullFilename = GetFullPathname(FolderMgt.DataFolder, "FIX.txt");
+            string FullFilename = SCTcommon.GetFullPathname(FolderMgt.DataFolder, "FIX.txt");
             using (StreamReader reader = new StreamReader(FullFilename))
             {
                 string Line = string.Empty;
@@ -171,13 +185,13 @@ namespace SCTBuilder
             DataTable RWYtable = Form1.RWY;
             if (APTtable.Rows.Count != 0) APTtable.Clear();     // Must start with empty tables
             if (RWYtable.Rows.Count != 0) RWYtable.Clear();
-            string FullFilename = GetFullPathname(FolderMgt.DataFolder, "APT.txt");
+            string FullFilename = SCTcommon.GetFullPathname(FolderMgt.DataFolder, "APT.txt");
             char[] FacilityType = { 'A', 'C', 'H' };     // Only interested in Airport, Seaplane, and Heliports
             string FacType = string.Empty; string tempID = string.Empty; string tempBID = string.Empty;
             string tempRID = string.Empty; double tempLatB = 0f; double tempLongB = 0f; string tempFacID = string.Empty;
             double tempLatR = 0f; double tempLongR = 0f; double tempLength = 0f; bool tempOpen = false;
             double tempWidth = 0f; double tempHdgB = -1f; double tempHdgR = -1f; string tempRwyID; string tempRwyName = string.Empty;
-            double tempElevB = 0f; double tempElevR = 0f; string tempARTCC = string.Empty;
+            double tempElevB = 0f; double tempElevR = 0f; string tempARTCC = string.Empty; string tempFacilityName = string.Empty;
             using (StreamReader reader = new StreamReader(FullFilename))
             {
                 string Line = string.Empty;
@@ -195,11 +209,13 @@ namespace SCTBuilder
                             if ((FacType.IndexOfAny(FacilityType) != -1) && (tempOpen))     // Only operational APTs of "A", "H" and "C"
                             {
                                 tempARTCC = Line.Substring(674, 4).Trim();
+                                tempFacID = Line.Substring(27, 4).Trim();
+                                tempFacilityName = Line.Substring(133, 50).Trim();
                                 var AptInfo = new List<object>
                                 {
                                 tempID,                                        // ID (Landing Facility Site Number)
-                                Line.Substring(27, 4).Trim(),                  // Facility ID (ICOA)
-                                Line.Substring(133, 50).Trim(),                // Facility Name
+                                tempFacID                   ,                  // Facility ID (ICOA)
+                                tempFacilityName,                               // Facility Name
                                 Conversions.Seconds2DecDeg(Line.Substring(538, 12)),    // Latitude
                                 Conversions.Seconds2DecDeg(Line.Substring(565, 12)),    // Longitude
                                 tempARTCC,                                     // Responsible ARTCC
@@ -253,6 +269,7 @@ namespace SCTBuilder
                                     {
                                         tempID,                                                 // ID (from APT row)
                                         tempFacID,                                              // Facility ID
+                                        tempFacilityName,                                       // Facility Name
                                         tempARTCC,                                              // ARTCC (from APT row)
                                         tempRwyName,                                            // Runway identifier (e.g., 17L/35R)
                                         tempLength,                                             // Length Feet
@@ -281,7 +298,7 @@ namespace SCTBuilder
         public static void FillTWR()
         {
             DataTable TWR = Form1.TWR;
-            string FullFilename = GetFullPathname(FolderMgt.DataFolder, "TWR.txt");
+            string FullFilename = SCTcommon.GetFullPathname(FolderMgt.DataFolder, "TWR.txt");
             string Line; string rowType; bool isATCT = false; bool LCLfound = false; int LineNo = 0;
             char[] FacType = { 'A', 'C', 'H' };     // Only interested in Airport, Seaplane, and Heliports
             string tempID = string.Empty; string tempFac = string.Empty; string tempName = string.Empty;
@@ -412,7 +429,7 @@ namespace SCTBuilder
         public static void FillAWY()
         {
             DataTable AWY = Form1.AWY;
-            string FullFilename = GetFullPathname(FolderMgt.DataFolder, "AWY.txt");
+            string FullFilename = SCTcommon.GetFullPathname(FolderMgt.DataFolder, "AWY.txt");
             string Line; string aNAVtype = string.Empty; string aNAVID;
             string aSeqNo = string.Empty; bool aFix; string aARTCC = string.Empty; string aMOCA = string.Empty;
             string aMEA = string.Empty; string aMAA = string.Empty; string atype = string.Empty;
@@ -473,7 +490,7 @@ namespace SCTBuilder
         public static void FillStarDP()
         {
             DataTable SSD = Form1.SSD;
-            string FullFilename = GetFullPathname(FolderMgt.DataFolder, "STARDP.txt");
+            string FullFilename = SCTcommon.GetFullPathname(FolderMgt.DataFolder, "STARDP.txt");
             bool isSid; string Line; int Seqno = 0;
             using (StreamReader reader = new StreamReader(FullFilename))
             {
@@ -506,7 +523,7 @@ namespace SCTBuilder
             string SectorAbbr = string.Empty; string SectorLevel = string.Empty; bool Exclude = false;
             string SectorBase = string.Empty; string SectorTop = string.Empty; bool Success = true;
             string Lat0; string Long0; bool PenUp = false; string Item; int LineNo = 0;
-            string FullFilename = GetFullPathname(FolderMgt.DataFolder, "LocalSectors.txt");
+            string FullFilename = SCTcommon.GetFullPathname(FolderMgt.DataFolder, "LocalSectors.txt");
             string Message = "Invalid context at/near LocalSectors.txt line "; string NewMessage = string.Empty;
             MessageBoxButtons buttons = MessageBoxButtons.OK;
             MessageBoxIcon icon = MessageBoxIcon.Warning;
@@ -617,26 +634,6 @@ namespace SCTBuilder
             return Success;
         }
 
-        private static string GetFullPathname(string DataFolder, string Filename)
-        /// <summary>
-        /// Checks that the data exists, returns an error if not found
-        /// </summary>
-        {
-            try
-            {
-                var file = Directory.GetFiles(DataFolder, Filename, System.IO.SearchOption.AllDirectories).FirstOrDefault();
-                return file.ToString();
-            }
-            catch (FileNotFoundException)
-            {
-                return "FILE ERROR";
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-                return "ERROR";
-            }
-        }
         private static void AddFixes(DataTable dT, List<object> FixItems)
         {
             dT.Rows.Add(FixItems.ToArray());
@@ -644,7 +641,7 @@ namespace SCTBuilder
 
         public static void FillAirSpace()
         {
-            string FullFilename = GetFullPathname(FolderMgt.DataFolder, "openaip_airspace_united_states_us.aip");
+            string FullFilename = SCTcommon.GetFullPathname(FolderMgt.DataFolder, "openaip_airspace_united_states_us.aip");
             DataTable SUA = Form1.SUA;
             DataView dvSUA = new DataView(SUA);
             string Category = string.Empty; string ID = string.Empty; 

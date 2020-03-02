@@ -270,15 +270,16 @@ namespace SCTBuilder
             CopyStart2EndButton.Enabled = (StartLatitudeTextBox.TextLength != 0) && (StartLongitudeTextBox.TextLength != 0);
             CopyEnd2StartButton.Enabled = (EndLatitudeTextBox.TextLength != 0) && (EndLongitudeTextBox.TextLength != 0);
             SwitchStartEndButton.Enabled = CopyEnd2StartButton.Enabled | CopyStart2EndButton.Enabled;
-            bool chkDash = DashedLineRadioButton.Checked && (DashedLineLengthTextBox.TextLength != 0);
+            bool chkDash = DashedLineRadioButton.Checked;
             AddLineButton.Enabled = CopyEnd2StartButton.Enabled && CopyStart2EndButton.Enabled && chkDash;
             AddNextButton.Enabled = AddLineButton.Enabled;
             if (AddLineButton.Enabled)
             {
                 Distance = LatLongCalc.Distance(StartLat, StartLon, EndLat, EndLon, 'N');
-                
+
                 DispBrgTextBox.Text = decimal.Round(Convert.ToDecimal(LineBrg), 2, MidpointRounding.AwayFromZero).ToString();
                 DispDistTextBox.Text = decimal.Round(Convert.ToDecimal(Distance), 2, MidpointRounding.AwayFromZero).ToString();
+                DashedLineLengthNUD.Maximum = decimal.Round(Convert.ToDecimal(Distance), 0, MidpointRounding.AwayFromZero) / 2;
             }
             else
             {
@@ -619,11 +620,11 @@ namespace SCTBuilder
                         }
                     }
                 else
-                    {
-                        Msg = "The Airway identifier is required for this format." + cr + "(Place in the prefix text box.)";
-                        SendMessage(Msg, icon);
-                        PrefixTextBox.Focus();
-                    }
+                {
+                    Msg = "The Airway identifier is required for this format." + cr + "(Place in the prefix text box.)";
+                    SendMessage(Msg, icon);
+                    PrefixTextBox.Focus();
+                }
 
             }
             if (ARTCCRadioButton.Checked)
@@ -655,21 +656,9 @@ namespace SCTBuilder
 
         private void DashedLineRadioButton_CheckedChanged(object sender, EventArgs e)
         {
-            DashedLineLengthTextBox.Enabled = DashFtRadioButton.Enabled =
+            DashedLineLengthNUD.Enabled = DashFtRadioButton.Enabled =
                 DashMeterRadioButton.Enabled = DashNMRadioButton.Enabled =
                 DashSMRadioButton.Enabled = DashedLineRadioButton.Checked;
-        }
-
-        private void DashedLineLengthTextBox_TextChanged(object sender, EventArgs e)
-        {
-            double Dist = Convert.ToDouble(DashedLineLengthTextBox.Text);
-            if (Dist > Distance / 2)
-            {
-                MessageBoxIcon icon = MessageBoxIcon.Warning;
-                string Msg = "Interval cannot be more than 1/2 of total distance.";
-                SendMessage(Msg, icon);
-                DashedLineLengthTextBox.Text = (Distance / 2).ToString("0.0");
-            }
         }
 
         private void DashSMRadioButton_CheckedChanged(object sender, EventArgs e)

@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -357,14 +357,17 @@ namespace SCTBuilder
             get { return dataFolder; }
             set { dataFolder = value; }
         }
-public static string OutputFolder
+
+        public static string OutputFolder
         {
             get { return outputFolder; }
             set { outputFolder = value; }
         }
             
         public static readonly string INIxml = ".\\SCTbuilder.xml";
+
     }
+
     public class VersionInfo                            // Internal information
     {
         public readonly static string Title = "SCT Builder 0.1";
@@ -372,14 +375,14 @@ public static string OutputFolder
     public class FilterBy                               // Filter source for SCT2 output
     {
         public static string Method { get; set; }
-        public static object NorthLimit { get; set; }
-        public static object SouthLimit { get; set; }
-        public static object EastLimit { get; set; }
-        public static object WestLimit { get; set; }
-        public static object NorthOffset { get; set; }
-        public static object SouthOffset { get; set; }
-        public static object EastOffset { get; set; }
-        public static object WestOffset { get; set; }
+        public static double NorthLimit { get; set; }
+        public static double SouthLimit { get; set; }
+        public static double EastLimit { get; set; }
+        public static double WestLimit { get; set; }
+        public static double NorthOffset { get; set; }
+        public static double SouthOffset { get; set; }
+        public static double EastOffset { get; set; }
+        public static double WestOffset { get; set; }
     }
     public class InfoSection
     {
@@ -387,6 +390,10 @@ public static string OutputFolder
         private static string afe = string.Empty;
         private static string artcc = string.Empty;
         private static string apt = string.Empty;
+        private static double centerLat = 0;
+        private static double centerLon = 0;
+        private static double NMperLonDeg = 0;
+
         public static string SectorName
         {
             get { return SponsorARTCC + "_" + CycleInfo.AIRAC.ToString(); }
@@ -418,41 +425,58 @@ public static string OutputFolder
             get { return apt; }
             set { apt = value; }
         }
-        public static double DefaultCenterLatitude               // Latitude of default sector center point
+        public static string CenterLatitude_SCT               // Latitude of default sector center point as SCT format
         {
             get
-            { if (DefaultAirport.Length != 0)
-                    return Conversions.DefaultLatitude(DefaultAirport);
-                else return -1;
+            { return Conversions.DecDeg2SCT(centerLat, true); }
+            set
+            {
+                if (value.IsNumeric()) centerLat = Convert.ToDouble(value);
+                else centerLat = Conversions.String2DecDeg(value);
             }
         }
-        public static double DefaultCenterLongitude  // Longitude of default sector center point
+        public static double CenterLatitude_Dec               // Latitude of default sector center point
         {
             get
+            { return centerLat; }
+            set
+            { centerLat = value; }
+        }
+        public static string CenterLongitude_SCT  // Longitude of default sector center point
+        {
+            get
+            { return Conversions.DecDeg2SCT(centerLon, false); }
+            set
             {
-                if (DefaultAirport.Length != 0)
-                    return Conversions.DefaultLongitude(DefaultAirport);
-                else return -1;
+                if (value.IsNumeric()) centerLon = Convert.ToDouble(value);
+                else centerLon = Conversions.String2DecDeg(value);
             }
+        }
+        public static double CenterLongitude_Dec
+        {
+            get
+            { return centerLon; }
+            set
+            { centerLon = value; }
         }
         public static double NMperDegreeLatitude { get { return 60f; } } // Always 60 NM
         public static double NMperDegreeLongitude
         {
-            get 
-            { 
-                if (DefaultCenterLatitude != -1)
-                return LatLongCalc.NMperLongDegree(DefaultCenterLatitude);
-            else return 60f; }
+            get
+            { return NMperLonDeg; }
+            set
+            { NMperLonDeg = value;}
         }
         public static double MagneticVariation       // Varies by location
         {
             get
             { 
                 if (DefaultAirport.Length != 0)
-                    return Conversions.DefaultMagVar(DefaultAirport);
+                    return SCTcommon.GetMagVar(DefaultAirport);
                 else return 0;
             }
         }
+
         public static double SectorScale { get { return 1f; } }      // Always 1, ignored in VRC
     }
     public static class SCTchecked

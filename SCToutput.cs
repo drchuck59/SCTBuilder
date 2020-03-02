@@ -228,8 +228,8 @@ namespace SCTBuilder
                 sw.WriteLine(InfoSection.SectorName);
                 sw.WriteLine(InfoSection.DefaultPosition);
                 sw.WriteLine(InfoSection.DefaultAirport);
-                sw.WriteLine(Conversions.DecDeg2SCT(Convert.ToSingle(InfoSection.DefaultCenterLatitude), true));
-                sw.WriteLine(Conversions.DecDeg2SCT(Convert.ToSingle(InfoSection.DefaultCenterLongitude), false));
+                sw.WriteLine(InfoSection.CenterLatitude_SCT);
+                sw.WriteLine(InfoSection.CenterLongitude_SCT);
                 sw.WriteLine(InfoSection.NMperDegreeLatitude);
                 sw.WriteLine(InfoSection.NMperDegreeLongitude);
                 sw.WriteLine(InfoSection.MagneticVariation);

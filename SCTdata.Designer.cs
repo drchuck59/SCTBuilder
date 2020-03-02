@@ -3470,6 +3470,8 @@ namespace SCTBuilder {
             
             private global::System.Data.DataColumn columnFacilityID;
             
+            private global::System.Data.DataColumn columnFacilityName;
+            
             private global::System.Data.DataColumn columnARTCC;
             
             private global::System.Data.DataColumn columnRwyIdentifier;
@@ -3546,6 +3548,14 @@ namespace SCTBuilder {
             public global::System.Data.DataColumn FacilityIDColumn {
                 get {
                     return this.columnFacilityID;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn FacilityNameColumn {
+                get {
+                    return this.columnFacilityName;
                 }
             }
             
@@ -3709,6 +3719,7 @@ namespace SCTBuilder {
             public RWYRow AddRWYRow(
                         string ID, 
                         string FacilityID, 
+                        string FacilityName, 
                         string ARTCC, 
                         string RwyIdentifier, 
                         int LengthFT, 
@@ -3728,6 +3739,7 @@ namespace SCTBuilder {
                 object[] columnValuesArray = new object[] {
                         ID,
                         FacilityID,
+                        FacilityName,
                         ARTCC,
                         RwyIdentifier,
                         LengthFT,
@@ -3767,6 +3779,7 @@ namespace SCTBuilder {
             internal void InitVars() {
                 this.columnID = base.Columns["ID"];
                 this.columnFacilityID = base.Columns["FacilityID"];
+                this.columnFacilityName = base.Columns["FacilityName"];
                 this.columnARTCC = base.Columns["ARTCC"];
                 this.columnRwyIdentifier = base.Columns["RwyIdentifier"];
                 this.columnLengthFT = base.Columns["LengthFT"];
@@ -3791,6 +3804,8 @@ namespace SCTBuilder {
                 base.Columns.Add(this.columnID);
                 this.columnFacilityID = new global::System.Data.DataColumn("FacilityID", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnFacilityID);
+                this.columnFacilityName = new global::System.Data.DataColumn("FacilityName", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnFacilityName);
                 this.columnARTCC = new global::System.Data.DataColumn("ARTCC", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnARTCC);
                 this.columnRwyIdentifier = new global::System.Data.DataColumn("RwyIdentifier", typeof(string), null, global::System.Data.MappingType.Element);
@@ -3973,6 +3988,12 @@ namespace SCTBuilder {
             
             private global::System.Data.DataColumn columnIsSID;
             
+            private global::System.Data.DataColumn columnAOA;
+            
+            private global::System.Data.DataColumn columnAOB;
+            
+            private global::System.Data.DataColumn columnSPEED;
+            
             private global::System.Data.DataColumn columnSelected;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -4082,6 +4103,30 @@ namespace SCTBuilder {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn AOAColumn {
+                get {
+                    return this.columnAOA;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn AOBColumn {
+                get {
+                    return this.columnAOB;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn SPEEDColumn {
+                get {
+                    return this.columnSPEED;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public global::System.Data.DataColumn SelectedColumn {
                 get {
                     return this.columnSelected;
@@ -4125,7 +4170,7 @@ namespace SCTBuilder {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public SSDRow AddSSDRow(string ID, string NavAid, string FixType, float Latitude, float Longitude, string SSDcode, string SSDName, int Sequence, bool IsSID, bool Selected) {
+            public SSDRow AddSSDRow(string ID, string NavAid, string FixType, float Latitude, float Longitude, string SSDcode, string SSDName, int Sequence, bool IsSID, string AOA, string AOB, string SPEED, bool Selected) {
                 SSDRow rowSSDRow = ((SSDRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         ID,
@@ -4137,6 +4182,9 @@ namespace SCTBuilder {
                         SSDName,
                         Sequence,
                         IsSID,
+                        AOA,
+                        AOB,
+                        SPEED,
                         Selected};
                 rowSSDRow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowSSDRow);
@@ -4169,6 +4217,9 @@ namespace SCTBuilder {
                 this.columnSSDName = base.Columns["SSDName"];
                 this.columnSequence = base.Columns["Sequence"];
                 this.columnIsSID = base.Columns["IsSID"];
+                this.columnAOA = base.Columns["AOA"];
+                this.columnAOB = base.Columns["AOB"];
+                this.columnSPEED = base.Columns["SPEED"];
                 this.columnSelected = base.Columns["Selected"];
             }
             
@@ -4193,6 +4244,12 @@ namespace SCTBuilder {
                 base.Columns.Add(this.columnSequence);
                 this.columnIsSID = new global::System.Data.DataColumn("IsSID", typeof(bool), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnIsSID);
+                this.columnAOA = new global::System.Data.DataColumn("AOA", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnAOA);
+                this.columnAOB = new global::System.Data.DataColumn("AOB", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnAOB);
+                this.columnSPEED = new global::System.Data.DataColumn("SPEED", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnSPEED);
                 this.columnSelected = new global::System.Data.DataColumn("Selected", typeof(bool), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnSelected);
                 this.columnID.AllowDBNull = false;
@@ -8359,6 +8416,22 @@ namespace SCTBuilder {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public string FacilityName {
+                get {
+                    try {
+                        return ((string)(this[this.tableRWY.FacilityNameColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'FacilityName\' in table \'RWY\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableRWY.FacilityNameColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public string ARTCC {
                 get {
                     try {
@@ -8607,6 +8680,18 @@ namespace SCTBuilder {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public void SetFacilityIDNull() {
                 this[this.tableRWY.FacilityIDColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsFacilityNameNull() {
+                return this.IsNull(this.tableRWY.FacilityNameColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetFacilityNameNull() {
+                this[this.tableRWY.FacilityNameColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -8940,6 +9025,54 @@ namespace SCTBuilder {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public string AOA {
+                get {
+                    try {
+                        return ((string)(this[this.tableSSD.AOAColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'AOA\' in table \'SSD\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableSSD.AOAColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public string AOB {
+                get {
+                    try {
+                        return ((string)(this[this.tableSSD.AOBColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'AOB\' in table \'SSD\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableSSD.AOBColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public string SPEED {
+                get {
+                    try {
+                        return ((string)(this[this.tableSSD.SPEEDColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'SPEED\' in table \'SSD\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableSSD.SPEEDColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public bool Selected {
                 get {
                     try {
@@ -9036,6 +9169,42 @@ namespace SCTBuilder {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public void SetIsSIDNull() {
                 this[this.tableSSD.IsSIDColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsAOANull() {
+                return this.IsNull(this.tableSSD.AOAColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetAOANull() {
+                this[this.tableSSD.AOAColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsAOBNull() {
+                return this.IsNull(this.tableSSD.AOBColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetAOBNull() {
+                this[this.tableSSD.AOBColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsSPEEDNull() {
+                return this.IsNull(this.tableSSD.SPEEDColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetSPEEDNull() {
+                this[this.tableSSD.SPEEDColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]

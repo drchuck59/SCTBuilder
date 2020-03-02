@@ -7,13 +7,13 @@
 <DiagramLayout xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ex:showrelationlabel="False" ViewPortX="-10" ViewPortY="0" xmlns:ex="urn:schemas-microsoft-com:xml-msdatasource-layout-extended" xmlns="urn:schemas-microsoft-com:xml-msdatasource-layout">
   <Shapes>
     <Shape ID="DesignTable:ARB" ZOrder="15" X="68" Y="56" Height="200" Width="150" AdapterExpanded="true" DataTableExpanded="true" OldAdapterHeight="0" OldDataTableHeight="0" SplitterPosition="196" />
-    <Shape ID="DesignTable:APT" ZOrder="14" X="246" Y="59" Height="310" Width="150" AdapterExpanded="true" DataTableExpanded="true" OldAdapterHeight="0" OldDataTableHeight="0" SplitterPosition="306" />
+    <Shape ID="DesignTable:APT" ZOrder="14" X="246" Y="59" Height="389" Width="150" AdapterExpanded="true" DataTableExpanded="true" OldAdapterHeight="0" OldDataTableHeight="0" SplitterPosition="385" />
     <Shape ID="DesignTable:VOR" ZOrder="13" X="428" Y="58" Height="238" Width="150" AdapterExpanded="true" DataTableExpanded="true" OldAdapterHeight="0" OldDataTableHeight="0" SplitterPosition="234" />
     <Shape ID="DesignTable:NDB" ZOrder="12" X="608" Y="55" Height="238" Width="150" AdapterExpanded="true" DataTableExpanded="true" OldAdapterHeight="0" OldDataTableHeight="0" SplitterPosition="234" />
     <Shape ID="DesignTable:TWR" ZOrder="11" X="975" Y="56" Height="181" Width="150" AdapterExpanded="true" DataTableExpanded="true" OldAdapterHeight="0" OldDataTableHeight="0" SplitterPosition="177" />
     <Shape ID="DesignTable:FIX" ZOrder="10" X="783" Y="56" Height="195" Width="150" AdapterExpanded="true" DataTableExpanded="true" OldAdapterHeight="0" OldDataTableHeight="0" SplitterPosition="191" />
-    <Shape ID="DesignTable:AWY" ZOrder="9" X="1157" Y="61" Height="315" Width="150" AdapterExpanded="true" DataTableExpanded="true" OldAdapterHeight="0" OldDataTableHeight="0" SplitterPosition="311" />
-    <Shape ID="DesignTable:RWY" ZOrder="8" X="434" Y="317" Height="448" Width="150" AdapterExpanded="true" DataTableExpanded="true" OldAdapterHeight="0" OldDataTableHeight="0" SplitterPosition="444" />
+    <Shape ID="DesignTable:AWY" ZOrder="9" X="1157" Y="61" Height="416" Width="150" AdapterExpanded="true" DataTableExpanded="true" OldAdapterHeight="0" OldDataTableHeight="0" SplitterPosition="412" />
+    <Shape ID="DesignTable:RWY" ZOrder="8" X="434" Y="317" Height="497" Width="150" AdapterExpanded="true" DataTableExpanded="true" OldAdapterHeight="0" OldDataTableHeight="0" SplitterPosition="493" />
     <Shape ID="DesignTable:SSD" ZOrder="7" X="1340" Y="59" Height="416" Width="150" AdapterExpanded="true" DataTableExpanded="true" OldAdapterHeight="0" OldDataTableHeight="0" SplitterPosition="412" />
     <Shape ID="DesignTable:ColorDefs" ZOrder="6" X="85" Y="300" Height="67" Width="150" AdapterExpanded="true" DataTableExpanded="true" OldAdapterHeight="0" OldDataTableHeight="0" SplitterPosition="63" />
     <Shape ID="DesignTable:DrawLabel" ZOrder="5" X="92" Y="436" Height="105" Width="150" AdapterExpanded="true" DataTableExpanded="true" OldAdapterHeight="0" OldDataTableHeight="0" SplitterPosition="101" />

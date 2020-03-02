@@ -1,16 +1,13 @@
 ﻿using System;
-using System.Windows.Forms;
 using System.Xml;
-using System.Xml.Linq;
 using System.IO;
-using System.Threading.Tasks;
 
 namespace SCTBuilder
 {
     class CycleInfo
     {
-        private readonly static DateTime Start1506 = Convert.ToDateTime("05/28/2015");
-        public static int AIRAC = 1506;
+        private readonly static DateTime Start1501 = Convert.ToDateTime("01/08/2015");
+        public static int AIRAC = 1501;
         public static DateTime CycleStart;
         public static DateTime CycleEnd;
 
@@ -56,8 +53,12 @@ namespace SCTBuilder
             xml.WriteEndElement();
         }
 
-        public static void ReadINIxml()
+        public static int ReadINIxml()
         {
+            // reads the INI file saved on a previous use of the program
+            // returns -1 if there is no XML file to read, else returns the AIRAC of the last run
+            // Of course, that information is also placed into the CycleInfo class
+            int result = 1503;
             if (File.Exists(FolderMgt.INIxml))
             {
                 XmlDocument doc = new XmlDocument();
@@ -71,6 +72,7 @@ namespace SCTBuilder
                         {
                             case "AIRAC":
                                 AIRAC = Convert.ToInt32(value);
+                                result = AIRAC;
                                 break;
                             case "CycleStart":
                                 CycleStart = Convert.ToDateTime(value);
@@ -155,12 +157,16 @@ namespace SCTBuilder
                 }
             }
             else
-                ResetCycleInfo();
+            {
+                result = -1;
+            }
+            return result;
         }
 
-        private static void ResetCycleInfo()
+        public static void ResetCycleInfo()
         {
-            AIRAC = 1503;
+            // Resets the cycle information
+            AIRAC = 1501;
             CycleStart = Convert.ToDateTime("1/1/1900");
             CycleEnd = Convert.ToDateTime("1/2/1900");
             FolderMgt.OutputFolder = string.Empty;
@@ -171,20 +177,22 @@ namespace SCTBuilder
             InfoSection.AsstFacilityEngineer = "Ass't  Engineer name";
         }
 
-        public static int FindAIRAC(DateTime Cycledate, bool SetCycleInfo = false)
+        public static int AIRACfromDate(DateTime Cycledate, bool Save2CycleInfo = false)
         /// <summary>
         /// Return the AIRAC info from any given date
-        /// And populates the AIRAC cycle information
-        /// At 1506 cycles became 28 days (was 34).
+        /// Optionally populates the AIRAC cycle information
+        /// Note: At 1506 cycles became 28 days (was 34).
         /// </summary>
         {
-            DateTime WorkingDate = Start1506;
+            DateTime WorkingDate = Start1501;
             int CycleInterval = 28;
             int CycleYear = WorkingDate.Year;
             int iCounter = 0;
+            int result;
             // Must know if future or past AIRAC
             while (WorkingDate < Cycledate)
             {
+                //Console.WriteLine("AIRAC: " + CalcAIRAC(Convert.ToInt32(Convert.ToString(CycleYear).Substring(2, 2)), iCounter) + " Cycle: " + WorkingDate.ToShortDateString());
                 WorkingDate = WorkingDate.AddDays(CycleInterval);
                 if (CycleYear != WorkingDate.Year)
                 {
@@ -196,24 +204,28 @@ namespace SCTBuilder
                     iCounter += 1;
                 }
             }
-            if (SetCycleInfo)
+            string AIRACyear = Convert.ToString(CycleYear).Substring(2, 2);
+
+            result = CalcAIRAC(Convert.ToInt32(AIRACyear), iCounter);
+            // OPTIONAL opportunity to save the data in the CycleInfo class
+            if (Save2CycleInfo)
             {
-                AIRAC = CalcAIRAC(Convert.ToInt32(Convert.ToString(CycleYear).Substring(2, 2)), (iCounter));
+                AIRAC = result;
                 CycleStart = WorkingDate;
                 CycleEnd = WorkingDate.AddDays(CycleInterval);
             }
-            // Console.WriteLine("FindAIRAC result: " + CalcAIRAC(Convert.ToInt32(Convert.ToString(CycleYear).Substring(2, 2)), (iCounter)));
-            return CalcAIRAC(Convert.ToInt32(Convert.ToString(CycleYear).Substring(2, 2)), (iCounter));
+            return result;
         }
-        public static DateTime FindCycle(int reqAIRAC, bool SetCycleInfo = false)
-            // Returns the beginning cycle date for a given AIRAC
+
+        public static DateTime CycleDateFromAIRAC(int reqAIRAC, bool Save2CycleInfo = false)
+            // Returns the beginning and ending cycle date for a given AIRAC
         {
-            DateTime WorkingDate = Start1506;
+            DateTime WorkingDate = Start1501; DateTime result;
+            // Loop the cycles until the calculated AIRAC matches the requested one
             int CycleInterval = 28;
             int CycleYear = WorkingDate.Year;
             int iCounter = 1;
-            int WorkingAIRAC = CalcAIRAC(CycleYear, iCounter);
-
+            int WorkingAIRAC = 1501;
             while (WorkingAIRAC < reqAIRAC)
             {
                 WorkingDate = WorkingDate.AddDays(CycleInterval);
@@ -228,31 +240,39 @@ namespace SCTBuilder
                     iCounter += 1;
                     WorkingAIRAC = CalcAIRAC(WorkingDate.Year, iCounter);
                 }
+                // Console.WriteLine("AIRAC: " + WorkingAIRAC + " Cycle: " + WorkingDate.ToShortDateString());
             }
-            if (SetCycleInfo)
+            result = WorkingDate;
+            // OPTIONAL opportunity to save the data in the CycleInfo class
+            if (Save2CycleInfo)
             {
                 AIRAC = WorkingAIRAC;
                 CycleStart = WorkingDate;
                 CycleEnd = WorkingDate.AddDays(CycleInterval);
             }
-            Console.WriteLine("FindCycle result: " + Convert.ToDateTime(WorkingDate));
-            return WorkingDate;
+            // result[0] has start cycle date, result[1] has end cycle date
+            return result;
         }
-        private static int CalcAIRAC(int aYear, int aCounter)
+
+        private static int CalcAIRAC(int iYear, int iCounter)
+            // Internal call to generate sample AIRAC values
         {
-            return Convert.ToInt32((Extensions.Right(aYear.ToString(), 2)) + aCounter.ToString("D2").ToString());
+            int result;
+            result = Convert.ToInt32((Extensions.Right(iYear.ToString(), 2)) + iCounter.ToString("00").ToString());
+            return result;
         }
+
         public static string BuildCycleText()
         {
+            string cr = Environment.NewLine;
             string Message =
-                "AIRAC Cycle: " + CycleInfo.AIRAC + Environment.NewLine +
-                "Cycle Start:    " + CycleInfo.CycleStart.ToString("dd MMM yyyy") + Environment.NewLine +
-                "Cycle End:     " + CycleInfo.CycleEnd.ToString("dd MMM yyyy");
-            if (CycleInfo.CycleEnd < DateTime.Today)
+                "AIRAC Cycle: " + AIRAC + cr +
+                "Cycle Start:    " + CycleStart.ToString("dd MMM yyyy") + cr +
+                "Cycle End:     " + CycleEnd.ToString("dd MMM yyyy");
+            if (CycleEnd < DateTime.Today)
             {
-                Message = Message + Environment.NewLine + "*** Outdated Cycle Data ***";
+                Message = Message + cr + "*** Outdated Cycle Data ***";
             }
-            // Console.WriteLine(Message + Environment.NewLine);
             return Message;
         }
     }

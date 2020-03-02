@@ -1,16 +1,18 @@
 ﻿using System;
-using System.Net;
+using System.Diagnostics;
 using System.Linq;
-using System.Linq.Expressions;
+using System.Net;
 using System.Data;
 using System.IO;
 using System.IO.Compression;
 using System.Windows.Forms;
 using System.ComponentModel;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Data.Sql;
 
 namespace SCTBuilder
-{  
+{
     public partial class Form1 : Form
     {
         static public DataTable ARB = new SCTdata.ARBDataTable();
@@ -27,8 +29,8 @@ namespace SCTBuilder
         static public DataTable Colors = new SCTdata.ColorDefsDataTable();
         static public DataTable LocalSector = new SCTdata.LocalSectorsDataTable();
         static public DataSet SCT = new SCTdata();
-        bool DataIsLoaded = false;
-        bool DataIsSelected = false;
+        string cr = Environment.NewLine; string Msg;
+
         public Form1()
         {
             InitializeComponent();
@@ -42,181 +44,484 @@ namespace SCTBuilder
             SCT.Tables.Add(SSD);
             SCT.Tables.Add(Colors);
             SCTcommon.DefineColorConstants(Colors);
-            Console.WriteLine("Exiting Form1");
-        }
-
-        private void CmdInstructions_Click(object sender, EventArgs e)
-        {
-            Form Instructions = new FormInstructions();
-            Instructions.ShowDialog(this);
-            Instructions.Dispose();
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            // Eventually text colors will be modifiable by user
-            Console.WriteLine("Form1_Load...");
-            TextColors.RWYTextColor = "White";
-            TextColors.SSDTextColor = "Green";
-            Form Instructions = new FormInstructions();
-            DataIsLoaded = false;
-            if (File.Exists(FolderMgt.INIxml))
-            {
-                CycleInfo.ReadINIxml();
-                GetChecked();
-                HoldForm(true);
-                LoadData();
-                LoadForm();
-                HoldForm(false);
-                DataIsSelected = false;
-                SCTtoolStripButton.Enabled = gridViewToolStripButton.Enabled = true;
-            }
-            else
-            {
-                Instructions.ShowDialog(this);
-            }
-            Instructions.Dispose();
-        }
-        private void LoadData()
-        {
-            string Message;
-            lblUpdating.Text = "Loading data from FAA files";
-            lblUpdating.Visible = true;
-            UseWaitCursor = true;
-            if (ReadNASR.FillCycleInfo() != -1)
-            {
-                ReadNASR.FillARB();
-                ReadNASR.FillVORNDB();
-                ReadNASR.FillFIX();
-                ReadNASR.FillAPT();        // Includes RWY table
-                ReadNASR.FillTWR();
-                ReadNASR.FillAWY();
-                ReadNASR.FillStarDP();
-                DataIsLoaded = true;
-                DataIsSelected = false;
-            }
-            else
-            {
-                Message = "File Data error - missing data files in folder.";
-                MessageBox.Show(Message, VersionInfo.Title, MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            lblUpdating.Visible = false;
-            UseWaitCursor = false;
+            Debug.WriteLine("--------Form1 loaded-------");
+            LoadForm1();
         }
 
-        private void LoadForm()
-        // Calls a load of all data and repopulates the form
-        // Called by Load, DataFolder validated, and DatafolderButton
+        private void LoadForm1()
         {
-            Console.WriteLine("LoadForm...");
-            lblCycleInfo.Text = CycleInfo.BuildCycleText();
-            txtDataFolder.Text = FolderMgt.DataFolder;
-            txtOutputFolder.Text = FolderMgt.OutputFolder;
-            txtFacilityEngineer.Text = InfoSection.FacilityEngineer;
-            txtAsstFacilityEngineer.Text = InfoSection.AsstFacilityEngineer;
-            LoadCboARTCC();
-            CboARTCC.SelectedIndex = CboARTCC.FindStringExact(InfoSection.SponsorARTCC);
-            FilterBy.Method = "ARTCC";
-            FilterBy.NorthLimit = CboARTCC.GetItemText(CboARTCC.SelectedItem);
-            FilterGroupBox.Visible = false;
-            LoadCboAirport();
-            CboAirport.SelectedIndex = CboAirport.FindStringExact(InfoSection.DefaultAirport);
-            SCTtoolStripButton.Enabled = TestWriteSCT();
-            DataIsSelected = false;
-            gridViewToolStripButton.Enabled = true;
+            Debug.WriteLine("Load Form subroutine...");
+            // Returns -1 if no init file, else returns last AIRAC used (redundant, but I'm lazy)
+            int iniAIRAC = CycleInfo.ReadINIxml();      
+            // If there is no INI file, then there is no datafolder, so clean install (else)
+            if (iniAIRAC != -1)                          
+            {
+                // We have a good ini file; try to load the FAA text data and update form
+                UpdateEngineers();      // I was forgetting to display the engineers on the form
+                if (LoadFAATextData() != -1) PostLoadTasks();
+                // If we cannot upload the FAA text data using the INI file, get a new data set
+                // Assuming the data downloads correctly, install in the various tables and update form
+                else if (DownloadInstallFAAfiles())
+                    if (LoadFAATextData() != -1) PostLoadTasks();
+                    else FAATextDataLoadFailed();
+            }
+            // If we cannot use the INI file, get a new data set
+            // Assuming the data downloads correctly, install in the various tables and update form
+            else if (DownloadInstallFAAfiles())
+                if (LoadFAATextData() != -1) PostLoadTasks();
+                else FAATextDataLoadFailed();
+        }
+
+        private void PostLoadTasks()
+        {
+            // Assumes we have a fresh FAA text folder and need to update
+            UpdateCycleInfoOnForm();
+            SetForm1Defaults();
+        }
+
+        private void FAATextDataLoadFailed()
+            // Inform the user that something is wrong and they cannot use all features of program
+        {
+            Msg = "WARNING: The FAA text data did not load correctly." + cr +
+                "You will be able to use basic tools and functions." + cr +
+                "However, the program cannot provide advanced building tools" + cr +
+                "that depend upon the FAA AIRAC data to function.";
+            SCTcommon.SendMessage(Msg, MessageBoxIcon.Exclamation);
+        }
+
+        private void UpdateCycleInfoOnForm(bool visible = true, string message = "")
+        {
+            if (message.Length == 0)
+            {
+                if (CycleInfo.AIRAC == 1501)
+                {
+                    CycleInfoLabel.Text = "No Active Cycle Data!";
+                }
+                else
+                {
+                    CycleInfoLabel.Text = CycleInfo.BuildCycleText();
+                }
+            }
+            else CycleInfoLabel.Text = message;
+            CycleInfoLabel.Visible = visible;
+            CycleInfoLabel.Refresh();
             Refresh();
         }
 
-        private void HoldForm(bool FormIsFrozen)
+        private int LoadFAATextData()
         {
-            lblUpdating.Visible = FormIsFrozen;
-            //progressBar1.Visible = FormIsFrozen;
-            //gridViewToolStripButton.Visible = !FormIsFrozen;
-            //gridViewToolStripButton.Refresh();
-            //txtDataFolder.Enabled = !FormIsFrozen;
-            //txtOutputFolder.Enabled = !FormIsFrozen;
-            //CboARTCC.Enabled = !FormIsFrozen;
-            //CboAirport.Enabled = !FormIsFrozen;
-            //grpSelectionMethod.Enabled = !FormIsFrozen;
-            //SCTtoolStripButton.Enabled = !FormIsFrozen;
-            //cmdInstructions.Enabled = !FormIsFrozen;
-            //cmdExit.Visible = !FormIsFrozen;
-            //chkbxShowAll.Enabled = !FormIsFrozen;
-            //tabControl1.Enabled = !FormIsFrozen;
-        }
-
-        private void UpdateLabel(string text)
-        {
-            lblUpdating.Text = text;
-            lblUpdating.Refresh();
-        }
-
-        private void LoadFixGrid()
-        {
-            string Filter;
-            SCTtoolStripButton.Enabled = false;
-            SetChecked();
-            if (DataIsLoaded)
+            // Get the NASR AIRAC (from NATFIX) to later compare with the folder ID
+            int result = ReadNASR.GetNASR_AIRAC();
+            // This also confirms that the properly named folder does indeed contain data
+            if (result != -1)
             {
-                DataIsSelected = true;
-                gridViewToolStripButton.Enabled = false;
-                // ARB must always be selected by Sponsor ARTCC
-                if (SCTchecked.ChkARB)
+                CycleInfo.CycleDateFromAIRAC(result, true);     // Save the cycle information
+                CallNASRread();             // Read all the text files
+            }
+            return result;
+        }
+
+        private void CallNASRread()
+        {
+            ReadNASR.FillARB();
+            ReadNASR.FillVORNDB();
+            ReadNASR.FillFIX();
+            ReadNASR.FillAPT();        // Includes RWY table
+            ReadNASR.FillTWR();
+            ReadNASR.FillAWY();
+            ReadNASR.FillStarDP();
+        }
+
+        private void SetForm1Defaults()
+        // Calls a load of all data and repopulates the form
+        // Called by Load, DataFolder validated, and DatafolderButton
+        {
+            Debug.WriteLine("SetForm1Defaults...");
+            UpdateFolderMgt(toFolderMgt: false);
+            if (LoadARTCCComboBox() != 0)           // Populates the combobox
+                UpdateARTCCComboBox();              // Sets the combobox to the last Sponsor ARTCC
+            else ClearARTCCComboBox();
+            UpdateSquarebyARTCC();                  // Set the parameters of the square to the ARTCC limits
+            if (LoadAirportComboBox() != 0)         // Using the desired filter format
+                UpdateAirportComboBox();            // Set the combobox to the last Default Airport or top of list
+            else ClearAirportComboBox();
+            SCTtoolStripButton.Enabled = TestWriteSCT();
+            gridViewToolStripButton.Enabled = true;
+            CheckARTCCAsCenterButton();
+            CheckAPTasCenterButton();
+        }
+
+        private int LoadARTCCComboBox()
+        {
+            // Populates the ARTCC combobox
+            DataView dvARB = new DataView(ARB)
+            {
+                Sort = "ARTCC"
+            };
+            DataTable dtARTCC = dvARB.ToTable(true, "ARTCC");
+            ARTCCComboBox.DisplayMember = "ARTCC";
+            ARTCCComboBox.ValueMember = "ARTCC";
+            ARTCCComboBox.DataSource = dtARTCC;
+            int result = ARTCCComboBox.Items.Count;
+            dvARB.Dispose();
+            return result;
+        }
+
+        private void ClearARTCCComboBox()
+        {
+            ARTCCComboBox.DataSource = null;
+        }
+
+        private void UpdateARTCCComboBox()
+        {
+            // Sets the combobox to the last Sponsor ARTCC if in list
+            if (InfoSection.SponsorARTCC.Length != 0)
+                ARTCCComboBox.SelectedIndex = ARTCCComboBox.FindStringExact(InfoSection.SponsorARTCC);
+            else
+                ARTCCComboBox.SelectedIndex = 0;
+        }
+        private int LoadAirportComboBox()
+        {
+            // Populate the Airport combobox
+            FilterBy.Method = "ARTCC"; int result;
+            string filter = SetFilter();
+            DataView dvAPT = new DataView(APT)
+            {
+                RowFilter = filter,
+                Sort = "FacilityID"
+            };
+            // Create the dataview, filtering by the selected class
+            DataTable dtAPT = dvAPT.ToTable(true, "ID", "FacilityID");
+            AirportComboBox.DisplayMember = "FacilityID";
+            AirportComboBox.ValueMember = "ID";
+            AirportComboBox.DataSource = dtAPT;
+            result = AirportComboBox.Items.Count;
+            dvAPT.Dispose();
+            return result;
+        }
+
+        private void ClearAirportComboBox()
+        {
+            AirportComboBox.DataSource = null;
+            InsertARTCCinSquareButton.Enabled = CenterARTCCButton.Enabled = false;
+        }
+
+        private void UpdateAirportComboBox()
+        {
+            int FoundItem = -1;
+            if (AirportComboBox.Items.Count != 0)
+            {
+                if (InfoSection.DefaultAirport.Length != 0)
                 {
-                    Filter = FixFilter("ARTCC");
-                    UpdateLabel("Selecting ARTCC boundaries...");
-                    Setdgv(dgvARB, ARB, Filter);
+                    Debug.WriteLine("Looking for " + InfoSection.DefaultAirport + " in CboAirport");
+                    FoundItem = AirportComboBox.FindStringExact(InfoSection.DefaultAirport);
                 }
-                else DataIsSelected = false;
-                // Everything else can be selected by user choice
-                Filter = FixFilter(FilterBy.Method);
-                if (SCTchecked.ChkAPT)
-                {
-                    UpdateLabel("Selecting Airports...");
-                    Setdgv(dgvAPT, APT, Filter);
-                }
-                else DataIsSelected = false;
-                if (SCTchecked.ChkVOR)
-                {
-                    UpdateLabel("Selecting VORs...");
-                    Setdgv(dgvVOR, VOR, Filter);
-                }
-                else DataIsSelected = false;
-                if (SCTchecked.ChkNDB)
-                {
-                    UpdateLabel("Selecting NDBs...");
-                    Setdgv(dgvNDB, NDB, Filter);
-                }
-                else DataIsSelected = false;
-                if (SCTchecked.ChkFIX)
-                {
-                    UpdateLabel("Selecting FIXes...");
-                    Setdgv(dgvFIX, FIX, Filter);
-                }
-                else DataIsSelected = false;
-                if (SCTchecked.ChkRWY)
-                {
-                    UpdateLabel("Selecting Runways...");
-                    Setdgv(dgvRWY, RWY, Filter);
-                }
-                else DataIsSelected = false;
-                if (SCTchecked.ChkAWY)
-                {
-                    UpdateLabel("Selecting Airways...");
-                    Setdgv(dgvAWY, AWY, Filter);
-                }
-                else DataIsSelected = false;
-                if (SCTchecked.ChkSSD)
-                {
-                    UpdateLabel("Selecting SIDs && STARs (slow)...");
-                    SetdgvSSD(Filter);
-                }
-                else DataIsSelected = false;
-                if (SCTchecked.ChkSUA) SetdgvSUA();
-                UpdateGridCount();
-                SCTtoolStripButton.Enabled = true;
+                if (FoundItem != -1) AirportComboBox.SelectedIndex = FoundItem;
+                else AirportComboBox.SelectedIndex = 0;
             }
         }
+
+        private bool SectionSelected()
+        {
+            return APTsCheckBox.Checked || RWYsCheckBox.Checked || AWYsCheckBox.Checked || VORsCheckBox.Checked
+                || NDBsCheckBox.Checked || FIXesCheckBox.Checked || ARTCCCheckBox.Checked
+                || SIDsCheckBox.Checked || STARsCheckBox.Checked;
+        }
+
+        private bool SquareSelected()
+        {
+            return (SouthLimitTextBox.TextLength != 0) &&
+                (NorthLimitTextBox.TextLength != 0) && (WestLimitTextBox.TextLength != 0) &&
+                (EastLimitTextBox.TextLength != 0);
+        }
+
+        private void PreviewButton_Click(object sender, EventArgs e)
+        {
+            UpdatingLabel.Visible = true;
+            FilterBy.Method = "Square";
+            string filter = SetFilter(); bool APTHasRows = false;
+            if (APTsCheckBox.Checked || RWYsCheckBox.Checked || SIDsCheckBox.Checked || STARsCheckBox.Checked)
+            {
+                APTHasRows = SelectTableItems(APT, filter) != 0;
+            };
+            if (APTsCheckBox.Checked)
+            {
+                if (APTHasRows) LoadAPTDataGridView();
+            }
+            if (RWYsCheckBox.Checked)
+                if (APTHasRows)
+                {
+                    if (SelectRWYs() != 0) LoadRWYDataGridView();
+                    else ClearDataGridView(dgvRWY);
+                }
+                else
+                {
+                    Msg = "Cannot select Runways.  Mo airports with runways in the selected square.";
+                    SCTcommon.SendMessage(Msg);
+                }
+            if (VORsCheckBox.Checked)
+            {
+                SelectTableItems(VOR, filter);
+                LoadVORGridView();
+            }
+            if (NDBsCheckBox.Checked) 
+            {
+                SelectTableItems(NDB, filter);
+                LoadNDBGridView();
+            }
+            if (FIXesCheckBox.Checked)
+            {
+                SelectTableItems(FIX, filter);
+                LoadFIXGridView();
+            }
+            // AWYs must come after VOR, NDB and FIX
+            if (AWYsCheckBox.Checked)
+            {
+                if (!VORsCheckBox.Checked) SelectTableItems(VOR, filter);
+                if (!NDBsCheckBox.Checked) SelectTableItems(NDB, filter);
+                if (!FIXesCheckBox.Checked) SelectTableItems(FIX, filter);
+                if (SelectAWYs() != 0) LoadAWYDataGridView();
+                else ClearDataGridView(dgvAWY);
+            }
+            if (ARTCCCheckBox.Checked) SelectTableItems(ARB, filter);
+            if (SIDsCheckBox.Checked)
+                if (SelectSSD(isSID: true) != 0) LoadSSDDataGridView(true);
+            if (STARsCheckBox.Checked)
+                if (SelectSSD(isSID: false) != 0) LoadSSDDataGridView(false);
+            UpdatingLabel.Visible = false;
+        }
+
+        private void ClearDataGridView(DataGridView dgv)
+        {
+            dgv.DataSource = null;
+        }
+
+        private int SelectTableItems(DataTable dt, string filter)
+        {
+            Console.WriteLine("Selecting " + dt.TableName);
+            DataView dataView = new DataView(dt); int result;
+            ClearSelected(dataView);
+            dataView.RowFilter = filter;
+            SetSelected(dataView);
+            result = dataView.Count;
+            dataView.Dispose();
+            return result;
+        }
+
+        private int SelectRWYs()
+        {
+            Console.WriteLine("Selecting RWYs");
+            DataView dvAPT = new DataView(APT)
+            {
+                RowFilter = "[Selected]"
+            };
+            DataView dvRWY = new DataView(RWY);
+            int result;
+            ClearSelected(dvRWY);
+            foreach (DataRowView drvAPT in dvAPT)
+            {
+                dvRWY.RowFilter = "[ID] = '" + drvAPT["ID"] + "'";
+                if (dvRWY.Count != 0) SetSelected(dvRWY);
+            }
+            dvRWY.RowFilter = "[Selected]";
+            result = dvRWY.Count;
+            dvRWY.Dispose();
+            dvAPT.Dispose();
+            return result;
+        }
+
+        private int SelectAWYs()
+        {
+            // Assumes VOR, NDB and FIXes have been selected
+            Console.WriteLine("Selecting AWYs");
+            string filter = "[Selected]"; int result;
+            DataView dvVOR = new DataView(VOR, filter, "FacilityID", DataViewRowState.CurrentRows);
+            DataView dvNDB = new DataView(NDB, filter, "FacilityID", DataViewRowState.CurrentRows);
+            DataView dvFIX = new DataView(FIX, filter, "FacilityID", DataViewRowState.CurrentRows);
+            // Create the table upon which the AWY table will be joined
+            DataTable dtFixList = dvVOR.ToTable(true, "FacilityID", "Latitude", "Longitude");
+            dtFixList.Merge(dvNDB.ToTable(true, "FacilityID", "Latitude", "Longitude"));
+            dtFixList.Merge(dvFIX.ToTable(true, "FacilityID", "Latitude", "Longitude"));
+            // Loop the result to set the selected AWYs based upon fixes selected
+            DataView dvAWY = new DataView(AWY);
+            ClearSelected(dvAWY);
+            FilterBy.Method = "Square";
+            dvAWY.RowFilter = SetFilter();
+            foreach (DataRowView dataRow in dvAWY)
+            {
+                dataRow["Selected"] = true;
+            }
+            //foreach (DataRow SelectedFix in dtFixList.Rows)
+            //{
+            //    dvAWY.RowFilter = "NavAid = '" + SelectedFix["FacilityID"] + "'" ;
+            //    foreach (DataRowView dataRow in dvAWY) { dataRow.Row["Selected"] = true; }
+            //}
+            result = dvAWY.Count;
+            // Clean up
+            dvAWY.Dispose();
+            dvFIX.Dispose();
+            dvNDB.Dispose();
+            dvVOR.Dispose();
+            return result;
+        }
+
+        private void LoadAPTDataGridView()
+        {
+            DataView dvAPT = new DataView(APT)
+            {
+                RowFilter = "[Selected]",
+                Sort = "FacilityID"
+            };
+            DataTable dtAPT = dvAPT.ToTable(true, "Selected", Conversions.ICOA("FacilityID"), "Name", "ID");
+            dgvAPT.DataSource = dtAPT;
+            dgvAPT.Columns[1].HeaderText = "Apt";
+            dgvAPT.AutoResizeColumns();
+            dvAPT.Dispose();
+        }
+
+        private void LoadRWYDataGridView()
+        {
+            //  Facility ID and RWYs
+            DataView dvRWY = new DataView(RWY)
+            {
+                RowFilter = "[Selected]",
+                Sort = "FacilityID"
+            };
+            DataTable dtRWY = dvRWY.ToTable(true, "Selected", "FacilityName", "RwyIdentifier", "ID");
+            dgvRWY.DataSource = dtRWY;
+            dgvRWY.Columns[1].HeaderText = "Apt";
+            dgvRWY.Columns[2].HeaderText = "Rwys";
+            dgvRWY.AutoResizeColumns();
+            dvRWY.Dispose();
+        }
+
+        private void LoadVORGridView()
+        {
+            DataView dvVOR = new DataView(VOR)
+            {
+                RowFilter = "[Selected]",
+                Sort = "FacilityID"
+            };
+            DataTable dtVOR = dvVOR.ToTable(true, "Selected", "FacilityID", "Name");
+            dgvVOR.DataSource = dtVOR;
+            dgvVOR.Columns[1].HeaderText = "ID";
+            dgvVOR.AutoResizeColumns();
+            dvVOR.Dispose();
+        }
+
+        private void LoadNDBGridView()
+        {
+            DataView dvNDB = new DataView(NDB)
+            {
+                RowFilter = "[Selected]",
+                Sort = "FacilityID"
+            };
+            DataTable dtNDB = dvNDB.ToTable(true, "Selected", "FacilityID", "Name");
+            dgvNDB.DataSource = dtNDB;
+            dgvNDB.Columns[1].HeaderText = "ID";
+            dgvNDB.AutoResizeColumns();
+            dvNDB.Dispose();
+        }
+
+        private void LoadFIXGridView()
+        {
+            DataView dvFIX = new DataView(FIX)
+            {
+                RowFilter = "[Selected]",
+                Sort = "FacilityID"
+            };
+            DataTable dtFIX = dvFIX.ToTable(true, "Selected", "FacilityID", "Use");
+            dgvFIX.DataSource = dtFIX;
+            dgvFIX.Columns[1].HeaderText = "ID";
+            dgvFIX.AutoResizeColumns();
+            dvFIX.Dispose();
+        }
+
+        private void LoadAWYDataGridView()
+        {
+            DataView dvAWY = new DataView(AWY)
+            {
+                RowFilter = "[Selected]",
+                Sort = "AWYID, Sequence"
+            };
+            DataTable dtAWY = dvAWY.ToTable(false, "AWYID", "NAVAID", "MinEnrAlt", "MaxAuthAlt", "MinObstClrAlt");
+            dgvAWY.DataSource = dtAWY;
+            dgvAWY.Columns[0].HeaderText = "ID";
+            dgvAWY.Columns[1].HeaderText = "NavAid";
+            dgvAWY.Columns[2].HeaderText = "MEA";
+            dgvAWY.Columns[3].HeaderText = "MAA";
+            dgvAWY.Columns[4].HeaderText = "MOCA";
+        }
+
+        private int SelectSSD(bool isSID)
+        {
+            // This one is different and gets [Selected] based upon included APTs
+            // To make this one faster, use a DataView rather than the dataviewgrid
+            // First, get all the airports affected (It's easier to just make a new one)
+            var SSDID = new List<string>(); string IDfilter;
+            DataView dvSSD = new DataView(SSD);
+            DataView dvAirports = new DataView(APT)
+            {
+                RowFilter = "[SELECTED]"
+            };
+            // Build a table of the (unique) airports
+            DataTable dtAirports = dvAirports.ToTable(true, "FacilityID");
+
+            // Use the SELECTED airports to find the SID/STARs           
+            ClearSelected(dvSSD);
+            // Build a list of SID/STAR ID values from the filter
+            string AAfilter = "([FixType] = 'AA') AND ([isSID] = " + isSID + ") AND (";
+            foreach (DataRow dataRow in dtAirports.AsEnumerable())
+            {
+                string FacIDfilter = "[NavAid] = '" + dataRow[0].ToString() + "')";
+                dvSSD.RowFilter = AAfilter + FacIDfilter;
+                DataTable IDdata = dvSSD.ToTable(true, "ID");
+                foreach (DataRow data in IDdata.AsEnumerable())
+                {
+                    SSDID.Add(data["ID"].ToString());
+                }
+            }
+            // Apply the selected flag to those SIDs/STARs in the list
+            IEnumerable<string> distinctSSDID = SSDID.Distinct();
+            foreach (var item in distinctSSDID)
+            {
+                IDfilter = "[ID] = '" + item.ToString() + "'";
+                dvSSD.RowFilter = IDfilter;
+                SetSelected(dvSSD);
+            }
+            return distinctSSDID.Count();
+        }
+
+        private void LoadSSDDataGridView(bool isSID)
+        {
+            // Assumes the SID/STARs have been selected
+            DataView dvSSD = new DataView(SSD)
+            {
+                RowFilter = "[SELECTED] AND [isSSD] = " + isSID,
+                Sort = "SSDcode"
+            };
+            if (isSID)
+            {
+                DataTable dtSID = dvSSD.ToTable(true, "SSDcode", "SSDname");
+                dgvSID.DataSource = dtSID;
+                dgvSID.Sort(dgvSID.Columns["Sequence"], ListSortDirection.Ascending);
+                dgvSID.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.DisplayedCellsExceptHeader;
+                dvSSD.Dispose();
+            }
+            else
+            {
+                DataTable dtSTAR = dvSSD.ToTable(true, "SSDcode", "SSDname");
+                dgvSTAR.DataSource = dtSTAR;
+                dgvSTAR.Sort(dgvSID.Columns["Sequence"], ListSortDirection.Ascending);
+                dgvSTAR.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.DisplayedCellsExceptHeader;
+                dvSSD.Dispose();
+            }
+        }
+
 
         private void SetdgvSUA()
         {
@@ -225,18 +530,16 @@ namespace SCTBuilder
             foreach (DataRowView rowView in dvSUA) rowView["Selected"] = false;
             dvSUA.RowFilter = SetSUAfilter();
             foreach (DataRowView rowView in dvSUA) rowView["Selected"] = true;
-            DataTable dtgv = dvSUA.ToTable(true, "Selected", "Category", "Name", "ID");
-            dgvSUA.DataSource = dtgv;
+            // DataTable dtgv = dvSUA.ToTable(true, "Selected", "Category", "Name", "ID");
         }
 
         private string SetSUAfilter()
         {
-            UpdateSquare();
             string Filter = " ( ([Latitude_North] <= " + FilterBy.NorthLimit.ToString() + ")" +
                             " AND  ([Latitude_South] >= " + FilterBy.SouthLimit.ToString() + ")" +
                             " AND ([Longitude_East] <= " + FilterBy.EastLimit.ToString() + ")" +
                             " AND ([Longitude_West] >= " + FilterBy.WestLimit.ToString() + ") )";
-            string AddlFilter = string.Empty; 
+            string AddlFilter = string.Empty;
             if (SCTchecked.ChkSUA_ClassB)
             {
                 AddlFilter += "([Category] = 'B')";
@@ -273,151 +576,11 @@ namespace SCTBuilder
             return Filter + AddlFilter;
         }
 
-        private void LoadCboARTCC()
-        {
-            DataView dvARB = new DataView(ARB)
-            {
-                Sort = "ARTCC"
-            };
-            DataTable datacboARTCC = dvARB.ToTable(true, "ARTCC");
-            CboARTCC.DisplayMember = "ARTCC";
-            CboARTCC.ValueMember = "ARTCC";
-            CboARTCC.DataSource = datacboARTCC;
-            dvARB.Dispose();
-        }
-        private void LoadCboAirport()
-        {
-            // Get APTs we will use in the usual manner
-            string filter = FixFilter(FilterBy.Method);
-            DataView dvAPT = new DataView(APT)
-            {
-                RowFilter = filter,
-                Sort = "FacilityID"
-            };
-            // Create the dataview, filtering by the selected class
-            CboAirport.DisplayMember = "FacilityID";
-            CboAirport.ValueMember = "ID";
-            CboAirport.DataSource = dvAPT;
-            if (CboAirport.Items.Count != 0) CboAirport.SelectedIndex = 0;
-            dvAPT.Dispose();
-        }
-
-        private void Setdgv(DataGridView dgv, DataTable dt, string filter)
-        {
-            DataView dataView = new DataView(dt);
-            ClearSelected(dataView);
-            dataView.RowFilter = filter;
-            Console.WriteLine(dgv.Name + " has " + dgv.Rows.Count + " in filter " + filter);
-            Console.WriteLine(dt.TableName + " has " + dt.Rows.Count + " rows available.");
-            SetSelected(dataView);
-            dgv.DataSource = dt;
-            ColumnSortOrder(dgv);
-            string curDGV = dgv.Name;
-            int sortIndex = 1;
-            switch (curDGV)
-            {
-                case "dgvAPT":
-                    dgv.Columns[1].HeaderText = "ICOA";
-                    break;
-                case "dgvRWY":
-                    dgv.Columns[1].HeaderText = "Apt";
-                    dgv.Columns[2].HeaderText = "Rwy";
-                    break;
-                case "dgvAWY":
-                    dgv.Columns[1].HeaderText = "AWY";
-                    sortIndex = 0;
-                    break;
-                case "dgvSTAR":
-                case "dgvSID":
-                    dgv.Columns[1].HeaderText = "Name";
-                    break;
-                case "dgvFIX":
-                    dgv.Columns[0].HeaderText = "Name";
-                    sortIndex = 0;
-                    break;
-                case "dgvARB":
-                    dgv.Columns[1].HeaderText = "ARTCC";
-                    break;
-                default:
-                    dgv.Columns[1].HeaderText = "NavAid";
-                    break;
-            }
-            dgv.Sort(dgv.Columns[sortIndex], ListSortDirection.Ascending);
-            if (chkbxShowAll.Checked)
-                (dgv.DataSource as DataTable).DefaultView.RowFilter = "";
-            else
-                (dgv.DataSource as DataTable).DefaultView.RowFilter = "[Selected]";
-            dgv.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.DisplayedCellsExceptHeader;
-            // dgv.AutoResizeColumns();
-            dataView.Dispose();
-        }
-        private void SetdgvSSD(string filter)
-        {
-            // This one is different and gets [Selected] based upon included APTs
-            // To make this one faster, use a DataView rather than the dataviewgrid
-            // First, get all the airports affected (It's easier to just make a new one)
-            var SSDID = new List<string>(); string IDfilter;
-            DataView dvSSD = new DataView(SSD);
-            DataView dvAirports = new DataView(APT)
-            {
-                RowFilter = filter
-            };
-            // Clear the SSD list            
-            ClearSelected(dvSSD);
-
-            // Build a table of the (unique) airports
-            DataTable dtAirports = dvAirports.ToTable(true, "FacilityID");
-
-            // Build a List of affected airports (may or may not have SSDs)
-            string AAfilter = "([FixType] = 'AA') AND ";
-            foreach (DataRow dataRow in dtAirports.AsEnumerable())
-            {
-                string FacIDfilter = "[NavAid] = '" + dataRow[0].ToString() + "'";       // Only 1 item in this table
-                dvSSD.RowFilter = AAfilter + FacIDfilter;
-                DataTable IDdata = dvSSD.ToTable(true, "ID");            // I hope it lets me do this, or I'll need another list!
-                foreach (DataRow data in IDdata.AsEnumerable())
-                {
-                    SSDID.Add(data["ID"].ToString());
-                }
-            }
-            // FINALLY I can set the [Selected] - damn you, FAA, for inconsistent data tables
-            // Use a dataview to update the column
-            IEnumerable<string> distinctSSDID = SSDID.Distinct();           // Remove duplicates (multiple APTS in SSDs)
-            foreach (var item in distinctSSDID)
-            {
-                IDfilter = "[ID] = '" + item.ToString() + "'";
-                dvSSD.RowFilter = IDfilter;
-                SetSelected(dvSSD);
-            }
-            string strSID = "[IsSID]";
-            string strSTAR = "(NOT [IsSID])";
-            if (!chkbxShowAll.Checked)
-            {
-                strSID += " AND [Selected]";
-                strSTAR += " AND [Selected]";
-            }
-            dvSSD.RowFilter = strSID;
-            DataTable dtSID = dvSSD.ToTable();
-            dgvSID.DataSource = dtSID;
-            dgvSID.Sort(dgvSID.Columns["Sequence"], ListSortDirection.Ascending);
-            dgvSID.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.DisplayedCellsExceptHeader;
-            ColumnSortOrder(dgvSID);
-
-            dvSSD.RowFilter = strSTAR;
-            DataTable dtSTAR = dvSSD.ToTable();
-            dgvSTAR.DataSource = dtSTAR;
-            dgvSTAR.Sort(dgvSTAR.Columns["Sequence"], ListSortDirection.Ascending);
-            dgvSTAR.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.DisplayedCellsExceptHeader;
-            ColumnSortOrder(dgvSTAR);
-            dvAirports.Dispose();
-            dvSSD.Dispose();
-        }
         private void ClearSelected(DataView dv)
         {
             // If the filter is applied, selected boxes are true
             // otherwise, ALL the selected boxes are false
             // But if the ShowAll box is checked, ignore the update
-            Console.WriteLine("Current filter: " + dv.RowFilter + " for " + dv.Count + " rows.");
             dv.RowFilter = "";
             foreach (DataRowView row in dv)
             {
@@ -436,7 +599,7 @@ namespace SCTBuilder
         }
         private void UpdateGridCount()
         {
-            switch (tabControl1.SelectedTab.Text)
+            switch (SelectedTabControl.SelectedTab.Text)
             {
                 case "APTs":
                     txtGridViewCount.Text = dgvAPT.Rows.Count.ToString() + " / " + APT.Rows.Count.ToString();
@@ -456,9 +619,6 @@ namespace SCTBuilder
                 case "AWYs":
                     txtGridViewCount.Text = dgvAWY.Rows.Count.ToString() + " / " + AWY.Rows.Count.ToString();
                     break;
-                case "ARBs":
-                    txtGridViewCount.Text = dgvARB.Rows.Count.ToString() + " / " + ARB.Rows.Count.ToString();
-                    break;
                 case "SIDs":
                     txtGridViewCount.Text = dgvSID.Rows.Count.ToString() + " / " + SSD.Rows.Count.ToString();
                     break;
@@ -470,112 +630,83 @@ namespace SCTBuilder
                     break;
             }
         }
-        private void ColumnSortOrder(DataGridView dgv)
+
+        private string SetFilter()
         {
-            bool hasName = false;
-            foreach (DataGridViewColumn dgvc in dgv.Columns)
+            string result = string.Empty;
+            switch (FilterBy.Method)
             {
-                switch (dgvc.Name)
-                {
-                    case "Selected":
-                        dgvc.DisplayIndex = 0;
-                        dgvc.ReadOnly = false;
-                        break;
-                    case "FacilityID":
-                    case "STARname":
-                    case "AWYID":
-                        dgvc.DisplayIndex = 1;
-                        dgvc.ReadOnly = true;
-                        break;
-                    case "RwyIdentifier":
-                        dgvc.DisplayIndex = 2;
-                        dgvc.ReadOnly = true;
-                        break;
-                    case "Name":
-                        dgvc.DisplayIndex = 2;
-                        dgvc.ReadOnly = true;
-                        hasName = true;
-                        break;
-                    case "Latitude":
-                        if (hasName) dgvc.DisplayIndex = 3;
-                        else dgvc.DisplayIndex = 2;
-                        dgvc.ReadOnly = true;
-                        break;
-                    case "Longitude":
-                        if (hasName) dgvc.DisplayIndex = 4;
-                        else dgvc.DisplayIndex = 3;
-                        dgvc.ReadOnly = true;
-                        break;
-                    case "Frequency":
-                        if (hasName) dgvc.DisplayIndex = 5;
-                        else dgvc.DisplayIndex = 4;
-                        dgvc.ReadOnly = true;
-                        break;
-                    case "Use":
-                        if (hasName) dgvc.DisplayIndex = 5;
-                        else dgvc.DisplayIndex = 4;
-                        dgvc.ReadOnly = true;
-                        break;
-                    default:
-                        dgvc.ReadOnly = true;
-                        dgvc.Visible = false;
-                        break;
-                }
+                default:
+                case "ARTCC":
+                    if (ARTCCComboBox.SelectedIndex != -1)
+                        result = " ([ARTCC] ='" + ARTCCComboBox.GetItemText(ARTCCComboBox.SelectedItem) + "')";
+                    else
+                    {
+                        Msg = "SEVERE ERROR selecting ARTCC as filter in SetFilter.  Contact developer.";
+                        SCTcommon.SendMessage(Msg, MessageBoxIcon.Exclamation);
+                        CmdExit_Click(null, null);
+                    }
+                    break;
+                case "Square":
+                    result = result +
+                        " ( ([Latitude] <= " + FilterBy.NorthLimit.ToString() + ")" +
+                        " AND  ([Latitude] >= " + FilterBy.SouthLimit.ToString() + ")" +
+                        " AND ([Longitude] <= " + FilterBy.EastLimit.ToString() + ")" +
+                        " AND ([Longitude] >= " + FilterBy.WestLimit.ToString() + ") )";
+                    break;
             }
-        }
-        private string FixFilter(string Method)
-        {
-            string FilterString=string.Empty;
-            if (chkbxShowAll.Checked == false)
-           
-                switch (Method)
-                {
-                    default:
-                    case "ARTCC":
-                        FilterString = " ([ARTCC] ='" + CboARTCC.GetItemText(CboARTCC.SelectedItem) + "')";
-                        UpdateSquare();             // Calculates the limits N/S/E/W of selected ARTCC
-                        break;
-                    case "Square":
-                        FilterBy.NorthLimit = Conversions.AdjustedLatLong(txtLatNorth.Text, nudNorth.Value.ToString(), "N");
-                        FilterBy.SouthLimit = Conversions.AdjustedLatLong(txtLatSouth.Text, nudSouth.Value.ToString(), "S");
-                        FilterBy.EastLimit = Conversions.AdjustedLatLong(txtLongEast.Text, nudWest.Value.ToString(), "W");
-                        FilterBy.WestLimit = Conversions.AdjustedLatLong(txtLongWest.Text, nudEast.Value.ToString(), "E");
-                        FilterString = FilterString +
-                            " ( ([Latitude] <= " + FilterBy.NorthLimit.ToString() + ")" +
-                            " AND  ([Latitude] >= " + FilterBy.SouthLimit.ToString() + ")" +
-                            " AND ([Longitude] <= " + FilterBy.EastLimit.ToString() + ")" +
-                            " AND ([Longitude] >= " + FilterBy.WestLimit.ToString() + ") )";
-                        break;
-                }
-            return FilterString;
-        }
-         
-            private void PictureBox2_Click(object sender, EventArgs e)
-        {
-            System.Diagnostics.Process.Start("https://zjxartcc.org");
+            return result;
         }
 
-        private void TxtFacilityEngineer_Validated(object sender, EventArgs e)
+        private void PictureBox2_Click(object sender, EventArgs e)
         {
-            InfoSection.FacilityEngineer = txtFacilityEngineer.Text;
+            Process.Start("https://zjxartcc.org");
+        }
+        private void AsstFacilityEngineerTextBox_Validated(object sender, EventArgs e)
+        {
+            // Note - this textbox does not need "Validating"
+            bool ToClass = true;
+            InfoSection.AsstFacilityEngineer = AsstFacilityEngineerTextBox.Text;
+            SCTtoolStripButton.Enabled = TestWriteSCT();
+            UpdateEngineers(ToClass);
+        }
+
+        private void FacilityEngineerTextBox_Validated(object sender, EventArgs e)
+        {
+            bool ToClass = true;
+            InfoSection.FacilityEngineer = FacilityEngineerTextBox.Text;
+            UpdateEngineers(ToClass);
             SCTtoolStripButton.Enabled = TestWriteSCT();
         }
 
-        private void TxtFacilityEngineer_Validating(object sender, CancelEventArgs e)
+        private void FacilityEngineerTextBox_Validating(object sender, CancelEventArgs e)
         {
-            string Message = "Facility Engineer name may not be blank";
-            MessageBoxButtons buttons = MessageBoxButtons.OK;
-            MessageBoxIcon icon = MessageBoxIcon.Warning;
-            if (txtFacilityEngineer.TextLength == 0)
+            bool ToClass = true;
+            Msg = "Facility Engineer name may not be blank";
+            if (FacilityEngineerTextBox.TextLength == 0)
             {
-                MessageBox.Show(Message, VersionInfo.Title, buttons, icon);
-                txtFacilityEngineer.Text = "Facility Engineer Name";
+                SCTcommon.SendMessage(Msg);
+                FacilityEngineerTextBox.Text = "Facility Engineer Name";
+                UpdateEngineers(ToClass);
             }
         }
-
-        private void UpdateSquare()
+        private void UpdateEngineers(bool ToClass = false)
         {
-            string FilterARTCC = CboARTCC.GetItemText(CboARTCC.SelectedItem);
+            if (ToClass)
+            {
+                InfoSection.FacilityEngineer = FacilityEngineerTextBox.Text;
+                InfoSection.AsstFacilityEngineer = AsstFacilityEngineerTextBox.Text;
+            }
+            else
+            {
+                FacilityEngineerTextBox.Text = InfoSection.FacilityEngineer;
+                AsstFacilityEngineerTextBox.Text = InfoSection.AsstFacilityEngineer;
+            }
+        }
+        private void UpdateSquarebyARTCC()
+        {
+            // Updates the values of the filter square based on the ARTCC selected
+            string FilterARTCC = ARTCCComboBox.GetItemText(ARTCCComboBox.SelectedItem);
             double LatNorth = double.MinValue;
             double LongWest = double.MaxValue;
             double LatSouth = double.MaxValue;
@@ -600,106 +731,93 @@ namespace SCTBuilder
                     Console.WriteLine(LatNorth + "  " + LongWest + "  " + LatSouth + "  " + LongEast);
                 }
             }
-            FilterBy.Method = "Square";
             FilterBy.NorthLimit = LatNorth;
             FilterBy.SouthLimit = LatSouth;
             FilterBy.EastLimit = LongEast;
             FilterBy.WestLimit = LongWest;
-            txtLongEast.Text = Math.Round(LongEast, 6).ToString();
-            txtLongWest.Text = Math.Round(LongWest, 6).ToString();
-            txtLatNorth.Text = Math.Round(LatNorth, 6).ToString();
-            txtLatSouth.Text = Math.Round(LatSouth, 6).ToString();
+            EastLimitTextBox.Text = Conversions.DecDeg2SCT(LongEast, false);
+            WestLimitTextBox.Text = Conversions.DecDeg2SCT(LongWest, false);
+            NorthLimitTextBox.Text = Conversions.DecDeg2SCT(LatNorth, true);
+            SouthLimitTextBox.Text = Conversions.DecDeg2SCT(LatSouth, true);
             dataview.Dispose();
         }
 
         private void CmdOutputFolder_Click(object sender, EventArgs e)
         {
-            FolderBrowserDialog fBD = new FolderBrowserDialog();
-            if (txtOutputFolder.TextLength > 0)
+            txtOutputFolder.Text = UpdateFolder(txtOutputFolder, "Select folder to save SCT files");
+            if (txtOutputFolder.TextLength != 0)
             {
-                fBD.SelectedPath = txtOutputFolder.Text;
+                UpdateFolderMgt(toFolderMgt: true);
             }
-            else
-            {
-                fBD.SelectedPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-            }
-            if (fBD.ShowDialog() == DialogResult.OK)
-            {
-                txtOutputFolder.Text = fBD.SelectedPath;
-            }
-            fBD.Dispose();
             SCTtoolStripButton.Enabled = TestWriteSCT();
         }
 
         private void CmdDataFolder_Click(object sender, EventArgs e)
         {
-            FolderBrowserDialog fBD = new FolderBrowserDialog();
-            if (txtDataFolder.TextLength > 0)
+            DataFolderTextBox.Text = UpdateFolder(DataFolderTextBox, "Select FAA AIRAC data folder");
+            if (DataFolderTextBox.TextLength != 0)
             {
-                fBD.SelectedPath = txtDataFolder.Text;
+                UpdateFolderMgt(toFolderMgt: true);
+            }
+            SCTtoolStripButton.Enabled = TestWriteSCT();
+        }
+
+        private string UpdateFolder(TextBox textBox, string dialogTitle)
+        {
+            // This calling routine allows other classes to update a folder
+            string result;
+            result = GetFolderPath(textBox.Text, dialogTitle);
+            return result;
+        }
+
+        private void UpdateFolderMgt(bool toFolderMgt)
+        {
+            if (toFolderMgt)
+            {
+                if (FolderMgt.DataFolder != DataFolderTextBox.Text)
+                    FolderMgt.DataFolder = DataFolderTextBox.Text;
+                if (FolderMgt.OutputFolder != txtOutputFolder.Text)
+                    FolderMgt.OutputFolder = txtOutputFolder.Text;
             }
             else
             {
-                fBD.SelectedPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+                if (FolderMgt.DataFolder != DataFolderTextBox.Text)
+                    DataFolderTextBox.Text = FolderMgt.DataFolder;
+                if (FolderMgt.OutputFolder != txtOutputFolder.Text)
+                    txtOutputFolder.Text = FolderMgt.OutputFolder;
             }
-            if (fBD.ShowDialog() == DialogResult.OK)
-            {
-                txtDataFolder.Text = fBD.SelectedPath;
-                if (FolderMgt.DataFolder != txtDataFolder.Text)
-                {
-                    FolderMgt.DataFolder = txtDataFolder.Text;
-                }
-            }
+        }
+
+        private string GetFolderPath(string selectedPath, string dialogTitle)
+        {
+            FolderBrowserDialog fBD = new FolderBrowserDialog();
+            string result;
+            // Set default folder to start
+            fBD.SelectedPath = selectedPath;
+            fBD.Description = dialogTitle;
+            if (selectedPath.Length != 0) fBD.SelectedPath = selectedPath;
+            else fBD.SelectedPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            // Get user's desired folder
+            fBD.ShowDialog();
+            result = fBD.SelectedPath;
             fBD.Dispose();
-            DataIsSelected = false;
-            gridViewToolStripButton.Enabled = true;
-            SCTtoolStripButton.Enabled = TestWriteSCT();
+            return result;
         }
 
         private void CmdWriteSCT_Click(object sender, EventArgs e)
         {
-            if (!DataIsSelected)
-            {
-                gridViewToolStripButton.Enabled = false;
-                HoldForm(true);
-                UpdateInfoSection();
-                LoadFixGrid();
-                HoldForm(false);
-            }
             SCToutput.WriteSCT();
         }
 
         private bool TestWriteSCT()
         {
-            //Console.WriteLine("Data: " + FolderMgt.DataFolder.ToString());
-            //Console.WriteLine("Output: " + FolderMgt.OutputFolder.ToString());
-            //Console.WriteLine("ARTCC: " + InfoSection.SponsorARTCC.ToString());
-            //Console.WriteLine("Airport: " + InfoSection.DefaultAirport.ToString());
-            //Console.WriteLine("Latitude: " + InfoSection.DefaultCenterLatitude.ToString());
-            //Console.WriteLine("Longitude: " + InfoSection.DefaultCenterLongitude.ToString());
-            //Console.WriteLine("Mag Var: " + InfoSection.MagneticVariation.ToString());
             return !(string.IsNullOrEmpty(FolderMgt.DataFolder.ToString()) ||
                 string.IsNullOrEmpty(FolderMgt.OutputFolder.ToString()) ||
                 string.IsNullOrEmpty(InfoSection.SponsorARTCC.ToString()) ||
                 string.IsNullOrEmpty(InfoSection.DefaultAirport) ||
-                string.IsNullOrEmpty(InfoSection.DefaultCenterLatitude.ToString()) ||
-                string.IsNullOrEmpty(InfoSection.DefaultCenterLongitude.ToString()) ||
+                InfoSection.CenterLatitude_Dec == 0 ||
+                InfoSection.CenterLongitude_Dec == 0 ||
                 string.IsNullOrEmpty(InfoSection.MagneticVariation.ToString()));
-        }
-        private void UpdateInfoSection()
-
-        {
-            if (CboAirport.Items.Count != 0)
-            {
-                //string cr = Environment.NewLine;
-                //string Message = "InfoSection Update Data" + cr + "Airport: " + cboAirport.GetItemText(cboAirport.SelectedItem).ToString() + cr +
-                //   "Latitude: " + Convert.ToSingle(foundRow["Latitude"].ToString()) + cr +
-                //   "Longitude: " + Convert.ToSingle(foundRow["Longitude"].ToString()) + cr +
-                //   "Mag Var: " + Convert.ToSingle(foundRow["MagVar"].ToString());
-                //MessageBox.Show(Message, "UpdateInfoSection", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                InfoSection.SponsorARTCC = CboARTCC.GetItemText(CboARTCC.SelectedItem).ToString();
-                InfoSection.DefaultAirport = CboAirport.GetItemText(CboAirport.SelectedItem).ToString();
-            }
         }
 
         private void ChkbxShowAll_CheckedChanged(object sender, EventArgs e)
@@ -725,17 +843,15 @@ namespace SCTBuilder
 
         private void TxtDataFolder_Validated(object sender, EventArgs e)
         {
-            if (txtDataFolder.TextLength > 0)
+            if (DataFolderTextBox.TextLength > 0)
             {
-                LoadData();
-                LoadForm();
+                LoadFAATextData();
+                SetForm1Defaults();
                 // LoadFixGrid();
-                FolderMgt.DataFolder = txtDataFolder.Text;
-                FilterGroupBox.Visible = false;
+                FolderMgt.DataFolder = DataFolderTextBox.Text;
             }
-            if (txtDataFolder.Text != FolderMgt.DataFolder)
+            if (DataFolderTextBox.Text != FolderMgt.DataFolder)
                 CmdDataFolder_Click(sender, e);
-            DataIsSelected = false;
             gridViewToolStripButton.Enabled = true;
             SCTtoolStripButton.Enabled = TestWriteSCT();
         }
@@ -743,21 +859,21 @@ namespace SCTBuilder
         private void TxtDataFolder_Validating(object sender, CancelEventArgs e)
         {
             Console.WriteLine("TxtDataFolder_Validating...");
-            if (txtDataFolder.TextLength > 0)
+            if (DataFolderTextBox.TextLength > 0)
             {
-                if (Directory.Exists(txtDataFolder.Text))
+                if (Directory.Exists(DataFolderTextBox.Text))
                 {
-                    FolderMgt.DataFolder = txtDataFolder.Text;
+                    FolderMgt.DataFolder = DataFolderTextBox.Text;
                     e.Cancel = false;
                 }
                 else
                 {
-                    string message = "Invalid folder path. Consider using the folder finder button.";
+                    Msg = "Invalid folder path. Consider using the folder finder button.";
                     string caption = VersionInfo.Title;
                     MessageBoxButtons buttons = MessageBoxButtons.OK;
-                    MessageBox.Show(message, caption, buttons);
+                    MessageBox.Show(Msg, caption, buttons);
                     FolderMgt.DataFolder = string.Empty;
-                    lblCycleInfo.Text = "Choose folder containing FAA text data";
+                    CycleInfoLabel.Text = "Choose folder containing FAA text data";
                     e.Cancel = true;
                 }
             }
@@ -770,59 +886,40 @@ namespace SCTBuilder
             Application.Exit();
         }
 
-        private void CmdUpdateGrid_Click(object sender, EventArgs e)
+        private void ARTCCComboBox_Validated(object sender, EventArgs e)
         {
-            Console.WriteLine("cmdUpdateGrid_Click...");
-            string Message = "You must at-least select an ARTCC and Airport";
-            MessageBoxButtons buttons = MessageBoxButtons.OK;
-            MessageBoxIcon icon = MessageBoxIcon.Exclamation;
-            if (TestUpdateGrid())
-            {
-                HoldForm(true);
-                UpdateInfoSection();
-                SetChecked();
-                LoadFixGrid();
-                HoldForm(false);
-                Refresh();
-            }
-            else
-                MessageBox.Show(Message, VersionInfo.Title, buttons, icon);
-        }
-
-        private bool TestUpdateGrid()
-        {
-            bool Result;
-            Result = (InfoSection.SponsorARTCC.Length != 0) &&
-                    (InfoSection.DefaultAirport.Length != 0) &&
-                    (InfoSection.DefaultCenterLatitude.ToString().Length != 0) &&
-                    (InfoSection.DefaultCenterLongitude.ToString().Length != 0) &&
-                    (InfoSection.MagneticVariation.ToString().Length != 0);
-            Console.WriteLine ("TestUpdateGrid is " + Result.ToString());
-            return Result;
-        }
-        private void CboARTCC_Validated(object sender, EventArgs e)
-        {
-            if (CboARTCC.SelectedIndex != -1)
-            {
-                InfoSection.SponsorARTCC = CboARTCC.Text.ToString();
-                LoadCboAirport();
-            }
+            InfoSection.SponsorARTCC = ARTCCComboBox.Text.ToString();
+            if (LoadAirportComboBox() != 0)
+                UpdateAirportComboBox();
+            else ClearAirportComboBox();
             SCTtoolStripButton.Enabled = TestWriteSCT();
+            CheckARTCCAsCenterButton();
+            CheckARTCC2SquareButton();
         }
 
-        private void CboAirport_Validated(object sender, EventArgs e)
+        private void CheckARTCCAsCenterButton()
         {
-            if (CboAirport.SelectedIndex != -1)
+            CenterARTCCButton.Enabled = SquareSelected();
+        }
+
+        private void CheckARTCC2SquareButton()
+        {
+            InsertARTCCinSquareButton.Enabled = SquareSelected();
+        }
+        private void AirportComboBox_Validated(object sender, EventArgs e)
+        {
+            if (AirportComboBox.SelectedIndex != -1)
             {
-                InfoSection.DefaultAirport = CboAirport.Text.ToString();
+                InfoSection.DefaultAirport = AirportComboBox.Text.ToString();
             }
+            CheckAPTasCenterButton();
             SCTtoolStripButton.Enabled = TestWriteSCT();
         }
 
         private void LocalSectors_Click(object sender, EventArgs e)
         {
             Console.WriteLine("LocalSectors_Click...");
-            if (ReadNASR.FillLocalSectors() )
+            if (ReadNASR.FillLocalSectors())
                 SCToutput.WriteLS_SID(LocalSector);
         }
 
@@ -838,83 +935,58 @@ namespace SCTBuilder
         private void SetChecked()
         {
             Console.WriteLine("SetChecked...");
-            SCTchecked.ChkAPT = chkAPTs.Checked;
-            SCTchecked.ChkARB = chkARBs.Checked;
-            SCTchecked.ChkAWY = chkAWYs.Checked;
-            SCTchecked.ChkFIX = chkFIXes.Checked;
-            SCTchecked.ChkNDB = chkNDBs.Checked;
-            SCTchecked.ChkRWY = chkRWYs.Checked;
-            SCTchecked.ChkSSD = chkSSDs.Checked;
-            SCTchecked.ChkVOR = chkVORs.Checked;
-            SCTchecked.ChkALL = chkALL.Checked;
-            SCTchecked.ChkSSDname = chkSSDName.Checked;
-            SCTchecked.ChkSUA = ChkSUA.Checked;
-            SCTchecked.ChkSUA_ClassB = chkSUA_ClassB.Checked;
-            SCTchecked.ChkSUA_ClassC = chkSUA_ClassC.Checked;
-            SCTchecked.ChkSUA_ClassD = chkSUA_ClassD.Checked;
-            SCTchecked.ChkSUA_Danger = chkSUA_Danger.Checked;
-            SCTchecked.ChkSUA_Prohibited = chkSUA_Prohibited.Checked;
-            SCTchecked.ChkSUA_Restricted = chkSUA_Restricted.Checked;
+            SCTchecked.ChkAPT = APTsCheckBox.Checked;
+            SCTchecked.ChkARB = ARTCCCheckBox.Checked;
+            SCTchecked.ChkAWY = AWYsCheckBox.Checked;
+            SCTchecked.ChkFIX = FIXesCheckBox.Checked;
+            SCTchecked.ChkNDB = NDBsCheckBox.Checked;
+            SCTchecked.ChkRWY = RWYsCheckBox.Checked;
+            SCTchecked.ChkSSD = SIDsCheckBox.Checked;
+            SCTchecked.ChkVOR = VORsCheckBox.Checked;
+            SCTchecked.ChkSSDname = SIDNameCheckBox.Checked;
+            SCTchecked.ChkSUA_ClassB = SUA_ClassBCheckBox.Checked;
+            SCTchecked.ChkSUA_ClassC = SUA_ClassCCheckBox.Checked;
+            SCTchecked.ChkSUA_ClassD = SUA_ClassDCheckBox.Checked;
+            SCTchecked.ChkSUA_Danger = SUA_DangerCheckBox.Checked;
+            SCTchecked.ChkSUA_Prohibited = SUA_ProhibitedCheckBox.Checked;
+            SCTchecked.ChkSUA_Restricted = SUA_RestrictedCheckBox.Checked;
         }
 
         private void GetChecked()
         {
             Console.WriteLine("GetChecked...");
-            chkAPTs.Checked = SCTchecked.ChkAPT;
-            chkARBs.Checked = SCTchecked.ChkARB;
-            chkAWYs.Checked = SCTchecked.ChkAWY;
-            chkFIXes.Checked = SCTchecked.ChkFIX;
-            chkNDBs.Checked = SCTchecked.ChkNDB;
-            chkRWYs.Checked = SCTchecked.ChkRWY;
-            chkSSDs.Checked = SCTchecked.ChkSSD;
-            chkVORs.Checked = SCTchecked.ChkVOR;
-            chkALL.Checked = SCTchecked.ChkALL;
-            chkSSDName.Checked = SCTchecked.ChkSSDname;
-            ChkSUA.Checked = SCTchecked.ChkSUA;
-            chkSUA_ClassB.Checked = SCTchecked.ChkSUA_ClassB;
-            chkSUA_ClassC.Checked = SCTchecked.ChkSUA_ClassC;
-            chkSUA_ClassD.Checked = SCTchecked.ChkSUA_ClassD;
-            chkSUA_Danger.Checked = SCTchecked.ChkSUA_Danger;
-            chkSUA_Prohibited.Checked = SCTchecked.ChkSUA_Prohibited;
-            chkSUA_Restricted.Checked = SCTchecked.ChkSUA_Restricted;
-        }
-
-        private void ChkALL_CheckedChanged(object sender, EventArgs e)
-        {
-            string cr = Environment.NewLine;
-            if (chkALL.Checked)
-            {
-                chkAPTs.Checked = chkALL.Checked;
-                chkARBs.Checked = chkALL.Checked;
-                chkAWYs.Checked = chkALL.Checked;
-                chkFIXes.Checked = chkALL.Checked;
-                chkNDBs.Checked = chkALL.Checked;
-                chkRWYs.Checked = chkALL.Checked;
-                chkSSDs.Checked = chkALL.Checked;
-                chkVORs.Checked = chkALL.Checked;
-                lblFilesWarning.Text = "A text file (.txt) will be written for" + cr +
-                                        "each item checked. You can review " + cr +
-                                        "and place in your SCT2 file.";
-            }
-            else
-                lblFilesWarning.Text = "All checked items will be written to" + cr +
-                                        "a single SCT2 file.";
-            lblFilesWarning.Refresh();
+            APTsCheckBox.Checked = SCTchecked.ChkAPT;
+            ARTCCCheckBox.Checked = SCTchecked.ChkARB;
+            AWYsCheckBox.Checked = SCTchecked.ChkAWY;
+            FIXesCheckBox.Checked = SCTchecked.ChkFIX;
+            NDBsCheckBox.Checked = SCTchecked.ChkNDB;
+            RWYsCheckBox.Checked = SCTchecked.ChkRWY;
+            SIDsCheckBox.Checked = SCTchecked.ChkSSD;
+            VORsCheckBox.Checked = SCTchecked.ChkVOR;
+            SIDNameCheckBox.Checked = SCTchecked.ChkSSDname;
+            SUA_ClassBCheckBox.Checked = SCTchecked.ChkSUA_ClassB;
+            SUA_ClassCCheckBox.Checked = SCTchecked.ChkSUA_ClassC;
+            SUA_ClassDCheckBox.Checked = SCTchecked.ChkSUA_ClassD;
+            SUA_DangerCheckBox.Checked = SCTchecked.ChkSUA_Danger;
+            SUA_ProhibitedCheckBox.Checked = SCTchecked.ChkSUA_Prohibited;
+            SUA_RestrictedCheckBox.Checked = SCTchecked.ChkSUA_Restricted;
         }
 
         private void ChkSSDs_CheckedChanged(object sender, EventArgs e)
         {
-            chkSSDName.Visible = chkSSDs.Checked;
+            SIDNameCheckBox.Enabled = SIDsCheckBox.Checked;
+            CheckPreviewButton();
+        }
+
+        private void STARsCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            STARsNameCheckBox.Enabled = STARsCheckBox.Checked;
+            CheckPreviewButton();
         }
 
         private void CmdAddSUAs_Click(object sender, EventArgs e)
         {
             ReadNASR.FillAirSpace();
-        }
-
-        private void ChkSUA_CheckedChanged(object sender, EventArgs e)
-        {
-            panelSUAs.Visible = ChkSUA.Checked;
         }
 
         private void GoToFAA28dayNASRToolStripMenuItem_Click(object sender, EventArgs e)
@@ -927,7 +999,7 @@ namespace SCTBuilder
         {
             Form form = new About();
             form.ShowDialog(this);
-            form.Dispose(); 
+            form.Dispose();
         }
 
         private void XML2SCTToolStripMenuItem_Click(object sender, EventArgs e)
@@ -944,9 +1016,405 @@ namespace SCTBuilder
             form.Dispose();
         }
 
-        private void confirmOverwriteOfFilesToolStripMenuItem_CheckedChanged(object sender, EventArgs e)
+        private void ConfirmOverwriteOfFilesToolStripMenuItem_CheckedChanged(object sender, EventArgs e)
         {
-            SCTchecked.ChkConfirmOverwrite = confirmOverwriteOfFilesToolStripMenuItem.Checked;
+            SCTchecked.ChkConfirmOverwrite = ConfirmOverwriteOfFilesToolStripMenuItem.Checked;
+        }
+
+        private void IdentifierTextBox_TextChanged(object sender, EventArgs e)
+        {
+            SEByFIXButton.Enabled = NWByFIXButton.Enabled = false;
+            if (FIX.Rows.Count != 0)
+            {
+                if (IdentifierTextBox.TextLength != 0)
+                {
+                    // First, be sure there is data in the database!
+                    DataTable dtVOR = VOR;
+                    DataTable dtNDB = NDB;
+                    DataTable dtFIX = FIX;
+                    if ((dtFIX.Rows.Count != 0) && (dtVOR.Rows.Count != 0) && (dtNDB.Rows.Count != 0))
+                    {
+                        // Load the gridview - can be sorted later.  Future: add [Selected]
+                        string filter = "[FacilityID] LIKE '" + IdentifierTextBox.Text + "*" + "'";
+                        DataView dvVOR = new DataView(dtVOR, filter, "FacilityID", DataViewRowState.CurrentRows);
+                        DataView dvNDB = new DataView(dtNDB, filter, "FacilityID", DataViewRowState.CurrentRows);
+                        DataView dvFIX = new DataView(dtFIX, filter, "FacilityID", DataViewRowState.CurrentRows);
+                        DataTable dtFixList = dvVOR.ToTable(true, "FacilityID", "Latitude", "Longitude");
+                        dtFixList.Merge(dvNDB.ToTable(true, "FacilityID", "Latitude", "Longitude"));
+                        dtFixList.Merge(dvFIX.ToTable(true, "FacilityID", "Latitude", "Longitude"));
+                        FixListDataGridView.DataSource = dtFixList;
+                        FixListDataGridView.DefaultCellStyle.Font = new Font("Arial", 9);
+                        FixListDataGridView.Columns[0].HeaderText = "ID";
+                        if (FixListDataGridView.Rows.Count != 0)
+                        {
+                            FixListDataGridView.AutoResizeColumn(0, DataGridViewAutoSizeColumnMode.AllCells);
+                            SEByFIXButton.Enabled = NWByFIXButton.Enabled = true;
+                        };
+                    }
+                    else
+                    {
+                        Msg = "You must select your FAA data folder before you can search for Fixes.";
+                        MessageBoxIcon icon = MessageBoxIcon.Warning;
+                        SCTcommon.SendMessage(Msg, icon);
+                        IdentifierTextBox.Text = string.Empty;
+                    }
+                }
+                else
+                {
+                    FixListDataGridView.DataSource = null;
+                }
+            }
+            else
+            {
+                Msg = "You must first load FAA data";
+                SCTcommon.SendMessage(Msg);
+            }
+        }
+
+        private void SouthLimitTextBox_Validated(object sender, EventArgs e)
+        {
+            if ((SouthLimitTextBox.TextLength != 0) &
+                    (NorthLimitTextBox.TextLength != 0))
+            {
+                double SLat = Conversions.String2DecDeg(SouthLimitTextBox.Text);
+                double NLat = Conversions.String2DecDeg(NorthLimitTextBox.Text);
+                if (SLat == -1)
+                {
+                    Msg = "You used an invalid format or "
+                        + cr + "your latitude is out of range (-90 to 90)."
+                        + cr + "Click the question mark for help on formats.";
+                    SCTcommon.SendMessage(Msg);
+                }
+                else if (NLat <= SLat)
+                {
+                    Msg = "Cannot place SE position north of NW position!";
+                    SCTcommon.SendMessage(Msg);
+                    SouthLimitTextBox.Text = string.Empty;
+                }
+            }
+            CheckPreviewButton();
+            CheckARTCC2SquareButton();
+            CheckARTCCAsCenterButton();
+        }
+
+        private void NorthLimitTextBox_Validated(object sender, EventArgs e)
+        {
+            if ((SouthLimitTextBox.TextLength != 0) &
+                (NorthLimitTextBox.TextLength != 0))
+            {
+                double SLat = Conversions.String2DecDeg(SouthLimitTextBox.Text);
+                double NLat = Conversions.String2DecDeg(NorthLimitTextBox.Text);
+                if (NLat == -1)
+                {
+                    Msg = "You used an invalid format or "
+                        + cr + "your latitude is out of range (-90 to 90)."
+                        + cr + "Click the question mark for help on formats.";
+                    SCTcommon.SendMessage(Msg);
+                }
+                else if (NLat <= SLat)
+                {
+                    Msg = "Cannot place NW position south of SE position!";
+                    SCTcommon.SendMessage(Msg);
+                    NorthLimitTextBox.Text = string.Empty;
+                }
+            }
+            CheckPreviewButton();
+            CheckARTCC2SquareButton();
+            CheckARTCCAsCenterButton();
+        }
+
+        private void WestLimitTextBox_Validated(object sender, EventArgs e)
+        {
+            if ((WestLimitTextBox.TextLength != 0) &
+                    (EastLimitTextBox.TextLength != 0))
+            {
+                double WLon = Conversions.String2DecDeg(WestLimitTextBox.Text);
+                double ELon = Conversions.String2DecDeg(EastLimitTextBox.Text);
+                if (WLon == -1)
+                {
+                    Msg = "You used an invalid format or "
+                        + cr + "your latitude is out of range (-180 to 180)."
+                        + cr + "Click the question mark for help on formats.";
+                    SCTcommon.SendMessage(Msg);
+                }
+                else if (ELon <= WLon)
+                {
+                    Msg = "Cannot place NW position east of SE position!";
+                    SCTcommon.SendMessage(Msg);
+                    WestLimitTextBox.Text = string.Empty;
+                }
+                else
+                    FilterBy.WestLimit =
+                        Conversions.AdjustedLatLong(WestLimitTextBox.Text, WestMarginNumericUpDown.Value.ToString(), "N");
+            }
+            CheckPreviewButton();
+            CheckARTCC2SquareButton();
+            CheckARTCCAsCenterButton();
+        }
+
+        private void EastLimitTextBox_Validated(object sender, EventArgs e)
+        {
+            if ((WestLimitTextBox.TextLength != 0) &
+                (EastLimitTextBox.TextLength != 0))
+            {
+                double WLon = Conversions.String2DecDeg(WestLimitTextBox.Text);
+                double ELon = Conversions.String2DecDeg(EastLimitTextBox.Text);
+                if (ELon == -1)
+                {
+                    Msg = "You used an invalid format or "
+                        + cr + "your latitude is out of range (-180 to 180)."
+                        + cr + "Click the question mark for help on formats.";
+                    SCTcommon.SendMessage(Msg);
+                }
+                else if (ELon <= WLon)
+                {
+                    Msg = "Cannot place SE position west of NW position!";
+                    SCTcommon.SendMessage(Msg);
+                    EastLimitTextBox.Text = string.Empty;
+                }
+                else
+                    FilterBy.EastLimit =
+                        Conversions.AdjustedLatLong(EastLimitTextBox.Text, EastMarginNumericUpDown.Value.ToString(), "N");
+            }
+            CheckPreviewButton();
+            CheckARTCC2SquareButton();
+            CheckARTCCAsCenterButton();
+        }
+
+        private void CheckPreviewButton()
+        {
+            PreviewButton.Enabled = SquareSelected() && SectionSelected();
+        }
+
+        private void NWByFIXButton_Click(object sender, EventArgs e)
+        {
+            if (FixListDataGridView.SelectedRows.Count != 0)
+            {
+                Console.WriteLine(FixListDataGridView.SelectedRows[0].Cells["Latitude"].Value);
+                Console.WriteLine(FixListDataGridView.SelectedRows[0].Cells["Longitude"].Value);
+                FilterBy.NorthLimit = Convert.ToDouble(FixListDataGridView.SelectedRows[0].Cells[1].Value);
+                FilterBy.WestLimit = Convert.ToDouble(FixListDataGridView.SelectedRows[0].Cells[2].Value);
+                NorthLimitTextBox.Text = Conversions.DecDeg2SCT(FilterBy.NorthLimit, true);
+                WestLimitTextBox.Text = Conversions.DecDeg2SCT(FilterBy.WestLimit, false);
+            }
+            CheckPreviewButton();
+            CheckARTCC2SquareButton();
+            CheckARTCCAsCenterButton();
+        }
+
+        private void SEByFIXButton_Click(object sender, EventArgs e)
+        {
+            if (FixListDataGridView.SelectedRows.Count != 0)
+            {
+                FilterBy.SouthLimit = Convert.ToDouble(FixListDataGridView.SelectedRows[0].Cells[1].Value);
+                FilterBy.EastLimit = Convert.ToDouble(FixListDataGridView.SelectedRows[0].Cells[2].Value);
+                SouthLimitTextBox.Text = Conversions.DecDeg2SCT(FilterBy.SouthLimit, true);
+                EastLimitTextBox.Text = Conversions.DecDeg2SCT(FilterBy.EastLimit, false);
+            }
+            CheckPreviewButton();
+            CheckARTCC2SquareButton();
+            CheckARTCCAsCenterButton();
+        }
+
+        private void ARTCCCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            ARTCChighCheckBox.Enabled = ARTCClowCheckBox.Enabled = ARTCCCheckBox.Checked;
+            CheckPreviewButton();
+        }
+
+        private void SetAllMarginsButton_Click(object sender, EventArgs e)
+        {
+            NorthMarginNumericUpDown.Value = SouthMarginNumericUpDown.Value =
+                EastMarginNumericUpDown.Value = WestMarginNumericUpDown.Value =
+                AllMarginsNumericUpDown.Value;
+        }
+
+        private void UpdateAIRACbutton_Click(object sender, EventArgs e)
+        {
+            UpdateAIRACbutton.Visible = false;
+            DownloadInstallFAAfiles();
+            LoadForm1();
+            UpdateAIRACbutton.Visible = true;
+        }
+
+        private string VerifyExtractPath()
+        {
+            // returns the path to extract the data (the data folder)
+            Msg = "Select new / Verify current data folder to contain FAA data subfolder";
+            string extractPath = GetFolderPath(FolderMgt.DataFolder, Msg);
+            if (extractPath.Length == 0)
+            {
+                Msg = "No folder selected to save FAA text files. Update aborted.";
+                SCTcommon.SendMessage(Msg, MessageBoxIcon.Warning);
+            }
+            else
+            {
+                DataFolderTextBox.Text = extractPath;
+                UpdateFolderMgt(toFolderMgt: true);
+            }
+            return extractPath;
+        }
+
+        private int CleanDataFolder(string newCycleDate)
+        {
+            // See if the user already has the same data - ask if user wants to rewrite it
+            // If old data, confirm the user wants to overwrite it
+            // if NO data, do the install without query
+            // Start by identifying the datafolder if needed
+            bool Continue = false; string Msg; string filter = "*28DaySubscription*";
+
+            // Verify the data folder holding the extraction data
+            FolderMgt.DataFolder = VerifyExtractPath();
+            if (FolderMgt.DataFolder.Length == 0) return 99;  // user cancelled operation
+
+            // Search the datafolder for duplicate data subfolders and remove them
+            string[] dirs = Directory.GetDirectories(@FolderMgt.DataFolder, filter, SearchOption.TopDirectoryOnly);
+            Console.WriteLine("Dirs found: " + dirs.Length);
+            foreach (string dir in dirs)
+            {
+                if (dir.IndexOf(newCycleDate) != -1)
+                {
+                    Msg = "You already have the current dataset" + cr +
+                        "Cycle date: " + newCycleDate + cr +
+                        "Are you sure that you want to reinstall it?";
+                    DialogResult dialogResult = SCTcommon.SendMessage(Msg, MessageBoxIcon.Question, MessageBoxButtons.YesNo);
+                    Continue = (dialogResult == DialogResult.Yes);
+                }
+                else
+                if (dir.IndexOf(filter) != 0)
+                {
+                    Msg = "This will OVERWRITE your current FAA AIRAc (Cycle date " + newCycleDate +")." + cr +
+                        "If you wish, click NO and move the folder " + cr +
+                        dir.Trim() + cr +
+                        "outside of your main data folder." + cr +
+                        "Otherwise, click YES to remove this data and add the new AIRAC." + cr + cr +
+                        "Are you sure that you want to overwrite your data with the current AIRAC?";
+                    DialogResult dialogResult = SCTcommon.SendMessage(Msg, MessageBoxIcon.Question, MessageBoxButtons.YesNo);
+                    Continue = (dialogResult == DialogResult.Yes);
+                }
+                if (Continue)
+                {
+                    Directory.Delete(path: dir, recursive: true);
+                }
+                Continue = false;               // Reset the flag or you might delete ALL the dirs!
+            }
+            // Need to verify that there are no subscription folders in the data folder
+            List<string> dirsList = new List<string>
+                (Directory.EnumerateFiles(FolderMgt.DataFolder, filter, SearchOption.AllDirectories));
+            return (dirsList.Count);        // Accpetable values are 0 (clean) or 1 (kept old data)
+        }
+
+        private bool DownloadInstallFAAfiles()
+        {
+            // Downloads the FAA text files and extracts into a subfolder of the user's data folder
+            // Removes any like folders
+            // Returns bool for success or failure
+            string downloadsPath; DateTime newDate; 
+
+            int newAIRAC = CycleInfo.AIRACfromDate(DateTime.Today, Save2CycleInfo: false);
+            newDate = CycleInfo.CycleDateFromAIRAC(newAIRAC, Save2CycleInfo: false);
+            string CycleDate = newDate.ToString("yyyy'-'MM'-'dd");
+
+            // Need an empty datafolder (0), or abort for some reason
+            if (CleanDataFolder(CycleDate) != 0) return false;
+            if (FolderMgt.DataFolder.Length == 0) return false;
+
+            // Now we can proceed
+            // Set up values for the download;
+            string URL = "https://nfdc.faa.gov/webContent/28DaySub/28DaySubscription_Effective_" + CycleDate + ".zip";
+            downloadsPath = KnownFolders.GetPath(KnownFolder.Downloads) + "\\28DaySubscription_Effective_" + CycleDate + ".zip";
+
+            // Show messages in the CycleInfoLabel
+            UpdateCycleInfoOnForm(visible: true, "Downloading FAA data...");
+            WebClient wc = new WebClient();
+            wc.DownloadFile(new System.Uri(URL), downloadsPath);
+            wc.Dispose();
+
+            // Unless I messed up, there cannot be a data subdirectory by this name, so create it
+            UpdateCycleInfoOnForm(visible: true, "Extracting files to data folder...");
+            DirectoryInfo di = Directory.CreateDirectory(FolderMgt.DataFolder + "\\28DaySubscription_Effective_" + CycleDate + "\\");
+            string extractPath = di.FullName;
+            ZipFile.ExtractToDirectory(downloadsPath, extractPath);
+            return true;
+        }
+
+        private void CheckAPTasCenterButton()
+        {
+             APTasCenterButton.Enabled = AirportComboBox.SelectedIndex != -1;
+        }
+
+        private void APTasCenterButton_Click(object sender, EventArgs e)
+        {
+            double[] coords = SCTcommon.GetCoords(AirportComboBox.Text, "APT");
+            InfoSection.CenterLatitude_Dec = coords[0];
+            InfoSection.CenterLongitude_Dec = coords[1];
+            CenterLatTextBox.Text = InfoSection.CenterLatitude_SCT;
+            CenterLonTextBox.Text = InfoSection.CenterLongitude_SCT;
+            MagVarTextBox.Text = InfoSection.MagneticVariation.ToString("0.00");
+        }
+
+        private void CenterARTCCButton_Click(object sender, EventArgs e)
+        {
+            InfoSection.CenterLatitude_Dec = (FilterBy.NorthLimit + FilterBy.SouthLimit)/ 2;
+            CenterLatTextBox.Text = InfoSection.CenterLatitude_SCT;
+            InfoSection.CenterLongitude_Dec = (FilterBy.WestLimit + FilterBy.EastLimit) / 2;
+            CenterLonTextBox.Text = InfoSection.CenterLongitude_SCT;
+        }
+
+        private void InsertARTCCinSquareButton_Click(object sender, EventArgs e)
+        {
+            UpdateSquarebyARTCC();
+        }
+
+        private void FixListDataGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            NWByFIXButton.Enabled = SEByFIXButton.Enabled = FixListDataGridView.SelectedRows.Count != 0;
+        }
+
+        private void APTsCheckBox_Click(object sender, EventArgs e)
+        {
+            CheckPreviewButton();
+            RWYsCheckBox.Enabled = APTsCheckBox.Checked;
+        }
+
+        private void RWYsCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            CheckPreviewButton();
+        }
+
+        private void AWYsCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            CheckPreviewButton();
+        }
+
+        private void VORsCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            CheckPreviewButton();
+        }
+
+        private void NDBsCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            CheckPreviewButton();
+        }
+
+        private void FIXesCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            CheckPreviewButton();
+        }
+
+        private void ARTCChighCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            ARTCCCheckBox.Checked = ARTCChighCheckBox.Checked || ARTCClowCheckBox.Checked;
+        }
+
+        private void ARTCClowCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            ARTCCCheckBox.Checked = ARTCChighCheckBox.Checked || ARTCClowCheckBox.Checked;
+        }
+
+        private void dgvAWY_DoubleClick(object sender, EventArgs e)
+        {
+            // Use this to edit the airways
         }
     }
 }
