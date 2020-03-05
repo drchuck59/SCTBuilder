@@ -130,6 +130,12 @@
       <DependentUpon>AIRACUpdateForm.cs</DependentUpon>
     </Compile>
     <Compile Include="CycleInfo.cs" />
+    <Compile Include="DMS_DecDeg.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DMS_DecDeg.Designer.cs">
+      <DependentUpon>DMS_DecDeg.cs</DependentUpon>
+    </Compile>
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -172,6 +178,9 @@
     <Compile Include="SCToutput.cs" />
     <EmbeddedResource Include="About.resx">
       <DependentUpon>About.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DMS_DecDeg.resx">
+      <DependentUpon>DMS_DecDeg.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>

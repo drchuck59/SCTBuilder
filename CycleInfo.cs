@@ -190,7 +190,7 @@ namespace SCTBuilder
             int iCounter = 0;
             int result;
             // Must know if future or past AIRAC
-            while (WorkingDate < Cycledate)
+            while (WorkingDate.AddDays(CycleInterval) < Cycledate)
             {
                 //Console.WriteLine("AIRAC: " + CalcAIRAC(Convert.ToInt32(Convert.ToString(CycleYear).Substring(2, 2)), iCounter) + " Cycle: " + WorkingDate.ToShortDateString());
                 WorkingDate = WorkingDate.AddDays(CycleInterval);
@@ -205,15 +205,9 @@ namespace SCTBuilder
                 }
             }
             string AIRACyear = Convert.ToString(CycleYear).Substring(2, 2);
-
             result = CalcAIRAC(Convert.ToInt32(AIRACyear), iCounter);
             // OPTIONAL opportunity to save the data in the CycleInfo class
-            if (Save2CycleInfo)
-            {
-                AIRAC = result;
-                CycleStart = WorkingDate;
-                CycleEnd = WorkingDate.AddDays(CycleInterval);
-            }
+            if (Save2CycleInfo) CycleDateFromAIRAC(result, true);
             return result;
         }
 

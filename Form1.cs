@@ -9,7 +9,6 @@ using System.Windows.Forms;
 using System.ComponentModel;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Data.Sql;
 
 namespace SCTBuilder
 {
@@ -65,15 +64,20 @@ namespace SCTBuilder
                 if (LoadFAATextData() != -1) PostLoadTasks();
                 // If we cannot upload the FAA text data using the INI file, get a new data set
                 // Assuming the data downloads correctly, install in the various tables and update form
-                else if (DownloadInstallFAAfiles())
+                else
+                if (DownloadInstallFAAfiles())
+                {
                     if (LoadFAATextData() != -1) PostLoadTasks();
-                    else FAATextDataLoadFailed();
-            }
-            // If we cannot use the INI file, get a new data set
-            // Assuming the data downloads correctly, install in the various tables and update form
-            else if (DownloadInstallFAAfiles())
-                if (LoadFAATextData() != -1) PostLoadTasks();
+                }
                 else FAATextDataLoadFailed();
+            }
+            // If we cannot use the INI file, see if there is data set or get a new one
+            // Assuming the data downloads correctly, install in the various tables and update form
+            else
+            {
+                Msg = "It appears FEBU is running for the first time." + cr +
+                    "Use the Update AIRAC button to retrieve the current FAA AIRAC.";
+            }
         }
 
         private void PostLoadTasks()
@@ -640,12 +644,6 @@ namespace SCTBuilder
                 case "ARTCC":
                     if (ARTCCComboBox.SelectedIndex != -1)
                         result = " ([ARTCC] ='" + ARTCCComboBox.GetItemText(ARTCCComboBox.SelectedItem) + "')";
-                    else
-                    {
-                        Msg = "SEVERE ERROR selecting ARTCC as filter in SetFilter.  Contact developer.";
-                        SCTcommon.SendMessage(Msg, MessageBoxIcon.Exclamation);
-                        CmdExit_Click(null, null);
-                    }
                     break;
                 case "Square":
                     result = result +
@@ -1233,7 +1231,7 @@ namespace SCTBuilder
         {
             UpdateAIRACbutton.Visible = false;
             DownloadInstallFAAfiles();
-            LoadForm1();
+            PostLoadTasks();
             UpdateAIRACbutton.Visible = true;
         }
 
@@ -1415,6 +1413,12 @@ namespace SCTBuilder
         private void dgvAWY_DoubleClick(object sender, EventArgs e)
         {
             // Use this to edit the airways
+        }
+
+        private void dMSDecDegToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Form ConvertDMS = new DMS_DecDeg();
+            ConvertDMS.Show();
         }
     }
 }

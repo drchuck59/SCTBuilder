@@ -2,8 +2,8 @@
 using System.Data;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.IO;
 using System.Windows.Forms;
+using System.IO;
 
 namespace SCTBuilder
 {
@@ -61,6 +61,8 @@ namespace SCTBuilder
         {
             return MessageBox.Show(Msg, VersionInfo.Title, buttons, icon);
         }
+
+
 
         public static double[] GetCoords(string FIX, string FixType = "APT")
         {
@@ -292,6 +294,46 @@ namespace SCTBuilder
             result = quadrant + strDD + "." + strMM + "." + strSS;
             return result;
         }
+
+        public static string DecDeg2DMS(double DecDeg, bool IsLatitude)
+        {
+            string quadrant;
+            string result;     // An empty string indicates an error occurred
+            double tempDecDeg;
+            if (DecDeg < 0)     // Tests for S or W quadrants
+            {
+                if (IsLatitude)
+                {
+                    quadrant = "S";
+                }
+                else
+                {
+                    quadrant = "W";
+                }
+            }
+            else
+            {
+                if (IsLatitude)
+                {
+                    quadrant = "N";
+                }
+                else
+                {
+                    quadrant = "E";
+                }
+            }
+            tempDecDeg = Math.Abs(DecDeg);
+            int DD = (int)Math.Floor(tempDecDeg);     // Need integer value WITHOUT rounding
+            string strDD = DD.ToString("000");          // This cannot be done in one step
+            double tmpDecDeg = (tempDecDeg - DD) * 60;
+            int MM = (int)Math.Floor(tmpDecDeg);
+            string strMM = MM.ToString("00");
+            double SS = (tmpDecDeg - MM) * 60;
+            string strSS = SS.ToString("00.000");
+            result = strDD + " " + strMM + " " + strSS + quadrant;
+            return result;
+        }
+
         public static double Seconds2DecDeg(string seconds)
         {
             if (seconds.Length == 0) return -1;
