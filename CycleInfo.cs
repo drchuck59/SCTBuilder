@@ -33,7 +33,8 @@ namespace SCTBuilder
             WriteXmlElement(xml, "ChkFIX", SCTchecked.ChkFIX.ToString());
             WriteXmlElement(xml, "ChkNDB", SCTchecked.ChkNDB.ToString());
             WriteXmlElement(xml, "ChkRWY", SCTchecked.ChkRWY.ToString());
-            WriteXmlElement(xml, "ChkSSD", SCTchecked.ChkSSD.ToString());
+            WriteXmlElement(xml, "ChkSID", SCTchecked.ChkSID.ToString());
+            WriteXmlElement(xml, "ChkSTAR", SCTchecked.ChkSTAR.ToString());
             WriteXmlElement(xml, "ChkSSDname", SCTchecked.ChkSSDname.ToString());
             WriteXmlElement(xml, "ChkSUA", SCTchecked.ChkSUA.ToString());
             WriteXmlElement(xml, "ChkSUA_ClassB", SCTchecked.ChkSUA_ClassB.ToString());
@@ -119,8 +120,11 @@ namespace SCTBuilder
                             case "ChkRWY":
                                 SCTchecked.ChkRWY = Convert.ToBoolean(value);
                                 break;
-                            case "ChkSSD":
-                                SCTchecked.ChkSSD = Convert.ToBoolean(value);
+                            case "ChkSID":
+                                SCTchecked.ChkSID = Convert.ToBoolean(value);
+                                break;
+                            case "ChkSTAR":
+                                SCTchecked.ChkSTAR = Convert.ToBoolean(value);
                                 break;
                             case "ChkSSDname":
                                 SCTchecked.ChkSSDname = Convert.ToBoolean(value);
@@ -190,7 +194,7 @@ namespace SCTBuilder
             int iCounter = 0;
             int result;
             // Must know if future or past AIRAC
-            while (WorkingDate.AddDays(CycleInterval) < Cycledate)
+            while (WorkingDate.AddDays(CycleInterval) <= Cycledate)
             {
                 //Console.WriteLine("AIRAC: " + CalcAIRAC(Convert.ToInt32(Convert.ToString(CycleYear).Substring(2, 2)), iCounter) + " Cycle: " + WorkingDate.ToShortDateString());
                 WorkingDate = WorkingDate.AddDays(CycleInterval);

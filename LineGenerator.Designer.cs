@@ -52,6 +52,7 @@
             this.ImportFix2EndButton = new System.Windows.Forms.Button();
             this.CalcEndButton = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.MagBrgCheckBox = new System.Windows.Forms.CheckBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.CalcDistFeetRadioButton = new System.Windows.Forms.RadioButton();
             this.CalcDistMeterRadioButton = new System.Windows.Forms.RadioButton();
@@ -73,6 +74,7 @@
             this.CopyStart2EndButton = new System.Windows.Forms.Button();
             this.SwitchStartEndButton = new System.Windows.Forms.Button();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.DashedLineLengthNUD = new System.Windows.Forms.NumericUpDown();
             this.DashMeterRadioButton = new System.Windows.Forms.RadioButton();
             this.DashFtRadioButton = new System.Windows.Forms.RadioButton();
             this.DashNMRadioButton = new System.Windows.Forms.RadioButton();
@@ -95,6 +97,8 @@
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.LatLongHelpButton = new System.Windows.Forms.Button();
             this.ColorValueTextBox = new System.Windows.Forms.TextBox();
+            this.DispDistTextBox = new System.Windows.Forms.TextBox();
+            this.DispBrgTextBox = new System.Windows.Forms.TextBox();
             this.label11 = new System.Windows.Forms.Label();
             this.ColorGroupBox = new System.Windows.Forms.GroupBox();
             this.ColorValueLabel = new System.Windows.Forms.Label();
@@ -102,11 +106,8 @@
             this.ColorNameLabel = new System.Windows.Forms.Label();
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
-            this.DispDistTextBox = new System.Windows.Forms.TextBox();
             this.LineDistLabel = new System.Windows.Forms.Label();
-            this.DispBrgTextBox = new System.Windows.Forms.TextBox();
             this.LineBrgLabel = new System.Windows.Forms.Label();
-            this.DashedLineLengthNUD = new System.Windows.Forms.NumericUpDown();
             this.StartGroupBox.SuspendLayout();
             this.EndPointGroupBo.SuspendLayout();
             this.FixImportGroupBox.SuspendLayout();
@@ -115,9 +116,9 @@
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox4.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.DashedLineLengthNUD)).BeginInit();
             this.ColorGroupBox.SuspendLayout();
             this.groupBox5.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.DashedLineLengthNUD)).BeginInit();
             this.SuspendLayout();
             // 
             // StartGroupBox
@@ -382,6 +383,7 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.MagBrgCheckBox);
             this.groupBox1.Controls.Add(this.groupBox2);
             this.groupBox1.Controls.Add(this.CalcDistanceTextBox);
             this.groupBox1.Controls.Add(this.label6);
@@ -398,6 +400,17 @@
             this.groupBox1.TabIndex = 9;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Calculate End Point";
+            // 
+            // MagBrgCheckBox
+            // 
+            this.MagBrgCheckBox.AutoSize = true;
+            this.MagBrgCheckBox.Location = new System.Drawing.Point(213, 38);
+            this.MagBrgCheckBox.Name = "MagBrgCheckBox";
+            this.MagBrgCheckBox.Size = new System.Drawing.Size(118, 29);
+            this.MagBrgCheckBox.TabIndex = 5;
+            this.MagBrgCheckBox.Text = "Magnetic";
+            this.MagBrgCheckBox.UseVisualStyleBackColor = true;
+            this.MagBrgCheckBox.CheckedChanged += new System.EventHandler(this.MagBrgCheckBox_CheckedChanged);
             // 
             // groupBox2
             // 
@@ -441,13 +454,11 @@
             // CalcDistSMRadioButton
             // 
             this.CalcDistSMRadioButton.AutoSize = true;
-            this.CalcDistSMRadioButton.Checked = true;
             this.CalcDistSMRadioButton.Location = new System.Drawing.Point(10, 28);
             this.CalcDistSMRadioButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.CalcDistSMRadioButton.Name = "CalcDistSMRadioButton";
             this.CalcDistSMRadioButton.Size = new System.Drawing.Size(68, 29);
             this.CalcDistSMRadioButton.TabIndex = 1;
-            this.CalcDistSMRadioButton.TabStop = true;
             this.CalcDistSMRadioButton.Text = "SM";
             this.CalcDistSMRadioButton.UseVisualStyleBackColor = true;
             this.CalcDistSMRadioButton.CheckedChanged += new System.EventHandler(this.CalcDistSMRadioButton_CheckedChanged);
@@ -455,18 +466,20 @@
             // CalcDistNMRadioButton
             // 
             this.CalcDistNMRadioButton.AutoSize = true;
+            this.CalcDistNMRadioButton.Checked = true;
             this.CalcDistNMRadioButton.Location = new System.Drawing.Point(144, 28);
             this.CalcDistNMRadioButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.CalcDistNMRadioButton.Name = "CalcDistNMRadioButton";
             this.CalcDistNMRadioButton.Size = new System.Drawing.Size(68, 29);
             this.CalcDistNMRadioButton.TabIndex = 3;
+            this.CalcDistNMRadioButton.TabStop = true;
             this.CalcDistNMRadioButton.Text = "NM";
             this.CalcDistNMRadioButton.UseVisualStyleBackColor = true;
             this.CalcDistNMRadioButton.CheckedChanged += new System.EventHandler(this.CalcDistNMRadioButton_CheckedChanged);
             // 
             // CalcDistanceTextBox
             // 
-            this.CalcDistanceTextBox.Location = new System.Drawing.Point(165, 121);
+            this.CalcDistanceTextBox.Location = new System.Drawing.Point(161, 121);
             this.CalcDistanceTextBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.CalcDistanceTextBox.Name = "CalcDistanceTextBox";
             this.CalcDistanceTextBox.Size = new System.Drawing.Size(100, 30);
@@ -477,7 +490,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(68, 124);
+            this.label6.Location = new System.Drawing.Point(64, 124);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(88, 25);
             this.label6.TabIndex = 4;
@@ -485,18 +498,20 @@
             // 
             // CalcMagVarTextBox
             // 
-            this.CalcMagVarTextBox.Location = new System.Drawing.Point(165, 79);
+            this.CalcMagVarTextBox.Enabled = false;
+            this.CalcMagVarTextBox.Location = new System.Drawing.Point(160, 79);
             this.CalcMagVarTextBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.CalcMagVarTextBox.Name = "CalcMagVarTextBox";
             this.CalcMagVarTextBox.Size = new System.Drawing.Size(100, 30);
             this.CalcMagVarTextBox.TabIndex = 1;
+            this.toolTip1.SetToolTip(this.CalcMagVarTextBox, "Also called declination; retrieved from the main program info");
             this.CalcMagVarTextBox.TextChanged += new System.EventHandler(this.CalcMagVarTextBox_TextChanged);
             this.CalcMagVarTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.CalcMagVarTextBox_KeyPress);
             // 
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(26, 79);
+            this.label5.Location = new System.Drawing.Point(21, 79);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(133, 25);
             this.label5.TabIndex = 2;
@@ -504,11 +519,12 @@
             // 
             // CalcBearingTextBox
             // 
-            this.CalcBearingTextBox.Location = new System.Drawing.Point(165, 38);
+            this.CalcBearingTextBox.Location = new System.Drawing.Point(106, 38);
             this.CalcBearingTextBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.CalcBearingTextBox.Name = "CalcBearingTextBox";
             this.CalcBearingTextBox.Size = new System.Drawing.Size(100, 30);
             this.CalcBearingTextBox.TabIndex = 0;
+            this.toolTip1.SetToolTip(this.CalcBearingTextBox, "Enter initial desired bearing");
             this.CalcBearingTextBox.TextChanged += new System.EventHandler(this.CalcBearingTextBox_TextChanged);
             this.CalcBearingTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.CalcBearingTextBox_KeyPress);
             // 
@@ -517,9 +533,9 @@
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(21, 38);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(134, 25);
+            this.label4.Size = new System.Drawing.Size(79, 25);
             this.label4.TabIndex = 0;
-            this.label4.Text = "Bearing (Deg)";
+            this.label4.Text = "Bearing";
             // 
             // groupBox3
             // 
@@ -558,6 +574,7 @@
             this.GEORadioButton.TabIndex = 1;
             this.GEORadioButton.Text = "GEO";
             this.GEORadioButton.UseVisualStyleBackColor = true;
+            this.GEORadioButton.CheckedChanged += new System.EventHandler(this.GEORadioButton_CheckedChanged);
             // 
             // SSDRadioButton
             // 
@@ -571,6 +588,7 @@
             this.SSDRadioButton.TabStop = true;
             this.SSDRadioButton.Text = "SID|STAR";
             this.SSDRadioButton.UseVisualStyleBackColor = true;
+            this.SSDRadioButton.CheckedChanged += new System.EventHandler(this.SSDRadioButton_CheckedChanged);
             // 
             // ARTCCRadioButton
             // 
@@ -663,6 +681,18 @@
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Line Type";
             // 
+            // DashedLineLengthNUD
+            // 
+            this.DashedLineLengthNUD.Location = new System.Drawing.Point(244, 28);
+            this.DashedLineLengthNUD.Maximum = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
+            this.DashedLineLengthNUD.Name = "DashedLineLengthNUD";
+            this.DashedLineLengthNUD.Size = new System.Drawing.Size(68, 26);
+            this.DashedLineLengthNUD.TabIndex = 5;
+            // 
             // DashMeterRadioButton
             // 
             this.DashMeterRadioButton.AutoSize = true;
@@ -692,12 +722,14 @@
             // DashNMRadioButton
             // 
             this.DashNMRadioButton.AutoSize = true;
+            this.DashNMRadioButton.Checked = true;
             this.DashNMRadioButton.Enabled = false;
             this.DashNMRadioButton.Location = new System.Drawing.Point(199, 61);
             this.DashNMRadioButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.DashNMRadioButton.Name = "DashNMRadioButton";
             this.DashNMRadioButton.Size = new System.Drawing.Size(58, 24);
             this.DashNMRadioButton.TabIndex = 3;
+            this.DashNMRadioButton.TabStop = true;
             this.DashNMRadioButton.Text = "NM";
             this.DashNMRadioButton.UseVisualStyleBackColor = true;
             this.DashNMRadioButton.CheckedChanged += new System.EventHandler(this.DashNMRadioButton_CheckedChanged);
@@ -715,14 +747,12 @@
             // DashSMRadioButton
             // 
             this.DashSMRadioButton.AutoSize = true;
-            this.DashSMRadioButton.Checked = true;
             this.DashSMRadioButton.Enabled = false;
             this.DashSMRadioButton.Location = new System.Drawing.Point(89, 61);
             this.DashSMRadioButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.DashSMRadioButton.Name = "DashSMRadioButton";
             this.DashSMRadioButton.Size = new System.Drawing.Size(58, 24);
             this.DashSMRadioButton.TabIndex = 1;
-            this.DashSMRadioButton.TabStop = true;
             this.DashSMRadioButton.Text = "SM";
             this.DashSMRadioButton.UseVisualStyleBackColor = true;
             this.DashSMRadioButton.CheckedChanged += new System.EventHandler(this.DashSMRadioButton_CheckedChanged);
@@ -742,13 +772,11 @@
             // SolidLineRadioButton
             // 
             this.SolidLineRadioButton.AutoSize = true;
-            this.SolidLineRadioButton.Checked = true;
             this.SolidLineRadioButton.Location = new System.Drawing.Point(10, 30);
             this.SolidLineRadioButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.SolidLineRadioButton.Name = "SolidLineRadioButton";
             this.SolidLineRadioButton.Size = new System.Drawing.Size(69, 24);
             this.SolidLineRadioButton.TabIndex = 0;
-            this.SolidLineRadioButton.TabStop = true;
             this.SolidLineRadioButton.Text = "Solid";
             this.SolidLineRadioButton.UseVisualStyleBackColor = true;
             // 
@@ -788,6 +816,8 @@
             this.SuffixTextBox.Size = new System.Drawing.Size(258, 26);
             this.SuffixTextBox.TabIndex = 6;
             this.toolTip1.SetToolTip(this.SuffixTextBox, "Comment after line description. Semicolon NOT required.");
+            this.SuffixTextBox.TextChanged += new System.EventHandler(this.SuffixTextBox_TextChanged);
+            this.SuffixTextBox.DoubleClick += new System.EventHandler(this.SuffixTextBox_DoubleClick);
             // 
             // AddNextButton
             // 
@@ -833,6 +863,7 @@
             this.OutputTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
             this.OutputTextBox.Size = new System.Drawing.Size(696, 143);
             this.OutputTextBox.TabIndex = 13;
+            this.OutputTextBox.WordWrap = false;
             // 
             // label9
             // 
@@ -897,6 +928,30 @@
             this.ColorValueTextBox.TabIndex = 3;
             this.toolTip1.SetToolTip(this.ColorValueTextBox, "Double-click for color selection dialog");
             this.ColorValueTextBox.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.ColorValueTextBox_MouseDoubleClick);
+            // 
+            // DispDistTextBox
+            // 
+            this.DispDistTextBox.BackColor = System.Drawing.SystemColors.InactiveBorder;
+            this.DispDistTextBox.Enabled = false;
+            this.DispDistTextBox.Location = new System.Drawing.Point(195, 28);
+            this.DispDistTextBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.DispDistTextBox.Name = "DispDistTextBox";
+            this.DispDistTextBox.Size = new System.Drawing.Size(67, 26);
+            this.DispDistTextBox.TabIndex = 3;
+            this.DispDistTextBox.TabStop = false;
+            this.toolTip1.SetToolTip(this.DispDistTextBox, "Distance between coordinates in NM");
+            // 
+            // DispBrgTextBox
+            // 
+            this.DispBrgTextBox.BackColor = System.Drawing.SystemColors.InactiveBorder;
+            this.DispBrgTextBox.Enabled = false;
+            this.DispBrgTextBox.Location = new System.Drawing.Point(48, 26);
+            this.DispBrgTextBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.DispBrgTextBox.Name = "DispBrgTextBox";
+            this.DispBrgTextBox.Size = new System.Drawing.Size(64, 26);
+            this.DispBrgTextBox.TabIndex = 1;
+            this.DispBrgTextBox.TabStop = false;
+            this.toolTip1.SetToolTip(this.DispBrgTextBox, "Initial true bearing to end point");
             // 
             // label11
             // 
@@ -969,17 +1024,6 @@
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "Line Information";
             // 
-            // DispDistTextBox
-            // 
-            this.DispDistTextBox.BackColor = System.Drawing.SystemColors.InactiveBorder;
-            this.DispDistTextBox.Enabled = false;
-            this.DispDistTextBox.Location = new System.Drawing.Point(195, 28);
-            this.DispDistTextBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.DispDistTextBox.Name = "DispDistTextBox";
-            this.DispDistTextBox.Size = new System.Drawing.Size(67, 26);
-            this.DispDistTextBox.TabIndex = 3;
-            this.DispDistTextBox.TabStop = false;
-            // 
             // LineDistLabel
             // 
             this.LineDistLabel.AutoSize = true;
@@ -989,17 +1033,6 @@
             this.LineDistLabel.TabIndex = 2;
             this.LineDistLabel.Text = "Distance";
             // 
-            // DispBrgTextBox
-            // 
-            this.DispBrgTextBox.BackColor = System.Drawing.SystemColors.InactiveBorder;
-            this.DispBrgTextBox.Enabled = false;
-            this.DispBrgTextBox.Location = new System.Drawing.Point(48, 26);
-            this.DispBrgTextBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.DispBrgTextBox.Name = "DispBrgTextBox";
-            this.DispBrgTextBox.Size = new System.Drawing.Size(64, 26);
-            this.DispBrgTextBox.TabIndex = 1;
-            this.DispBrgTextBox.TabStop = false;
-            // 
             // LineBrgLabel
             // 
             this.LineBrgLabel.AutoSize = true;
@@ -1008,18 +1041,6 @@
             this.LineBrgLabel.Size = new System.Drawing.Size(34, 20);
             this.LineBrgLabel.TabIndex = 0;
             this.LineBrgLabel.Text = "Brg";
-            // 
-            // DashedLineLengthNUD
-            // 
-            this.DashedLineLengthNUD.Location = new System.Drawing.Point(244, 28);
-            this.DashedLineLengthNUD.Maximum = new decimal(new int[] {
-            5,
-            0,
-            0,
-            0});
-            this.DashedLineLengthNUD.Name = "DashedLineLengthNUD";
-            this.DashedLineLengthNUD.Size = new System.Drawing.Size(68, 26);
-            this.DashedLineLengthNUD.TabIndex = 5;
             // 
             // LineGenerator
             // 
@@ -1075,11 +1096,11 @@
             this.groupBox3.PerformLayout();
             this.groupBox4.ResumeLayout(false);
             this.groupBox4.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.DashedLineLengthNUD)).EndInit();
             this.ColorGroupBox.ResumeLayout(false);
             this.ColorGroupBox.PerformLayout();
             this.groupBox5.ResumeLayout(false);
             this.groupBox5.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.DashedLineLengthNUD)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1164,5 +1185,6 @@
         private System.Windows.Forms.RadioButton DashNMRadioButton;
         private System.Windows.Forms.RadioButton DashSMRadioButton;
         private System.Windows.Forms.NumericUpDown DashedLineLengthNUD;
+        private System.Windows.Forms.CheckBox MagBrgCheckBox;
     }
 }

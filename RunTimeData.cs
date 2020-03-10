@@ -488,7 +488,8 @@ namespace SCTBuilder
         public static bool ChkFIX { get; set; }
         public static bool ChkAWY { get; set; }
         public static bool ChkRWY { get; set; }
-        public static bool ChkSSD { get; set; }
+        public static bool ChkSID { get; set; }
+        public static bool ChkSTAR { get; set; }
         public static bool ChkALL { get; set; }
         public static bool ChkSSDname { get; set; }
         public static bool ChkSUA { get; set; }

@@ -35,7 +35,7 @@
             this.XMLOpenFileDialogButton = new System.Windows.Forms.Button();
             this.SCTFileTextBox = new System.Windows.Forms.TextBox();
             this.txtOutputFolder_label = new System.Windows.Forms.Label();
-            this.XMLFileTextBox = new System.Windows.Forms.TextBox();
+            this.SourceFileTextBox = new System.Windows.Forms.TextBox();
             this.txtDataFolder_label = new System.Windows.Forms.Label();
             this.ConvertXML2SCTButton = new System.Windows.Forms.Button();
             this.resultTextBox = new System.Windows.Forms.TextBox();
@@ -103,14 +103,14 @@
             this.txtOutputFolder_label.TabIndex = 10;
             this.txtOutputFolder_label.Text = "SCT Filename:";
             // 
-            // XMLFileTextBox
+            // SourceFileTextBox
             // 
-            this.XMLFileTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.XMLFileTextBox.Location = new System.Drawing.Point(195, 185);
-            this.XMLFileTextBox.Name = "XMLFileTextBox";
-            this.XMLFileTextBox.Size = new System.Drawing.Size(361, 31);
-            this.XMLFileTextBox.TabIndex = 9;
-            this.XMLFileTextBox.DoubleClick += new System.EventHandler(this.XMLOpenFileDialogButton_Click);
+            this.SourceFileTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.SourceFileTextBox.Location = new System.Drawing.Point(195, 185);
+            this.SourceFileTextBox.Name = "SourceFileTextBox";
+            this.SourceFileTextBox.Size = new System.Drawing.Size(361, 31);
+            this.SourceFileTextBox.TabIndex = 9;
+            this.SourceFileTextBox.DoubleClick += new System.EventHandler(this.XMLOpenFileDialogButton_Click);
             // 
             // txtDataFolder_label
             // 
@@ -131,6 +131,7 @@
             this.ConvertXML2SCTButton.TabIndex = 14;
             this.ConvertXML2SCTButton.Text = "Convert file";
             this.ConvertXML2SCTButton.UseVisualStyleBackColor = true;
+            this.ConvertXML2SCTButton.Click += new System.EventHandler(this.ConvertXML2SCTButton_Click);
             // 
             // resultTextBox
             // 
@@ -261,7 +262,7 @@
             this.Controls.Add(this.XMLOpenFileDialogButton);
             this.Controls.Add(this.SCTFileTextBox);
             this.Controls.Add(this.txtOutputFolder_label);
-            this.Controls.Add(this.XMLFileTextBox);
+            this.Controls.Add(this.SourceFileTextBox);
             this.Controls.Add(this.txtDataFolder_label);
             this.Controls.Add(this.XML2SCTInstructionLabel);
             this.Controls.Add(this.XML2SCTLabel);
@@ -282,7 +283,7 @@
         private System.Windows.Forms.Button XMLOpenFileDialogButton;
         private System.Windows.Forms.TextBox SCTFileTextBox;
         private System.Windows.Forms.Label txtOutputFolder_label;
-        private System.Windows.Forms.TextBox XMLFileTextBox;
+        private System.Windows.Forms.TextBox SourceFileTextBox;
         private System.Windows.Forms.Label txtDataFolder_label;
         private System.Windows.Forms.Button ConvertXML2SCTButton;
         private System.Windows.Forms.TextBox resultTextBox;

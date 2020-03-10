@@ -105,14 +105,14 @@ namespace SCTBuilder
                 TextFiles.Add(path);
             }
             path = CheckFile(PartialPath, "SID");
-            if (SCTchecked.ChkSSD && path != string.Empty)
+            if (SCTchecked.ChkSID && path != string.Empty)
             {
                 Console.WriteLine("SIDS...");
                 WriteSIDSTAR(path, UseName:SCTchecked.ChkSSDname, IsSID: true);
                 TextFiles.Add(path);
             }
             path = CheckFile(PartialPath, "STAR");
-            if (SCTchecked.ChkSSD && path != string.Empty)
+            if (SCTchecked.ChkSTAR && path != string.Empty)
             {
                 Console.WriteLine("STARS...");
                 WriteSIDSTAR(path, UseName:SCTchecked.ChkSSDname, IsSID: false);
@@ -276,7 +276,7 @@ namespace SCTBuilder
                 sw.WriteLine("[NDB]");
                 foreach (DataRowView row in dataView)
                 {
-                    strOut[0] = row["FacilityID"].ToString();
+                    strOut[0] = row["FacilityID"].ToString().PadRight(3);
                     strOut[1] = string.Format("{0:000.000}", row["Frequency"]);
                     strOut[2] = Conversions.DecDeg2SCT(Convert.ToSingle(row["Latitude"]), true);
                     strOut[3] = Conversions.DecDeg2SCT(Convert.ToSingle(row["Longitude"]), false);
@@ -386,13 +386,13 @@ namespace SCTBuilder
                 {
                     if (row["FacilityID"].ToString() != FacID)
                     {
-                        sw.WriteLine("; " + row["FacilityID"].ToString());
-                        FacID = row["FacilityID"].ToString();
                         if (FirstLine)
                         {
                             sw.WriteLine(cr + "[RUNWAY]");
                             FirstLine = false;
                         }
+                        sw.WriteLine("; " + row["FacilityID"].ToString());
+                        FacID = row["FacilityID"].ToString();
                     }
                     strOut[0] = row["BaseIdentifier"].ToString().Trim().PadRight(3);
                     strOut[1] = row["EndIdentifier"].ToString().Trim().PadRight(3);
@@ -487,7 +487,7 @@ namespace SCTBuilder
             AWYView.Dispose();
         }
 
-        public static void WriteSIDSTAR(string path, bool UseName, bool IsSID)
+        private static void WriteSIDSTAR(string path, bool UseName, bool IsSID)
         {
             // Declare variables
             string SSDfilter; 
@@ -617,7 +617,7 @@ namespace SCTBuilder
             return result;
         }
 
-        public static void WriteSSD(StreamWriter sw, string SSDID, bool UseName, bool IsSID)
+        private static void WriteSSD(StreamWriter sw, string SSDID, bool UseName, bool IsSID)
         {
             ///<summary>
             /// Everything works.  Need to find a way to add the FIXes from the SSDs outside

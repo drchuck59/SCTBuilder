@@ -78,6 +78,7 @@ namespace SCTBuilder
                 Msg = "It appears FEBU is running for the first time." + cr +
                     "Use the Update AIRAC button to retrieve the current FAA AIRAC.";
             }
+            TestWriteSCT();                 // Update the output button
         }
 
         private void PostLoadTasks()
@@ -153,7 +154,7 @@ namespace SCTBuilder
             if (LoadAirportComboBox() != 0)         // Using the desired filter format
                 UpdateAirportComboBox();            // Set the combobox to the last Default Airport or top of list
             else ClearAirportComboBox();
-            SCTtoolStripButton.Enabled = TestWriteSCT();
+            TestWriteSCT();
             gridViewToolStripButton.Enabled = true;
             CheckARTCCAsCenterButton();
             CheckAPTasCenterButton();
@@ -245,6 +246,7 @@ namespace SCTBuilder
 
         private void PreviewButton_Click(object sender, EventArgs e)
         {
+            SetChecked();
             UpdatingLabel.Visible = true;
             FilterBy.Method = "Square";
             string filter = SetFilter(); bool APTHasRows = false;
@@ -252,11 +254,11 @@ namespace SCTBuilder
             {
                 APTHasRows = SelectTableItems(APT, filter) != 0;
             };
-            if (APTsCheckBox.Checked)
+            if (SCTchecked.ChkAPT)
             {
                 if (APTHasRows) LoadAPTDataGridView();
             }
-            if (RWYsCheckBox.Checked)
+            if (SCTchecked.ChkRWY)
                 if (APTHasRows)
                 {
                     if (SelectRWYs() != 0) LoadRWYDataGridView();
@@ -267,36 +269,37 @@ namespace SCTBuilder
                     Msg = "Cannot select Runways.  Mo airports with runways in the selected square.";
                     SCTcommon.SendMessage(Msg);
                 }
-            if (VORsCheckBox.Checked)
+            if (SCTchecked.ChkRWY)
             {
                 SelectTableItems(VOR, filter);
                 LoadVORGridView();
             }
-            if (NDBsCheckBox.Checked) 
+            if (SCTchecked.ChkNDB) 
             {
                 SelectTableItems(NDB, filter);
                 LoadNDBGridView();
             }
-            if (FIXesCheckBox.Checked)
+            if (SCTchecked.ChkFIX)
             {
                 SelectTableItems(FIX, filter);
                 LoadFIXGridView();
             }
             // AWYs must come after VOR, NDB and FIX
-            if (AWYsCheckBox.Checked)
+            if (SCTchecked.ChkAWY)
             {
-                if (!VORsCheckBox.Checked) SelectTableItems(VOR, filter);
-                if (!NDBsCheckBox.Checked) SelectTableItems(NDB, filter);
-                if (!FIXesCheckBox.Checked) SelectTableItems(FIX, filter);
+                if (!SCTchecked.ChkVOR) SelectTableItems(VOR, filter);
+                if (!SCTchecked.ChkNDB) SelectTableItems(NDB, filter);
+                if (!SCTchecked.ChkFIX) SelectTableItems(FIX, filter);
                 if (SelectAWYs() != 0) LoadAWYDataGridView();
                 else ClearDataGridView(dgvAWY);
             }
-            if (ARTCCCheckBox.Checked) SelectTableItems(ARB, filter);
-            if (SIDsCheckBox.Checked)
+            if (SCTchecked.ChkARB) SelectTableItems(ARB, filter);
+            if (SCTchecked.ChkSID)
                 if (SelectSSD(isSID: true) != 0) LoadSSDDataGridView(true);
-            if (STARsCheckBox.Checked)
+            if (SCTchecked.ChkSTAR)
                 if (SelectSSD(isSID: false) != 0) LoadSSDDataGridView(false);
             UpdatingLabel.Visible = false;
+            TestWriteSCT();
         }
 
         private void ClearDataGridView(DataGridView dgv)
@@ -656,16 +659,12 @@ namespace SCTBuilder
             return result;
         }
 
-        private void PictureBox2_Click(object sender, EventArgs e)
-        {
-            Process.Start("https://zjxartcc.org");
-        }
         private void AsstFacilityEngineerTextBox_Validated(object sender, EventArgs e)
         {
             // Note - this textbox does not need "Validating"
             bool ToClass = true;
             InfoSection.AsstFacilityEngineer = AsstFacilityEngineerTextBox.Text;
-            SCTtoolStripButton.Enabled = TestWriteSCT();
+            TestWriteSCT();
             UpdateEngineers(ToClass);
         }
 
@@ -674,7 +673,7 @@ namespace SCTBuilder
             bool ToClass = true;
             InfoSection.FacilityEngineer = FacilityEngineerTextBox.Text;
             UpdateEngineers(ToClass);
-            SCTtoolStripButton.Enabled = TestWriteSCT();
+            TestWriteSCT();
         }
 
         private void FacilityEngineerTextBox_Validating(object sender, CancelEventArgs e)
@@ -747,7 +746,7 @@ namespace SCTBuilder
             {
                 UpdateFolderMgt(toFolderMgt: true);
             }
-            SCTtoolStripButton.Enabled = TestWriteSCT();
+            TestWriteSCT();
         }
 
         private void CmdDataFolder_Click(object sender, EventArgs e)
@@ -757,7 +756,7 @@ namespace SCTBuilder
             {
                 UpdateFolderMgt(toFolderMgt: true);
             }
-            SCTtoolStripButton.Enabled = TestWriteSCT();
+            TestWriteSCT();
         }
 
         private string UpdateFolder(TextBox textBox, string dialogTitle)
@@ -802,20 +801,37 @@ namespace SCTBuilder
             return result;
         }
 
-        private void CmdWriteSCT_Click(object sender, EventArgs e)
-        {
-            SCToutput.WriteSCT();
-        }
-
         private bool TestWriteSCT()
         {
-            return !(string.IsNullOrEmpty(FolderMgt.DataFolder.ToString()) ||
+            bool result; bool CheckedItemsHaveSelections = true;
+            bool InfoPopulated =
+             !(string.IsNullOrEmpty(FolderMgt.DataFolder.ToString()) ||
                 string.IsNullOrEmpty(FolderMgt.OutputFolder.ToString()) ||
                 string.IsNullOrEmpty(InfoSection.SponsorARTCC.ToString()) ||
                 string.IsNullOrEmpty(InfoSection.DefaultAirport) ||
                 InfoSection.CenterLatitude_Dec == 0 ||
                 InfoSection.CenterLongitude_Dec == 0 ||
                 string.IsNullOrEmpty(InfoSection.MagneticVariation.ToString()));
+            if (InfoPopulated)
+            {
+                if (APTsCheckBox.Checked && (dgvAPT.Rows.Count == 0)) CheckedItemsHaveSelections = false;
+                if (RWYsCheckBox.Checked && (dgvRWY.Rows.Count == 0)) CheckedItemsHaveSelections = false;
+                if (AWYsCheckBox.Checked && (dgvAWY.Rows.Count == 0)) CheckedItemsHaveSelections = false;
+                if (VORsCheckBox.Checked && (dgvVOR.Rows.Count == 0)) CheckedItemsHaveSelections = false;
+                if (NDBsCheckBox.Checked && (dgvNDB.Rows.Count == 0)) CheckedItemsHaveSelections = false;
+                if (FIXesCheckBox.Checked && (dgvFIX.Rows.Count == 0)) CheckedItemsHaveSelections = false;
+                if (SIDsCheckBox.Checked && (dgvSID.Rows.Count == 0)) CheckedItemsHaveSelections = false;
+                if (STARsCheckBox.Checked && (dgvSTAR.Rows.Count == 0)) CheckedItemsHaveSelections = false;
+                if (!CheckedItemsHaveSelections)
+                    SCTtoolStripButton.ToolTipText = "No SCTsection checked or [SCTsection] has no items. Check grid view.";
+            }
+            else
+            {
+                SCTtoolStripButton.ToolTipText = "Required items missing in [Info] section";
+            }
+            result = InfoPopulated & CheckedItemsHaveSelections;
+            SCTtoolStripButton.Enabled = result;
+            return result;
         }
 
         private void ChkbxShowAll_CheckedChanged(object sender, EventArgs e)
@@ -851,7 +867,7 @@ namespace SCTBuilder
             if (DataFolderTextBox.Text != FolderMgt.DataFolder)
                 CmdDataFolder_Click(sender, e);
             gridViewToolStripButton.Enabled = true;
-            SCTtoolStripButton.Enabled = TestWriteSCT();
+            TestWriteSCT();
         }
 
         private void TxtDataFolder_Validating(object sender, CancelEventArgs e)
@@ -890,7 +906,7 @@ namespace SCTBuilder
             if (LoadAirportComboBox() != 0)
                 UpdateAirportComboBox();
             else ClearAirportComboBox();
-            SCTtoolStripButton.Enabled = TestWriteSCT();
+            TestWriteSCT();
             CheckARTCCAsCenterButton();
             CheckARTCC2SquareButton();
         }
@@ -911,7 +927,7 @@ namespace SCTBuilder
                 InfoSection.DefaultAirport = AirportComboBox.Text.ToString();
             }
             CheckAPTasCenterButton();
-            SCTtoolStripButton.Enabled = TestWriteSCT();
+            TestWriteSCT();
         }
 
         private void LocalSectors_Click(object sender, EventArgs e)
@@ -927,9 +943,8 @@ namespace SCTBuilder
             {
                 FolderMgt.OutputFolder = txtOutputFolder.Text;
             }
-            SCTtoolStripButton.Enabled = TestWriteSCT();
+            TestWriteSCT();
         }
-
         private void SetChecked()
         {
             Console.WriteLine("SetChecked...");
@@ -939,7 +954,8 @@ namespace SCTBuilder
             SCTchecked.ChkFIX = FIXesCheckBox.Checked;
             SCTchecked.ChkNDB = NDBsCheckBox.Checked;
             SCTchecked.ChkRWY = RWYsCheckBox.Checked;
-            SCTchecked.ChkSSD = SIDsCheckBox.Checked;
+            SCTchecked.ChkSID = SIDsCheckBox.Checked;
+            SCTchecked.ChkSTAR = STARsCheckBox.Checked;
             SCTchecked.ChkVOR = VORsCheckBox.Checked;
             SCTchecked.ChkSSDname = SIDNameCheckBox.Checked;
             SCTchecked.ChkSUA_ClassB = SUA_ClassBCheckBox.Checked;
@@ -949,7 +965,6 @@ namespace SCTBuilder
             SCTchecked.ChkSUA_Prohibited = SUA_ProhibitedCheckBox.Checked;
             SCTchecked.ChkSUA_Restricted = SUA_RestrictedCheckBox.Checked;
         }
-
         private void GetChecked()
         {
             Console.WriteLine("GetChecked...");
@@ -959,7 +974,8 @@ namespace SCTBuilder
             FIXesCheckBox.Checked = SCTchecked.ChkFIX;
             NDBsCheckBox.Checked = SCTchecked.ChkNDB;
             RWYsCheckBox.Checked = SCTchecked.ChkRWY;
-            SIDsCheckBox.Checked = SCTchecked.ChkSSD;
+            SIDsCheckBox.Checked = SCTchecked.ChkSID;
+            STARsCheckBox.Checked = SCTchecked.ChkSTAR;
             VORsCheckBox.Checked = SCTchecked.ChkVOR;
             SIDNameCheckBox.Checked = SCTchecked.ChkSSDname;
             SUA_ClassBCheckBox.Checked = SCTchecked.ChkSUA_ClassB;
@@ -978,7 +994,7 @@ namespace SCTBuilder
 
         private void STARsCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            STARsNameCheckBox.Enabled = STARsCheckBox.Checked;
+            STARNameCheckBox.Enabled = STARsCheckBox.Checked;
             CheckPreviewButton();
         }
 
@@ -1233,6 +1249,7 @@ namespace SCTBuilder
             DownloadInstallFAAfiles();
             PostLoadTasks();
             UpdateAIRACbutton.Visible = true;
+            TestWriteSCT();
         }
 
         private string VerifyExtractPath()
@@ -1357,6 +1374,7 @@ namespace SCTBuilder
             CenterLatTextBox.Text = InfoSection.CenterLatitude_SCT;
             InfoSection.CenterLongitude_Dec = (FilterBy.WestLimit + FilterBy.EastLimit) / 2;
             CenterLonTextBox.Text = InfoSection.CenterLongitude_SCT;
+            MagVarTextBox.Text = InfoSection.MagneticVariation.ToString();
         }
 
         private void InsertARTCCinSquareButton_Click(object sender, EventArgs e)
@@ -1377,6 +1395,7 @@ namespace SCTBuilder
 
         private void RWYsCheckBox_CheckedChanged(object sender, EventArgs e)
         {
+
             CheckPreviewButton();
         }
 
@@ -1387,16 +1406,19 @@ namespace SCTBuilder
 
         private void VORsCheckBox_CheckedChanged(object sender, EventArgs e)
         {
+            AWYsCheckBox.Enabled = VORsCheckBox.Checked && NDBsCheckBox.Checked && FIXesCheckBox.Checked;
             CheckPreviewButton();
         }
 
         private void NDBsCheckBox_CheckedChanged(object sender, EventArgs e)
         {
+            AWYsCheckBox.Enabled = VORsCheckBox.Checked && NDBsCheckBox.Checked && FIXesCheckBox.Checked;
             CheckPreviewButton();
         }
 
         private void FIXesCheckBox_CheckedChanged(object sender, EventArgs e)
         {
+            AWYsCheckBox.Enabled = VORsCheckBox.Checked && NDBsCheckBox.Checked && FIXesCheckBox.Checked;
             CheckPreviewButton();
         }
 
@@ -1419,6 +1441,11 @@ namespace SCTBuilder
         {
             Form ConvertDMS = new DMS_DecDeg();
             ConvertDMS.Show();
+        }
+
+        private void SCTtoolStripButton_Click(object sender, EventArgs e)
+        {
+            SCToutput.WriteSCT();
         }
     }
 }

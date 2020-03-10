@@ -62,8 +62,6 @@ namespace SCTBuilder
             return MessageBox.Show(Msg, VersionInfo.Title, buttons, icon);
         }
 
-
-
         public static double[] GetCoords(string FIX, string FixType = "APT")
         {
             // Returns the lat/lon in double of the desired fix
@@ -119,6 +117,28 @@ namespace SCTBuilder
     public class Conversions
     // Convert a variety of strings 
     {
+        public static double ToNM(double value, string FromType)
+        {
+            double result;
+            switch (FromType)
+            {
+                case "N":
+                default:
+                    result = value;
+                    break;
+                case "S":
+                    result = value * 0.868976;
+                    break;
+                case "f":
+                    result = value * 0.000164579;
+                    break;
+                case "m":
+                    result = value * 0.000539957;
+                    break;
+            }
+            return result;
+        }
+
         public static double AdjustedLatLong(string LL, string nud, string LLedge)
         {
             double result = Convert.ToSingle(LL);
@@ -394,6 +414,7 @@ namespace SCTBuilder
             }
             // Console.WriteLine("Added " + Counter + " rows to table (now has " + dtPoly.Rows.Count + " rows).");
         }
+
         public static void BorderCoord(string Polygon, out double North, out double South, out double East, out double West)
         {
             // Returns the quadrant-most coordinate for a given polygon
@@ -471,7 +492,7 @@ namespace SCTBuilder
         public static string APTout(string[] strOut)
         {
             string result = strOut[0] + " " + strOut[1] + " " + strOut[2] + " " +
-                            strOut[3] + " " + " ;" + strOut[4] + strOut[5] + strOut[6];
+                            strOut[3] + " " + " ;" + strOut[4] + " " + strOut[5] + " " + strOut[6];
             return result;
         }
         public static string FIXout(string[] strOut)
@@ -499,6 +520,7 @@ namespace SCTBuilder
                     NavAid1 + " " + NavAid1;
             return result;
         }
+
         public static string SSDout(string StartLat,
             string StartLong, string EndLat, string EndLong,
             string NavAid0 = "", string NavAid1 = "", bool UseFix = false)
@@ -508,11 +530,12 @@ namespace SCTBuilder
             string result;
             if (!UseFix)
                 result = str + StartLat + " " + StartLong + " " + EndLat + " " + EndLong +
-                    "; " + NavAid0 + NavAid1;
+                    " ; " + NavAid0 + " " + NavAid1;
             else
                 result = str + NavAid0 + " " + NavAid0 + " " + NavAid1 + " " + NavAid1;
             return result;
         }
+
         public static string BoundaryOut(string prefix, string StartLat,
             string StartLong, string EndLat, string EndLong,
             string suffix = "")
@@ -522,6 +545,16 @@ namespace SCTBuilder
             if (suffix.Length != 0) result += "; " + suffix;
             return result;
         }
+
+        public static string GeoOut(string StartLat,
+            string StartLong, string EndLat, string EndLong,
+            string suffix)
+        {
+            string result = StartLat + " " + StartLong + " " +
+                            EndLat + " " + EndLong + " " + suffix;
+            return result;
+        }
+
         public static string LabelOut(string label, string Lat, string Long, string Color, string Comment = "")
         {
             string strText = "\"" + label.Trim() + "\"";

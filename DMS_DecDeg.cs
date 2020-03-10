@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
+using System.Text.RegularExpressions;
+
 
 namespace SCTBuilder
 {
@@ -24,19 +26,19 @@ namespace SCTBuilder
         {
             if ((Lat.Length != 0) && (Lon.Length != 0))
             {
-                tb.Text = Lat + ", " + Lon;
+                tb.Text = Lat + " " + Lon;
             }
         }
 
         private void LatDMSTextBox_Validated(object sender, EventArgs e)
         {
-            if (LatDMSTextBox.TextLength != 0)
+            if (IsValidCoord(LatDMSTextBox.Text))
             {
                 double result;
                 result = Conversions.String2DecDeg(LatDMSTextBox.Text);
                 if (result != -1)
-                {
-                    LatDecTextBox.Text = result.ToString();
+                {// decimal.Round(yourValue, 2, MidpointRounding.AwayFromZero);
+                    LatDecTextBox.Text = decimal.Round(Convert.ToDecimal(result),6,MidpointRounding.AwayFromZero).ToString();
                     LatSCTTextBox.Text = Conversions.DecDeg2SCT(result, true);
                 }
                 UpdateStrings();
@@ -45,13 +47,13 @@ namespace SCTBuilder
 
         private void LonDMSTextBox_Validated(object sender, EventArgs e)
         {
-            if (LonDMSTextBox.TextLength != 0)
+            if (IsValidCoord(LonDMSTextBox.Text))
             {
                 double result;
                 result = Conversions.String2DecDeg(LonDMSTextBox.Text);
                 if (result != -1)
                 {
-                    LonDecTextBox.Text = result.ToString();
+                    LonDecTextBox.Text = decimal.Round(Convert.ToDecimal(result), 6, MidpointRounding.AwayFromZero).ToString();
                     LonSCTTextBox.Text = Conversions.DecDeg2SCT(result, false);
                 }
                 UpdateStrings();
@@ -61,7 +63,7 @@ namespace SCTBuilder
         private void LatDecTextBox_Validated(object sender, EventArgs e)
         {
             {
-                if (LatDecTextBox.TextLength != 0)
+                if (IsValidCoord(LatDecTextBox.Text))
                 {
                     string result; double Lat = Convert.ToDouble(LatDecTextBox.Text);
                     result = Conversions.DecDeg2SCT(Lat, true);
@@ -76,7 +78,7 @@ namespace SCTBuilder
         }
         private void LonDecTextBox_Validated(object sender, EventArgs e)
         {
-            if (LonDecTextBox.TextLength != 0)
+            if (IsValidCoord(LonDecTextBox.Text))
             {
                 string result; double Lon = Convert.ToDouble(LonDecTextBox.Text);
                 result = Conversions.DecDeg2SCT(Lon, true);
@@ -91,14 +93,14 @@ namespace SCTBuilder
 
         private void LatSCTTextBox_Validated(object sender, EventArgs e)
         {
-            if (LatSCTTextBox.TextLength != 0)
+            if (IsValidCoord(LatSCTTextBox.Text))
             {
-                string result; double Lat = Convert.ToDouble(LatSCTTextBox.Text);
-                result = Conversions.DecDeg2SCT(Lat, true);
-                if (result.Length > 0)
+                string Lat; double result = Convert.ToDouble(LatSCTTextBox.Text);
+                Lat = Conversions.DecDeg2SCT(result, true);
+                if (Lat.Length > 0)
                 {
-                    LatDecTextBox.Text = Lat.ToString();
-                    LatDMSTextBox.Text = Conversions.DecDeg2DMS(Lat, true);
+                    LatDecTextBox.Text = decimal.Round(Convert.ToDecimal(result), 6, MidpointRounding.AwayFromZero).ToString();
+                    LatDMSTextBox.Text = Conversions.DecDeg2DMS(result, true);
                 }
                 UpdateStrings();
             }
@@ -106,31 +108,105 @@ namespace SCTBuilder
 
         private void LonSCTTextBox_Validated(object sender, EventArgs e)
         {
-            if (LonSCTTextBox.TextLength != 0)
+            if (IsValidCoord(LonSCTTextBox.Text))
             {
-                string result; double Lat = Convert.ToDouble(LonSCTTextBox.Text);
-                result = Conversions.DecDeg2SCT(Lat, false);
-                if (result.Length > 0)
+                string Lon; double result = Convert.ToDouble(LonSCTTextBox.Text);
+                Lon = Conversions.DecDeg2SCT(result, false);
+                if (Lon.Length > 0)
                 {
-                    LonDecTextBox.Text = Lat.ToString();
-                    LonDMSTextBox.Text = Conversions.DecDeg2DMS(Lat, false);
+                    LonDecTextBox.Text = decimal.Round(Convert.ToDecimal(result), 6, MidpointRounding.AwayFromZero).ToString();
+                    LonDMSTextBox.Text = Conversions.DecDeg2DMS(result, false);
                 }
                 UpdateStrings();
             }
         }
 
+        private void ParseSCTInsertButton_Click(object sender, EventArgs e)
+        {
+            string workText = SCTTextBox.Text;
+            if (IsValidCoord(workText))
+            {                
+                int loc1 = SCTTextBox.Text.IndexOf(",");
+                if (loc1 != -1)
+                    workText = SCTTextBox.Text.Substring(0, loc1 - 1) + SCTTextBox.Text.Substring(loc1);
+                loc1 = workText.IndexOf(" ");
+                LatSCTTextBox.Text = workText.Substring(0, loc1).Trim();
+                LonSCTTextBox.Text = workText.Substring(SCTTextBox.Text.IndexOf(" ")).Trim();
+                double result = Conversions.String2DecDeg(LatSCTTextBox.Text);
+                LatDecTextBox.Text = decimal.Round(Convert.ToDecimal(result), 6, MidpointRounding.AwayFromZero).ToString();
+                LatDMSTextBox.Text = Conversions.DecDeg2DMS(result, true);
+                result = Conversions.String2DecDeg(LonSCTTextBox.Text);
+                LonDecTextBox.Text = decimal.Round(Convert.ToDecimal(result), 6, MidpointRounding.AwayFromZero).ToString();
+                LonDMSTextBox.Text = Conversions.DecDeg2DMS(result, false);
+                UpdateStrings();
+                Clipboard.SetText(DECTextBox.Text);
+                DECTextBox.SelectAll();
+            }
+        }
+
+        private bool IsValidCoord(string coord)
+        {
+            bool result;
+            result = coord.Length != 0;
+            return result;
+        }
+
+        private void PasteButton_Click(object sender, EventArgs e)
+        {
+            SCTTextBox.Text = Clipboard.GetText();
+        }
+
+        private void LatDMSTextBox_DoubleClick(object sender, EventArgs e)
+        {
+            LatDMSTextBox.SelectAll();
+            Clipboard.SetText(LatDecTextBox.Text);
+        }
+
+        private void LonDMSTextBox_DoubleClick(object sender, EventArgs e)
+        {
+            LonDMSTextBox.SelectAll();
+            Clipboard.SetText(LonDecTextBox.Text);
+        }
+
+        private void LatDecTextBox_DoubleClick(object sender, EventArgs e)
+        {
+            LatDecTextBox.SelectAll();
+            Clipboard.SetText(LatDecTextBox.Text);
+        }
+
+        private void LatSCTTextBox_DoubleClick(object sender, EventArgs e)
+        {
+            LatSCTTextBox.SelectAll();
+            Clipboard.SetText(LatSCTTextBox.Text);
+        }
+
+        private void LonDecTextBox_DoubleClick(object sender, EventArgs e)
+        {
+            LonDecTextBox.SelectAll();
+            Clipboard.SetText(LonDecTextBox.Text);
+        }
+
+        private void LonSCTTextBox_DoubleClick(object sender, EventArgs e)
+        {
+            LonSCTTextBox.SelectAll();
+            Clipboard.SetText(LonSCTTextBox.Text);
+        }
+
         private void DMSTextBox_DoubleClick(object sender, EventArgs e)
         {
+            DMSTextBox.SelectAll();
             Clipboard.SetText(DMSTextBox.Text);
         }
 
         private void DECTextBox_DoubleClick(object sender, EventArgs e)
         {
+            DECTextBox.SelectAll();
             Clipboard.SetText(DECTextBox.Text);
         }
 
         private void SCTTextBox_DoubleClick(object sender, EventArgs e)
         {
+            SCTTextBox.SelectAll();
             Clipboard.SetText(SCTTextBox.Text);
         }
     }
