@@ -189,14 +189,14 @@ namespace SCTBuilder
         /// </summary>
         // If possible, find the delimiter
         {
-            double result = -1; double DD; double MM; double SS; string quadrant;
+            double result = -199; double DD; double MM; double SS; string quadrant;
             string tempDMS; double factor; string newDelim;
             if (DMS.Length > 5)
             {
                 // Check that caller didn't "forget" the delim (or may not know it)
                 newDelim = FindDelimiter(DMS);
                 if (Delim.Length != 0)
-                    if (newDelim != Delim) return result;       // Result is still -1
+                    if (newDelim != Delim) return result;       // Result is still -199
 
                 // Sometimes the quadrant is in the front and other times in the back!
                 if (DMS.Substring(0, 1).IsNumeric())
@@ -254,11 +254,11 @@ namespace SCTBuilder
                 {
                     case "N":
                     case "S":
-                        if (Math.Abs(result) > 90) result = -1;
+                        if (Math.Abs(result) > 90) result = -199;
                         break;
                     case "E":
                     case "W":
-                        if (Math.Abs(result) > 180) result = -1;
+                        if (Math.Abs(result) > 180) result = -199;
                         break;
                 }
             }

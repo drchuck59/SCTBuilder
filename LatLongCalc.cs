@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Linq;
-using System.Threading.Tasks;
+using System.Data;
 
 namespace SCTBuilder
 {
@@ -20,11 +20,23 @@ namespace SCTBuilder
     }
     class LatLongCalc
     {
-        public static double NMperLongDegree(double Latitude)
+        public static double NMperLongDegree()
         {
             // Assumes all Lat/Longs are in Decimal degrees
-            double Lat = Deg2Rad(Latitude);
-            double result = Math.Cos(Lat) * EarthRadius('N');
+            double result = 60; double Lat;
+            if (InfoSection.DefaultAirport.Length != 0)
+            {
+                DataView dvAPT = new DataView(Form1.APT)
+                {
+                    RowFilter = "[FacilityID] ='" + InfoSection.DefaultAirport + "'"
+                };
+                if (dvAPT.Count != 0)
+                {
+                    Lat = Deg2Rad(Convert.ToDouble(dvAPT[0]["Latitude"]));
+                    result = Math.Cos(Lat) * EarthRadius('N');
+                }
+                dvAPT.Dispose();
+            }
             return result;
         }
         public static double RWYBearing(string Heading, string RwyID)
@@ -255,6 +267,16 @@ namespace SCTBuilder
         {
             // Same as Segment, but allows for simpler calls to midpoint
             return Segment(Lat1, Lon1, Lat2, Lon2);
+        }
+
+        public static double[] Arc_Radius(double Lat1, double Lon1, double Segment, double Radius)
+        {
+            double[] result = new double[2];
+            // Return the the coordinates from a point ArcDegrees (always positive) given the radius
+            // As the segments are expected to be small, can use trigonometry
+            //double rLat1 = Deg2Rad(Lat1); double rLon1 = Deg2Rad(Lon1); double rDeg = Deg2Rad(Deg); double rArc = Deg2Rad(Radius);
+            // I konw both legs are equal and one angle, so each angle is (180-angle)/2
+            return result;
         }
 
         private static double NormalizedLon(double radLon)

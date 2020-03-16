@@ -123,9 +123,14 @@ namespace SCTBuilder
 
         private void ParseSCTInsertButton_Click(object sender, EventArgs e)
         {
+            ParseSCTTextBox();
+        }
+
+        private void ParseSCTTextBox()
+        {
             string workText = SCTTextBox.Text;
             if (IsValidCoord(workText))
-            {                
+            {
                 int loc1 = SCTTextBox.Text.IndexOf(",");
                 if (loc1 != -1)
                     workText = SCTTextBox.Text.Substring(0, loc1 - 1) + SCTTextBox.Text.Substring(loc1);
@@ -144,6 +149,7 @@ namespace SCTBuilder
             }
         }
 
+
         private bool IsValidCoord(string coord)
         {
             bool result;
@@ -159,37 +165,44 @@ namespace SCTBuilder
         private void LatDMSTextBox_DoubleClick(object sender, EventArgs e)
         {
             LatDMSTextBox.SelectAll();
-            Clipboard.SetText(LatDecTextBox.Text);
+            Clipboard.SetText(LatDMSTextBox.Text);
+            CrossForm.Lat = Conversions.String2DecDeg(LatDMSTextBox.Text);
         }
 
         private void LonDMSTextBox_DoubleClick(object sender, EventArgs e)
         {
             LonDMSTextBox.SelectAll();
-            Clipboard.SetText(LonDecTextBox.Text);
+            Clipboard.SetText(LonDMSTextBox.Text);
+            CrossForm.Lon = Conversions.String2DecDeg(LonDMSTextBox.Text);
         }
 
         private void LatDecTextBox_DoubleClick(object sender, EventArgs e)
         {
             LatDecTextBox.SelectAll();
             Clipboard.SetText(LatDecTextBox.Text);
+            CrossForm.Lat = Convert.ToDouble(LatDecTextBox.Text);
+
+        }
+        private void LonDecTextBox_DoubleClick(object sender, EventArgs e)
+        {
+            LonDecTextBox.SelectAll();
+            Clipboard.SetText(LonDecTextBox.Text);
+            CrossForm.Lon = Convert.ToDouble(LonDecTextBox.Text);
         }
 
         private void LatSCTTextBox_DoubleClick(object sender, EventArgs e)
         {
             LatSCTTextBox.SelectAll();
             Clipboard.SetText(LatSCTTextBox.Text);
+            CrossForm.Lat = Conversions.String2DecDeg(LatSCTTextBox.Text);
         }
 
-        private void LonDecTextBox_DoubleClick(object sender, EventArgs e)
-        {
-            LonDecTextBox.SelectAll();
-            Clipboard.SetText(LonDecTextBox.Text);
-        }
 
         private void LonSCTTextBox_DoubleClick(object sender, EventArgs e)
         {
             LonSCTTextBox.SelectAll();
             Clipboard.SetText(LonSCTTextBox.Text);
+            CrossForm.Lon = Conversions.String2DecDeg(LonSCTTextBox.Text);
         }
 
         private void DMSTextBox_DoubleClick(object sender, EventArgs e)

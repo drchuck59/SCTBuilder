@@ -75,7 +75,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(39, 135);
+            this.label2.Location = new System.Drawing.Point(39, 125);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(120, 20);
             this.label2.TabIndex = 2;
@@ -83,7 +83,7 @@
             // 
             // LonDMSTextBox
             // 
-            this.LonDMSTextBox.Location = new System.Drawing.Point(43, 161);
+            this.LonDMSTextBox.Location = new System.Drawing.Point(43, 151);
             this.LonDMSTextBox.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.LonDMSTextBox.Name = "LonDMSTextBox";
             this.LonDMSTextBox.Size = new System.Drawing.Size(176, 26);
@@ -93,7 +93,7 @@
             // 
             // LonDecTextBox
             // 
-            this.LonDecTextBox.Location = new System.Drawing.Point(393, 161);
+            this.LonDecTextBox.Location = new System.Drawing.Point(393, 151);
             this.LonDecTextBox.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.LonDecTextBox.Name = "LonDecTextBox";
             this.LonDecTextBox.Size = new System.Drawing.Size(176, 26);
@@ -104,7 +104,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(389, 135);
+            this.label3.Location = new System.Drawing.Point(389, 125);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(141, 20);
             this.label3.TabIndex = 6;
@@ -131,7 +131,7 @@
             // 
             // DMSTextBox
             // 
-            this.DMSTextBox.Location = new System.Drawing.Point(43, 249);
+            this.DMSTextBox.Location = new System.Drawing.Point(43, 264);
             this.DMSTextBox.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.DMSTextBox.Name = "DMSTextBox";
             this.DMSTextBox.Size = new System.Drawing.Size(331, 26);
@@ -141,24 +141,24 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(43, 220);
+            this.label5.Location = new System.Drawing.Point(43, 235);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(180, 20);
+            this.label5.Size = new System.Drawing.Size(135, 20);
             this.label5.TabIndex = 9;
-            this.label5.Text = "Double click to clipboard";
+            this.label5.Text = "DMS Coordinates";
             // 
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(393, 220);
+            this.label6.Location = new System.Drawing.Point(393, 235);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(180, 20);
+            this.label6.Size = new System.Drawing.Size(156, 20);
             this.label6.TabIndex = 11;
-            this.label6.Text = "Double click to clipboard";
+            this.label6.Text = "Decimal Coordinates";
             // 
             // DECTextBox
             // 
-            this.DECTextBox.Location = new System.Drawing.Point(393, 249);
+            this.DECTextBox.Location = new System.Drawing.Point(393, 264);
             this.DECTextBox.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.DECTextBox.Name = "DECTextBox";
             this.DECTextBox.Size = new System.Drawing.Size(331, 26);
@@ -168,15 +168,15 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(731, 220);
+            this.label7.Location = new System.Drawing.Point(731, 235);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(180, 20);
+            this.label7.Size = new System.Drawing.Size(130, 20);
             this.label7.TabIndex = 17;
-            this.label7.Text = "Double click to clipboard";
+            this.label7.Text = "SCT Coordinates";
             // 
             // SCTTextBox
             // 
-            this.SCTTextBox.Location = new System.Drawing.Point(731, 249);
+            this.SCTTextBox.Location = new System.Drawing.Point(731, 264);
             this.SCTTextBox.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.SCTTextBox.Name = "SCTTextBox";
             this.SCTTextBox.Size = new System.Drawing.Size(331, 26);
@@ -185,7 +185,7 @@
             // 
             // LonSCTTextBox
             // 
-            this.LonSCTTextBox.Location = new System.Drawing.Point(731, 161);
+            this.LonSCTTextBox.Location = new System.Drawing.Point(731, 151);
             this.LonSCTTextBox.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.LonSCTTextBox.Name = "LonSCTTextBox";
             this.LonSCTTextBox.Size = new System.Drawing.Size(176, 26);
@@ -196,7 +196,7 @@
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(728, 135);
+            this.label8.Location = new System.Drawing.Point(728, 125);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(115, 20);
             this.label8.TabIndex = 14;
@@ -223,22 +223,22 @@
             // 
             // ParseSCTInsertButton
             // 
-            this.ParseSCTInsertButton.Location = new System.Drawing.Point(987, 210);
+            this.ParseSCTInsertButton.Location = new System.Drawing.Point(926, 225);
             this.ParseSCTInsertButton.Name = "ParseSCTInsertButton";
-            this.ParseSCTInsertButton.Size = new System.Drawing.Size(75, 30);
+            this.ParseSCTInsertButton.Size = new System.Drawing.Size(136, 30);
             this.ParseSCTInsertButton.TabIndex = 18;
-            this.ParseSCTInsertButton.Text = "Parse";
+            this.ParseSCTInsertButton.Text = "Convert all";
             this.toolTip1.SetToolTip(this.ParseSCTInsertButton, "Parses line below to ALL boxes and copies Decimal Lat/Lon to clipboard");
             this.ParseSCTInsertButton.UseVisualStyleBackColor = true;
             this.ParseSCTInsertButton.Click += new System.EventHandler(this.ParseSCTInsertButton_Click);
             // 
             // PasteButton
             // 
-            this.PasteButton.Location = new System.Drawing.Point(918, 210);
+            this.PasteButton.Location = new System.Drawing.Point(926, 189);
             this.PasteButton.Name = "PasteButton";
-            this.PasteButton.Size = new System.Drawing.Size(75, 30);
+            this.PasteButton.Size = new System.Drawing.Size(136, 30);
             this.PasteButton.TabIndex = 19;
-            this.PasteButton.Text = "Paste";
+            this.PasteButton.Text = "Paste from VRC";
             this.toolTip1.SetToolTip(this.PasteButton, "Pastes clipboard to line below");
             this.PasteButton.UseVisualStyleBackColor = true;
             this.PasteButton.Click += new System.EventHandler(this.PasteButton_Click);

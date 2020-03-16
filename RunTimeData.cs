@@ -392,7 +392,6 @@ namespace SCTBuilder
         private static string apt = string.Empty;
         private static double centerLat = 0;
         private static double centerLon = 0;
-        private static double NMperLonDeg = 0;
 
         public static string SectorName
         {
@@ -460,13 +459,9 @@ namespace SCTBuilder
             { centerLon = value; }
         }
         public static double NMperDegreeLatitude { get { return 60f; } } // Always 60 NM
-        public static double NMperDegreeLongitude
-        {
-            get
-            { return NMperLonDeg; }
-            set
-            { NMperLonDeg = value;}
-        }
+        
+        public static double NMperDegreeLongitude { get { return LatLongCalc.NMperLongDegree(); } }
+
         public static double MagneticVariation       // Varies by location
         {
             get
@@ -500,5 +495,13 @@ namespace SCTBuilder
         public static bool ChkSUA_Prohibited { get; set; }
         public static bool ChkSUA_Restricted { get; set; }
         public static bool ChkConfirmOverwrite { get; set; }
+    }
+
+    public static class CrossForm
+    {
+        public static double Lat { get; set; }
+        public static double Lon { get; set; }
+        public static double Distance { get; set; }
+        public static double Bearing { get; set; }
     }
 } 

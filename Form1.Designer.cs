@@ -70,6 +70,8 @@
             this.PreviewButton = new System.Windows.Forms.Button();
             this.SetAllMarginsButton = new System.Windows.Forms.Button();
             this.AllMarginsNumericUpDown = new System.Windows.Forms.NumericUpDown();
+            this.RWYsCheckBox = new System.Windows.Forms.CheckBox();
+            this.AWYsCheckBox = new System.Windows.Forms.CheckBox();
             this.ARTCCLabel = new System.Windows.Forms.Label();
             this.AirportLabel = new System.Windows.Forms.Label();
             this.AsstFacilityEngineerLabel = new System.Windows.Forms.Label();
@@ -114,9 +116,7 @@
             this.APTsCheckBox = new System.Windows.Forms.CheckBox();
             this.VORsCheckBox = new System.Windows.Forms.CheckBox();
             this.NDBsCheckBox = new System.Windows.Forms.CheckBox();
-            this.RWYsCheckBox = new System.Windows.Forms.CheckBox();
             this.FIXesCheckBox = new System.Windows.Forms.CheckBox();
-            this.AWYsCheckBox = new System.Windows.Forms.CheckBox();
             this.SIDsCheckBox = new System.Windows.Forms.CheckBox();
             this.ARTCCCheckBox = new System.Windows.Forms.CheckBox();
             this.ARTCClowCheckBox = new System.Windows.Forms.CheckBox();
@@ -130,6 +130,7 @@
             this.preferencesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ConfirmOverwriteOfFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.savePreferencesToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.useFixesForCoordinatesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openDataFolderToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.savePreferencesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.selectOutputFolderToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
@@ -166,7 +167,6 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.UpdateAIRACbutton = new System.Windows.Forms.Button();
             this.UpdatingLabel = new System.Windows.Forms.Label();
-            this.useFixesForCoordinatesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panelSUAs.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.AllMarginsNumericUpDown)).BeginInit();
             this.FilterGroupBox.SuspendLayout();
@@ -580,6 +580,7 @@
             // STARNameCheckBox
             // 
             this.STARNameCheckBox.AutoSize = true;
+            this.STARNameCheckBox.Enabled = false;
             this.STARNameCheckBox.Location = new System.Drawing.Point(122, 192);
             this.STARNameCheckBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.STARNameCheckBox.Name = "STARNameCheckBox";
@@ -653,6 +654,32 @@
             this.AllMarginsNumericUpDown.Size = new System.Drawing.Size(66, 26);
             this.AllMarginsNumericUpDown.TabIndex = 46;
             this.toolTip1.SetToolTip(this.AllMarginsNumericUpDown, "Set all margins to this value");
+            // 
+            // RWYsCheckBox
+            // 
+            this.RWYsCheckBox.AutoSize = true;
+            this.RWYsCheckBox.Location = new System.Drawing.Point(143, 32);
+            this.RWYsCheckBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.RWYsCheckBox.Name = "RWYsCheckBox";
+            this.RWYsCheckBox.Size = new System.Drawing.Size(100, 24);
+            this.RWYsCheckBox.TabIndex = 37;
+            this.RWYsCheckBox.Text = "Runways";
+            this.toolTip1.SetToolTip(this.RWYsCheckBox, "Airport selection must be enable to select Runways");
+            this.RWYsCheckBox.UseVisualStyleBackColor = true;
+            this.RWYsCheckBox.CheckedChanged += new System.EventHandler(this.RWYsCheckBox_CheckedChanged);
+            // 
+            // AWYsCheckBox
+            // 
+            this.AWYsCheckBox.AutoSize = true;
+            this.AWYsCheckBox.Location = new System.Drawing.Point(143, 90);
+            this.AWYsCheckBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.AWYsCheckBox.Name = "AWYsCheckBox";
+            this.AWYsCheckBox.Size = new System.Drawing.Size(89, 24);
+            this.AWYsCheckBox.TabIndex = 39;
+            this.AWYsCheckBox.Text = "Airways";
+            this.toolTip1.SetToolTip(this.AWYsCheckBox, "VORs, NDB, and FIXes must be enabled to select airways");
+            this.AWYsCheckBox.UseVisualStyleBackColor = true;
+            this.AWYsCheckBox.CheckedChanged += new System.EventHandler(this.AWYsCheckBox_CheckedChanged);
             // 
             // ARTCCLabel
             // 
@@ -1001,6 +1028,7 @@
             // 
             this.dgvRWY.AllowUserToAddRows = false;
             this.dgvRWY.AllowUserToDeleteRows = false;
+            this.dgvRWY.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.DisplayedCells;
             this.dgvRWY.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvRWY.Location = new System.Drawing.Point(3, 9);
             this.dgvRWY.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
@@ -1027,6 +1055,7 @@
             // 
             this.dgvVOR.AllowUserToAddRows = false;
             this.dgvVOR.AllowUserToDeleteRows = false;
+            this.dgvVOR.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.DisplayedCells;
             this.dgvVOR.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvVOR.Location = new System.Drawing.Point(3, 9);
             this.dgvVOR.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
@@ -1053,6 +1082,7 @@
             // 
             this.dgvNDB.AllowUserToAddRows = false;
             this.dgvNDB.AllowUserToDeleteRows = false;
+            this.dgvNDB.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.DisplayedCells;
             this.dgvNDB.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvNDB.Location = new System.Drawing.Point(3, 9);
             this.dgvNDB.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
@@ -1079,6 +1109,7 @@
             // 
             this.dgvFIX.AllowUserToAddRows = false;
             this.dgvFIX.AllowUserToDeleteRows = false;
+            this.dgvFIX.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.DisplayedCells;
             this.dgvFIX.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvFIX.Location = new System.Drawing.Point(3, 9);
             this.dgvFIX.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
@@ -1105,6 +1136,7 @@
             // 
             this.dgvAWY.AllowUserToAddRows = false;
             this.dgvAWY.AllowUserToDeleteRows = false;
+            this.dgvAWY.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.DisplayedCells;
             this.dgvAWY.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvAWY.Location = new System.Drawing.Point(3, 9);
             this.dgvAWY.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
@@ -1132,6 +1164,7 @@
             // 
             this.dgvSID.AllowUserToAddRows = false;
             this.dgvSID.AllowUserToDeleteRows = false;
+            this.dgvSID.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.DisplayedCells;
             this.dgvSID.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvSID.Location = new System.Drawing.Point(3, 9);
             this.dgvSID.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
@@ -1158,6 +1191,7 @@
             // 
             this.dgvSTAR.AllowUserToAddRows = false;
             this.dgvSTAR.AllowUserToDeleteRows = false;
+            this.dgvSTAR.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.DisplayedCells;
             this.dgvSTAR.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvSTAR.Location = new System.Drawing.Point(3, 9);
             this.dgvSTAR.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
@@ -1215,20 +1249,6 @@
             this.NDBsCheckBox.UseVisualStyleBackColor = true;
             this.NDBsCheckBox.CheckedChanged += new System.EventHandler(this.NDBsCheckBox_CheckedChanged);
             // 
-            // RWYsCheckBox
-            // 
-            this.RWYsCheckBox.AutoSize = true;
-            this.RWYsCheckBox.Enabled = false;
-            this.RWYsCheckBox.Location = new System.Drawing.Point(143, 32);
-            this.RWYsCheckBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.RWYsCheckBox.Name = "RWYsCheckBox";
-            this.RWYsCheckBox.Size = new System.Drawing.Size(100, 24);
-            this.RWYsCheckBox.TabIndex = 37;
-            this.RWYsCheckBox.Text = "Runways";
-            this.toolTip1.SetToolTip(this.RWYsCheckBox, "Airport selection must be enable to select Runways");
-            this.RWYsCheckBox.UseVisualStyleBackColor = true;
-            this.RWYsCheckBox.CheckedChanged += new System.EventHandler(this.RWYsCheckBox_CheckedChanged);
-            // 
             // FIXesCheckBox
             // 
             this.FIXesCheckBox.AutoSize = true;
@@ -1240,20 +1260,6 @@
             this.FIXesCheckBox.Text = "Fixes";
             this.FIXesCheckBox.UseVisualStyleBackColor = true;
             this.FIXesCheckBox.CheckedChanged += new System.EventHandler(this.FIXesCheckBox_CheckedChanged);
-            // 
-            // AWYsCheckBox
-            // 
-            this.AWYsCheckBox.AutoSize = true;
-            this.AWYsCheckBox.Enabled = false;
-            this.AWYsCheckBox.Location = new System.Drawing.Point(143, 90);
-            this.AWYsCheckBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.AWYsCheckBox.Name = "AWYsCheckBox";
-            this.AWYsCheckBox.Size = new System.Drawing.Size(89, 24);
-            this.AWYsCheckBox.TabIndex = 39;
-            this.AWYsCheckBox.Text = "Airways";
-            this.toolTip1.SetToolTip(this.AWYsCheckBox, "VORs, NDB, and FIXes must be enabled to select airways");
-            this.AWYsCheckBox.UseVisualStyleBackColor = true;
-            this.AWYsCheckBox.CheckedChanged += new System.EventHandler(this.AWYsCheckBox_CheckedChanged);
             // 
             // SIDsCheckBox
             // 
@@ -1329,8 +1335,7 @@
             this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Padding = new System.Windows.Forms.Padding(6, 2, 0, 2);
-            this.menuStrip1.Size = new System.Drawing.Size(1700, 33);
+            this.menuStrip1.Size = new System.Drawing.Size(1700, 36);
             this.menuStrip1.TabIndex = 50;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -1391,6 +1396,14 @@
             this.savePreferencesToolStripMenuItem1.Name = "savePreferencesToolStripMenuItem1";
             this.savePreferencesToolStripMenuItem1.Size = new System.Drawing.Size(314, 34);
             this.savePreferencesToolStripMenuItem1.Text = "Save preferences";
+            // 
+            // useFixesForCoordinatesToolStripMenuItem
+            // 
+            this.useFixesForCoordinatesToolStripMenuItem.CheckOnClick = true;
+            this.useFixesForCoordinatesToolStripMenuItem.Name = "useFixesForCoordinatesToolStripMenuItem";
+            this.useFixesForCoordinatesToolStripMenuItem.Size = new System.Drawing.Size(314, 34);
+            this.useFixesForCoordinatesToolStripMenuItem.Text = "Use Fixes for coordinates";
+            this.useFixesForCoordinatesToolStripMenuItem.ToolTipText = "If checked, fixes will be used for coordinates where possible";
             // 
             // openDataFolderToolStripMenuItem1
             // 
@@ -1479,6 +1492,7 @@
             this.labelGeneratorforDiagramsToolStripMenuItem.Name = "labelGeneratorforDiagramsToolStripMenuItem";
             this.labelGeneratorforDiagramsToolStripMenuItem.Size = new System.Drawing.Size(309, 34);
             this.labelGeneratorforDiagramsToolStripMenuItem.Text = "Label generator";
+            this.labelGeneratorforDiagramsToolStripMenuItem.Click += new System.EventHandler(this.LabelGeneratorforDiagramsToolStripMenuItem_Click);
             // 
             // iLSGeneratorToolStripMenuItem
             // 
@@ -1559,9 +1573,9 @@
             this.gridViewToolStripButton,
             this.toolStripButton1,
             this.toolStripButton2});
-            this.toolStrip1.Location = new System.Drawing.Point(0, 33);
+            this.toolStrip1.Location = new System.Drawing.Point(0, 36);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(1700, 34);
+            this.toolStrip1.Size = new System.Drawing.Size(1700, 38);
             this.toolStrip1.TabIndex = 51;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -1741,14 +1755,7 @@
             this.UpdatingLabel.Size = new System.Drawing.Size(264, 25);
             this.UpdatingLabel.TabIndex = 59;
             this.UpdatingLabel.Text = "Updating Data Grid View(s)...";
-            // 
-            // useFixesForCoordinatesToolStripMenuItem
-            // 
-            this.useFixesForCoordinatesToolStripMenuItem.CheckOnClick = true;
-            this.useFixesForCoordinatesToolStripMenuItem.Name = "useFixesForCoordinatesToolStripMenuItem";
-            this.useFixesForCoordinatesToolStripMenuItem.Size = new System.Drawing.Size(314, 34);
-            this.useFixesForCoordinatesToolStripMenuItem.Text = "Use Fixes for coordinates";
-            this.useFixesForCoordinatesToolStripMenuItem.ToolTipText = "If checked, fixes will be used for coordinates where possible";
+            this.UpdatingLabel.Visible = false;
             // 
             // Form1
             // 

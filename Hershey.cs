@@ -12,6 +12,7 @@ namespace SCTBuilder
             double curLat = Lat;
             double curLong = Long;
             string space = new string(' ', 27);
+            string cr = Environment.NewLine;
             int AsciiC; int[] SmplxC; string Result = string.Empty;
             foreach (char c in Message)
             {
@@ -20,12 +21,12 @@ namespace SCTBuilder
                     AsciiC -= 32;
                 else AsciiC = 10;     // 10 is '*' for 'error'
                 SmplxC = RomanSimplex.Simplex[AsciiC];
-                Result += WriteChar(SmplxC, curLat, curLong, Angle, Scale);
+                Result += "; " + c.ToString() + cr + WriteChar(SmplxC, curLat, curLong, Angle, Scale);
                 curLong += ScaleX(PivotX(SmplxC[1], 0f, Angle), Scale);
                 curLat += ScaleY(PivotY(SmplxC[1], 0f, Angle), Scale);
             }
             //Console.WriteLine(space + "; " + Message + Environment.NewLine + Result);
-            return space + "; " + Message + Environment.NewLine + Result;
+            return space + "; " + Message + cr + Result;
         }
 
         private static string WriteChar(int[] hFont, double Lat, double Long, double Angle, double Scale)
@@ -76,7 +77,7 @@ namespace SCTBuilder
         private static double PivotX(double X, double Y, double Angle)
         {
             double RadAngle = LatLongCalc.Deg2Rad(Angle);
-            return (X * Convert.ToSingle(Math.Cos(RadAngle))) - (Y * Convert.ToSingle(Math.Sin(RadAngle)));
+            return (X * Convert.ToDouble(Math.Cos(RadAngle))) - (Y * Convert.ToDouble(Math.Sin(RadAngle)));
         }
 
         private static double PivotY(double X, double Y, double Angle)

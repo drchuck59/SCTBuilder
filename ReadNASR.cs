@@ -491,28 +491,36 @@ namespace SCTBuilder
         {
             DataTable SSD = Form1.SSD;
             string FullFilename = SCTcommon.GetFullPathname(FolderMgt.DataFolder, "STARDP.txt");
-            bool isSid; string Line; int Seqno = 0;
+            bool isSid; string Line; int Seqno = 0; string SSID = string.Empty;
+            string TransistionCode = string.Empty; string Transition = string.Empty;
             using (StreamReader reader = new StreamReader(FullFilename))
             {
                 while ((Line = reader.ReadLine()) != null)
                 {
                     if (Line.Substring(0, 1) == "D") isSid = true; else isSid = false;
                     Seqno += 10;
-                    var FixItems = new List<object>
+                    string ID = Line.Substring(0, 5).Trim();                // Internal ID
+                    if (ID != SSID)
                     {
-                        Line.Substring(0,5).Trim(),                         // Internal ID
-                        Line.Substring(30,6).Trim(),                        // NavAid or Airport
-                        Line.Substring(10,2).Trim(),                        // FixType incl 'AA'
+                        TransistionCode = Line.Substring(38, 13).Trim();        // First entry is actual code and name
+                        Transition = Line.Substring(51, 110).Trim();
+                        SSID = ID;
+                    }
+                        var FixItems = new List<object>
+                    {
+                        ID,                                                         // Internal ID
+                        Line.Substring(30,6).Trim(),                                // NavAid or Airport
+                        Line.Substring(10,2).Trim(),                                // FixType incl 'AA'
                         Conversions.String2DecDeg(Line.Substring(13, 8).Trim()),    // Latitude
                         Conversions.String2DecDeg(Line.Substring(21, 9).Trim()),    // Longitude
-                        Line.Substring(38, 13).Trim(),                      // SSDCode
-                        Line.Substring(51, 110).Trim(),                     // SSDName
-                        Seqno,                                              // Sequence Number (mine)
-                        isSid                                               // Is a SID
+                        TransistionCode,
+                        Transition,
+                        Line.Substring(38, 13).Trim(),                              // SSDCode
+                        Line.Substring(51, 110).Trim(),                             // SSDName
+                        Seqno,                                                      // Sequence Number (mine)
+                        isSid                                                       // Is a SID
                     };
-                    AddFixes(SSD, FixItems);
-                    // Console.WriteLine(FixItems[0] + " " + FixItems[8]);
-                    // MessageBox.Show("checklist");
+                        AddFixes(SSD, FixItems);
                 }
             }
             // Console.WriteLine("SSD rows read: " + SSD.Rows.Count);

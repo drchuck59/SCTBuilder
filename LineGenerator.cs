@@ -19,6 +19,7 @@ namespace SCTBuilder
         char CalcType;
         double CalcBrg;
         double CalcMag;
+
         public LineGenerator()
         {
             InitializeComponent();
