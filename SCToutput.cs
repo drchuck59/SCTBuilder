@@ -11,6 +11,8 @@ namespace SCTBuilder
 {
     class SCToutput
     {
+        public static string CycleHeader;
+        public static readonly string cr = Environment.NewLine;
         public static void WriteSCT()
         {
             // DataTable LS = Form1.LocalSector;
@@ -189,7 +191,6 @@ namespace SCTBuilder
         {
             using (StreamWriter sw = File.CreateText(path))
             {
-                string cr = Environment.NewLine;
                 string Message =
                 ";              ** Not for real world navigation **" + cr +
                 "; File may be distributed only as freeware." + cr +
@@ -204,12 +205,16 @@ namespace SCTBuilder
                 "; <Add last modified and contributers from prior file>" + cr + cr;
                 sw.WriteLine(Message);
             }
+            CycleHeader = cr +
+                "; ================================================================" + cr +
+                "; AIRAC CYCLE: " + CycleInfo.AIRAC + cr +
+                "; Cycle: " + CycleInfo.CycleStart + " to " + CycleInfo.CycleEnd + cr +
+                "; ================================================================" + cr;
         }
         private static void WriteColors(string path)
         {
             DataTable dtColors = Form1.Colors;
             string Output = Environment.NewLine; 
-            string cr = Environment.NewLine;
             Output += "; Color definition table" + cr;
             Console.WriteLine("Colors in color table: " + dtColors.Rows.Count);
             foreach (DataRow row in dtColors.Rows)
@@ -272,7 +277,7 @@ namespace SCTBuilder
             };
             using (StreamWriter sw = new StreamWriter(path))
             {
-                sw.WriteLine();
+                sw.WriteLine(CycleHeader);
                 sw.WriteLine("[NDB]");
                 foreach (DataRowView row in dataView)
                 {
@@ -305,7 +310,7 @@ namespace SCTBuilder
             DataRow foundRow; string LCL; string ATIS;
             using (StreamWriter sw = new StreamWriter(path))
             {
-                sw.WriteLine();
+                sw.WriteLine(CycleHeader);
                 sw.WriteLine("[AIRPORT]");
                 foreach (DataRow row in dataTable.AsEnumerable())
                 {
@@ -354,7 +359,7 @@ namespace SCTBuilder
             };
             using (StreamWriter sw = new StreamWriter(path))
             {
-                sw.WriteLine();
+                sw.WriteLine(CycleHeader);
                 sw.WriteLine("[FIXES]");
                 foreach (DataRowView row in dataView)
                 {
@@ -372,7 +377,7 @@ namespace SCTBuilder
         {
             string[] strOut = new string[8]; string FacID = string.Empty;
             string RWYtextColor = TextColors.RWYTextColor;
-            string cr = Environment.NewLine; bool FirstLine = true;
+            bool FirstLine = true;
             DataTable DRAW = new SCTdata.DrawLabelDataTable();
             DataTable RWY = Form1.RWY;
             DataView dvRWY = new DataView(RWY)
@@ -388,10 +393,10 @@ namespace SCTBuilder
                     {
                         if (FirstLine)
                         {
-                            sw.WriteLine(cr + "[RUNWAY]");
+                            sw.WriteLine(CycleHeader);
+                            sw.WriteLine("[RUNWAY]");
                             FirstLine = false;
                         }
-                        sw.WriteLine("; " + row["FacilityID"].ToString());
                         FacID = row["FacilityID"].ToString();
                     }
                     strOut[0] = row["BaseIdentifier"].ToString().Trim().PadRight(3);
@@ -402,7 +407,8 @@ namespace SCTBuilder
                     strOut[5] = Conversions.DecDeg2SCT(Convert.ToSingle(row["Longitude"]), false);
                     strOut[6] = Conversions.DecDeg2SCT(Convert.ToSingle(row["EndLatitude"]), true);
                     strOut[7] = Conversions.DecDeg2SCT(Convert.ToSingle(row["EndLongitude"]), false);
-                    sw.WriteLine(SCTstrings.RWYout(strOut));
+                    sw.Write(SCTstrings.RWYout(strOut));
+                    sw.WriteLine("; " + row["FacilityID"].ToString());
                     DRAW.Rows.Add(new object[] { strOut[0].ToString(), strOut[4].ToString(), strOut[5].ToString(), RWYtextColor });
                     DRAW.Rows.Add(new object[] { strOut[1].ToString(), strOut[6].ToString(), strOut[7].ToString(), RWYtextColor });
                 }
@@ -433,7 +439,7 @@ namespace SCTBuilder
             };
             using (StreamWriter sw = new StreamWriter(path))
             {
-                sw.WriteLine();
+                sw.WriteLine(CycleHeader);
                 if (LOWawy) sw.WriteLine("[LOW AIRWAY]");
                 else sw.WriteLine("[HIGH AIRWAY]");
                 foreach (DataRowView row in AWYView)
@@ -627,7 +633,7 @@ namespace SCTBuilder
             DataTable SSD = Form1.SSD;
             char Prefix; string SSDName;
             string Lat0 = string.Empty; string Long0 = string.Empty;
-            string Lat1; string Long1; string cr = Environment.NewLine;
+            string Lat1; string Long1;
             string Fix0 = string.Empty; string Fix1; string FixType0 = string.Empty;
             string strLL = new string(' ', 27); string FixType1; 
             string SSDfilter = "[ID] = '" + SSDID + "'"; 
@@ -755,7 +761,7 @@ namespace SCTBuilder
             string Lat1; string Long1; string Descr1; string Descr0 = string.Empty;
             string Lat0 = string.Empty; string Long0 = string.Empty;
             string LatFirst; string LongFirst;
-            string Output = Environment.NewLine; string cr = Environment.NewLine;
+            string Output = Environment.NewLine;
             if (High)
             {
                 filter = "[Selected] AND (" +
@@ -862,7 +868,7 @@ namespace SCTBuilder
             ///FE may build local sector files and have them written to the ARTCC, LOW ARTCC, or HIGH ARTCC
             ///The text file must be configured as shown in the "LocalSectors.txt" file in the package.
             ///</summary>
-            string Lat0 = string.Empty; string Long0 = string.Empty; string cr = Environment.NewLine;
+            string Lat0 = string.Empty; string Long0 = string.Empty; 
             string Lat1; string Long1; string blank = new string(' ', 27); string Line1; string Line2;
             string LineLL;
             string dummycoords = "N000.00.00.000 E000.00.00.000 N000.00.00.000 E000.00.00.000";

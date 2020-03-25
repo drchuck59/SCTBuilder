@@ -503,7 +503,7 @@ namespace SCTBuilder
         public static string RWYout(string[] strOut)
         {
             string result = strOut[0] + " " + strOut[1] + " " + strOut[2] + " " + strOut[3] + " "
-                        + strOut[4] + " " + strOut[5] + " " + strOut[6] + " " + strOut[7] + Environment.NewLine;
+                        + strOut[4] + " " + strOut[5] + " " + strOut[6] + " " + strOut[7];
             return result;
         }
         public static string AWYout(string Awy, string StartLat, 
