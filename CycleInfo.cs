@@ -28,6 +28,7 @@ namespace SCTBuilder
             WriteXmlElement(xml, "AsstFacilityEngineer", InfoSection.AsstFacilityEngineer.ToString());
             WriteXmlElement(xml, "ChkAll", SCTchecked.ChkALL.ToString());
             WriteXmlElement(xml, "ChkAPT", SCTchecked.ChkAPT.ToString());
+            WriteXmlElement(xml, "ChkLimitAPT2ARTCC", SCTchecked.LimitAPT2ARTC.ToString());
             WriteXmlElement(xml, "ChkARB", SCTchecked.ChkARB.ToString());
             WriteXmlElement(xml, "ChkAWY", SCTchecked.ChkAWY.ToString());
             WriteXmlElement(xml, "ChkFIX", SCTchecked.ChkFIX.ToString());
@@ -44,6 +45,12 @@ namespace SCTBuilder
             WriteXmlElement(xml, "ChkSUA_Prohibited", SCTchecked.ChkSUA_Prohibited.ToString());
             WriteXmlElement(xml, "ChkSUA_Restricted", SCTchecked.ChkSUA_Restricted.ToString());
             WriteXmlElement(xml, "ChkVOR", SCTchecked.ChkVOR.ToString());
+            WriteXmlElement(xml, "UseFixNames", InfoSection.UseFixes.ToString());
+            WriteXmlElement(xml, "UseNaviGraphData", InfoSection.UseNaviGraph.ToString());
+            WriteXmlElement(xml, "NorthLimit", FilterBy.NorthLimit.ToString());
+            WriteXmlElement(xml, "SouthLimit", FilterBy.SouthLimit.ToString());
+            WriteXmlElement(xml, "WestLimit", FilterBy.WestLimit.ToString());
+            WriteXmlElement(xml, "EastLimit", FilterBy.EastLimit.ToString());
             xml.WriteEndDocument();
             xml.Close();
         }
@@ -105,6 +112,9 @@ namespace SCTBuilder
                             case "ChkAPT":
                                 SCTchecked.ChkAPT = Convert.ToBoolean(value);
                                 break;
+                            case "LimitAPT2ARTCC":
+                                SCTchecked.LimitAPT2ARTC = Convert.ToBoolean(value);
+                                break;
                             case "ChkARB":
                                 SCTchecked.ChkARB = Convert.ToBoolean(value);
                                 break;
@@ -152,6 +162,24 @@ namespace SCTBuilder
                                 break;
                             case "ChkVOR":
                                 SCTchecked.ChkVOR = Convert.ToBoolean(value);
+                                break;
+                            case "UseFixNames":
+                                InfoSection.UseFixes = Convert.ToBoolean(value);
+                                break;
+                            case "UseNaviGraphData":
+                                InfoSection.UseNaviGraph = Convert.ToBoolean(value);
+                                break;
+                            case "NorthLimit":
+                                FilterBy.NorthLimit = Convert.ToDouble(value);
+                                break;
+                            case "SouthLimit":
+                                FilterBy.SouthLimit = Convert.ToDouble(value);
+                                break;
+                            case "WestLimit":
+                                FilterBy.WestLimit = Convert.ToDouble(value);
+                                break;
+                            case "EastLimit":
+                                FilterBy.EastLimit = Convert.ToDouble(value);
                                 break;
                             default:
                                 break;

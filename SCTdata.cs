@@ -4,5 +4,8 @@
 
     partial class SCTdata
     {
+        partial class NGSIDDataTable
+        {
+        }
     }
 }

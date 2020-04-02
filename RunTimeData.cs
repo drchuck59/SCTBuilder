@@ -351,6 +351,7 @@ namespace SCTBuilder
     {
         private static string outputFolder = string.Empty;
         private static string dataFolder = string.Empty;
+        private static string ngFolder = string.Empty;
         public static readonly string INIfile = ".\\SCTbuilder.ini";
         public static string DataFolder
         {
@@ -363,22 +364,46 @@ namespace SCTBuilder
             get { return outputFolder; }
             set { outputFolder = value; }
         }
-            
+        public static string NGFolder
+        {
+            get { return ngFolder; }
+            set { ngFolder = value; }
+        }
         public static readonly string INIxml = ".\\SCTbuilder.xml";
 
     }
 
     public class VersionInfo                            // Internal information
     {
-        public readonly static string Title = "SCT Builder 0.1";
+        public readonly static string Title = "SCT Builder 0.8 beta";
     }
     public class FilterBy                               // Filter source for SCT2 output
     {
+        private static double northlimit = 0;
+        private static double southlimit = 0;
+        private static double westlimit = 0;
+        private static double eastlimit = 0;
         public static string Method { get; set; }
-        public static double NorthLimit { get; set; }
-        public static double SouthLimit { get; set; }
-        public static double EastLimit { get; set; }
-        public static double WestLimit { get; set; }
+        public static double NorthLimit
+        {
+            get { return northlimit; }
+            set { northlimit = value; }
+        }
+        public static double SouthLimit
+        {
+            get { return southlimit; }
+            set { southlimit = value; }
+        }
+        public static double EastLimit
+        {
+            get { return eastlimit; }
+            set { eastlimit = value; }
+        }
+        public static double WestLimit
+        {
+            get { return westlimit; }
+            set { westlimit = value; }
+        }
         public static double NorthOffset { get; set; }
         public static double SouthOffset { get; set; }
         public static double EastOffset { get; set; }
@@ -392,6 +417,8 @@ namespace SCTBuilder
         private static string apt = string.Empty;
         private static double centerLat = 0;
         private static double centerLon = 0;
+        private static bool useFixes;
+        private static bool useNaviGraph;
 
         public static string SectorName
         {
@@ -404,7 +431,7 @@ namespace SCTBuilder
                 return SponsorARTCC + "_xx_OBS";
             }
         }
-        public static string FacilityEngineer 
+        public static string FacilityEngineer
         {
             get { return fe; }
             set { fe = value; }
@@ -459,17 +486,29 @@ namespace SCTBuilder
             { centerLon = value; }
         }
         public static double NMperDegreeLatitude { get { return 60f; } } // Always 60 NM
-        
+
         public static double NMperDegreeLongitude { get { return LatLongCalc.NMperLongDegree(); } }
 
         public static double MagneticVariation       // Varies by location
         {
             get
-            { 
+            {
                 if (DefaultAirport.Length != 0)
                     return SCTcommon.GetMagVar(DefaultAirport);
                 else return 0;
             }
+        }
+
+        public static bool UseFixes
+        {
+            get { return useFixes; }
+            set { useFixes = value; } 
+        }
+
+        public static bool UseNaviGraph
+        {
+            get { return useNaviGraph; } 
+            set { useNaviGraph = value; }
         }
 
         public static double SectorScale { get { return 1f; } }      // Always 1, ignored in VRC
@@ -478,6 +517,7 @@ namespace SCTBuilder
     {
         public static bool ChkARB { get; set; }
         public static bool ChkAPT { get; set; }
+        public static bool LimitAPT2ARTC { get; set; }
         public static bool ChkVOR { get; set; }
         public static bool ChkNDB { get; set; }
         public static bool ChkFIX { get; set; }

@@ -28,7 +28,12 @@ namespace SCTBuilder
         static public DataTable Polygon = new SCTdata.SUA_PolygonDataTable();
         static public DataTable Colors = new SCTdata.ColorDefsDataTable();
         static public DataTable LocalSector = new SCTdata.LocalSectorsDataTable();
+        static public DataTable NGSID = new SCTdata.NGSIDDataTable();
+        static public DataTable NGSIDTransition = new SCTdata.NGSIDTransitionDataTable();
+        static public DataTable NGSTAR = new SCTdata.NGSTARDataTable();
+        static public DataTable GNSTARTransition = new SCTdata.NGSTARTransitionDataTable();
         static public DataSet SCT = new SCTdata();
+        static public bool ExitClicked = false;
         string cr = Environment.NewLine; string Msg;
 
         public Form1()
@@ -56,7 +61,7 @@ namespace SCTBuilder
         {
             Debug.WriteLine("Load Form subroutine...");
             // Returns -1 if no init file, else returns last AIRAC used (redundant, but I'm lazy)
-            int iniAIRAC = CycleInfo.ReadINIxml();      
+            int iniAIRAC = CycleInfo.ReadINIxml();
             // If there is no INI file, then there is no datafolder, so clean install (else)
             if (iniAIRAC != -1)                          
             {
@@ -152,7 +157,10 @@ namespace SCTBuilder
             if (LoadARTCCComboBox() != 0)           // Populates the combobox
                 UpdateARTCCComboBox();              // Sets the combobox to the last Sponsor ARTCC
             else ClearARTCCComboBox();
-            UpdateSquarebyARTCC();                  // Set the parameters of the square to the ARTCC limits
+            if (FilterBy.NorthLimit == 0)
+                UpdateSquarebyARTCC();              // Set the parameters of the square to the ARTCC limits
+            else
+                GetLimits();                        // ... or use previously set limits
             if (LoadAirportComboBox() != 0)         // Using the desired filter format
                 UpdateAirportComboBox();            // Set the combobox to the last Default Airport or top of list
             else ClearAirportComboBox();
@@ -345,6 +353,29 @@ namespace SCTBuilder
         {
             Console.WriteLine("Selecting " + dt.TableName);
             DataView dataView = new DataView(dt); int result;
+            ClearSelected(dataView);
+            dataView.RowFilter = filter;
+            SetSelected(dataView);
+            result = dataView.Count;
+            dataView.Dispose();
+            return result;
+        }
+
+        private int SelectAPTs()
+        {
+            string filter;
+            if (SCTchecked.LimitAPT2ARTC)
+            {
+                FilterBy.Method = "ARTCC";
+                filter = SetFilter();
+            }
+            else
+            {
+                FilterBy.Method = "Square";
+                filter = SetFilter();
+            }
+            Console.WriteLine("Selecting airports using ");
+            DataView dataView = new DataView(APT); int result;
             ClearSelected(dataView);
             dataView.RowFilter = filter;
             SetSelected(dataView);
@@ -821,8 +852,8 @@ namespace SCTBuilder
 
         private void CmdOutputFolder_Click(object sender, EventArgs e)
         {
-            txtOutputFolder.Text = UpdateFolder(txtOutputFolder, "Select folder to save SCT files");
-            if (txtOutputFolder.TextLength != 0)
+            OutputFolderTextBox.Text = UpdateFolder(OutputFolderTextBox, "Select folder to save SCT files");
+            if (OutputFolderTextBox.TextLength != 0)
             {
                 UpdateFolderMgt(toFolderMgt: true);
             }
@@ -831,15 +862,24 @@ namespace SCTBuilder
 
         private void CmdDataFolder_Click(object sender, EventArgs e)
         {
-            string newDataFolder = UpdateFolder(DataFolderTextBox, "Select FAA AIRAC data folder");
-            if ((newDataFolder != DataFolderTextBox.Text) && (newDataFolder.Length != 0))
+            string newDataFolder = UpdateFolder(FAADataFolderTextBox, "Select FAA AIRAC data folder");
+            if ((newDataFolder != FAADataFolderTextBox.Text) && (newDataFolder.Length != 0))
             {
-                DataFolderTextBox.Text = newDataFolder;
+                FAADataFolderTextBox.Text = newDataFolder;
                 UpdateFolderMgt(toFolderMgt: true);
                 if (LoadFAATextData() != -1) PostLoadTasks();
                 ClearAllDataGridViews();
             }
             TestWriteSCT();
+        }
+
+        private void NGDataFolderButton_Click(object sender, EventArgs e)
+        {
+            NGDataFolderTextBox.Text = UpdateFolder(NGDataFolderTextBox, "Select NaviGraph data folder");
+            if (NGDataFolderTextBox.TextLength != 0)
+            {
+                UpdateFolderMgt(toFolderMgt: true);
+            }
         }
 
         private void ClearAllDataGridViews()
@@ -862,17 +902,21 @@ namespace SCTBuilder
         {
             if (toFolderMgt)
             {
-                if (FolderMgt.DataFolder != DataFolderTextBox.Text)
-                    FolderMgt.DataFolder = DataFolderTextBox.Text;
-                if (FolderMgt.OutputFolder != txtOutputFolder.Text)
-                    FolderMgt.OutputFolder = txtOutputFolder.Text;
+                if (FolderMgt.DataFolder != FAADataFolderTextBox.Text)
+                    FolderMgt.DataFolder = FAADataFolderTextBox.Text;
+                if (FolderMgt.OutputFolder != OutputFolderTextBox.Text)
+                    FolderMgt.OutputFolder = OutputFolderTextBox.Text;
+                if (FolderMgt.NGFolder != NGDataFolderTextBox.Text)
+                    FolderMgt.NGFolder = NGDataFolderTextBox.Text;
             }
             else
             {
-                if (FolderMgt.DataFolder != DataFolderTextBox.Text)
-                    DataFolderTextBox.Text = FolderMgt.DataFolder;
-                if (FolderMgt.OutputFolder != txtOutputFolder.Text)
-                    txtOutputFolder.Text = FolderMgt.OutputFolder;
+                if (FolderMgt.DataFolder != FAADataFolderTextBox.Text)
+                    FAADataFolderTextBox.Text = FolderMgt.DataFolder;
+                if (FolderMgt.OutputFolder != OutputFolderTextBox.Text)
+                    OutputFolderTextBox.Text = FolderMgt.OutputFolder;
+                if (FolderMgt.NGFolder != NGDataFolderTextBox.Text)
+                    NGDataFolderTextBox.Text = FolderMgt.NGFolder;
             }
         }
 
@@ -948,14 +992,14 @@ namespace SCTBuilder
 
         private void TxtDataFolder_Validated(object sender, EventArgs e)
         {
-            if (DataFolderTextBox.TextLength > 0)
+            if (FAADataFolderTextBox.TextLength > 0)
             {
                 LoadFAATextData();
                 SetForm1Defaults();
                 // LoadFixGrid();
-                FolderMgt.DataFolder = DataFolderTextBox.Text;
+                FolderMgt.DataFolder = FAADataFolderTextBox.Text;
             }
-            if (DataFolderTextBox.Text != FolderMgt.DataFolder)
+            if (FAADataFolderTextBox.Text != FolderMgt.DataFolder)
                 CmdDataFolder_Click(sender, e);
             gridViewToolStripButton.Enabled = true;
             TestWriteSCT();
@@ -964,11 +1008,11 @@ namespace SCTBuilder
         private void TxtDataFolder_Validating(object sender, CancelEventArgs e)
         {
             Console.WriteLine("TxtDataFolder_Validating...");
-            if (DataFolderTextBox.TextLength > 0)
+            if (FAADataFolderTextBox.TextLength > 0)
             {
-                if (Directory.Exists(DataFolderTextBox.Text))
+                if (Directory.Exists(FAADataFolderTextBox.Text))
                 {
-                    FolderMgt.DataFolder = DataFolderTextBox.Text;
+                    FolderMgt.DataFolder = FAADataFolderTextBox.Text;
                     e.Cancel = false;
                 }
                 else
@@ -988,6 +1032,7 @@ namespace SCTBuilder
         {
             SetChecked();
             CycleInfo.WriteINIxml();
+            ExitClicked = true;
             Application.Exit();
         }
 
@@ -1030,9 +1075,9 @@ namespace SCTBuilder
 
         private void TxtOutputFolder_Validated(object sender, EventArgs e)
         {
-            if (txtOutputFolder.TextLength > 0)
+            if (OutputFolderTextBox.TextLength > 0)
             {
-                FolderMgt.OutputFolder = txtOutputFolder.Text;
+                FolderMgt.OutputFolder = OutputFolderTextBox.Text;
             }
             TestWriteSCT();
         }
@@ -1040,6 +1085,7 @@ namespace SCTBuilder
         {
             Console.WriteLine("SetChecked...");
             SCTchecked.ChkAPT = APTsCheckBox.Checked;
+            SCTchecked.LimitAPT2ARTC = LimitAPT2ARTCCCheckBox.Checked;
             SCTchecked.ChkARB = ARTCCCheckBox.Checked;
             SCTchecked.ChkAWY = AWYsCheckBox.Checked;
             SCTchecked.ChkFIX = FIXesCheckBox.Checked;
@@ -1055,11 +1101,14 @@ namespace SCTBuilder
             SCTchecked.ChkSUA_Danger = SUA_DangerCheckBox.Checked;
             SCTchecked.ChkSUA_Prohibited = SUA_ProhibitedCheckBox.Checked;
             SCTchecked.ChkSUA_Restricted = SUA_RestrictedCheckBox.Checked;
+            InfoSection.UseFixes = useFixesForCoordinatesToolStripMenuItem.Checked;
+            InfoSection.UseNaviGraph = includeNaviGraphDataToolStripMenuItem.Checked;
         }
         private void GetChecked()
         {
             Console.WriteLine("GetChecked...");
             APTsCheckBox.Checked = SCTchecked.ChkAPT;
+            LimitAPT2ARTCCCheckBox.Checked = SCTchecked.LimitAPT2ARTC;
             ARTCCCheckBox.Checked = SCTchecked.ChkARB;
             AWYsCheckBox.Checked = SCTchecked.ChkAWY;
             FIXesCheckBox.Checked = SCTchecked.ChkFIX;
@@ -1075,6 +1124,24 @@ namespace SCTBuilder
             SUA_DangerCheckBox.Checked = SCTchecked.ChkSUA_Danger;
             SUA_ProhibitedCheckBox.Checked = SCTchecked.ChkSUA_Prohibited;
             SUA_RestrictedCheckBox.Checked = SCTchecked.ChkSUA_Restricted;
+            useFixesForCoordinatesToolStripMenuItem.Checked = InfoSection.UseFixes;
+            includeNaviGraphDataToolStripMenuItem.Checked = InfoSection.UseNaviGraph;
+        }
+
+        private void SetLimits()
+        {
+            FilterBy.NorthLimit = Convert.ToDouble(NorthLimitTextBox.Text);
+            FilterBy.SouthLimit = Convert.ToDouble(SouthLimitTextBox.Text);
+            FilterBy.WestLimit = Convert.ToDouble(WestLimitTextBox.Text);
+            FilterBy.EastLimit = Convert.ToDouble(EastLimitTextBox.Text);
+        }
+
+        private void GetLimits()
+        {
+            NorthLimitTextBox.Text = Conversions.DecDeg2SCT(FilterBy.NorthLimit, true);
+            SouthLimitTextBox.Text = Conversions.DecDeg2SCT(FilterBy.SouthLimit, true);
+            WestLimitTextBox.Text = Conversions.DecDeg2SCT(FilterBy.WestLimit, false);
+            EastLimitTextBox.Text = Conversions.DecDeg2SCT(FilterBy.EastLimit, false);
         }
 
         private void ChkSSDs_CheckedChanged(object sender, EventArgs e)
@@ -1220,6 +1287,11 @@ namespace SCTBuilder
                     SCTcommon.SendMessage(Msg);
                     SouthLimitTextBox.Text = string.Empty;
                 }
+                else
+                {
+                    FilterBy.SouthLimit =
+                        Conversions.AdjustedLatLong(SouthLimitTextBox.Text, SouthMarginNumericUpDown.Value.ToString(), "S");
+                }
             }
             CheckPreviewButton();
             CheckARTCC2SquareButton();
@@ -1245,6 +1317,11 @@ namespace SCTBuilder
                     Msg = "Cannot place NW position south of SE position!";
                     SCTcommon.SendMessage(Msg);
                     NorthLimitTextBox.Text = string.Empty;
+                }
+                else
+                {
+                    FilterBy.NorthLimit = 
+                        Conversions.AdjustedLatLong(NorthLimitTextBox.Text, NorthMarginNumericUpDown.Value.ToString(), "N");
                 }
             }
             CheckPreviewButton();
@@ -1274,7 +1351,7 @@ namespace SCTBuilder
                 }
                 else
                     FilterBy.WestLimit =
-                        Conversions.AdjustedLatLong(WestLimitTextBox.Text, WestMarginNumericUpDown.Value.ToString(), "N");
+                        Conversions.AdjustedLatLong(WestLimitTextBox.Text, WestMarginNumericUpDown.Value.ToString(), "W");
             }
             CheckPreviewButton();
             CheckARTCC2SquareButton();
@@ -1303,7 +1380,7 @@ namespace SCTBuilder
                 }
                 else
                     FilterBy.EastLimit =
-                        Conversions.AdjustedLatLong(EastLimitTextBox.Text, EastMarginNumericUpDown.Value.ToString(), "N");
+                        Conversions.AdjustedLatLong(EastLimitTextBox.Text, EastMarginNumericUpDown.Value.ToString(), "E");
             }
             CheckPreviewButton();
             CheckARTCC2SquareButton();
@@ -1379,7 +1456,7 @@ namespace SCTBuilder
             }
             else
             {
-                DataFolderTextBox.Text = extractPath;
+                FAADataFolderTextBox.Text = extractPath;
                 UpdateFolderMgt(toFolderMgt: true);
             }
             return extractPath;
@@ -1502,10 +1579,10 @@ namespace SCTBuilder
             NWByFIXButton.Enabled = SEByFIXButton.Enabled = FixListDataGridView.SelectedRows.Count != 0;
         }
 
-        private void APTsCheckBox_Click(object sender, EventArgs e)
+        private void APTsCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             CheckPreviewButton();
-            RWYsCheckBox.Enabled = APTsCheckBox.Checked;
+            RWYsCheckBox.Enabled = LimitAPT2ARTCCCheckBox.Enabled = APTsCheckBox.Checked;
         }
 
         private void RWYsCheckBox_CheckedChanged(object sender, EventArgs e)
@@ -1589,5 +1666,25 @@ namespace SCTBuilder
             MessageBox.Show(Msg, VersionInfo.Title, buttons, icon);
         }
 
+        private void useFixesForCoordinatesToolStripMenuItem_CheckedChanged(object sender, EventArgs e)
+        {
+            InfoSection.UseFixes = useFixesForCoordinatesToolStripMenuItem.Checked;
+        }
+
+        private void includeNaviGraphDataToolStripMenuItem_CheckedChanged(object sender, EventArgs e)
+        {
+            NGDataFolderLabel.Enabled = NGDataFolderTextBox.Enabled = NGDataFolderButton.Enabled = 
+                InfoSection.UseNaviGraph = includeNaviGraphDataToolStripMenuItem.Checked;
+        }
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (!ExitClicked)
+            {
+                SetChecked();
+                CycleInfo.WriteINIxml();
+            }
+            Application.Exit();
+        }
     }
 }

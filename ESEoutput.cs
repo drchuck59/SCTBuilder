@@ -5,15 +5,14 @@ using System.Data;
 using System.Linq;
 using System.Collections.Generic;
 using System.Media;
-using System.Globalization;
 
 namespace SCTBuilder
 {
-    class SCToutput
+    class ESEoutput
     {
         public static string CycleHeader;
         public static readonly string cr = Environment.NewLine;
-        public static void WriteSCT()
+        public static void WriteESE()
         {
             // DataTable LS = Form1.LocalSector;
             var TextFiles = new List<string>();
@@ -94,7 +93,7 @@ namespace SCTBuilder
             }
             path = CheckFile(PartialPath, "AirwayLow");
             if (SCTchecked.ChkAWY && path != string.Empty)
-                {
+            {
                 Console.WriteLine("Low AirWays...");
                 WriteAWY(path, LOWawy: true);
                 TextFiles.Add(path);
@@ -110,14 +109,14 @@ namespace SCTBuilder
             if (SCTchecked.ChkSID && path != string.Empty)
             {
                 Console.WriteLine("SIDS...");
-                WriteSIDSTAR(path, UseName:SCTchecked.ChkSSDname, IsSID: true);
+                WriteSIDSTAR(path, UseName: SCTchecked.ChkSSDname, IsSID: true);
                 TextFiles.Add(path);
             }
             path = CheckFile(PartialPath, "STAR");
             if (SCTchecked.ChkSTAR && path != string.Empty)
             {
                 Console.WriteLine("STARS...");
-                WriteSIDSTAR(path, UseName:SCTchecked.ChkSSDname, IsSID: false);
+                WriteSIDSTAR(path, UseName: SCTchecked.ChkSSDname, IsSID: false);
                 TextFiles.Add(path);
             }
             path = CheckFile(PartialPath, "SUA");
@@ -127,7 +126,7 @@ namespace SCTBuilder
                 WriteSUA();
                 // TextFiles.Add(path);
             }
-            path = CheckFile(PartialPath, CycleInfo.AIRAC.ToString(),".sct2");
+            path = CheckFile(PartialPath, CycleInfo.AIRAC.ToString(), ".sct2");
             if (SCTchecked.ChkALL && path != string.Empty)
             {
                 using (var SCTfile = File.Create(path))
@@ -151,7 +150,7 @@ namespace SCTBuilder
             Console.WriteLine("End writing output files");
         }
 
-        public static string CheckFile(string PartialPath, string file, string type = ".txt")
+        public static string CheckFile(string PartialPath, string file, string type = ".ese")
         {
             string caption = VersionInfo.Title;
             string Message; MessageBoxIcon icon; MessageBoxButtons buttons;
@@ -187,7 +186,7 @@ namespace SCTBuilder
             else return string.Empty;
         }
 
-    private static void WriteHeader(string path)
+        private static void WriteHeader(string path)
         {
             using (StreamWriter sw = File.CreateText(path))
             {
@@ -214,7 +213,7 @@ namespace SCTBuilder
         private static void WriteColors(string path)
         {
             DataTable dtColors = Form1.Colors;
-            string Output = Environment.NewLine; 
+            string Output = Environment.NewLine;
             Output += "; Color definition table" + cr;
             Console.WriteLine("Colors in color table: " + dtColors.Rows.Count);
             foreach (DataRow row in dtColors.Rows)
@@ -236,7 +235,7 @@ namespace SCTBuilder
                 sw.WriteLine(InfoSection.CenterLatitude_SCT);
                 sw.WriteLine(InfoSection.CenterLongitude_SCT);
                 sw.WriteLine(InfoSection.NMperDegreeLatitude);
-                sw.WriteLine(InfoSection.NMperDegreeLongitude.ToString("F1", CultureInfo.InvariantCulture));
+                sw.WriteLine(InfoSection.NMperDegreeLongitude);
                 sw.WriteLine(InfoSection.MagneticVariation);
                 sw.WriteLine(InfoSection.SectorScale);
             }
@@ -251,7 +250,7 @@ namespace SCTBuilder
             };
             using (StreamWriter sw = new StreamWriter(path))
             {
-                sw.WriteLine(CycleHeader);
+                sw.WriteLine();
                 sw.WriteLine("[VOR]");
                 foreach (DataRowView row in dataView)
                 {
@@ -339,9 +338,9 @@ namespace SCTBuilder
                         strOut[5] = " (Public) ";
                     else
                         strOut[5] = " {Private} ";
-                    strOut[6] = ATIS; 
-                    if (ATIS.Length != 0) strOut[6] = ATIStype + strOut[6];
-                        else strOut[6] = string.Empty;
+                    strOut[6] = ATIS;
+                    if (ATIS.Length != 0) strOut[6] += ATIStype + strOut[6];
+                    else strOut[6] = string.Empty;
                     if (!(strOut[2] + " " + strOut[3]).Contains("-1 "))      // Do NOT write VORs having no fix
                         sw.WriteLine(SCTstrings.APTout(strOut));
                 }
@@ -376,8 +375,7 @@ namespace SCTBuilder
         private static void WriteRWY(string path)
         {
             string[] strOut = new string[9]; string FacID = string.Empty;
-            string RWYtextColor = TextColors.RWYTextColor; double MagBHdg; double MagEHdg;
-            bool FirstLine = true; string FacFullName = string.Empty;
+            bool FirstLine = true; string FacName = string.Empty;
             DataTable DRAW = new SCTdata.DrawLabelDataTable();
             DataTable RWY = Form1.RWY;
             DataView dvRWY = new DataView(RWY)
@@ -398,29 +396,22 @@ namespace SCTBuilder
                             FirstLine = false;
                         }
                         FacID = row["FacilityID"].ToString();
-                        FacFullName = FacID + '-' + row["FacilityName"].ToString();
+                        FacName = row["FacilityName"].ToString();
                     }
-                    // FAA bearings are in "True" format and must be converted to "Magnetic"
                     strOut[0] = row["BaseIdentifier"].ToString().Trim().PadRight(3);
                     strOut[1] = row["EndIdentifier"].ToString().Trim().PadRight(3);
-                    MagBHdg = Convert.ToDouble(row["BaseHeading"]) + InfoSection.MagneticVariation;
-                    if (MagBHdg > 360) MagBHdg %= 360;
-                    else if (MagBHdg < 0) MagBHdg = MagBHdg + 360 % 360;
-                    strOut[2] = Convert.ToString(MagBHdg).PadRight(3);
-                    MagEHdg = Convert.ToDouble(row["EndHeading"]) + InfoSection.MagneticVariation;
-                    if (MagEHdg > 360) MagEHdg %= 360;
-                    else if (MagEHdg < 0) MagEHdg = MagEHdg + 360 % 360;
-                    strOut[3] = Convert.ToString(MagEHdg).PadRight(3);
+                    strOut[2] = row["BaseHeading"].ToString().PadRight(3);
+                    strOut[3] = row["EndHeading"].ToString().PadRight(3);
                     strOut[4] = Conversions.DecDeg2SCT(Convert.ToSingle(row["Latitude"]), true);
                     strOut[5] = Conversions.DecDeg2SCT(Convert.ToSingle(row["Longitude"]), false);
                     strOut[6] = Conversions.DecDeg2SCT(Convert.ToSingle(row["EndLatitude"]), true);
                     strOut[7] = Conversions.DecDeg2SCT(Convert.ToSingle(row["EndLongitude"]), false);
-                    strOut[8] = FacFullName;
-                    sw.WriteLine(SCTstrings.RWYout(strOut));
-                    DRAW.Rows.Add(new object[] { strOut[0].ToString(), strOut[4].ToString(), strOut[5].ToString(), RWYtextColor, FacFullName });
-                    DRAW.Rows.Add(new object[] { strOut[1].ToString(), strOut[6].ToString(), strOut[7].ToString(), RWYtextColor, FacFullName });
+                    strOut[9] = FacID + " - " + FacName ;
+                    sw.Write(SCTstrings.RWYout(strOut));
+                    DRAW.Rows.Add(new object[] { strOut[0].ToString(), strOut[4].ToString(), strOut[5].ToString(), strOut[9].ToString() });
+                    DRAW.Rows.Add(new object[] { strOut[1].ToString(), strOut[6].ToString(), strOut[7].ToString(), strOut[9].ToString() });
                 }
-                WriteLabels(DRAW, sw);
+                WriteRWYLabels(DRAW, sw);
             }
             dvRWY.Dispose();
         }
@@ -503,23 +494,25 @@ namespace SCTBuilder
 
         private static void WriteSIDSTAR(string path, bool UseName, bool IsSID)
         {
-            // Declare variables
-            string SSDfilter; 
-            char Mark = Convert.ToChar("=");        // Used in the Diagrams headers
+            // ESE's SIDSTAR format is VERY different than VRCs
+            // <SID/STAR>:<AIRPORT ICAO>:<RUNWAY>:<TRANSITIONxPROCEDURE>:<ROUTE>
+            // Example:
+            // SID:PHNL:08L:PALAY2xLNY:PALAY ROSHE LNY STAR:PHNL:08L:APACKxMAGGI3:APACK TOADS SOPIW MAGGI BAMBO GRITL CKH
+            // I no longer need ARTCC, but I need to add RWY lines for every airport
+            // SO... For each [Selected] SID/STAR, take the APT_ID and find the runways
+            string SSDfilter;
             using (StreamWriter sw = new StreamWriter(path))
             {
                 // OK to write the Section header here since it's called only once
-                string Section;
-                if (IsSID) { Section = "SID"; } else { Section = "STAR"; }
-                sw.WriteLine();
-                sw.WriteLine("[" + Section + "]");
-                sw.WriteLine(SSDHeader(Section, Mark, 5));
-                Console.WriteLine(SSDHeader(Section, Mark, 5));
+                sw.WriteLine(CycleHeader);
+                sw.WriteLine("[SIDSTARS]");
 
                 // Declare tables that will be used to write lookup table
                 DataTable APTtable = Form1.APT;
                 DataTable SSDtable = Form1.SSD;
+                DataTable RWYtable = Form1.RWY;
                 DataTable A2Dtable = new SCTdata.APT2SSDDataTable();
+                // Set up DataViews used for filtering and building strings
                 DataView dvAPT = new DataView(APTtable)
                 {
                     Sort = "ID"
@@ -528,8 +521,9 @@ namespace SCTBuilder
                 {
                     Sort = "Sequence"
                 };
+                DataView dvRWY = new DataView(RWYtable);
 
-                // Filter SSD dataview to find affected airports and ARTCCs in APT file
+                // Start by filtering SSD dataview to selected airports
                 if (IsSID) SSDfilter = "[IsSID]"; else SSDfilter = "NOT [IsSID]";
                 SSDfilter += " AND [Selected] AND [FixType] = 'AA'";
                 dvSSD.RowFilter = SSDfilter;
@@ -541,6 +535,7 @@ namespace SCTBuilder
                 foreach (DataRowView SSDrow in dvSSD)
                 {
                     dvAPT.RowFilter = "[FacilityID] = '" + SSDrow["NavAid"].ToString() + "'";
+                    dvRWY.RowFilter = "[ID] = '" + dvAPT[0]["ID"].ToString() + "'";
                     DataRowView newrow = dvA2D_raw.AddNew();
                     newrow["ARTCC"] = dvAPT[0]["ARTCC"].ToString();
                     newrow["APT_FK"] = dvAPT[0]["ID"].ToString();
@@ -554,64 +549,20 @@ namespace SCTBuilder
                 // And sort it into a dataview we can use
                 DataView dvA2D = new DataView(dtA2D)
                 {
-                    Sort = "ARTCC, APT_FACID, SSD_FK"
+                    Sort = "SSD_FK, APT_FK"
                 };
                 Console.WriteLine("dtA2D rows: " + dtA2D.Rows.Count.ToString());
 
-                // Call WriteSSD using the sorted dvSSD list
-                // Sponsor ARTTC first
-                string curARTCC = InfoSection.SponsorARTCC.ToString();
-                dvA2D.RowFilter = "[ARTCC] = '" + curARTCC + "'";
-                sw.WriteLine(SSDHeader(curARTCC, Mark, 4));
-                // Loop the SSDIDs in the DV to write the data for Sponsor ARTCC
-                // Use a Dataview so we can sort by airports
+                // Loop the SID (or STAR), Airport, and runways
                 string curAirportID = string.Empty;
                 foreach (DataRowView drA2D in dvA2D)
                 {
                     if (curAirportID != drA2D["APT_FK"].ToString())
                     {
                         curAirportID = drA2D["APT_FK"].ToString();
-                        Console.WriteLine("ID: " + curAirportID + ", ARTCC: " + curARTCC + ", APT: " + drA2D["APT_FACID"].ToString());
-                        sw.WriteLine(SSDHeader(Conversions.ICOA(drA2D["APT_FACID"].ToString()), Mark, 3));
+                        sw.WriteLine();                         // Blank line between airports
                     }
                     WriteSSD(sw, drA2D["SSD_FK"].ToString(), UseName, IsSID);
-                }
-                // All the other ARTCCs that may have been in the filter
-                dvA2D.RowFilter = "[ARTCC] <> '" + curARTCC + "'";
-                // This loop adds the ARTCCs, skip if no other ARTCCs
-                DialogResult Result;
-                if (dvA2D.Count != 0)
-                {
-                    if (SCTchecked.ChkConfirmOverwrite == true)
-                    {
-                        string Message = "There are " + dvA2D.Count.ToString();
-                        if (IsSID) Message += " SIDs "; else Message += " STARs ";
-                        Message += "in other ARTCCs.  They could make the sector file very large. Do you want them generated?";
-                        Result = MessageBox.Show(Message, VersionInfo.Title, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                    }
-                    else Result = DialogResult.Yes;
-                    if (Result == DialogResult.Yes)
-                    {
-                        curARTCC = string.Empty;
-                        curAirportID = string.Empty;
-                        foreach (DataRowView drA2D in dvA2D)
-                        {
-                            if (curARTCC != drA2D["ARTCC"].ToString())
-                            {
-                                curARTCC = drA2D["ARTCC"].ToString();
-                                sw.WriteLine(SSDHeader(curARTCC, Mark, 4));
-                            }
-                            if (curAirportID != drA2D["APT_FK"].ToString())
-                            {
-                                curAirportID = drA2D["APT_FK"].ToString();
-                                dvAPT.RowFilter = "ID = '" + curAirportID + "'";
-                                Console.WriteLine("ID: " + curAirportID + ", ARTCC: " + curARTCC + ", APT: " + dvAPT[0]["FacilityID"].ToString());
-                                sw.WriteLine(SSDHeader(Conversions.ICOA(dvAPT[0]["FacilityID"].ToString()), Mark, 3));
-                            }
-                            WriteSSD(sw, drA2D["SSD_FK"].ToString(), UseName, IsSID);
-                        }
-                    }
-                    else Console.WriteLine("No other ARTCCs in SID/STAR");
                 }
                 dvA2D.Dispose();
                 dvAPT.Dispose();
@@ -619,39 +570,24 @@ namespace SCTBuilder
             }
         }
 
-        private static string SSDHeader(string Header, char Marker='=', int MarkerCount=0)
-        {
-            string Mask; string result; int Pad = 27;
-            if (MarkerCount != 0) Mask = new string(Marker, MarkerCount);
-            else Mask = Marker.ToString();
-            result = Mask + Header;
-            if (MarkerCount != 0) result += Mask;
-            string DummyCoords = "N000.00.00.000 E000.00.00.000 N000.00.00.000 E000.00.00.000";
-            result = result.PadRight(Pad) + DummyCoords;
-            return result;
-        }
-
         private static void WriteSSD(StreamWriter sw, string SSDID, bool UseName, bool IsSID)
         {
             ///<summary>
-            /// Everything works.  Need to find a way to add the FIXes from the SSDs outside
-            /// of the search box, so that the "Find" command can show the FIX.
-            /// Also need to test the SSD labeling routine.
             /// </summary>
             DataTable SSD = Form1.SSD;
             char Prefix; string SSDName;
             string Lat0 = string.Empty; string Long0 = string.Empty;
             string Lat1; string Long1;
             string Fix0 = string.Empty; string Fix1; string FixType0 = string.Empty;
-            string strLL = new string(' ', 27); string FixType1; 
-            string SSDfilter = "[ID] = '" + SSDID + "'"; 
+            string strLL = new string(' ', 27); string FixType1;
+            string SSDfilter = "[ID] = '" + SSDID + "'";
             string SSDResult = string.Empty; string SSDCaption;
             if (UseName) SSDCaption = "SSDName"; else SSDCaption = "SSDcode";
-                DataView dvSSD = new DataView(SSD)
-                {
-                    RowFilter = SSDfilter,
-                    Sort = "Sequence"
-                };
+            DataView dvSSD = new DataView(SSD)
+            {
+                RowFilter = SSDfilter,
+                Sort = "Sequence"
+            };
             if (IsSID) Prefix = Convert.ToChar("+"); else Prefix = Convert.ToChar("-");
             var SSDNames = new List<string>();
             // Save the SSD Header
@@ -678,7 +614,7 @@ namespace SCTBuilder
                 FixType1 = SSDrow["FixType"].ToString();
                 if ((Fix0.Length != 0) && (Fix0 != Fix1))
                 {
-                    SSDResult += strLL + Lat0 + " " + Long0 + " " + Lat1 + " " + 
+                    SSDResult += strLL + Lat0 + " " + Long0 + " " + Lat1 + " " +
                         Long1 + "; " + Fix0 + "(" + FixType0 + ") " + Fix1 + "(" + FixType1 + ")" + cr;
                     ListFixes(SSDNames, Fix0);
                     ListFixes(SSDNames, Fix1);
@@ -690,14 +626,9 @@ namespace SCTBuilder
             // Output the result if there were FIXes in the SSD
             if (SSDResult.Length != 0)
             {
-                sw.WriteLine(SSDHeader(SSDName + " *RNAV*", Prefix));
                 sw.WriteLine(SSDResult);
                 WriteFixNames(SSDNames, sw);
                 SSDNames.Clear();
-            }
-            else
-            {
-                sw.WriteLine(SSDHeader(SSDName + "(RV only)", Prefix));
             }
             dvSSD.Dispose();
         }
@@ -725,7 +656,7 @@ namespace SCTBuilder
             DataView dvNDB = new DataView(Form1.NDB);
             foreach (string FixName in FixNames)
             {
-                Filter = "[FacilityID] = '" + FixName + "'" ;
+                Filter = "[FacilityID] = '" + FixName + "'";
                 dvFIX.RowFilter = Filter;
                 if (dvFIX.Count != 0)
                 {
@@ -765,7 +696,7 @@ namespace SCTBuilder
             // MAY want to do that in the "SELECTED" phase (dgvARB), then sort by ARTCC.
             DataTable ARB = Form1.ARB;
             string FacID0 = string.Empty; string FacID1;
-            string ARBname; string HL;  string filter; string Sector;
+            string ARBname; string HL; string filter; string Sector;
             string Lat1; string Long1; string Descr1; string Descr0 = string.Empty;
             string Lat0 = string.Empty; string Long0 = string.Empty;
             string LatFirst; string LongFirst;
@@ -833,7 +764,7 @@ namespace SCTBuilder
                         {
                             // Do NOT add a line to close boundary
                             // Check for dual condition; end of group AND new ARTCC...
-                            if (Output.Length !=0)
+                            if (Output.Length != 0)
                             {
                                 sw.WriteLine(Output);
                             }
@@ -846,9 +777,9 @@ namespace SCTBuilder
             ARBview.Dispose();
         }
 
-        private static void WriteLabels(DataTable dtSTL, StreamWriter sw)
+        private static void WriteRWYLabels(DataTable dtSTL, StreamWriter sw)
         {
-            string strText; string Lat; string Long; string TextColor; string Comment;
+            string strText; string Lat; string Long; string Facility; string Comment;
             string Output;
             // string colorValue = dtColors.Rows[0]["ColorValue"].ToString();
             sw.WriteLine("[LABELS]");
@@ -858,14 +789,14 @@ namespace SCTBuilder
                 strText = row["LabelText"].ToString();
                 Lat = row["Latitude"].ToString();
                 Long = row["Longitude"].ToString();
-                TextColor = row["TextColor"].ToString();
-                Comment = row["Comment"].ToString();
+                Facility = row["TextColor"].ToString();            // This is actually the Facility ID in ESE
                 if (row["Comment"].ToString().Length != 0)
                 {
-                    Output = SCTstrings.LabelOut(strText, Lat, Long, TextColor, Comment);
+                    Comment = row["Comment"].ToString();
+                    Output = SCTstrings.LabelOut(strText, Lat, Long, Facility, Comment);
                 }
                 else
-                    Output = SCTstrings.LabelOut(strText, Lat, Long, TextColor);
+                    Output = SCTstrings.LabelOut(strText, Lat, Long, Facility);
                 sw.WriteLine(Output);
             }
         }
@@ -876,7 +807,7 @@ namespace SCTBuilder
             ///FE may build local sector files and have them written to the ARTCC, LOW ARTCC, or HIGH ARTCC
             ///The text file must be configured as shown in the "LocalSectors.txt" file in the package.
             ///</summary>
-            string Lat0 = string.Empty; string Long0 = string.Empty; 
+            string Lat0 = string.Empty; string Long0 = string.Empty;
             string Lat1; string Long1; string blank = new string(' ', 27); string Line1; string Line2;
             string LineLL;
             string dummycoords = "N000.00.00.000 E000.00.00.000 N000.00.00.000 E000.00.00.000";
@@ -945,8 +876,7 @@ namespace SCTBuilder
         }
         private static void WriteSUA()
         {
-            
+
         }
     }
 }
-

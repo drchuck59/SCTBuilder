@@ -23,22 +23,18 @@ namespace SCTBuilder
         public static double NMperLongDegree()
         {
             // Assumes all Lat/Longs are in Decimal degrees
-            double result = 60; double Lat;
-            if (InfoSection.DefaultAirport.Length != 0)
-            {
-                DataView dvAPT = new DataView(Form1.APT)
-                {
-                    RowFilter = "[FacilityID] ='" + InfoSection.DefaultAirport + "'"
-                };
-                if (dvAPT.Count != 0)
-                {
-                    Lat = Deg2Rad(Convert.ToDouble(dvAPT[0]["Latitude"]));
-                    result = Math.Cos(Lat) * EarthRadius('N');
-                }
-                dvAPT.Dispose();
-            }
+            double DegPerNMequator = 69.172;
+            double radCenterLat;
+            // Use the user's desired center if possible
+            if (InfoSection.CenterLatitude_Dec == 0)
+                radCenterLat =
+                    LatLongCalc.Deg2Rad((FilterBy.NorthLimit + FilterBy.SouthLimit) / 2);
+            else
+                radCenterLat = LatLongCalc.Deg2Rad(InfoSection.CenterLatitude_Dec);
+            double result = Math.Cos(radCenterLat) * DegPerNMequator;
             return result;
         }
+
         public static double RWYBearing(string Heading, string RwyID)
         {
             if (RwyID.Length == 0) return -1;
@@ -150,7 +146,7 @@ namespace SCTBuilder
             switch (Type)
             {
                 case 'S':
-                    return 3958.8;       // taken as average
+                    return 3958.8;       // taken as average 
                 case 'm':
                     return 6371000;
                 case 'f':

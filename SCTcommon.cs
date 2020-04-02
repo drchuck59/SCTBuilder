@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using System.IO;
+using System.Collections.Generic;
 
 namespace SCTBuilder
 {
@@ -112,8 +113,31 @@ namespace SCTBuilder
             APTView.Dispose();
             return result;
         }
+        public static int CountStringOccurrences(string text, string pattern)
+        {
+            // Loop through all instances of the string 'text'.
+            int count = 0;
+            int i = 0;
+            while ((i = text.IndexOf(pattern, i)) != -1)
+            {
+                i += pattern.Length;
+                count++;
+            }
+            return count;
+        }
+
+        public static int CountListOccurrences(List<string> Words, string pattern)
+        {
+            // Loop through all instances of the string 'text'.
+            int count = 0;
+            foreach (string word in Words)
+            {
+                if (word == pattern) count++;
+            }
+            return count;
+        }
     }
-  
+
     public class Conversions
     // Convert a variety of strings 
     {
@@ -141,8 +165,8 @@ namespace SCTBuilder
 
         public static double AdjustedLatLong(string LL, string nud, string LLedge)
         {
-            double result = Convert.ToSingle(LL);
-            double offset = Convert.ToSingle(nud);
+            double result = Conversions.String2DecDeg(LL);
+            double offset = Convert.ToDouble(nud);
             switch (LLedge)
             {
                 case "N":
@@ -503,7 +527,7 @@ namespace SCTBuilder
         public static string RWYout(string[] strOut)
         {
             string result = strOut[0] + " " + strOut[1] + " " + strOut[2] + " " + strOut[3] + " "
-                        + strOut[4] + " " + strOut[5] + " " + strOut[6] + " " + strOut[7];
+                        + strOut[4] + " " + strOut[5] + " " + strOut[6] + " " + strOut[7] + "; " + strOut[8];
             return result;
         }
         public static string AWYout(string Awy, string StartLat, 
@@ -557,8 +581,12 @@ namespace SCTBuilder
 
         public static string LabelOut(string label, string Lat, string Long, string Color, string Comment = "")
         {
+            string result;
             string strText = "\"" + label.Trim() + "\"";
-            string result = strText + " " + Lat + " " + Long + " " + Color + Comment;
+            if (Comment.Length != 0)
+                result = strText + " " + Lat + " " + Long + " " + Color + "; " + Comment;
+            else
+                result = strText + " " + Lat + " " + Long + " " + Color;
             return result;
         }
     }
