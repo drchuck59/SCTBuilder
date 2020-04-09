@@ -159,10 +159,8 @@ namespace SCTBuilder
             if (LoadARTCCComboBox() != 0)           // Populates the combobox
                 UpdateARTCCComboBox();              // Sets the combobox to the last Sponsor ARTCC
             else ClearARTCCComboBox();
-            if (FilterBy.NorthLimit == 0)
-                UpdateSquarebyARTCC();              // Set the parameters of the square to the ARTCC limits
-            else
-                GetSquareAndOffset();                        // ... or use previously set limits
+            if (FilterBy.NorthLimit != 0)
+                GetSquareAndOffset();                        // ... Use previously set limits
             if (LoadAirportComboBox() != 0)         // Using the desired filter format
                 UpdateAirportComboBox();            // Set the combobox to the last Default Airport or top of list
             else ClearAirportComboBox();
@@ -892,8 +890,7 @@ namespace SCTBuilder
         private string UpdateFolder(TextBox textBox, string dialogTitle)
         {
             // This calling routine allows other classes to update a folder
-            string result;
-            result = GetFolderPath(textBox.Text, dialogTitle);
+            string result = GetFolderPath(textBox.Text, dialogTitle);
             return result;
         }
 
@@ -922,15 +919,16 @@ namespace SCTBuilder
         private string GetFolderPath(string selectedPath, string dialogTitle)
         {
             FolderBrowserDialog fBD = new FolderBrowserDialog();
-            string result;
+            string result = string.Empty;
             // Set default folder to start
             fBD.SelectedPath = selectedPath;
             fBD.Description = dialogTitle;
             if (selectedPath.Length != 0) fBD.SelectedPath = selectedPath;
             else fBD.SelectedPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
             // Get user's desired folder
-            fBD.ShowDialog();
-            result = fBD.SelectedPath;
+            DialogResult dialogResult = fBD.ShowDialog();
+            if (dialogResult == DialogResult.OK)
+                result = fBD.SelectedPath;
             fBD.Dispose();
             return result;
         }

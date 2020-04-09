@@ -45,6 +45,7 @@ namespace SCTBuilder
             try
             {
                 var file = Directory.GetFiles(DataFolder, Filename, SearchOption.AllDirectories).FirstOrDefault();
+                if (file == null) return "ERROR";
                 return file.ToString();
             }
             catch (FileNotFoundException)
@@ -489,7 +490,9 @@ namespace SCTBuilder
         }
         public static bool IsNumeric(this string text)
         {
+#pragma warning disable IDE0059 // Unnecessary assignment of a value
             return double.TryParse(text, out double test);
+#pragma warning restore IDE0059 // Unnecessary assignment of a value
         }
 
         public static string Left(this string value, int maxLength)
@@ -596,7 +599,7 @@ namespace SCTBuilder
 /// </summary>
 public static class KnownFolders
     {
-        private static string[] _knownFolderGuids = new string[]
+        private readonly static string[] _knownFolderGuids = new string[]
         {
         "{56784854-C6CB-462B-8169-88E350ACB882}", // Contacts
         "{B4BFCC3A-DB2C-424C-B029-7FE99A87C641}", // Desktop

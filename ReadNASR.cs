@@ -402,10 +402,12 @@ namespace SCTBuilder
                     if (loc1 != -1)
                         Result = Result.Substring(0, loc1 - 1).Trim();
                     // Some entries have a character suffix on the freq
-                    bool canConvert = false; decimal testResult;
+                    bool canConvert = false; 
                     while (!canConvert)
                     {
-                        canConvert = decimal.TryParse(Result, out testResult);
+#pragma warning disable IDE0059 // Unnecessary assignment of a value - This IS necessary
+                        canConvert = decimal.TryParse(Result, out decimal testResult);
+#pragma warning restore IDE0059 // Unnecessary assignment of a value
                         if (!canConvert)
                         {
                             Result = Result.Substring(0, Result.Length - 1);
