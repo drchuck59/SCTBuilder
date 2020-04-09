@@ -15,8 +15,8 @@ namespace SCTBuilder
             // <SID/STAR>:<AIRPORT ICAO>:<RUNWAY>:<TRANSITIONxPROCEDURE>:<ROUTE>
             // There will be a line for every RWY with the Procedure and every RWY with Transition.Procedure
             // Therefore, read all the procedures for each runway and save transitions to reuse later
-            string ICOA = Conversions.ICOA(Airport); string Transition = string.Empty;
-            string SSDcode = string.Empty; string Vectors = string.Empty; string Procedure = string.Empty;
+            string ICOA = Conversions.ICOA(Airport); string Transition;
+            string SSDcode = string.Empty; string Vectors; string Procedure = string.Empty;
             string FullFilename = SCTcommon.GetFullPathname(FolderMgt.NGFolder, ICOA + ".txt");
             DataRowView newrow;
             List<string> Words = new List<string>();
@@ -30,13 +30,13 @@ namespace SCTBuilder
             List<string> TAOA = new List<string>();
             List<string> TAOB = new List<string>();
             List<string> TAt = new List<string>();
-            string Section = string.Empty; string Line;
+            string Section; string Line;
             if (FullFilename.IndexOf("ERROR") == -1)
             {
                 using (StreamReader reader = new StreamReader(FullFilename))
                 {
                     Line = reader.ReadLine();
-                    Words.AddRange(ParseLine(Line, Section));
+                    Words.AddRange(ParseLine(Line));
                     if (Words.Count != 0)
                     {
                         // Use Words vs OldWords to detect a new line
@@ -173,9 +173,11 @@ namespace SCTBuilder
                                         Transition = Words[1];
                                         Vectors = SIDVectorString(Words.ToArray());
                                         DataView dvNGSIDTransition = new DataView(Form1.NGSIDTransition);
-                                        DataView dvNGSID = new DataView(Form1.NGSID);
-                                        // Only write the main SID once
-                                        dvNGSID.RowFilter = "[SSDCode] = '" + SSDcode + "'";
+                                        DataView dvNGSID = new DataView(Form1.NGSID)
+                                        {
+                                            // Only write the main SID once
+                                            RowFilter = "[SSDCode] = '" + SSDcode + "'"
+                                        };
                                         if (dvNGSID.Count == 0)
                                         {
                                             foreach (string Rwy in RNWS)
@@ -308,7 +310,7 @@ namespace SCTBuilder
             return result;
         }
 
-        private static string[] ParseLine(string Line, string Section)
+        private static string[] ParseLine(string Line)
         {
             // Parse the line into individual words
             // First word indicates level: Title, Content, Addenda

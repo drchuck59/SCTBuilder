@@ -10,6 +10,8 @@ using System.ComponentModel;
 using System.Collections.Generic;
 using System.Drawing;
 using MySqlX.XDevAPI.Common;
+using System.Threading.Tasks;
+using Squirrel;
 
 namespace SCTBuilder
 {
