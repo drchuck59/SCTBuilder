@@ -163,7 +163,7 @@ namespace SCTBuilder
             return result;
         }
 
-        public static double AdjustedLatLong(string LL, string nud, string LLedge)
+        public static double SetFilterByLimit(string LL, string nud, string LLedge)
         {
             double result = Conversions.String2DecDeg(LL);
             double offset = Convert.ToDouble(nud);

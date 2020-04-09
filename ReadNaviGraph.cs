@@ -15,16 +15,22 @@ namespace SCTBuilder
             // <SID/STAR>:<AIRPORT ICAO>:<RUNWAY>:<TRANSITIONxPROCEDURE>:<ROUTE>
             // There will be a line for every RWY with the Procedure and every RWY with Transition.Procedure
             // Therefore, read all the procedures for each runway and save transitions to reuse later
-            string ICOA = Conversions.ICOA(Airport); string RWY = string.Empty; string Transition = string.Empty;
-            string SSDcode = string.Empty; string Vectors = string.Empty; string SpeedLimit = string.Empty;
-            string AoA = string.Empty; string AoB = string.Empty; string AtAlt = string.Empty;
+            string ICOA = Conversions.ICOA(Airport); string Transition = string.Empty;
+            string SSDcode = string.Empty; string Vectors = string.Empty; string Procedure = string.Empty;
             string FullFilename = SCTcommon.GetFullPathname(FolderMgt.NGFolder, ICOA + ".txt");
+            DataRowView newrow;
             List<string> Words = new List<string>();
-            List<string> OldWords = new List<string>();
+            List<string> TransitionFixes = new List<string>();
             List<string> RNWS = new List<string>();
+            List<string> Speed = new List<string>();
+            List<string> AOA = new List<string>();
+            List<string> AOB = new List<string>();
+            List<string> At = new List<string>();
+            List<string> TSpeed = new List<string>();
+            List<string> TAOA = new List<string>();
+            List<string> TAOB = new List<string>();
+            List<string> TAt = new List<string>();
             string Section = string.Empty; string Line;
-            DataView dvFIX = new DataView(Form1.FIX);
-            DataView dvNGSID = new DataView(Form1.NGSID); DataView dvNGSIDTrans = new DataView(Form1.NGSIDTransition);
             if (FullFilename.IndexOf("ERROR") == -1)
             {
                 using (StreamReader reader = new StreamReader(FullFilename))
@@ -59,12 +65,19 @@ namespace SCTBuilder
                                         // In some cases, there is only one line, concatenated
                                         if (Words.Count > 3)
                                         {
-                                            Vectors = SSDVectorString(Words.ToArray());
-                                            SpeedLimit = Speed(Line, SSDcode);
-                                            AtAlt = AltAtRestrict(Line, SSDcode);
-                                            AoA = AoARestrict(Line, SSDcode);
-                                            AoB = AoBRestrict(Line, SSDcode);
-                                            // This should be ready to save ************************
+                                            for (int i = 1; i < Words.Count(); i++)
+                                            {
+                                                if (Words[i] == "RNW") RNWS.Add(Words[i + 1]);
+                                            }
+                                            DataView dvSID = new DataView(Form1.NGSID);
+                                            foreach(string RWY in RNWS)
+                                            {
+                                                newrow = dvSID.AddNew();
+                                                newrow["SSDcode"] = SSDcode;
+                                                newrow["FacilityID"] = ICOA;
+                                                newrow["Rwy"] = RWY;
+                                                newrow.EndEdit();
+                                            }
                                         }
                                         else
                                         {
@@ -73,7 +86,23 @@ namespace SCTBuilder
                                         break;
                                     case "STAR":
                                         // This begins the read of one STAR
-                                        LoadStar(Words, RNWS);
+                                        if (Procedure.IndexOf('.') != -1)
+                                        {
+                                            Procedure = Procedure.Substring(0, Procedure.IndexOf('.') - 1);
+                                            RNWS.Add( Procedure.Substring(Procedure.IndexOf('.') + 1));
+                                        }
+                                        // will need to loop the data for mult runways if no defining rwy
+                                        int FixCount = SCTcommon.CountListOccurrences(Words, "FIX");
+                                        for (int i = 1; i <= Words.Count(); i++)
+                                        {
+                                            if (Words[i] == "FIX")
+                                            {
+                                                AOA.Add(AoARestrict(Line, Words[i + 1]));
+                                                AOB.Add(AoBRestrict(Line, Words[i + 1]));
+                                                At.Add(AltAtRestrict(Line, Words[i + 1]));
+                                                Speed.Add(SpeedRestrict(Line, Words[i + 1]));
+                                            }
+                                        }
                                         break;
                                     case "APPROACH":
                                         // This begins the read of one APPROACH
@@ -92,18 +121,32 @@ namespace SCTBuilder
                                 switch (Words[1])
                                 {
                                     case "RNW":
-                                        // Should have the SSDcode for the SID
-                                        RWY = Words[1];
-                                        Vectors = SSDVectorString(Words.ToArray());
-                                        DataRowView newrow = dvNGSID.AddNew();
+                                        // Should have the SSDcode for the SID and ICOA from calling routine
+                                        DataView dvNGSID = new DataView(Form1.NGSID);
+                                        newrow = dvNGSID.AddNew();
                                         newrow["SSDcode"] = SSDcode;
                                         newrow["Facility"] = ICOA;
-                                        newrow["RWY"] = RWY;
-                                        newrow["Vectors"] = Vectors;
+                                        newrow["RWY"] = Words[1];
+                                        newrow["InitHdg"] = SIDInitHdg(Words.ToArray());
+                                        newrow["InitAlt"] = SIDInitAlt(Words.ToArray());
+                                        newrow["Vectors"] = SIDVectorString(Words.ToArray());
                                         newrow.EndEdit();
+                                        dvNGSID.Dispose();
                                         break;
                                     case "TRANSITION":
-                                        SSDcode = Words[1];
+                                        Transition = Words[1];
+                                        TAOA.Clear(); TAOB.Clear(); TAt.Clear(); TSpeed.Clear(); 
+                                        for (int i = 1; i < Words.Count(); i++)
+                                        {
+                                            if (Words[i] == "FIX")
+                                            {
+                                                TransitionFixes.Add(Words[i + 1]);
+                                                TAOA.Add(AoARestrict(Line, Words[i + 1]));
+                                                TAOB.Add(AoBRestrict(Line, Words[i + 1]));
+                                                TAt.Add(AltAtRestrict(Line, Words[i + 1]));
+                                                TSpeed.Add(SpeedRestrict(Line, Words[i + 1]));
+                                            }
+                                        }
                                         break;
                                 }
                                 break;
@@ -111,19 +154,44 @@ namespace SCTBuilder
                                 switch (Words[1])
                                 {
                                     case "RNW":
-                                        
+                                        //Only occurs in STARS
+                                        for (int i = 0; i < Words.Count; i++)
+                                        {
+                                            if (Words[i] == "RNW") RNWS.Add(Words[i + 1]);
+                                        }
+                                        // At this point, the STARS data should be ready to save
+                                        DataView dvSTAR = new DataView(Form1.NGSTAR);
+                                        DataView dvTransition = new DataView(Form1.NGSTARTransition);
+
+                                        newrow = dvSTAR.AddNew();
 
                                         break;
                                     case "TRANSITION":
-                                        // Only SIDs have this word in column 2 (zero based)
-                                        // So it's coming from a SID
+                                        // Only occurs in SIDs
+                                        // Can load this group
+                                        // Transitions are inbound and don't specify RWYs
                                         Transition = Words[1];
-                                        Vectors = SSDVectorString(Words.ToArray());
-                                        DataRowView newrow = dvNGSIDTrans.AddNew();
-                                        newrow["SSDcode"] = SSDcode;
+                                        Vectors = SIDVectorString(Words.ToArray());
+                                        DataView dvNGSIDTransition = new DataView(Form1.NGSIDTransition);
+                                        DataView dvNGSID = new DataView(Form1.NGSID);
+                                        // Only write the main SID once
+                                        dvNGSID.RowFilter = "[SSDCode] = '" + SSDcode + "'";
+                                        if (dvNGSID.Count == 0)
+                                        {
+                                            foreach (string Rwy in RNWS)
+                                            {
+                                                newrow = dvNGSID.AddNew();
+                                                newrow["SSDcode"] = SSDcode;
+                                                newrow["Transition"] = Transition;
+                                                newrow["Rwy"] = Rwy;
+                                                newrow["Vectors"] = Vectors;
+                                                newrow.EndEdit();
+                                            }
+                                        }
+                                        newrow = dvNGSIDTransition.AddNew();
+                                        newrow["SSDCode"] = SSDcode;
                                         newrow["Transition"] = Transition;
                                         newrow["Vectors"] = Vectors;
-                                        newrow.EndEdit();
                                         break;
                                 }
                                 break;
@@ -133,23 +201,7 @@ namespace SCTBuilder
             }
         }
 
-        private static void LoadStar (List<string>Words, List<string>RNWS)
-        {
-            // STARS are always multiline and may contain a rwy
-            // But they are always appended so use that
-            string RWY = string.Empty;
-            string Procedure = Words[2];
-            if (Procedure.IndexOf('.') != -1)
-            {
-                Procedure = Procedure.Substring(0, Procedure.IndexOf('.') - 1);
-                RWY = Procedure.Substring(Procedure.IndexOf('.') + 1, 2);
-            }
-            // will need to loop the data for mult runways if no defining rwy
-            int FixCount = SCTcommon.CountListOccurrences(Words, "FIX");
-
-        }
-
-        private static string SSDVectorString(string[] Words)
+        private static string SIDVectorString(string[] Words)
         {
             // Return a string of found FIXes
             string vectors = string.Empty;
@@ -166,7 +218,27 @@ namespace SCTBuilder
             return vectors.Trim();
         }
 
-        private static string Speed(string Line, string FIX)
+        private static string SIDInitHdg(string[] Words)
+        {
+            string result = string.Empty;
+            for (int i = 1; i < Words.Length; i++)
+            {
+                if (Words[i] == "HDG") result = Words[i + 1];
+            }
+            return result;
+        }
+
+        private static string SIDInitAlt(string[] Words)
+        {
+            string result = string.Empty;
+            for (int i = 1; i < Words.Length; i++)
+            {
+                if (Words[i] == "UNTIL") result = Words[i + 1];
+            }
+            return result;
+        }
+
+        private static string SpeedRestrict(string Line, string FIX)
         {
             string result = string.Empty;  int LocNextFix;
             int LocFix = Line.IndexOf(FIX);

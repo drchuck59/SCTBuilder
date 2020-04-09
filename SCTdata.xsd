@@ -253,7 +253,8 @@
               <xs:element name="SSDcode" msprop:Generator_ColumnVarNameInTable="columnSSDcode" msprop:Generator_ColumnPropNameInRow="SSDcode" msprop:Generator_ColumnPropNameInTable="SSDcodeColumn" msprop:Generator_UserColumnName="SSDcode" type="xs:string" minOccurs="0" />
               <xs:element name="FacilityID" msprop:Generator_ColumnVarNameInTable="columnFacilityID" msprop:Generator_ColumnPropNameInRow="FacilityID" msprop:Generator_ColumnPropNameInTable="FacilityIDColumn" msprop:Generator_UserColumnName="FacilityID" type="xs:string" minOccurs="0" />
               <xs:element name="Rwy" msprop:Generator_ColumnVarNameInTable="columnRwy" msprop:Generator_ColumnPropNameInRow="Rwy" msprop:Generator_ColumnPropNameInTable="RwyColumn" msprop:Generator_UserColumnName="Rwy" type="xs:string" minOccurs="0" />
-              <xs:element name="Vectors" msprop:Generator_ColumnVarNameInTable="columnVectors" msprop:Generator_ColumnPropNameInRow="Vectors" msprop:Generator_ColumnPropNameInTable="VectorsColumn" msprop:Generator_UserColumnName="Vectors" type="xs:string" minOccurs="0" />
+              <xs:element name="InitHdg" msprop:Generator_ColumnVarNameInTable="columnInitHdg" msprop:Generator_ColumnPropNameInRow="InitHdg" msprop:Generator_ColumnPropNameInTable="InitHdgColumn" msprop:Generator_UserColumnName="InitHdg" type="xs:string" minOccurs="0" />
+              <xs:element name="InitAlt" msprop:Generator_ColumnVarNameInTable="columnInitAlt" msprop:Generator_ColumnPropNameInRow="InitAlt" msprop:Generator_ColumnPropNameInTable="InitAltColumn" msprop:Generator_UserColumnName="InitAlt" type="xs:string" minOccurs="0" />
             </xs:sequence>
           </xs:complexType>
         </xs:element>
@@ -263,11 +264,6 @@
               <xs:element name="SSDCode" msprop:Generator_ColumnVarNameInTable="columnSSDCode" msprop:Generator_ColumnPropNameInRow="SSDCode" msprop:Generator_ColumnPropNameInTable="SSDCodeColumn" msprop:Generator_UserColumnName="SSDCode" type="xs:string" minOccurs="0" />
               <xs:element name="FacilityID" msprop:Generator_ColumnVarNameInTable="columnFacilityID" msprop:Generator_ColumnPropNameInRow="FacilityID" msprop:Generator_ColumnPropNameInTable="FacilityIDColumn" msprop:Generator_UserColumnName="FacilityID" type="xs:string" minOccurs="0" />
               <xs:element name="Rwy" msprop:Generator_ColumnVarNameInTable="columnRwy" msprop:Generator_ColumnPropNameInRow="Rwy" msprop:Generator_ColumnPropNameInTable="RwyColumn" msprop:Generator_UserColumnName="Rwy" type="xs:string" minOccurs="0" />
-              <xs:element name="Fix" msprop:Generator_ColumnVarNameInTable="columnFix" msprop:Generator_ColumnPropNameInRow="Fix" msprop:Generator_ColumnPropNameInTable="FixColumn" msprop:Generator_UserColumnName="Fix" type="xs:string" minOccurs="0" />
-              <xs:element name="AltRestrict" msprop:Generator_ColumnVarNameInTable="columnAltRestrict" msprop:Generator_ColumnPropNameInRow="AltRestrict" msprop:Generator_ColumnPropNameInTable="AltRestrictColumn" msprop:Generator_UserColumnName="AltRestrict" type="xs:string" minOccurs="0" />
-              <xs:element name="Altitude" msprop:Generator_ColumnVarNameInTable="columnAltitude" msprop:Generator_ColumnPropNameInRow="Altitude" msprop:Generator_ColumnPropNameInTable="AltitudeColumn" msprop:Generator_UserColumnName="Altitude" type="xs:string" minOccurs="0" />
-              <xs:element name="SpeedRestrict" msprop:Generator_ColumnVarNameInTable="columnSpeedRestrict" msprop:Generator_ColumnPropNameInRow="SpeedRestrict" msprop:Generator_ColumnPropNameInTable="SpeedRestrictColumn" msprop:Generator_UserColumnName="SpeedRestrict" type="xs:string" minOccurs="0" />
-              <xs:element name="Speed" msprop:Generator_ColumnVarNameInTable="columnSpeed" msprop:Generator_ColumnPropNameInRow="Speed" msprop:Generator_ColumnPropNameInTable="SpeedColumn" msprop:Generator_UserColumnName="Speed" type="xs:string" minOccurs="0" />
             </xs:sequence>
           </xs:complexType>
         </xs:element>
@@ -276,7 +272,12 @@
             <xs:sequence>
               <xs:element name="SSDcode" msprop:Generator_ColumnVarNameInTable="columnSSDcode" msprop:Generator_ColumnPropNameInRow="SSDcode" msprop:Generator_ColumnPropNameInTable="SSDcodeColumn" msprop:Generator_UserColumnName="SSDcode" type="xs:string" minOccurs="0" />
               <xs:element name="Transition" msprop:Generator_ColumnVarNameInTable="columnTransition" msprop:Generator_ColumnPropNameInRow="Transition" msprop:Generator_ColumnPropNameInTable="TransitionColumn" msprop:Generator_UserColumnName="Transition" type="xs:string" minOccurs="0" />
-              <xs:element name="Vectors" msprop:Generator_ColumnVarNameInTable="columnVectors" msprop:Generator_ColumnPropNameInRow="Vectors" msprop:Generator_ColumnPropNameInTable="VectorsColumn" msprop:Generator_UserColumnName="Vectors" type="xs:string" minOccurs="0" />
+              <xs:element name="Fix" msprop:Generator_ColumnVarNameInTable="columnFix" msprop:Generator_ColumnPropNameInRow="Fix" msprop:Generator_ColumnPropNameInTable="FixColumn" msprop:Generator_UserColumnName="Fix" type="xs:string" minOccurs="0" />
+              <xs:element name="AltRestric" msprop:Generator_ColumnVarNameInTable="columnAltRestric" msprop:Generator_ColumnPropNameInRow="AltRestric" msprop:Generator_ColumnPropNameInTable="AltRestricColumn" msprop:Generator_UserColumnName="AltRestric" type="xs:string" minOccurs="0" />
+              <xs:element name="Altitude" msprop:Generator_ColumnVarNameInTable="columnAltitude" msprop:Generator_ColumnPropNameInRow="Altitude" msprop:Generator_ColumnPropNameInTable="AltitudeColumn" msprop:Generator_UserColumnName="Altitude" type="xs:string" minOccurs="0" />
+              <xs:element name="SpeedRestrict" msprop:Generator_ColumnVarNameInTable="columnSpeedRestrict" msprop:Generator_ColumnPropNameInRow="SpeedRestrict" msprop:Generator_ColumnPropNameInTable="SpeedRestrictColumn" msprop:Generator_UserColumnName="SpeedRestrict" type="xs:string" minOccurs="0" />
+              <xs:element name="Speed" msprop:Generator_ColumnVarNameInTable="columnSpeed" msprop:Generator_ColumnPropNameInRow="Speed" msprop:Generator_ColumnPropNameInTable="SpeedColumn" msprop:Generator_UserColumnName="Speed" type="xs:string" minOccurs="0" />
+              <xs:element name="Sequence" msprop:Generator_ColumnVarNameInTable="columnSequence" msprop:Generator_ColumnPropNameInRow="Sequence" msprop:Generator_ColumnPropNameInTable="SequenceColumn" msprop:Generator_UserColumnName="Sequence" type="xs:string" minOccurs="0" />
             </xs:sequence>
           </xs:complexType>
         </xs:element>
@@ -290,6 +291,7 @@
               <xs:element name="Altitude" msprop:Generator_ColumnVarNameInTable="columnAltitude" msprop:Generator_ColumnPropNameInRow="Altitude" msprop:Generator_ColumnPropNameInTable="AltitudeColumn" msprop:Generator_UserColumnName="Altitude" type="xs:string" minOccurs="0" />
               <xs:element name="SpeedRestrict" msprop:Generator_ColumnVarNameInTable="columnSpeedRestrict" msprop:Generator_ColumnPropNameInRow="SpeedRestrict" msprop:Generator_ColumnPropNameInTable="SpeedRestrictColumn" msprop:Generator_UserColumnName="SpeedRestrict" type="xs:string" minOccurs="0" />
               <xs:element name="Speed" msprop:Generator_ColumnVarNameInTable="columnSpeed" msprop:Generator_ColumnPropNameInRow="Speed" msprop:Generator_ColumnPropNameInTable="SpeedColumn" msprop:Generator_UserColumnName="Speed" type="xs:string" minOccurs="0" />
+              <xs:element name="Sequence" msprop:Generator_ColumnVarNameInTable="columnSequence" msprop:Generator_ColumnPropNameInRow="Sequence" msprop:Generator_ColumnPropNameInTable="SequenceColumn" msprop:Generator_UserColumnName="Sequence" type="xs:string" minOccurs="0" />
             </xs:sequence>
           </xs:complexType>
         </xs:element>
@@ -321,6 +323,33 @@
               <xs:element name="Altitude" msprop:Generator_ColumnVarNameInTable="columnAltitude" msprop:Generator_ColumnPropNameInRow="Altitude" msprop:Generator_ColumnPropNameInTable="AltitudeColumn" msprop:Generator_UserColumnName="Altitude" type="xs:string" minOccurs="0" />
               <xs:element name="SpeedRestric" msprop:Generator_ColumnVarNameInTable="columnSpeedRestric" msprop:Generator_ColumnPropNameInRow="SpeedRestric" msprop:Generator_ColumnPropNameInTable="SpeedRestricColumn" msprop:Generator_UserColumnName="SpeedRestric" type="xs:string" minOccurs="0" />
               <xs:element name="Speed" msprop:Generator_ColumnVarNameInTable="columnSpeed" msprop:Generator_ColumnPropNameInRow="Speed" msprop:Generator_ColumnPropNameInTable="SpeedColumn" msprop:Generator_UserColumnName="Speed" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="NGSIDVectors" msprop:Generator_TableClassName="NGSIDVectorsDataTable" msprop:Generator_TableVarName="tableNGSIDVectors" msprop:Generator_RowChangedName="NGSIDVectorsRowChanged" msprop:Generator_TablePropName="NGSIDVectors" msprop:Generator_RowDeletingName="NGSIDVectorsRowDeleting" msprop:Generator_RowChangingName="NGSIDVectorsRowChanging" msprop:Generator_RowEvHandlerName="NGSIDVectorsRowChangeEventHandler" msprop:Generator_RowDeletedName="NGSIDVectorsRowDeleted" msprop:Generator_RowClassName="NGSIDVectorsRow" msprop:Generator_UserTableName="NGSIDVectors" msprop:Generator_RowEvArgName="NGSIDVectorsRowChangeEvent">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="SSDcode" msprop:Generator_ColumnVarNameInTable="columnSSDcode" msprop:Generator_ColumnPropNameInRow="SSDcode" msprop:Generator_ColumnPropNameInTable="SSDcodeColumn" msprop:Generator_UserColumnName="SSDcode" type="xs:string" minOccurs="0" />
+              <xs:element name="Fix" msprop:Generator_ColumnVarNameInTable="columnFix" msprop:Generator_ColumnPropNameInRow="Fix" msprop:Generator_ColumnPropNameInTable="FixColumn" msprop:Generator_UserColumnName="Fix" type="xs:string" minOccurs="0" />
+              <xs:element name="AltRestrict" msprop:Generator_ColumnVarNameInTable="columnAltRestrict" msprop:Generator_ColumnPropNameInRow="AltRestrict" msprop:Generator_ColumnPropNameInTable="AltRestrictColumn" msprop:Generator_UserColumnName="AltRestrict" type="xs:string" minOccurs="0" />
+              <xs:element name="Altitude" msprop:Generator_ColumnVarNameInTable="columnAltitude" msprop:Generator_ColumnPropNameInRow="Altitude" msprop:Generator_ColumnPropNameInTable="AltitudeColumn" msprop:Generator_UserColumnName="Altitude" type="xs:string" minOccurs="0" />
+              <xs:element name="SpeedRestrict" msprop:Generator_ColumnVarNameInTable="columnSpeedRestrict" msprop:Generator_ColumnPropNameInRow="SpeedRestrict" msprop:Generator_ColumnPropNameInTable="SpeedRestrictColumn" msprop:Generator_UserColumnName="SpeedRestrict" type="xs:string" minOccurs="0" />
+              <xs:element name="Speed" msprop:Generator_ColumnVarNameInTable="columnSpeed" msprop:Generator_ColumnPropNameInRow="Speed" msprop:Generator_ColumnPropNameInTable="SpeedColumn" msprop:Generator_UserColumnName="Speed" type="xs:string" minOccurs="0" />
+              <xs:element name="Sequence" msprop:Generator_ColumnVarNameInTable="columnSequence" msprop:Generator_ColumnPropNameInRow="Sequence" msprop:Generator_ColumnPropNameInTable="SequenceColumn" msprop:Generator_UserColumnName="Sequence" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="NGSTARVectors" msprop:Generator_TableClassName="NGSTARVectorsDataTable" msprop:Generator_TableVarName="tableNGSTARVectors" msprop:Generator_TablePropName="NGSTARVectors" msprop:Generator_RowDeletingName="NGSTARVectorsRowDeleting" msprop:Generator_RowChangingName="NGSTARVectorsRowChanging" msprop:Generator_RowEvHandlerName="NGSTARVectorsRowChangeEventHandler" msprop:Generator_RowDeletedName="NGSTARVectorsRowDeleted" msprop:Generator_UserTableName="NGSTARVectors" msprop:Generator_RowChangedName="NGSTARVectorsRowChanged" msprop:Generator_RowEvArgName="NGSTARVectorsRowChangeEvent" msprop:Generator_RowClassName="NGSTARVectorsRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="SSDCode" msprop:Generator_ColumnVarNameInTable="columnSSDCode" msprop:Generator_ColumnPropNameInRow="SSDCode" msprop:Generator_ColumnPropNameInTable="SSDCodeColumn" msprop:Generator_UserColumnName="SSDCode" type="xs:string" minOccurs="0" />
+              <xs:element name="Rwy" msprop:Generator_ColumnVarNameInTable="columnRwy" msprop:Generator_ColumnPropNameInRow="Rwy" msprop:Generator_ColumnPropNameInTable="RwyColumn" msprop:Generator_UserColumnName="Rwy" type="xs:string" minOccurs="0" />
+              <xs:element name="Fix" msprop:Generator_ColumnVarNameInTable="columnFix" msprop:Generator_ColumnPropNameInRow="Fix" msprop:Generator_ColumnPropNameInTable="FixColumn" msprop:Generator_UserColumnName="Fix" type="xs:string" minOccurs="0" />
+              <xs:element name="AltRestrict" msprop:Generator_ColumnVarNameInTable="columnAltRestrict" msprop:Generator_ColumnPropNameInRow="AltRestrict" msprop:Generator_ColumnPropNameInTable="AltRestrictColumn" msprop:Generator_UserColumnName="AltRestrict" type="xs:string" minOccurs="0" />
+              <xs:element name="Altitude" msprop:Generator_ColumnVarNameInTable="columnAltitude" msprop:Generator_ColumnPropNameInRow="Altitude" msprop:Generator_ColumnPropNameInTable="AltitudeColumn" msprop:Generator_UserColumnName="Altitude" type="xs:string" minOccurs="0" />
+              <xs:element name="SpeedRestrict" msprop:Generator_ColumnVarNameInTable="columnSpeedRestrict" msprop:Generator_ColumnPropNameInRow="SpeedRestrict" msprop:Generator_ColumnPropNameInTable="SpeedRestrictColumn" msprop:Generator_UserColumnName="SpeedRestrict" type="xs:string" minOccurs="0" />
+              <xs:element name="Speed" msprop:Generator_ColumnVarNameInTable="columnSpeed" msprop:Generator_ColumnPropNameInRow="Speed" msprop:Generator_ColumnPropNameInTable="SpeedColumn" msprop:Generator_UserColumnName="Speed" type="xs:string" minOccurs="0" />
+              <xs:element name="Sequence" msprop:Generator_ColumnVarNameInTable="columnSequence" msprop:Generator_ColumnPropNameInRow="Sequence" msprop:Generator_ColumnPropNameInTable="SequenceColumn" msprop:Generator_UserColumnName="Sequence" type="xs:string" minOccurs="0" />
             </xs:sequence>
           </xs:complexType>
         </xs:element>

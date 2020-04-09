@@ -254,7 +254,7 @@
             this.OutputFolderTextBox.Name = "OutputFolderTextBox";
             this.OutputFolderTextBox.Size = new System.Drawing.Size(419, 31);
             this.OutputFolderTextBox.TabIndex = 5;
-            this.toolTip1.SetToolTip(this.OutputFolderTextBox, "Folder containing sector file");
+            this.toolTip1.SetToolTip(this.OutputFolderTextBox, "Folder containing output files");
             this.OutputFolderTextBox.Validated += new System.EventHandler(this.TxtOutputFolder_Validated);
             // 
             // txtOutputFolder_label
@@ -655,6 +655,11 @@
             // 
             this.AllMarginsNumericUpDown.Location = new System.Drawing.Point(292, 198);
             this.AllMarginsNumericUpDown.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.AllMarginsNumericUpDown.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
             this.AllMarginsNumericUpDown.Name = "AllMarginsNumericUpDown";
             this.AllMarginsNumericUpDown.Size = new System.Drawing.Size(66, 26);
             this.AllMarginsNumericUpDown.TabIndex = 46;
@@ -694,7 +699,7 @@
             this.NGDataFolderTextBox.Name = "NGDataFolderTextBox";
             this.NGDataFolderTextBox.Size = new System.Drawing.Size(419, 31);
             this.NGDataFolderTextBox.TabIndex = 9;
-            this.toolTip1.SetToolTip(this.NGDataFolderTextBox, "Folder containing sector file");
+            this.toolTip1.SetToolTip(this.NGDataFolderTextBox, "Folder containing NaviGraph data");
             // 
             // NGDataFolderButton
             // 
@@ -918,11 +923,6 @@
             this.EastMarginNumericUpDown.Name = "EastMarginNumericUpDown";
             this.EastMarginNumericUpDown.Size = new System.Drawing.Size(78, 26);
             this.EastMarginNumericUpDown.TabIndex = 32;
-            this.EastMarginNumericUpDown.Value = new decimal(new int[] {
-            20,
-            0,
-            0,
-            0});
             // 
             // SouthMarginNumericUpDown
             // 
@@ -936,11 +936,6 @@
             this.SouthMarginNumericUpDown.Name = "SouthMarginNumericUpDown";
             this.SouthMarginNumericUpDown.Size = new System.Drawing.Size(78, 26);
             this.SouthMarginNumericUpDown.TabIndex = 31;
-            this.SouthMarginNumericUpDown.Value = new decimal(new int[] {
-            20,
-            0,
-            0,
-            0});
             // 
             // WestMarginNumericUpDown
             // 
@@ -954,11 +949,6 @@
             this.WestMarginNumericUpDown.Name = "WestMarginNumericUpDown";
             this.WestMarginNumericUpDown.Size = new System.Drawing.Size(78, 26);
             this.WestMarginNumericUpDown.TabIndex = 30;
-            this.WestMarginNumericUpDown.Value = new decimal(new int[] {
-            20,
-            0,
-            0,
-            0});
             // 
             // NorthMarginNumericUpDown
             // 
@@ -972,11 +962,6 @@
             this.NorthMarginNumericUpDown.Name = "NorthMarginNumericUpDown";
             this.NorthMarginNumericUpDown.Size = new System.Drawing.Size(78, 26);
             this.NorthMarginNumericUpDown.TabIndex = 29;
-            this.NorthMarginNumericUpDown.Value = new decimal(new int[] {
-            20,
-            0,
-            0,
-            0});
             // 
             // lblMargins
             // 
@@ -1206,7 +1191,6 @@
             this.dgvAWY.RowTemplate.Height = 24;
             this.dgvAWY.Size = new System.Drawing.Size(684, 465);
             this.dgvAWY.TabIndex = 2;
-            this.dgvAWY.DoubleClick += new System.EventHandler(this.dgvAWY_DoubleClick);
             // 
             // SIDtabPage
             // 
@@ -1465,14 +1449,14 @@
             this.useFixesForCoordinatesToolStripMenuItem.Size = new System.Drawing.Size(314, 34);
             this.useFixesForCoordinatesToolStripMenuItem.Text = "Use Fixes for coordinates";
             this.useFixesForCoordinatesToolStripMenuItem.ToolTipText = "If checked, fixes will be used for coordinates where possible";
-            this.useFixesForCoordinatesToolStripMenuItem.CheckedChanged += new System.EventHandler(this.useFixesForCoordinatesToolStripMenuItem_CheckedChanged);
+            this.useFixesForCoordinatesToolStripMenuItem.CheckedChanged += new System.EventHandler(this.UseFixesForCoordinatesToolStripMenuItem_CheckedChanged);
             // 
             // includeNaviGraphDataToolStripMenuItem
             // 
             this.includeNaviGraphDataToolStripMenuItem.Name = "includeNaviGraphDataToolStripMenuItem";
             this.includeNaviGraphDataToolStripMenuItem.Size = new System.Drawing.Size(314, 34);
             this.includeNaviGraphDataToolStripMenuItem.Text = "Include NaviGraph Data";
-            this.includeNaviGraphDataToolStripMenuItem.CheckedChanged += new System.EventHandler(this.includeNaviGraphDataToolStripMenuItem_CheckedChanged);
+            this.includeNaviGraphDataToolStripMenuItem.CheckedChanged += new System.EventHandler(this.IncludeNaviGraphDataToolStripMenuItem_CheckedChanged);
             // 
             // openDataFolderToolStripMenuItem1
             // 
@@ -1587,7 +1571,7 @@
             this.dMSDecDegToolStripMenuItem.Name = "dMSDecDegToolStripMenuItem";
             this.dMSDecDegToolStripMenuItem.Size = new System.Drawing.Size(309, 34);
             this.dMSDecDegToolStripMenuItem.Text = "DMS_DecDeg";
-            this.dMSDecDegToolStripMenuItem.Click += new System.EventHandler(this.dMSDecDegToolStripMenuItem_Click);
+            this.dMSDecDegToolStripMenuItem.Click += new System.EventHandler(this.DMSDecDegToolStripMenuItem_Click);
             // 
             // helpToolStripMenuItem
             // 

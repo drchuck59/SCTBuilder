@@ -383,6 +383,7 @@ namespace SCTBuilder
         private static double southlimit = 0;
         private static double westlimit = 0;
         private static double eastlimit = 0;
+
         public static string Method { get; set; }
         public static double NorthLimit
         {
@@ -404,10 +405,7 @@ namespace SCTBuilder
             get { return westlimit; }
             set { westlimit = value; }
         }
-        public static double NorthOffset { get; set; }
-        public static double SouthOffset { get; set; }
-        public static double EastOffset { get; set; }
-        public static double WestOffset { get; set; }
+
     }
     public class InfoSection
     {
@@ -419,6 +417,14 @@ namespace SCTBuilder
         private static double centerLon = 0;
         private static bool useFixes;
         private static bool useNaviGraph;
+        private static double northsquare = 0;
+        private static double southsquare = 0;
+        private static double westsquare = 0;
+        private static double eastsquare = 0;
+        private static double northoffset = 0;
+        private static double southoffset = 0;
+        private static double westoffset = 0;
+        private static double eastoffset = 0;
 
         public static string SectorName
         {
@@ -510,7 +516,46 @@ namespace SCTBuilder
             get { return useNaviGraph; } 
             set { useNaviGraph = value; }
         }
-
+        public static double NorthSquare
+        {
+            get { return northsquare; }
+            set { northsquare = value; }
+        }
+        public static double SouthSquare
+        {
+            get { return southsquare; }
+            set { southsquare = value; }
+        }
+        public static double EastSquare
+        {
+            get { return eastsquare; }
+            set { eastsquare = value; }
+        }
+        public static double WestSquare
+        {
+            get { return westsquare; }
+            set { westsquare = value; }
+        }
+        public static double NorthOffset
+        {
+            get { return northoffset; }
+            set { northoffset = value; }
+        }
+        public static double SouthOffset
+        {
+            get { return southoffset; }
+            set { southoffset = value; }
+        }
+        public static double EastOffset
+        {
+            get { return eastoffset; }
+            set { eastoffset = value; }
+        }
+        public static double WestOffset
+        {
+            get { return westoffset; }
+            set { westoffset = value; }
+        }
         public static double SectorScale { get { return 1f; } }      // Always 1, ignored in VRC
     }
     public static class SCTchecked

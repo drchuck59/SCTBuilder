@@ -31,10 +31,10 @@ namespace SCTBuilder
         static public DataTable NGSID = new SCTdata.NGSIDDataTable();
         static public DataTable NGSIDTransition = new SCTdata.NGSIDTransitionDataTable();
         static public DataTable NGSTAR = new SCTdata.NGSTARDataTable();
-        static public DataTable GNSTARTransition = new SCTdata.NGSTARTransitionDataTable();
+        static public DataTable NGSTARTransition = new SCTdata.NGSTARTransitionDataTable();
         static public DataSet SCT = new SCTdata();
         static public bool ExitClicked = false;
-        string cr = Environment.NewLine; string Msg;
+        readonly string cr = Environment.NewLine; string Msg;
 
         public Form1()
         {
@@ -63,7 +63,7 @@ namespace SCTBuilder
             // Returns -1 if no init file, else returns last AIRAC used (redundant, but I'm lazy)
             int iniAIRAC = CycleInfo.ReadINIxml();
             // If there is no INI file, then there is no datafolder, so clean install (else)
-            if (iniAIRAC != -1)                          
+            if (iniAIRAC != -1)
             {
                 // We have a good ini file; try to load the FAA text data and update form
                 UpdateEngineers();      // I was forgetting to display the engineers on the form
@@ -76,7 +76,7 @@ namespace SCTBuilder
                     if (LoadFAATextData() != -1) PostLoadTasks();
                 }
                 else FAATextDataLoadFailed();
-                
+
             }
             // If we cannot use the INI file, see if there is data set or get a new one
             // Assuming the data downloads correctly, install in the various tables and update form
@@ -96,7 +96,7 @@ namespace SCTBuilder
         }
 
         private void FAATextDataLoadFailed()
-            // Inform the user that something is wrong and they cannot use all features of program
+        // Inform the user that something is wrong and they cannot use all features of program
         {
             Msg = "WARNING: The FAA text data did not load correctly." + cr +
                 "You will be able to use basic tools and functions." + cr +
@@ -160,7 +160,7 @@ namespace SCTBuilder
             if (FilterBy.NorthLimit == 0)
                 UpdateSquarebyARTCC();              // Set the parameters of the square to the ARTCC limits
             else
-                GetLimits();                        // ... or use previously set limits
+                GetSquareAndOffset();                        // ... or use previously set limits
             if (LoadAirportComboBox() != 0)         // Using the desired filter format
                 UpdateAirportComboBox();            // Set the combobox to the last Default Airport or top of list
             else ClearAirportComboBox();
@@ -259,6 +259,7 @@ namespace SCTBuilder
         {
             string lastTab = "APTtabPage";
             SetChecked();
+            SetSquareAndOffset();
             UpdatingLabel.Visible = true;
             Refresh();
             FilterBy.Method = "Square";
@@ -288,7 +289,7 @@ namespace SCTBuilder
                 SelectTableItems(VOR, filter);
                 lastTab = LoadVORGridView();
             }
-            if (SCTchecked.ChkNDB) 
+            if (SCTchecked.ChkNDB)
             {
                 SelectTableItems(NDB, filter);
                 lastTab = LoadNDBGridView();
@@ -361,28 +362,28 @@ namespace SCTBuilder
             return result;
         }
 
-        private int SelectAPTs()
-        {
-            string filter;
-            if (SCTchecked.LimitAPT2ARTC)
-            {
-                FilterBy.Method = "ARTCC";
-                filter = SetFilter();
-            }
-            else
-            {
-                FilterBy.Method = "Square";
-                filter = SetFilter();
-            }
-            Console.WriteLine("Selecting airports using ");
-            DataView dataView = new DataView(APT); int result;
-            ClearSelected(dataView);
-            dataView.RowFilter = filter;
-            SetSelected(dataView);
-            result = dataView.Count;
-            dataView.Dispose();
-            return result;
-        }
+        //private int SelectAPTs()
+        //{
+        //    string filter;
+        //    if (SCTchecked.LimitAPT2ARTC)
+        //    {
+        //        FilterBy.Method = "ARTCC";
+        //        filter = SetFilter();
+        //    }
+        //    else
+        //    {
+        //        FilterBy.Method = "Square";
+        //        filter = SetFilter();
+        //    }
+        //    Console.WriteLine("Selecting airports using ");
+        //    DataView dataView = new DataView(APT); int result;
+        //    ClearSelected(dataView);
+        //    dataView.RowFilter = filter;
+        //    SetSelected(dataView);
+        //    result = dataView.Count;
+        //    dataView.Dispose();
+        //    return result;
+        //}
 
         private int SelectRWYs()
         {
@@ -641,58 +642,48 @@ namespace SCTBuilder
         }
 
 
-        private void SetdgvSUA()
-        {
-
-            DataView dvSUA = new DataView(SUA);
-            foreach (DataRowView rowView in dvSUA) rowView["Selected"] = false;
-            dvSUA.RowFilter = SetSUAfilter();
-            foreach (DataRowView rowView in dvSUA) rowView["Selected"] = true;
-            // DataTable dtgv = dvSUA.ToTable(true, "Selected", "Category", "Name", "ID");
-        }
-
-        private string SetSUAfilter()
-        {
-            string Filter = " ( ([Latitude_North] <= " + FilterBy.NorthLimit.ToString() + ")" +
-                            " AND  ([Latitude_South] >= " + FilterBy.SouthLimit.ToString() + ")" +
-                            " AND ([Longitude_East] <= " + FilterBy.EastLimit.ToString() + ")" +
-                            " AND ([Longitude_West] >= " + FilterBy.WestLimit.ToString() + ") )";
-            string AddlFilter = string.Empty;
-            if (SCTchecked.ChkSUA_ClassB)
-            {
-                AddlFilter += "([Category] = 'B')";
-            }
-            if (SCTchecked.ChkSUA_ClassC)
-            {
-                if (AddlFilter.Length != 0) AddlFilter += " OR ";
-                AddlFilter += "([Category] = 'C')";
-            }
-            if (SCTchecked.ChkSUA_ClassD)
-            {
-                if (AddlFilter.Length != 0) AddlFilter += " OR ";
-                AddlFilter += "([Category] = 'D')";
-            }
-            if (SCTchecked.ChkSUA_Restricted)
-            {
-                if (AddlFilter.Length != 0) AddlFilter += " OR ";
-                AddlFilter += "([Category] = 'RESTRICTED')";
-            }
-            if (SCTchecked.ChkSUA_Prohibited)
-            {
-                if (AddlFilter.Length != 0) AddlFilter += " OR ";
-                AddlFilter += "([Category] = 'PROHIBITED')";
-            }
-            if (SCTchecked.ChkSUA_Danger)
-            {
-                if (AddlFilter.Length != 0) AddlFilter += " OR ";
-                AddlFilter += "([Category] = 'DANGER')";
-            }
-            if (AddlFilter.Length != 0)
-                AddlFilter = "AND ( " + AddlFilter + " )";
-            Console.WriteLine(Filter);
-            Console.WriteLine(AddlFilter);
-            return Filter + AddlFilter;
-        }
+        //private string SetSUAfilter()
+        //{
+        //    string Filter = " ( ([Latitude_North] <= " + FilterBy.NorthLimit.ToString() + ")" +
+        //                    " AND  ([Latitude_South] >= " + FilterBy.SouthLimit.ToString() + ")" +
+        //                    " AND ([Longitude_East] <= " + FilterBy.EastLimit.ToString() + ")" +
+        //                    " AND ([Longitude_West] >= " + FilterBy.WestLimit.ToString() + ") )";
+        //    string AddlFilter = string.Empty;
+        //    if (SCTchecked.ChkSUA_ClassB)
+        //    {
+        //        AddlFilter += "([Category] = 'B')";
+        //    }
+        //    if (SCTchecked.ChkSUA_ClassC)
+        //    {
+        //        if (AddlFilter.Length != 0) AddlFilter += " OR ";
+        //        AddlFilter += "([Category] = 'C')";
+        //    }
+        //    if (SCTchecked.ChkSUA_ClassD)
+        //    {
+        //        if (AddlFilter.Length != 0) AddlFilter += " OR ";
+        //        AddlFilter += "([Category] = 'D')";
+        //    }
+        //    if (SCTchecked.ChkSUA_Restricted)
+        //    {
+        //        if (AddlFilter.Length != 0) AddlFilter += " OR ";
+        //        AddlFilter += "([Category] = 'RESTRICTED')";
+        //    }
+        //    if (SCTchecked.ChkSUA_Prohibited)
+        //    {
+        //        if (AddlFilter.Length != 0) AddlFilter += " OR ";
+        //        AddlFilter += "([Category] = 'PROHIBITED')";
+        //    }
+        //    if (SCTchecked.ChkSUA_Danger)
+        //    {
+        //        if (AddlFilter.Length != 0) AddlFilter += " OR ";
+        //        AddlFilter += "([Category] = 'DANGER')";
+        //    }
+        //    if (AddlFilter.Length != 0)
+        //        AddlFilter = "AND ( " + AddlFilter + " )";
+        //    Console.WriteLine(Filter);
+        //    Console.WriteLine(AddlFilter);
+        //    return Filter + AddlFilter;
+        //}
 
         private void ClearSelected(DataView dv)
         {
@@ -760,6 +751,7 @@ namespace SCTBuilder
                         result = " ([ARTCC] ='" + ARTCCComboBox.GetItemText(ARTCCComboBox.SelectedItem) + "')";
                     break;
                 case "Square":
+                    SetFilterBy();
                     result = result +
                         " ( ([Latitude] <= " + FilterBy.NorthLimit.ToString() + ")" +
                         " AND  ([Latitude] >= " + FilterBy.SouthLimit.ToString() + ")" +
@@ -770,7 +762,15 @@ namespace SCTBuilder
             return result;
         }
 
-        private void AsstFacilityEngineerTextBox_Validated(object sender, EventArgs e)
+        private void SetFilterBy()
+        {
+            FilterBy.NorthLimit = InfoSection.NorthSquare + InfoSection.NorthOffset / InfoSection.NMperDegreeLatitude;
+            FilterBy.SouthLimit = InfoSection.SouthSquare - InfoSection.SouthOffset / InfoSection.NMperDegreeLatitude;
+            FilterBy.EastLimit = InfoSection.EastSquare - InfoSection.EastOffset / InfoSection.NMperDegreeLongitude;
+            FilterBy.WestLimit = InfoSection.WestSquare + InfoSection.WestOffset / InfoSection.NMperDegreeLongitude;
+        }
+
+    private void AsstFacilityEngineerTextBox_Validated(object sender, EventArgs e)
         {
             // Note - this textbox does not need "Validating"
             bool ToClass = true;
@@ -839,14 +839,11 @@ namespace SCTBuilder
                     Console.WriteLine(LatNorth + "  " + LongWest + "  " + LatSouth + "  " + LongEast);
                 }
             }
-            FilterBy.NorthLimit = LatNorth;
-            FilterBy.SouthLimit = LatSouth;
-            FilterBy.EastLimit = LongEast;
-            FilterBy.WestLimit = LongWest;
             EastLimitTextBox.Text = Conversions.DecDeg2SCT(LongEast, false);
             WestLimitTextBox.Text = Conversions.DecDeg2SCT(LongWest, false);
             NorthLimitTextBox.Text = Conversions.DecDeg2SCT(LatNorth, true);
             SouthLimitTextBox.Text = Conversions.DecDeg2SCT(LatSouth, true);
+            SetSquareAndOffset();
             dataview.Dispose();
         }
 
@@ -1031,6 +1028,7 @@ namespace SCTBuilder
         private void CmdExit_Click(object sender, EventArgs e)
         {
             SetChecked();
+            SetSquareAndOffset();
             CycleInfo.WriteINIxml();
             ExitClicked = true;
             Application.Exit();
@@ -1128,20 +1126,28 @@ namespace SCTBuilder
             includeNaviGraphDataToolStripMenuItem.Checked = InfoSection.UseNaviGraph;
         }
 
-        private void SetLimits()
+        private void SetSquareAndOffset()
         {
-            FilterBy.NorthLimit = Convert.ToDouble(NorthLimitTextBox.Text);
-            FilterBy.SouthLimit = Convert.ToDouble(SouthLimitTextBox.Text);
-            FilterBy.WestLimit = Convert.ToDouble(WestLimitTextBox.Text);
-            FilterBy.EastLimit = Convert.ToDouble(EastLimitTextBox.Text);
+            InfoSection.NorthSquare = Conversions.String2DecDeg(NorthLimitTextBox.Text);
+            InfoSection.SouthSquare = Conversions.String2DecDeg(SouthLimitTextBox.Text);
+            InfoSection.WestSquare = Conversions.String2DecDeg(WestLimitTextBox.Text);
+            InfoSection.EastSquare = Conversions.String2DecDeg(EastLimitTextBox.Text);
+            InfoSection.NorthOffset = Convert.ToDouble(NorthMarginNumericUpDown.Value);
+            InfoSection.EastOffset = Convert.ToDouble(EastMarginNumericUpDown.Value);
+            InfoSection.SouthOffset = Convert.ToDouble(SouthMarginNumericUpDown.Value);
+            InfoSection.WestOffset = Convert.ToDouble(WestMarginNumericUpDown.Value);
         }
 
-        private void GetLimits()
+        private void GetSquareAndOffset()
         {
-            NorthLimitTextBox.Text = Conversions.DecDeg2SCT(FilterBy.NorthLimit, true);
-            SouthLimitTextBox.Text = Conversions.DecDeg2SCT(FilterBy.SouthLimit, true);
-            WestLimitTextBox.Text = Conversions.DecDeg2SCT(FilterBy.WestLimit, false);
-            EastLimitTextBox.Text = Conversions.DecDeg2SCT(FilterBy.EastLimit, false);
+            NorthLimitTextBox.Text = Conversions.DecDeg2SCT(InfoSection.NorthSquare, true);
+            SouthLimitTextBox.Text = Conversions.DecDeg2SCT(InfoSection.SouthSquare, true);
+            WestLimitTextBox.Text = Conversions.DecDeg2SCT(InfoSection.WestSquare, false);
+            EastLimitTextBox.Text = Conversions.DecDeg2SCT(InfoSection.EastSquare, false);
+            NorthMarginNumericUpDown.Text = InfoSection.NorthOffset.ToString();
+            EastMarginNumericUpDown.Text = InfoSection.EastOffset.ToString();
+            SouthMarginNumericUpDown.Text = InfoSection.SouthOffset.ToString();
+            WestMarginNumericUpDown.Text = InfoSection.WestOffset.ToString();
         }
 
         private void ChkSSDs_CheckedChanged(object sender, EventArgs e)
@@ -1281,7 +1287,7 @@ namespace SCTBuilder
                         + cr + "Click the question mark for help on formats.";
                     SCTcommon.SendMessage(Msg);
                 }
-                else if (NLat <= SLat)
+                else if (NLat < SLat)
                 {
                     Msg = "Cannot place SE position north of NW position!";
                     SCTcommon.SendMessage(Msg);
@@ -1289,8 +1295,8 @@ namespace SCTBuilder
                 }
                 else
                 {
-                    FilterBy.SouthLimit =
-                        Conversions.AdjustedLatLong(SouthLimitTextBox.Text, SouthMarginNumericUpDown.Value.ToString(), "S");
+                    InfoSection.SouthSquare = SLat;
+                    GetSquareAndOffset();
                 }
             }
             CheckPreviewButton();
@@ -1312,7 +1318,7 @@ namespace SCTBuilder
                         + cr + "Click the question mark for help on formats.";
                     SCTcommon.SendMessage(Msg);
                 }
-                else if (NLat <= SLat)
+                else if (NLat < SLat)
                 {
                     Msg = "Cannot place NW position south of SE position!";
                     SCTcommon.SendMessage(Msg);
@@ -1320,8 +1326,8 @@ namespace SCTBuilder
                 }
                 else
                 {
-                    FilterBy.NorthLimit = 
-                        Conversions.AdjustedLatLong(NorthLimitTextBox.Text, NorthMarginNumericUpDown.Value.ToString(), "N");
+                    InfoSection.NorthSquare = NLat;
+                    GetSquareAndOffset();
                 }
             }
             CheckPreviewButton();
@@ -1343,15 +1349,17 @@ namespace SCTBuilder
                         + cr + "Click the question mark for help on formats.";
                     SCTcommon.SendMessage(Msg);
                 }
-                else if (ELon <= WLon)
+                else if (ELon < WLon)
                 {
                     Msg = "Cannot place NW position east of SE position!";
                     SCTcommon.SendMessage(Msg);
                     WestLimitTextBox.Text = string.Empty;
                 }
                 else
-                    FilterBy.WestLimit =
-                        Conversions.AdjustedLatLong(WestLimitTextBox.Text, WestMarginNumericUpDown.Value.ToString(), "W");
+                {
+                    InfoSection.WestSquare = WLon;
+                    SetSquareAndOffset();
+                }
             }
             CheckPreviewButton();
             CheckARTCC2SquareButton();
@@ -1372,15 +1380,17 @@ namespace SCTBuilder
                         + cr + "Click the question mark for help on formats.";
                     SCTcommon.SendMessage(Msg);
                 }
-                else if (ELon <= WLon)
+                else if (ELon < WLon)
                 {
                     Msg = "Cannot place SE position west of NW position!";
                     SCTcommon.SendMessage(Msg);
                     EastLimitTextBox.Text = string.Empty;
                 }
                 else
-                    FilterBy.EastLimit =
-                        Conversions.AdjustedLatLong(EastLimitTextBox.Text, EastMarginNumericUpDown.Value.ToString(), "E");
+                {
+                    InfoSection.EastSquare = ELon;
+                    SetSquareAndOffset();
+                }
             }
             CheckPreviewButton();
             CheckARTCC2SquareButton();
@@ -1396,12 +1406,9 @@ namespace SCTBuilder
         {
             if (FixListDataGridView.SelectedRows.Count != 0)
             {
-                Console.WriteLine(FixListDataGridView.SelectedRows[0].Cells["Latitude"].Value);
-                Console.WriteLine(FixListDataGridView.SelectedRows[0].Cells["Longitude"].Value);
-                FilterBy.NorthLimit = Convert.ToDouble(FixListDataGridView.SelectedRows[0].Cells[1].Value);
-                FilterBy.WestLimit = Convert.ToDouble(FixListDataGridView.SelectedRows[0].Cells[2].Value);
-                NorthLimitTextBox.Text = Conversions.DecDeg2SCT(FilterBy.NorthLimit, true);
-                WestLimitTextBox.Text = Conversions.DecDeg2SCT(FilterBy.WestLimit, false);
+                InfoSection.NorthSquare = Convert.ToDouble(FixListDataGridView.SelectedRows[0].Cells["Latitude"].Value);
+                InfoSection.WestSquare = Convert.ToDouble(FixListDataGridView.SelectedRows[0].Cells["Longitude"].Value);
+                GetSquareAndOffset();
             }
             CheckPreviewButton();
             CheckARTCC2SquareButton();
@@ -1412,10 +1419,9 @@ namespace SCTBuilder
         {
             if (FixListDataGridView.SelectedRows.Count != 0)
             {
-                FilterBy.SouthLimit = Convert.ToDouble(FixListDataGridView.SelectedRows[0].Cells[1].Value);
-                FilterBy.EastLimit = Convert.ToDouble(FixListDataGridView.SelectedRows[0].Cells[2].Value);
-                SouthLimitTextBox.Text = Conversions.DecDeg2SCT(FilterBy.SouthLimit, true);
-                EastLimitTextBox.Text = Conversions.DecDeg2SCT(FilterBy.EastLimit, false);
+                InfoSection.SouthSquare = Convert.ToDouble(FixListDataGridView.SelectedRows[0].Cells["Latitude"].Value);
+                InfoSection.EastSquare = Convert.ToDouble(FixListDataGridView.SelectedRows[0].Cells["Longitude"].Value);
+                GetSquareAndOffset();
             }
             CheckPreviewButton();
             CheckARTCC2SquareButton();
@@ -1562,6 +1568,7 @@ namespace SCTBuilder
 
         private void CenterARTCCButton_Click(object sender, EventArgs e)
         {
+            SetFilterBy();
             InfoSection.CenterLatitude_Dec = (FilterBy.NorthLimit + FilterBy.SouthLimit)/ 2;
             CenterLatTextBox.Text = InfoSection.CenterLatitude_SCT;
             InfoSection.CenterLongitude_Dec = (FilterBy.WestLimit + FilterBy.EastLimit) / 2;
@@ -1638,17 +1645,6 @@ namespace SCTBuilder
             ARTCCCheckBox.Checked = ARTCChighCheckBox.Checked || ARTCClowCheckBox.Checked;
         }
 
-        private void dgvAWY_DoubleClick(object sender, EventArgs e)
-        {
-            // Use this to edit the airways
-        }
-
-        private void dMSDecDegToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Form ConvertDMS = new DMS_DecDeg();
-            ConvertDMS.Show();
-        }
-
         private void SCTtoolStripButton_Click(object sender, EventArgs e)
         {
             SCToutput.WriteSCT();
@@ -1666,25 +1662,32 @@ namespace SCTBuilder
             MessageBox.Show(Msg, VersionInfo.Title, buttons, icon);
         }
 
-        private void useFixesForCoordinatesToolStripMenuItem_CheckedChanged(object sender, EventArgs e)
-        {
-            InfoSection.UseFixes = useFixesForCoordinatesToolStripMenuItem.Checked;
-        }
-
-        private void includeNaviGraphDataToolStripMenuItem_CheckedChanged(object sender, EventArgs e)
-        {
-            NGDataFolderLabel.Enabled = NGDataFolderTextBox.Enabled = NGDataFolderButton.Enabled = 
-                InfoSection.UseNaviGraph = includeNaviGraphDataToolStripMenuItem.Checked;
-        }
-
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (!ExitClicked)
             {
                 SetChecked();
+                SetSquareAndOffset();
                 CycleInfo.WriteINIxml();
             }
             Application.Exit();
+        }
+
+        private void DMSDecDegToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Form ConvertDMS = new DMS_DecDeg();
+            ConvertDMS.Show();
+        }
+
+        private void UseFixesForCoordinatesToolStripMenuItem_CheckedChanged(object sender, EventArgs e)
+        {
+            InfoSection.UseFixes = useFixesForCoordinatesToolStripMenuItem.Checked;
+        }
+
+        private void IncludeNaviGraphDataToolStripMenuItem_CheckedChanged(object sender, EventArgs e)
+        {
+            NGDataFolderLabel.Enabled = NGDataFolderTextBox.Enabled = NGDataFolderButton.Enabled =
+                InfoSection.UseNaviGraph = includeNaviGraphDataToolStripMenuItem.Checked;
         }
     }
 }

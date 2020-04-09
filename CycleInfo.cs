@@ -22,6 +22,7 @@ namespace SCTBuilder
             WriteXmlElement(xml, "CycleEnd", CycleEnd.ToString());
             WriteXmlElement(xml, "DataFolder", FolderMgt.DataFolder.ToString());
             WriteXmlElement(xml, "OutputFolder", FolderMgt.OutputFolder.ToString());
+            WriteXmlElement(xml, "NaviGraphDataFolder", FolderMgt.NGFolder.ToString());
             WriteXmlElement(xml, "SponsorARTCC", InfoSection.SponsorARTCC.ToString());
             WriteXmlElement(xml, "DefaultAirport", InfoSection.DefaultAirport.ToString());
             WriteXmlElement(xml, "FacilityEngineer", InfoSection.FacilityEngineer.ToString());
@@ -47,10 +48,14 @@ namespace SCTBuilder
             WriteXmlElement(xml, "ChkVOR", SCTchecked.ChkVOR.ToString());
             WriteXmlElement(xml, "UseFixNames", InfoSection.UseFixes.ToString());
             WriteXmlElement(xml, "UseNaviGraphData", InfoSection.UseNaviGraph.ToString());
-            WriteXmlElement(xml, "NorthLimit", FilterBy.NorthLimit.ToString());
-            WriteXmlElement(xml, "SouthLimit", FilterBy.SouthLimit.ToString());
-            WriteXmlElement(xml, "WestLimit", FilterBy.WestLimit.ToString());
-            WriteXmlElement(xml, "EastLimit", FilterBy.EastLimit.ToString());
+            WriteXmlElement(xml, "NorthSquare", InfoSection.NorthSquare.ToString());
+            WriteXmlElement(xml, "SouthSquare", InfoSection.SouthSquare.ToString());
+            WriteXmlElement(xml, "WestSquare", InfoSection.WestSquare.ToString());
+            WriteXmlElement(xml, "EastSquare", InfoSection.EastSquare.ToString());
+            WriteXmlElement(xml, "NorthOffset", InfoSection.NorthOffset.ToString());
+            WriteXmlElement(xml, "WestOffset", InfoSection.WestOffset.ToString());
+            WriteXmlElement(xml, "SouthOffset", InfoSection.SouthOffset.ToString());
+            WriteXmlElement(xml, "EastOffset", InfoSection.EastOffset.ToString());
             xml.WriteEndDocument();
             xml.Close();
         }
@@ -93,6 +98,9 @@ namespace SCTBuilder
                                 break;
                             case "OutputFolder":
                                 FolderMgt.OutputFolder = value;
+                                break;
+                            case "NaviGraphDataFolder":
+                                FolderMgt.NGFolder = value;
                                 break;
                             case "SponsorARTCC":
                                 InfoSection.SponsorARTCC = value;
@@ -169,17 +177,29 @@ namespace SCTBuilder
                             case "UseNaviGraphData":
                                 InfoSection.UseNaviGraph = Convert.ToBoolean(value);
                                 break;
-                            case "NorthLimit":
-                                FilterBy.NorthLimit = Convert.ToDouble(value);
+                            case "NorthSquare":
+                                InfoSection.NorthSquare = Convert.ToDouble(value);
                                 break;
-                            case "SouthLimit":
-                                FilterBy.SouthLimit = Convert.ToDouble(value);
+                            case "SouthSquare":
+                                InfoSection.SouthSquare = Convert.ToDouble(value);
                                 break;
-                            case "WestLimit":
-                                FilterBy.WestLimit = Convert.ToDouble(value);
+                            case "WestSquare":
+                                InfoSection.WestSquare = Convert.ToDouble(value);
                                 break;
-                            case "EastLimit":
-                                FilterBy.EastLimit = Convert.ToDouble(value);
+                            case "EastSquare":
+                                InfoSection.EastSquare = Convert.ToDouble(value);
+                                break;
+                            case "NorthOffset":
+                                InfoSection.NorthOffset = Convert.ToDouble(value);
+                                break;
+                            case "SouthOffset":
+                                InfoSection.SouthOffset = Convert.ToDouble(value);
+                                break;
+                            case "WestOffset":
+                                InfoSection.WestOffset = Convert.ToDouble(value);
+                                break;
+                            case "EastOffset":
+                                InfoSection.EastOffset = Convert.ToDouble(value);
                                 break;
                             default:
                                 break;
