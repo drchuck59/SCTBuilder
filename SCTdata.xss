@@ -10,7 +10,7 @@
     <Shape ID="DesignTable:APT" ZOrder="22" X="246" Y="59" Height="389" Width="150" AdapterExpanded="true" DataTableExpanded="true" OldAdapterHeight="0" OldDataTableHeight="0" SplitterPosition="385" />
     <Shape ID="DesignTable:VOR" ZOrder="21" X="428" Y="58" Height="238" Width="150" AdapterExpanded="true" DataTableExpanded="true" OldAdapterHeight="0" OldDataTableHeight="0" SplitterPosition="234" />
     <Shape ID="DesignTable:NDB" ZOrder="20" X="608" Y="55" Height="238" Width="150" AdapterExpanded="true" DataTableExpanded="true" OldAdapterHeight="0" OldDataTableHeight="0" SplitterPosition="234" />
-    <Shape ID="DesignTable:TWR" ZOrder="19" X="975" Y="56" Height="181" Width="150" AdapterExpanded="true" DataTableExpanded="true" OldAdapterHeight="0" OldDataTableHeight="0" SplitterPosition="177" />
+    <Shape ID="DesignTable:TWR" ZOrder="19" X="975" Y="56" Height="227" Width="150" AdapterExpanded="true" DataTableExpanded="true" OldAdapterHeight="0" OldDataTableHeight="0" SplitterPosition="223" />
     <Shape ID="DesignTable:FIX" ZOrder="18" X="783" Y="56" Height="195" Width="150" AdapterExpanded="true" DataTableExpanded="true" OldAdapterHeight="0" OldDataTableHeight="0" SplitterPosition="191" />
     <Shape ID="DesignTable:AWY" ZOrder="17" X="1157" Y="61" Height="416" Width="150" AdapterExpanded="true" DataTableExpanded="true" OldAdapterHeight="0" OldDataTableHeight="0" SplitterPosition="412" />
     <Shape ID="DesignTable:RWY" ZOrder="16" X="434" Y="317" Height="497" Width="150" AdapterExpanded="true" DataTableExpanded="true" OldAdapterHeight="0" OldDataTableHeight="0" SplitterPosition="493" />

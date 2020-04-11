@@ -352,7 +352,6 @@ namespace SCTBuilder
         private static string outputFolder = string.Empty;
         private static string dataFolder = string.Empty;
         private static string ngFolder = string.Empty;
-        public static readonly string INIfile = ".\\SCTbuilder.ini";
         public static string DataFolder
         {
             get { return dataFolder; }
@@ -375,7 +374,7 @@ namespace SCTBuilder
 
     public class VersionInfo                            // Internal information
     {
-        public readonly static string Title = "SCT Builder 0.8 beta";
+        public readonly static string Title = "SCT Builder";
     }
     public class FilterBy                               // Filter source for SCT2 output
     {

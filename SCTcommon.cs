@@ -58,6 +58,25 @@ namespace SCTBuilder
             }
         }
 
+        public static string GetFolderPath(string selectedPath, string dialogTitle)
+        {
+            FolderBrowserDialog fBD = new FolderBrowserDialog();
+            string result = string.Empty;
+            // Set default folder to start
+            fBD.SelectedPath = selectedPath;
+            fBD.Description = dialogTitle;
+            if (selectedPath.Length != 0) fBD.SelectedPath = selectedPath;
+            else fBD.SelectedPath = AppDomain.CurrentDomain.BaseDirectory;
+            //Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            // Get user's desired folder
+
+            DialogResult dialogResult = fBD.ShowDialog();
+            if (dialogResult == DialogResult.OK)
+                result = fBD.SelectedPath;
+            fBD.Dispose();
+            return result;
+        }
+
         public static DialogResult SendMessage(string Msg,
                 MessageBoxIcon icon = MessageBoxIcon.Warning, MessageBoxButtons buttons = MessageBoxButtons.OK)
         {

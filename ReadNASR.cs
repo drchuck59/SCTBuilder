@@ -142,8 +142,8 @@ namespace SCTBuilder
                             break;
                     }
                 }
-                // Console.WriteLine("VOR rows read: " + VORtable.Rows.Count.ToString());
-                // Console.WriteLine("NDB rows read: " + NDBtable.Rows.Count.ToString());
+                Console.WriteLine("VOR rows read: " + VORtable.Rows.Count.ToString());
+                Console.WriteLine("NDB rows read: " + NDBtable.Rows.Count.ToString());
             }
         }
         public static void FillFIX()

@@ -65,7 +65,7 @@
             this.MagVarTextBox = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.STARNameCheckBox = new System.Windows.Forms.CheckBox();
-            this.InsertARTCCinSquareButton = new System.Windows.Forms.Button();
+            this.UseARTCCAsSquareButton = new System.Windows.Forms.Button();
             this.IdentifierTextBox = new System.Windows.Forms.TextBox();
             this.PreviewButton = new System.Windows.Forms.Button();
             this.SetAllMarginsButton = new System.Windows.Forms.Button();
@@ -164,7 +164,7 @@
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
             this.InfoGroupBox = new System.Windows.Forms.GroupBox();
-            this.APTasCenterButton = new System.Windows.Forms.Button();
+            this.CenterAPTButton = new System.Windows.Forms.Button();
             this.CenterARTCCButton = new System.Windows.Forms.Button();
             this.label7 = new System.Windows.Forms.Label();
             this.FoldersGroupBox = new System.Windows.Forms.GroupBox();
@@ -241,7 +241,7 @@
             this.FAADataFolderTextBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.FAADataFolderTextBox.Name = "FAADataFolderTextBox";
             this.FAADataFolderTextBox.Size = new System.Drawing.Size(419, 31);
-            this.FAADataFolderTextBox.TabIndex = 3;
+            this.FAADataFolderTextBox.TabIndex = 1;
             this.toolTip1.SetToolTip(this.FAADataFolderTextBox, "Folder containing FAA text files");
             this.FAADataFolderTextBox.Validating += new System.ComponentModel.CancelEventHandler(this.TxtDataFolder_Validating);
             this.FAADataFolderTextBox.Validated += new System.EventHandler(this.TxtDataFolder_Validated);
@@ -253,7 +253,7 @@
             this.OutputFolderTextBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.OutputFolderTextBox.Name = "OutputFolderTextBox";
             this.OutputFolderTextBox.Size = new System.Drawing.Size(419, 31);
-            this.OutputFolderTextBox.TabIndex = 5;
+            this.OutputFolderTextBox.TabIndex = 3;
             this.toolTip1.SetToolTip(this.OutputFolderTextBox, "Folder containing output files");
             this.OutputFolderTextBox.Validated += new System.EventHandler(this.TxtOutputFolder_Validated);
             // 
@@ -274,7 +274,7 @@
             this.FAADataFolderButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.FAADataFolderButton.Name = "FAADataFolderButton";
             this.FAADataFolderButton.Size = new System.Drawing.Size(42, 34);
-            this.FAADataFolderButton.TabIndex = 6;
+            this.FAADataFolderButton.TabIndex = 2;
             this.FAADataFolderButton.Text = "...";
             this.toolTip1.SetToolTip(this.FAADataFolderButton, "Browse to select data folder");
             this.FAADataFolderButton.UseVisualStyleBackColor = true;
@@ -287,7 +287,7 @@
             this.OutputFolderButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.OutputFolderButton.Name = "OutputFolderButton";
             this.OutputFolderButton.Size = new System.Drawing.Size(42, 34);
-            this.OutputFolderButton.TabIndex = 7;
+            this.OutputFolderButton.TabIndex = 4;
             this.OutputFolderButton.Text = "...";
             this.toolTip1.SetToolTip(this.OutputFolderButton, "Browse to select data folder");
             this.OutputFolderButton.UseVisualStyleBackColor = true;
@@ -301,8 +301,9 @@
             this.ARTCCComboBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.ARTCCComboBox.Name = "ARTCCComboBox";
             this.ARTCCComboBox.Size = new System.Drawing.Size(79, 30);
-            this.ARTCCComboBox.TabIndex = 8;
+            this.ARTCCComboBox.TabIndex = 9;
             this.toolTip1.SetToolTip(this.ARTCCComboBox, "YOUR ARTCC that will be the name of the sector file (e.g., 1909_ZJX)");
+            this.ARTCCComboBox.SelectedIndexChanged += new System.EventHandler(this.ARTCCComboBox_SelectedIndexChanged);
             this.ARTCCComboBox.Validated += new System.EventHandler(this.ARTCCComboBox_Validated);
             // 
             // AirportComboBox
@@ -315,6 +316,7 @@
             this.AirportComboBox.Size = new System.Drawing.Size(85, 30);
             this.AirportComboBox.TabIndex = 10;
             this.toolTip1.SetToolTip(this.AirportComboBox, "The airport and lat/long where VRC will center when opened");
+            this.AirportComboBox.SelectedIndexChanged += new System.EventHandler(this.AirportComboBox_SelectedIndexChanged);
             this.AirportComboBox.Validated += new System.EventHandler(this.AirportComboBox_Validated);
             // 
             // AsstFacilityEngineerTextBox
@@ -324,7 +326,7 @@
             this.AsstFacilityEngineerTextBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.AsstFacilityEngineerTextBox.Name = "AsstFacilityEngineerTextBox";
             this.AsstFacilityEngineerTextBox.Size = new System.Drawing.Size(337, 28);
-            this.AsstFacilityEngineerTextBox.TabIndex = 17;
+            this.AsstFacilityEngineerTextBox.TabIndex = 8;
             this.toolTip1.SetToolTip(this.AsstFacilityEngineerTextBox, "Assistant Facilities Engineer (can be blank)");
             this.AsstFacilityEngineerTextBox.Validated += new System.EventHandler(this.AsstFacilityEngineerTextBox_Validated);
             // 
@@ -335,7 +337,7 @@
             this.FacilityEngineerTextBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.FacilityEngineerTextBox.Name = "FacilityEngineerTextBox";
             this.FacilityEngineerTextBox.Size = new System.Drawing.Size(337, 28);
-            this.FacilityEngineerTextBox.TabIndex = 15;
+            this.FacilityEngineerTextBox.TabIndex = 7;
             this.toolTip1.SetToolTip(this.FacilityEngineerTextBox, "ARTCC Facilities Engineer (may not be blank)");
             this.FacilityEngineerTextBox.Validating += new System.ComponentModel.CancelEventHandler(this.FacilityEngineerTextBox_Validating);
             this.FacilityEngineerTextBox.Validated += new System.EventHandler(this.FacilityEngineerTextBox_Validated);
@@ -347,7 +349,7 @@
             this.SouthLimitTextBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.SouthLimitTextBox.Name = "SouthLimitTextBox";
             this.SouthLimitTextBox.Size = new System.Drawing.Size(145, 28);
-            this.SouthLimitTextBox.TabIndex = 26;
+            this.SouthLimitTextBox.TabIndex = 15;
             this.toolTip1.SetToolTip(this.SouthLimitTextBox, "Southern Latitude of square");
             this.SouthLimitTextBox.Validated += new System.EventHandler(this.SouthLimitTextBox_Validated);
             // 
@@ -358,7 +360,7 @@
             this.EastLimitTextBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.EastLimitTextBox.Name = "EastLimitTextBox";
             this.EastLimitTextBox.Size = new System.Drawing.Size(145, 28);
-            this.EastLimitTextBox.TabIndex = 24;
+            this.EastLimitTextBox.TabIndex = 16;
             this.toolTip1.SetToolTip(this.EastLimitTextBox, "Eastern Longitude of square");
             this.EastLimitTextBox.Validated += new System.EventHandler(this.EastLimitTextBox_Validated);
             // 
@@ -369,7 +371,7 @@
             this.WestLimitTextBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.WestLimitTextBox.Name = "WestLimitTextBox";
             this.WestLimitTextBox.Size = new System.Drawing.Size(145, 28);
-            this.WestLimitTextBox.TabIndex = 22;
+            this.WestLimitTextBox.TabIndex = 14;
             this.toolTip1.SetToolTip(this.WestLimitTextBox, "Western Longitude of square");
             this.WestLimitTextBox.Validated += new System.EventHandler(this.WestLimitTextBox_Validated);
             // 
@@ -380,7 +382,7 @@
             this.NorthLimitTextBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.NorthLimitTextBox.Name = "NorthLimitTextBox";
             this.NorthLimitTextBox.Size = new System.Drawing.Size(145, 28);
-            this.NorthLimitTextBox.TabIndex = 20;
+            this.NorthLimitTextBox.TabIndex = 13;
             this.toolTip1.SetToolTip(this.NorthLimitTextBox, "Northern Latitude of square");
             this.NorthLimitTextBox.Validated += new System.EventHandler(this.NorthLimitTextBox_Validated);
             // 
@@ -416,7 +418,7 @@
             this.SIDNameCheckBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.SIDNameCheckBox.Name = "SIDNameCheckBox";
             this.SIDNameCheckBox.Size = new System.Drawing.Size(132, 24);
-            this.SIDNameCheckBox.TabIndex = 44;
+            this.SIDNameCheckBox.TabIndex = 30;
             this.SIDNameCheckBox.Text = "Use full name";
             this.toolTip1.SetToolTip(this.SIDNameCheckBox, "If checked, SCT diagrams will use full name for SIDs/STARs. If UNchecked, will us" +
         "e the abbreviation.");
@@ -540,6 +542,7 @@
             this.CenterLatTextBox.Name = "CenterLatTextBox";
             this.CenterLatTextBox.Size = new System.Drawing.Size(145, 26);
             this.CenterLatTextBox.TabIndex = 20;
+            this.CenterLatTextBox.TabStop = false;
             this.toolTip1.SetToolTip(this.CenterLatTextBox, "VRC will open centered on these coordinates");
             // 
             // CenterLonTextBox
@@ -549,6 +552,7 @@
             this.CenterLonTextBox.Name = "CenterLonTextBox";
             this.CenterLonTextBox.Size = new System.Drawing.Size(145, 26);
             this.CenterLonTextBox.TabIndex = 22;
+            this.CenterLonTextBox.TabStop = false;
             this.toolTip1.SetToolTip(this.CenterLonTextBox, "VRC will open centered on these coordinates");
             // 
             // CenterLonLabel
@@ -569,6 +573,7 @@
             this.MagVarTextBox.Name = "MagVarTextBox";
             this.MagVarTextBox.Size = new System.Drawing.Size(56, 26);
             this.MagVarTextBox.TabIndex = 24;
+            this.MagVarTextBox.TabStop = false;
             this.toolTip1.SetToolTip(this.MagVarTextBox, "VRC will use this to correct to true bearings");
             // 
             // label1
@@ -590,24 +595,24 @@
             this.STARNameCheckBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.STARNameCheckBox.Name = "STARNameCheckBox";
             this.STARNameCheckBox.Size = new System.Drawing.Size(132, 24);
-            this.STARNameCheckBox.TabIndex = 47;
+            this.STARNameCheckBox.TabIndex = 32;
             this.STARNameCheckBox.Text = "Use full name";
             this.toolTip1.SetToolTip(this.STARNameCheckBox, "If checked, SCT diagrams will use full name for SIDs/STARs. If UNchecked, will us" +
         "e the abbreviation.");
             this.STARNameCheckBox.UseVisualStyleBackColor = true;
             // 
-            // InsertARTCCinSquareButton
+            // UseARTCCAsSquareButton
             // 
-            this.InsertARTCCinSquareButton.Enabled = false;
-            this.InsertARTCCinSquareButton.Location = new System.Drawing.Point(40, 198);
-            this.InsertARTCCinSquareButton.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.InsertARTCCinSquareButton.Name = "InsertARTCCinSquareButton";
-            this.InsertARTCCinSquareButton.Size = new System.Drawing.Size(133, 31);
-            this.InsertARTCCinSquareButton.TabIndex = 38;
-            this.InsertARTCCinSquareButton.Text = "Use ARTCC";
-            this.toolTip1.SetToolTip(this.InsertARTCCinSquareButton, "Insert the N, S, E, and W limits of the ARTCC as the selection");
-            this.InsertARTCCinSquareButton.UseVisualStyleBackColor = true;
-            this.InsertARTCCinSquareButton.Click += new System.EventHandler(this.InsertARTCCinSquareButton_Click);
+            this.UseARTCCAsSquareButton.Enabled = false;
+            this.UseARTCCAsSquareButton.Location = new System.Drawing.Point(57, 198);
+            this.UseARTCCAsSquareButton.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.UseARTCCAsSquareButton.Name = "UseARTCCAsSquareButton";
+            this.UseARTCCAsSquareButton.Size = new System.Drawing.Size(133, 31);
+            this.UseARTCCAsSquareButton.TabIndex = 17;
+            this.UseARTCCAsSquareButton.Text = "Use ARTCC";
+            this.toolTip1.SetToolTip(this.UseARTCCAsSquareButton, "Insert the N, S, E, and W limits of the ARTCC as the selection");
+            this.UseARTCCAsSquareButton.UseVisualStyleBackColor = true;
+            this.UseARTCCAsSquareButton.Click += new System.EventHandler(this.UseARTCCAsSquareButton_Click);
             // 
             // IdentifierTextBox
             // 
@@ -625,14 +630,13 @@
             this.PreviewButton.BackColor = System.Drawing.Color.White;
             this.PreviewButton.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("PreviewButton.BackgroundImage")));
             this.PreviewButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.PreviewButton.Enabled = false;
             this.PreviewButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.PreviewButton.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.PreviewButton.Location = new System.Drawing.Point(697, 733);
             this.PreviewButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.PreviewButton.Name = "PreviewButton";
             this.PreviewButton.Size = new System.Drawing.Size(253, 108);
-            this.PreviewButton.TabIndex = 55;
+            this.PreviewButton.TabIndex = 33;
             this.toolTip1.SetToolTip(this.PreviewButton, "Preview Selection");
             this.PreviewButton.UseVisualStyleBackColor = false;
             this.PreviewButton.Click += new System.EventHandler(this.PreviewButton_Click);
@@ -646,7 +650,7 @@
             this.SetAllMarginsButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.SetAllMarginsButton.Name = "SetAllMarginsButton";
             this.SetAllMarginsButton.Size = new System.Drawing.Size(66, 38);
-            this.SetAllMarginsButton.TabIndex = 45;
+            this.SetAllMarginsButton.TabIndex = 18;
             this.toolTip1.SetToolTip(this.SetAllMarginsButton, "Click to Set all margins to this value");
             this.SetAllMarginsButton.UseVisualStyleBackColor = false;
             this.SetAllMarginsButton.Click += new System.EventHandler(this.SetAllMarginsButton_Click);
@@ -663,6 +667,7 @@
             this.AllMarginsNumericUpDown.Name = "AllMarginsNumericUpDown";
             this.AllMarginsNumericUpDown.Size = new System.Drawing.Size(66, 26);
             this.AllMarginsNumericUpDown.TabIndex = 46;
+            this.AllMarginsNumericUpDown.TabStop = false;
             this.toolTip1.SetToolTip(this.AllMarginsNumericUpDown, "Set all margins to this value");
             // 
             // RWYsCheckBox
@@ -672,7 +677,7 @@
             this.RWYsCheckBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.RWYsCheckBox.Name = "RWYsCheckBox";
             this.RWYsCheckBox.Size = new System.Drawing.Size(100, 24);
-            this.RWYsCheckBox.TabIndex = 37;
+            this.RWYsCheckBox.TabIndex = 20;
             this.RWYsCheckBox.Text = "Runways";
             this.toolTip1.SetToolTip(this.RWYsCheckBox, "Airport selection must be enable to select Runways");
             this.RWYsCheckBox.UseVisualStyleBackColor = true;
@@ -685,7 +690,7 @@
             this.AWYsCheckBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.AWYsCheckBox.Name = "AWYsCheckBox";
             this.AWYsCheckBox.Size = new System.Drawing.Size(89, 24);
-            this.AWYsCheckBox.TabIndex = 39;
+            this.AWYsCheckBox.TabIndex = 25;
             this.AWYsCheckBox.Text = "Airways";
             this.toolTip1.SetToolTip(this.AWYsCheckBox, "VORs, NDB, and FIXes must be enabled to select airways");
             this.AWYsCheckBox.UseVisualStyleBackColor = true;
@@ -698,7 +703,7 @@
             this.NGDataFolderTextBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.NGDataFolderTextBox.Name = "NGDataFolderTextBox";
             this.NGDataFolderTextBox.Size = new System.Drawing.Size(419, 31);
-            this.NGDataFolderTextBox.TabIndex = 9;
+            this.NGDataFolderTextBox.TabIndex = 5;
             this.toolTip1.SetToolTip(this.NGDataFolderTextBox, "Folder containing NaviGraph data");
             // 
             // NGDataFolderButton
@@ -708,7 +713,7 @@
             this.NGDataFolderButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.NGDataFolderButton.Name = "NGDataFolderButton";
             this.NGDataFolderButton.Size = new System.Drawing.Size(42, 34);
-            this.NGDataFolderButton.TabIndex = 10;
+            this.NGDataFolderButton.TabIndex = 6;
             this.NGDataFolderButton.Text = "...";
             this.toolTip1.SetToolTip(this.NGDataFolderButton, "Browse to select data folder");
             this.NGDataFolderButton.UseVisualStyleBackColor = true;
@@ -721,7 +726,7 @@
             this.LimitAPT2ARTCCCheckBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.LimitAPT2ARTCCCheckBox.Name = "LimitAPT2ARTCCCheckBox";
             this.LimitAPT2ARTCCCheckBox.Size = new System.Drawing.Size(199, 24);
-            this.LimitAPT2ARTCCCheckBox.TabIndex = 55;
+            this.LimitAPT2ARTCCCheckBox.TabIndex = 21;
             this.LimitAPT2ARTCCCheckBox.Text = "Limit to primary ARTCC";
             this.toolTip1.SetToolTip(this.LimitAPT2ARTCCCheckBox, "Airport selection must be enable to select Runways");
             this.LimitAPT2ARTCCCheckBox.UseVisualStyleBackColor = true;
@@ -780,7 +785,7 @@
             this.FilterGroupBox.Controls.Add(this.SEByFIXButton);
             this.FilterGroupBox.Controls.Add(this.NWByFIXButton);
             this.FilterGroupBox.Controls.Add(this.label8);
-            this.FilterGroupBox.Controls.Add(this.InsertARTCCinSquareButton);
+            this.FilterGroupBox.Controls.Add(this.UseARTCCAsSquareButton);
             this.FilterGroupBox.Controls.Add(this.label5);
             this.FilterGroupBox.Controls.Add(this.label4);
             this.FilterGroupBox.Controls.Add(this.label3);
@@ -923,6 +928,7 @@
             this.EastMarginNumericUpDown.Name = "EastMarginNumericUpDown";
             this.EastMarginNumericUpDown.Size = new System.Drawing.Size(78, 26);
             this.EastMarginNumericUpDown.TabIndex = 32;
+            this.EastMarginNumericUpDown.TabStop = false;
             // 
             // SouthMarginNumericUpDown
             // 
@@ -936,6 +942,7 @@
             this.SouthMarginNumericUpDown.Name = "SouthMarginNumericUpDown";
             this.SouthMarginNumericUpDown.Size = new System.Drawing.Size(78, 26);
             this.SouthMarginNumericUpDown.TabIndex = 31;
+            this.SouthMarginNumericUpDown.TabStop = false;
             // 
             // WestMarginNumericUpDown
             // 
@@ -949,6 +956,7 @@
             this.WestMarginNumericUpDown.Name = "WestMarginNumericUpDown";
             this.WestMarginNumericUpDown.Size = new System.Drawing.Size(78, 26);
             this.WestMarginNumericUpDown.TabIndex = 30;
+            this.WestMarginNumericUpDown.TabStop = false;
             // 
             // NorthMarginNumericUpDown
             // 
@@ -962,6 +970,7 @@
             this.NorthMarginNumericUpDown.Name = "NorthMarginNumericUpDown";
             this.NorthMarginNumericUpDown.Size = new System.Drawing.Size(78, 26);
             this.NorthMarginNumericUpDown.TabIndex = 29;
+            this.NorthMarginNumericUpDown.TabStop = false;
             // 
             // lblMargins
             // 
@@ -1028,7 +1037,8 @@
             this.SelectedTabControl.Name = "SelectedTabControl";
             this.SelectedTabControl.SelectedIndex = 0;
             this.SelectedTabControl.Size = new System.Drawing.Size(699, 520);
-            this.SelectedTabControl.TabIndex = 22;
+            this.SelectedTabControl.TabIndex = 34;
+            this.SelectedTabControl.SelectedIndexChanged += new System.EventHandler(this.SelectedTabControl_SelectedIndexChanged);
             // 
             // APTtabPage
             // 
@@ -1264,7 +1274,7 @@
             this.APTsCheckBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.APTsCheckBox.Name = "APTsCheckBox";
             this.APTsCheckBox.Size = new System.Drawing.Size(90, 24);
-            this.APTsCheckBox.TabIndex = 34;
+            this.APTsCheckBox.TabIndex = 19;
             this.APTsCheckBox.Text = "Airports";
             this.APTsCheckBox.UseVisualStyleBackColor = true;
             this.APTsCheckBox.CheckedChanged += new System.EventHandler(this.APTsCheckBox_CheckedChanged);
@@ -1276,7 +1286,7 @@
             this.VORsCheckBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.VORsCheckBox.Name = "VORsCheckBox";
             this.VORsCheckBox.Size = new System.Drawing.Size(78, 24);
-            this.VORsCheckBox.TabIndex = 35;
+            this.VORsCheckBox.TabIndex = 22;
             this.VORsCheckBox.Text = "VORs";
             this.VORsCheckBox.UseVisualStyleBackColor = true;
             this.VORsCheckBox.CheckedChanged += new System.EventHandler(this.VORsCheckBox_CheckedChanged);
@@ -1288,7 +1298,7 @@
             this.NDBsCheckBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.NDBsCheckBox.Name = "NDBsCheckBox";
             this.NDBsCheckBox.Size = new System.Drawing.Size(77, 24);
-            this.NDBsCheckBox.TabIndex = 36;
+            this.NDBsCheckBox.TabIndex = 23;
             this.NDBsCheckBox.Text = "NDBs";
             this.NDBsCheckBox.UseVisualStyleBackColor = true;
             this.NDBsCheckBox.CheckedChanged += new System.EventHandler(this.NDBsCheckBox_CheckedChanged);
@@ -1300,7 +1310,7 @@
             this.FIXesCheckBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.FIXesCheckBox.Name = "FIXesCheckBox";
             this.FIXesCheckBox.Size = new System.Drawing.Size(72, 24);
-            this.FIXesCheckBox.TabIndex = 38;
+            this.FIXesCheckBox.TabIndex = 24;
             this.FIXesCheckBox.Text = "Fixes";
             this.FIXesCheckBox.UseVisualStyleBackColor = true;
             this.FIXesCheckBox.CheckedChanged += new System.EventHandler(this.FIXesCheckBox_CheckedChanged);
@@ -1312,7 +1322,7 @@
             this.SIDsCheckBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.SIDsCheckBox.Name = "SIDsCheckBox";
             this.SIDsCheckBox.Size = new System.Drawing.Size(71, 24);
-            this.SIDsCheckBox.TabIndex = 40;
+            this.SIDsCheckBox.TabIndex = 29;
             this.SIDsCheckBox.Text = "SIDs";
             this.SIDsCheckBox.UseVisualStyleBackColor = true;
             this.SIDsCheckBox.CheckedChanged += new System.EventHandler(this.ChkSSDs_CheckedChanged);
@@ -1324,7 +1334,7 @@
             this.ARTCCCheckBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.ARTCCCheckBox.Name = "ARTCCCheckBox";
             this.ARTCCCheckBox.Size = new System.Drawing.Size(97, 24);
-            this.ARTCCCheckBox.TabIndex = 42;
+            this.ARTCCCheckBox.TabIndex = 26;
             this.ARTCCCheckBox.Text = "ARTCCs";
             this.ARTCCCheckBox.UseVisualStyleBackColor = true;
             this.ARTCCCheckBox.CheckedChanged += new System.EventHandler(this.ARTCCCheckBox_CheckedChanged);
@@ -1338,7 +1348,7 @@
             this.ARTCClowCheckBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.ARTCClowCheckBox.Name = "ARTCClowCheckBox";
             this.ARTCClowCheckBox.Size = new System.Drawing.Size(44, 24);
-            this.ARTCClowCheckBox.TabIndex = 54;
+            this.ARTCClowCheckBox.TabIndex = 28;
             this.ARTCClowCheckBox.Text = "L";
             this.ARTCClowCheckBox.UseVisualStyleBackColor = true;
             this.ARTCClowCheckBox.CheckedChanged += new System.EventHandler(this.ARTCClowCheckBox_CheckedChanged);
@@ -1352,7 +1362,7 @@
             this.ARTCChighCheckBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.ARTCChighCheckBox.Name = "ARTCChighCheckBox";
             this.ARTCChighCheckBox.Size = new System.Drawing.Size(47, 24);
-            this.ARTCChighCheckBox.TabIndex = 48;
+            this.ARTCChighCheckBox.TabIndex = 27;
             this.ARTCChighCheckBox.Text = "H";
             this.ARTCChighCheckBox.UseVisualStyleBackColor = true;
             this.ARTCChighCheckBox.CheckedChanged += new System.EventHandler(this.ARTCChighCheckBox_CheckedChanged);
@@ -1364,7 +1374,7 @@
             this.STARsCheckBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.STARsCheckBox.Name = "STARsCheckBox";
             this.STARsCheckBox.Size = new System.Drawing.Size(86, 24);
-            this.STARsCheckBox.TabIndex = 46;
+            this.STARsCheckBox.TabIndex = 31;
             this.STARsCheckBox.Text = "STARs";
             this.STARsCheckBox.UseVisualStyleBackColor = true;
             this.STARsCheckBox.CheckedChanged += new System.EventHandler(this.STARsCheckBox_CheckedChanged);
@@ -1686,7 +1696,7 @@
             // 
             // InfoGroupBox
             // 
-            this.InfoGroupBox.Controls.Add(this.APTasCenterButton);
+            this.InfoGroupBox.Controls.Add(this.CenterAPTButton);
             this.InfoGroupBox.Controls.Add(this.CenterARTCCButton);
             this.InfoGroupBox.Controls.Add(this.label7);
             this.InfoGroupBox.Controls.Add(this.MagVarTextBox);
@@ -1712,17 +1722,17 @@
             this.InfoGroupBox.TabStop = false;
             this.InfoGroupBox.Text = "[INFO]";
             // 
-            // APTasCenterButton
+            // CenterAPTButton
             // 
-            this.APTasCenterButton.Enabled = false;
-            this.APTasCenterButton.Location = new System.Drawing.Point(364, 138);
-            this.APTasCenterButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.APTasCenterButton.Name = "APTasCenterButton";
-            this.APTasCenterButton.Size = new System.Drawing.Size(122, 31);
-            this.APTasCenterButton.TabIndex = 27;
-            this.APTasCenterButton.Text = "Center on Apt";
-            this.APTasCenterButton.UseVisualStyleBackColor = true;
-            this.APTasCenterButton.Click += new System.EventHandler(this.APTasCenterButton_Click);
+            this.CenterAPTButton.Enabled = false;
+            this.CenterAPTButton.Location = new System.Drawing.Point(364, 138);
+            this.CenterAPTButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.CenterAPTButton.Name = "CenterAPTButton";
+            this.CenterAPTButton.Size = new System.Drawing.Size(122, 31);
+            this.CenterAPTButton.TabIndex = 12;
+            this.CenterAPTButton.Text = "Center on Apt";
+            this.CenterAPTButton.UseVisualStyleBackColor = true;
+            this.CenterAPTButton.Click += new System.EventHandler(this.CenterAPTButton_Click);
             // 
             // CenterARTCCButton
             // 
@@ -1731,7 +1741,7 @@
             this.CenterARTCCButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.CenterARTCCButton.Name = "CenterARTCCButton";
             this.CenterARTCCButton.Size = new System.Drawing.Size(158, 31);
-            this.CenterARTCCButton.TabIndex = 26;
+            this.CenterARTCCButton.TabIndex = 11;
             this.CenterARTCCButton.Text = "Center on ARTCC";
             this.CenterARTCCButton.UseVisualStyleBackColor = true;
             this.CenterARTCCButton.Click += new System.EventHandler(this.CenterARTCCButton_Click);
@@ -1808,8 +1818,8 @@
             this.UpdateAIRACbutton.Location = new System.Drawing.Point(526, 146);
             this.UpdateAIRACbutton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.UpdateAIRACbutton.Name = "UpdateAIRACbutton";
-            this.UpdateAIRACbutton.Size = new System.Drawing.Size(127, 35);
-            this.UpdateAIRACbutton.TabIndex = 58;
+            this.UpdateAIRACbutton.Size = new System.Drawing.Size(156, 43);
+            this.UpdateAIRACbutton.TabIndex = 35;
             this.UpdateAIRACbutton.Text = "Update AIRAC";
             this.UpdateAIRACbutton.UseVisualStyleBackColor = true;
             this.UpdateAIRACbutton.Click += new System.EventHandler(this.UpdateAIRACbutton_Click);
@@ -1818,6 +1828,7 @@
             // 
             this.UpdatingLabel.AutoSize = true;
             this.UpdatingLabel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(224)))), ((int)(((byte)(192)))));
+            this.UpdatingLabel.Enabled = false;
             this.UpdatingLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.UpdatingLabel.Location = new System.Drawing.Point(963, 375);
             this.UpdatingLabel.Name = "UpdatingLabel";
@@ -1854,6 +1865,7 @@
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.MaximizeBox = false;
             this.Name = "Form1";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Facility Engineers\' Build Utility";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
@@ -2005,7 +2017,7 @@
         private System.Windows.Forms.ToolStripButton toolStripButton1;
         private System.Windows.Forms.ToolStripButton toolStripButton2;
         private System.Windows.Forms.ToolStripMenuItem xML2SCTToolStripMenuItem;
-        private System.Windows.Forms.Button InsertARTCCinSquareButton;
+        private System.Windows.Forms.Button UseARTCCAsSquareButton;
         private System.Windows.Forms.GroupBox InfoGroupBox;
         private System.Windows.Forms.ToolStripMenuItem preferencesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem ConfirmOverwriteOfFilesToolStripMenuItem;
@@ -2027,7 +2039,7 @@
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Button SEByFIXButton;
         private System.Windows.Forms.Button NWByFIXButton;
-        private System.Windows.Forms.Button APTasCenterButton;
+        private System.Windows.Forms.Button CenterAPTButton;
         private System.Windows.Forms.Button CenterARTCCButton;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.TextBox IdentifierTextBox;

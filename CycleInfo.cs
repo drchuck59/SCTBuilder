@@ -10,6 +10,15 @@ namespace SCTBuilder
         public static int AIRAC = 1501;
         public static DateTime CycleStart;
         public static DateTime CycleEnd;
+        private readonly static int curAIRAC = CycleInfo.AIRACfromDate(DateTime.Today);
+
+        public static int CurrentAIRAC
+        {
+            get
+            {
+                return curAIRAC;
+            }
+        }
 
         public static void WriteINIxml()
         {
@@ -17,9 +26,6 @@ namespace SCTBuilder
             xml.WriteStartDocument();
             xml.WriteStartElement("SCT_Builder");
             WriteXmlElement(xml, "Version", VersionInfo.Title.ToString());
-            WriteXmlElement(xml, "AIRAC", AIRAC.ToString());
-            WriteXmlElement(xml, "CycleStart", CycleStart.ToString());
-            WriteXmlElement(xml, "CycleEnd", CycleEnd.ToString());
             WriteXmlElement(xml, "DataFolder", FolderMgt.DataFolder.ToString());
             WriteXmlElement(xml, "OutputFolder", FolderMgt.OutputFolder.ToString());
             WriteXmlElement(xml, "NaviGraphDataFolder", FolderMgt.NGFolder.ToString());
@@ -83,16 +89,6 @@ namespace SCTBuilder
                         string value = node.InnerText;
                         switch (node.Name)
                         {
-                            case "AIRAC":
-                                AIRAC = Convert.ToInt32(value);
-                                result = AIRAC;
-                                break;
-                            case "CycleStart":
-                                CycleStart = Convert.ToDateTime(value);
-                                break;
-                            case "CycleEnd":
-                                CycleEnd = Convert.ToDateTime(value);
-                                break;
                             case "DataFolder":
                                 FolderMgt.DataFolder = value;
                                 break;
