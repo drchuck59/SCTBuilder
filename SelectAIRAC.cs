@@ -76,6 +76,7 @@ namespace SCTBuilder
         private void InitializeConfirmationLabel()
         {
             int tempAIRAC = Convert.ToInt32(YearComboBox.Text.Substring(2, 2) + Convert.ToInt32(CycleComboBox.Text).ToString("D2"));
+            Console.WriteLine("Temp AIRAC: " + tempAIRAC);
             DateTime tempStart = CycleInfo.CycleDateFromAIRAC(tempAIRAC).Date;
             DateTime tempEnd = CycleInfo.CycleDateFromAIRAC(tempAIRAC).AddDays(28).Date;
             string cr = Environment.NewLine;

@@ -69,35 +69,57 @@ namespace SCTBuilder
         private void LoadForm1()
         {
             Debug.WriteLine("Load Form subroutine...");
-            // Returns -1 if no init file, else returns last AIRAC used (redundant, but I'm lazy)
+            string FAAfiles = string.Empty;
             int iniAIRAC = CycleInfo.ReadINIxml();
-            // If there is no INI file, then there is no datafolder, so clean install (else)
-            if (iniAIRAC != -1)
+            // Three things could result: No file (-1), Corrupted file (0) or OK (Last AIRAC)
+            if (iniAIRAC > 0)
             {
-                // We have a good ini file; try to load the FAA text data and update form
-                UpdateEngineers();      // I was forgetting to display the engineers on the form
-                if (LoadFAATextData() != -1) PostLoadTasks();
-                // If we cannot upload the FAA text data using the INI file, get a new data set
-                // Assuming the data downloads correctly, install in the various tables and update form
-                else
+                // GOOD FILE - Does the DATA match the last used AIRAC?
+                int dataAIRAC = ReadNASR.GetNASR_AIRAC();
+                if (dataAIRAC != iniAIRAC)
                 {
-                    Msg = "This program requires one and only one FAA data folder." + cr +
-                        "Prior to proceeding:" + cr +
-                        "    Place the '28DaySubscription' folder in your SCT Data folder" + cr +
-                        "    And/or select your datafolder in the main program.  Data will be installed automatically." + cr +
-                        "    You may also use the 'Change AIRAC' button which will guide you through the process.";
-                    SCTcommon.SendMessage(Msg);
-                    FAATextDataLoadFailed();
+                    MismatchedXMLmessage();
                 }
+                // Load the subscription data
+                if (LoadFAATextData() != -1) PostLoadTasks();
             }
-            // If we cannot use the INI file, see if there is data set or get a new one
-            // Assuming the data downloads correctly, install in the various tables and update form
+            // The user never previously did not save a data folder or did not instald a data set
             else
+            if (iniAIRAC == 0)   // File  corrupted
             {
-                Msg = "It appears the program is running for the first time." + cr +
-                    "Use the 'Update AIRAC' button to retrieve the current FAA AIRAC.";
+                BadXMLmessage();
+            }
+            else
+            // No XML file found
+            {
+                NoXMLmessage();
             }
             TestWriteSCT();                 // Update the output button
+        }
+
+        private void NoXMLmessage()
+        {
+            Msg = "It appears the program is running for the first time." + cr +
+                "First create or select a data folder ('DATA')." + cr +
+                "This folder will hold ALL the SCTBuilder data subfolders." + cr +
+                "Then click the 'Update AIRAC' button to retrieve the current FAA AIRAC.";
+            SCTcommon.SendMessage(Msg, MessageBoxIcon.Information);
+        }
+
+        private void BadXMLmessage()
+        {
+            Msg = "SCTBuilder closed with insufficient settings to resume.  " + cr +
+                "First create or select a data folder ('DATA')." + cr +
+                "This folder will hold ALL the SCTBuilder data subfolders." + cr +
+                "Then click the 'Update AIRAC' button to retrieve the current FAA AIRAC.";
+            SCTcommon.SendMessage(Msg);
+        }
+
+        private void MismatchedXMLmessage()
+        {
+            Msg = "The last AIRAC you used does not match the AIRAC in the data folder.  " + cr +
+                "The program will update to the data in the data folder.";
+            SCTcommon.SendMessage(Msg);
         }
 
         private void PostLoadTasks()
@@ -105,16 +127,7 @@ namespace SCTBuilder
             // Assumes we have a fresh FAA text folder and need to update
             UpdateCycleInfoOnForm();
             SetForm1Defaults();
-        }
-
-        private void FAATextDataLoadFailed()
-        // Inform the user that something is wrong and they cannot use all features of program
-        {
-            Msg = "WARNING: The FAA text data did not load correctly." + cr +
-                "You will be able to use basic tools and functions." + cr +
-                "However, the program cannot provide advanced building tools" + cr +
-                "that depend upon the FAA AIRAC data to function.";
-            SCTcommon.SendMessage(Msg, MessageBoxIcon.Exclamation);
+            UpdateEngineers();
         }
 
         private void UpdateCycleInfoOnForm(bool visible = true, string message = "")
@@ -303,7 +316,11 @@ namespace SCTBuilder
                 string filter = SetFilter(); bool APTHasRows = false;
                 if (APTsCheckBox.Checked || RWYsCheckBox.Checked || SIDsCheckBox.Checked || STARsCheckBox.Checked)
                 {
-                    if (dgvAPT.Rows.Count == 0) APTHasRows = SelectTableItems(APT, filter) != 0;
+                    if (dgvAPT.Rows.Count == 0)
+                    {
+                        UpdatingLabel.Text = "Selecting airports..."; Refresh();
+                        APTHasRows = SelectTableItems(APT, filter) != 0;
+                    }
                     else APTHasRows = true;
                 };
                 if (SCTchecked.ChkAPT)
@@ -313,6 +330,7 @@ namespace SCTBuilder
                 if (SCTchecked.ChkRWY)
                     if (APTHasRows)
                     {
+                        UpdatingLabel.Text = "Selecting runways..."; Refresh();
                         if (SelectRWYs() != 0) lastTab = LoadRWYDataGridView();
                         else ClearDataGridView(dgvRWY);
                     }
@@ -323,25 +341,41 @@ namespace SCTBuilder
                     }
                 if (SCTchecked.ChkVOR)
                 {
+                    UpdatingLabel.Text = "Selecting VORs..."; Refresh();
                     SelectTableItems(VOR, filter);
                     lastTab = LoadVORGridView();
                 }
                 if (SCTchecked.ChkNDB)
                 {
+                    UpdatingLabel.Text = "Selecting NDBs..."; Refresh();
                     SelectTableItems(NDB, filter);
                     lastTab = LoadNDBGridView();
                 }
                 if (SCTchecked.ChkFIX)
                 {
+                    UpdatingLabel.Text = "Selecting FIXes..."; Refresh();
                     SelectTableItems(FIX, filter);
                     lastTab = LoadFIXGridView();
                 }
                 // AWYs must come after VOR, NDB and FIX
                 if (SCTchecked.ChkAWY)
                 {
-                    if (dgvVOR.Rows.Count == 0) SelectTableItems(VOR, filter);
-                    if (dgvNDB.Rows.Count == 0) SelectTableItems(NDB, filter);
-                    if (dgvFIX.Rows.Count == 0) SelectTableItems(FIX, filter);
+                    if (dgvVOR.Rows.Count == 0)
+                    {
+                        UpdatingLabel.Text = "Selecting VORS (for Airways)..."; Refresh();
+                        SelectTableItems(VOR, filter);
+                    }
+                    if (dgvNDB.Rows.Count == 0)
+                    {
+                        UpdatingLabel.Text = "Selecting NDBs (for Airways)..."; Refresh();
+                        SelectTableItems(NDB, filter);
+                    }
+                    if (dgvFIX.Rows.Count == 0)
+                    {
+                        UpdatingLabel.Text = "Selecting FIXes (for Airways)..."; Refresh();
+                        SelectTableItems(FIX, filter);
+                    }
+                    UpdatingLabel.Text = "Selecting Airways...";
                     if (SelectAWYs() != 0) lastTab = LoadAWYDataGridView();
                     else ClearDataGridView(dgvAWY);
                 }
@@ -355,9 +389,22 @@ namespace SCTBuilder
                     }
                     else
                     {
-                        if (dgvVOR.Rows.Count == 0) SelectTableItems(VOR, filter);
-                        if (dgvNDB.Rows.Count == 0) SelectTableItems(NDB, filter);
-                        if (dgvFIX.Rows.Count == 0) SelectTableItems(FIX, filter);
+                        if (dgvVOR.Rows.Count == 0)
+                        {
+                            UpdatingLabel.Text = "Selecting VORS (for SIDs)..."; Refresh();
+                            SelectTableItems(VOR, filter);
+                        }
+                        if (dgvNDB.Rows.Count == 0)
+                        {
+                            UpdatingLabel.Text = "Selecting NDBs (for SIDs)..."; Refresh();
+                            SelectTableItems(NDB, filter);
+                        }
+                        if (dgvFIX.Rows.Count == 0)
+                        {
+                            UpdatingLabel.Text = "Selecting FIXes (for SIDs)..."; Refresh();
+                            SelectTableItems(FIX, filter);
+                        }
+                        UpdatingLabel.Text = "Selecting SIDs..."; Refresh();
                         if (SelectSSD(true) != 0) lastTab = LoadSSDDataGridView(true);
                     }
                 if (SCTchecked.ChkSTAR)
@@ -370,14 +417,27 @@ namespace SCTBuilder
                     }
                     else
                     {
-                        if (dgvVOR.Rows.Count == 0) SelectTableItems(VOR, filter);
-                        if (dgvNDB.Rows.Count == 0) SelectTableItems(NDB, filter);
-                        if (dgvFIX.Rows.Count == 0) SelectTableItems(FIX, filter);
+                        if (dgvVOR.Rows.Count == 0)
+                        {
+                            UpdatingLabel.Text = "Selecting VORS (for STARs)..."; Refresh();
+                            SelectTableItems(VOR, filter);
+                        }
+                        if (dgvNDB.Rows.Count == 0)
+                        {
+                            UpdatingLabel.Text = "Selecting NDBs (for Stars)..."; Refresh();
+                            SelectTableItems(NDB, filter);
+                        }
+                        if (dgvFIX.Rows.Count == 0)
+                        {
+                            UpdatingLabel.Text = "Selecting FIXes (for STARs)..."; Refresh();
+                            SelectTableItems(FIX, filter);
+                        }
+                        UpdatingLabel.Text = "Selecting STARS..."; Refresh();
                         if (SelectSSD(false) != 0) lastTab = LoadSSDDataGridView(false);
                     }
                 }
-                UpdatingLabel.Visible = false;
                 SelectedTabControl.SelectedTab = SelectedTabControl.TabPages[lastTab];
+                UpdatingLabel.Visible = false;
                 Refresh();
                 TestWriteSCT();
             }
@@ -401,6 +461,7 @@ namespace SCTBuilder
             dataView.RowFilter = filter;
             SetSelected(dataView);
             result = dataView.Count;
+            Console.WriteLine(APT.Rows.Count);
             dataView.Dispose();
             return result;
         }
@@ -571,13 +632,13 @@ namespace SCTBuilder
                 RowFilter = "[Selected]",
                 Sort = "AWYID, Sequence"
             };
-            DataTable dtAWY = dvAWY.ToTable(false, "AWYID", "NAVAID", "MinEnrAlt", "MaxAuthAlt", "MinObstClrAlt");
+            DataTable dtAWY = dvAWY.ToTable(false, "Selected", "AWYID", "NAVAID", "MinEnrAlt", "MaxAuthAlt", "MinObstClrAlt");
             dgvAWY.DataSource = dtAWY;
-            dgvAWY.Columns[0].HeaderText = "ID";
-            dgvAWY.Columns[1].HeaderText = "NavAid";
-            dgvAWY.Columns[2].HeaderText = "MEA";
-            dgvAWY.Columns[3].HeaderText = "MAA";
-            dgvAWY.Columns[4].HeaderText = "MOCA";
+            dgvAWY.Columns[1].HeaderText = "ID";
+            dgvAWY.Columns[2].HeaderText = "NavAid";
+            dgvAWY.Columns[3].HeaderText = "MEA";
+            dgvAWY.Columns[4].HeaderText = "MAA";
+            dgvAWY.Columns[5].HeaderText = "MOCA";
             dvAWY.Dispose();
             return "AWYtabPage";
         }
@@ -588,6 +649,7 @@ namespace SCTBuilder
             // To make this one faster, use a DataView rather than the dataviewgrid
             // First, get all the airports affected (It's easier to just make a new one)
             var SSDID = new List<string>(); string IDfilter;
+            string Proc = "STAR";  if (isSID) Proc = "STAR"; int PctDone; int DoneCounter = 0;
             // Clear only the SID or STAR selections
             DataView dvSSD = new DataView(SSD)
             {
@@ -619,7 +681,6 @@ namespace SCTBuilder
             DataTable dtAirports = dvAPT.ToTable(true, "FacilityID");
             string AAfilter = "([FixType] = 'AA') AND ([IsSID] = " + isSID + ") AND ";
             // Loop the list to get SID/STAR IDs for those airports
-            Console.WriteLine("Looping airports");
             foreach (DataRow dtAptRow in dtAirports.AsEnumerable())
             {
                 string FacIDfilter = "([NavAid] = '" + dtAptRow["FacilityID"].ToString() + "')";
@@ -634,12 +695,15 @@ namespace SCTBuilder
             // Make the list IEnumerable and distinct values
             IEnumerable<string> distinctSSDID = SSDID.Distinct();
             // Run that list of SID/STAR IDs to mark the rows 'selected'
-            Console.WriteLine("Selecting " + distinctSSDID.Count() + " SSD ");
+            Console.WriteLine("Selecting " + distinctSSDID.Count() + " " + Proc + "s");
             foreach (var item in distinctSSDID)
             {
+                DoneCounter++;
+                PctDone = DoneCounter / distinctSSDID.Count() * 100;
                 IDfilter = "[ID] = '" + item.ToString() + "'";
                 dvSSD.RowFilter = IDfilter;
                 SetSelected(dvSSD);
+                UpdatingLabel.Text = "Selecting " + Proc + "s... (" + PctDone + ")"; Refresh();
             }
             // *****************************************************************************
             Console.WriteLine("Done ");
@@ -882,10 +946,10 @@ namespace SCTBuilder
                     Console.WriteLine(LatNorth + "  " + LongWest + "  " + LatSouth + "  " + LongEast);
                 }
             }
-            InfoSection.NorthSquare = LongEast;
-            InfoSection.WestSquare = LongWest;
             InfoSection.NorthSquare = LatNorth;
             InfoSection.SouthSquare = LatSouth;
+            InfoSection.EastSquare = LongEast;
+            InfoSection.WestSquare = LongWest;
             dataview.Dispose();
         }
 
@@ -993,23 +1057,22 @@ namespace SCTBuilder
 
         private void ChkbxShowAll_CheckedChanged(object sender, EventArgs e)
         {
-            ToggleSelectedDGV(dgvAPT);
-            ToggleSelectedDGV(dgvVOR);
-            ToggleSelectedDGV(dgvNDB);
-            ToggleSelectedDGV(dgvFIX);
-            ToggleSelectedDGV(dgvRWY);
-            ToggleSelectedDGV(dgvAWY);
-            ToggleSelectedDGV(dgvSID);
-            ToggleSelectedDGV(dgvSTAR);
+            if (dgvAPT.DataSource != null) ToggleSelectedDGV(dgvAPT);
+            if (dgvVOR.DataSource != null) ToggleSelectedDGV(dgvVOR);
+            if (dgvNDB.DataSource != null) ToggleSelectedDGV(dgvNDB);
+            if (dgvFIX.DataSource != null) ToggleSelectedDGV(dgvFIX);
+            if (dgvRWY.DataSource != null) ToggleSelectedDGV(dgvRWY);
+            if (dgvAWY.DataSource != null) ToggleSelectedDGV(dgvAWY);
+            if (dgvSID.DataSource != null) ToggleSelectedDGV(dgvSID);
+            if (dgvSTAR.DataSource != null) ToggleSelectedDGV(dgvSTAR);
             UpdateGridCount();
         }
 
         private void ToggleSelectedDGV(DataGridView dgv)
         {
-            if (chkbxShowAll.Checked)
-                (dgv.DataSource as DataTable).DefaultView.RowFilter = "";
-            else
-                (dgv.DataSource as DataTable).DefaultView.RowFilter = "[Selected]";
+            if (chkbxShowAll.Checked) (dgv.DataSource as DataTable).DefaultView.RowFilter = null;
+            else (dgv.DataSource as DataTable).DefaultView.RowFilter = "[Selected]";
+            Console.WriteLine("Now showing " + dgv.Rows.Count + " rows in " + dgv.Name);
         }
 
         private void TxtDataFolder_Validated(object sender, EventArgs e)

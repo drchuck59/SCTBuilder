@@ -77,6 +77,34 @@ namespace SCTBuilder
             return result;
         }
 
+        public static string FAASubscriptionDirectory()
+        {
+            string result = string.Empty; ;
+            string filter = "*28DaySubscription*";
+            if (FolderMgt.DataFolder.Length == 0)
+            {
+                result = "ERROR - Directory not set";
+            }
+            else
+            if (!Directory.Exists(FolderMgt.DataFolder))
+            {
+                result = "ERROR - Directory not found";
+            }
+            else
+            {
+                string[] dirs = Directory.GetDirectories(@FolderMgt.DataFolder, filter, SearchOption.TopDirectoryOnly);
+                if (dirs.Length == 0)
+                    result = "ERROR - No Subscription file";
+                if (dirs.Length > 1)
+                    result = "ERROR - multiple Subscription files";
+                foreach (string dir in dirs)
+                {
+                    result = dir;
+                }
+            }
+            return result;
+        }
+
         public static DialogResult SendMessage(string Msg,
                 MessageBoxIcon icon = MessageBoxIcon.Warning, MessageBoxButtons buttons = MessageBoxButtons.OK)
         {

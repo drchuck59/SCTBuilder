@@ -1830,11 +1830,11 @@
             this.UpdatingLabel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(224)))), ((int)(((byte)(192)))));
             this.UpdatingLabel.Enabled = false;
             this.UpdatingLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.UpdatingLabel.Location = new System.Drawing.Point(963, 375);
+            this.UpdatingLabel.Location = new System.Drawing.Point(964, 424);
             this.UpdatingLabel.Name = "UpdatingLabel";
-            this.UpdatingLabel.Size = new System.Drawing.Size(264, 25);
+            this.UpdatingLabel.Size = new System.Drawing.Size(22, 25);
             this.UpdatingLabel.TabIndex = 59;
-            this.UpdatingLabel.Text = "Updating Data Grid View(s)...";
+            this.UpdatingLabel.Text = "  ";
             this.UpdatingLabel.Visible = false;
             // 
             // Form1

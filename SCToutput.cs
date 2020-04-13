@@ -405,11 +405,11 @@ namespace SCTBuilder
                     strOut[1] = row["EndIdentifier"].ToString().Trim().PadRight(3);
                     MagBHdg = Convert.ToDouble(row["BaseHeading"]) + InfoSection.MagneticVariation;
                     if (MagBHdg > 360) MagBHdg %= 360;
-                    else if (MagBHdg < 0) MagBHdg = MagBHdg + 360 % 360;
+                    else if (MagBHdg < 0) MagBHdg += 360 % 360;
                     strOut[2] = Convert.ToString(MagBHdg).PadRight(3);
                     MagEHdg = Convert.ToDouble(row["EndHeading"]) + InfoSection.MagneticVariation;
                     if (MagEHdg > 360) MagEHdg %= 360;
-                    else if (MagEHdg < 0) MagEHdg = MagEHdg + 360 % 360;
+                    else if (MagEHdg < 0) MagEHdg += 360 % 360;
                     strOut[3] = Convert.ToString(MagEHdg).PadRight(3);
                     strOut[4] = Conversions.DecDeg2SCT(Convert.ToSingle(row["Latitude"]), true);
                     strOut[5] = Conversions.DecDeg2SCT(Convert.ToSingle(row["Longitude"]), false);
@@ -547,6 +547,7 @@ namespace SCTBuilder
                     newrow["SSD_FK"] = SSDrow["ID"].ToString();
                     newrow["APT_FACID"] = dvAPT[0]["FacilityID"].ToString();
                     newrow.EndEdit();
+                    Application.DoEvents();
                 }
                 // Remove duplicate entries
                 DataTable dtA2D = dvA2D_raw.ToTable(true, "ARTCC", "APT_FK", "SSD_FK", "APT_FACID");
@@ -575,6 +576,8 @@ namespace SCTBuilder
                         sw.WriteLine(SSDHeader(Conversions.ICOA(drA2D["APT_FACID"].ToString()), Mark, 3));
                     }
                     WriteSSD(sw, drA2D["SSD_FK"].ToString(), UseName, IsSID);
+                    Application.DoEvents();
+
                 }
                 // All the other ARTCCs that may have been in the filter
                 dvA2D.RowFilter = "[ARTCC] <> '" + curARTCC + "'";
@@ -686,6 +689,7 @@ namespace SCTBuilder
                 // If the FixType is "AA", reuse the Fix0-items (don't shift the coordinates)
                 if (FixType1 != "AA")
                     Lat0 = Lat1; Long0 = Long1; Fix0 = Fix1; FixType0 = FixType1;
+                Application.DoEvents();
             }
             // Output the result if there were FIXes in the SSD
             if (SSDResult.Length != 0)

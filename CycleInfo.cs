@@ -26,6 +26,7 @@ namespace SCTBuilder
             xml.WriteStartDocument();
             xml.WriteStartElement("SCT_Builder");
             WriteXmlElement(xml, "Version", VersionInfo.Title.ToString());
+            WriteXmlElement(xml, "LastAIRAC", CycleInfo.AIRAC.ToString());
             WriteXmlElement(xml, "DataFolder", FolderMgt.DataFolder.ToString());
             WriteXmlElement(xml, "OutputFolder", FolderMgt.OutputFolder.ToString());
             WriteXmlElement(xml, "NaviGraphDataFolder", FolderMgt.NGFolder.ToString());
@@ -77,7 +78,8 @@ namespace SCTBuilder
             // reads the INI file saved on a previous use of the program
             // returns -1 if there is no XML file to read, else returns the AIRAC of the last run
             // Of course, that information is also placed into the CycleInfo class
-            int result = 1503;
+            int result = -1;    // -1 equals XML file doesn't exist
+            string temp;
             if (File.Exists(FolderMgt.INIxml))
             {
                 XmlDocument doc = new XmlDocument();
@@ -89,26 +91,52 @@ namespace SCTBuilder
                         string value = node.InnerText;
                         switch (node.Name)
                         {
+                            case "LastAIRAC":
+                                result = Convert.ToInt32(value);
+                                if ( (result.ToString().Length == 0) || (result == 1501) )
+                                    result = 0;     // This file is corrupted.
+                                break;
                             case "DataFolder":
-                                FolderMgt.DataFolder = value;
+                                temp = value;
+                                if ( (temp.Length!= 0) && (Directory.Exists(value)))
+                                    FolderMgt.DataFolder = value;
+                                else result = 0;    // This file is corrupted.
                                 break;
                             case "OutputFolder":
-                                FolderMgt.OutputFolder = value;
+                                temp = value;
+                                if ((temp.Length != 0) && (Directory.Exists(value)))
+                                    FolderMgt.OutputFolder = value;
+                                else FolderMgt.OutputFolder = string.Empty;
                                 break;
                             case "NaviGraphDataFolder":
-                                FolderMgt.NGFolder = value;
+                                temp = value;
+                                if ((temp.Length != 0) && (Directory.Exists(value)))
+                                    FolderMgt.NGFolder = value;
+                                else FolderMgt.NGFolder = string.Empty;
                                 break;
                             case "SponsorARTCC":
-                                InfoSection.SponsorARTCC = value;
+                                temp = value;
+                                if (temp.Length != 0)
+                                    InfoSection.SponsorARTCC = value;
+                                else InfoSection.SponsorARTCC = string.Empty;
                                 break;
                             case "DefaultAirport":
-                                InfoSection.DefaultAirport = value;
+                                temp = value;
+                                if (temp.Length != 0)
+                                    InfoSection.DefaultAirport = value;
+                                else InfoSection.DefaultAirport = string.Empty;
                                 break;
                             case "FacilityEngineer":
-                                InfoSection.FacilityEngineer = value;
+                                temp = value;
+                                if (temp.Length != 0)
+                                    InfoSection.FacilityEngineer = value;
+                                else InfoSection.FacilityEngineer = "Facility Engineer name";
                                 break;
                             case "AsstFacilityEngineer":
-                                InfoSection.AsstFacilityEngineer = value;
+                                temp = value;
+                                if (temp.Length != 0)
+                                    InfoSection.AsstFacilityEngineer = value;
+                                else InfoSection.AsstFacilityEngineer = string.Empty;
                                 break;
                             case "ChkALL":
                                 SCTchecked.ChkALL = Convert.ToBoolean(value);
@@ -199,14 +227,9 @@ namespace SCTBuilder
                                 break;
                             default:
                                 break;
-
                         }
                     }
                 }
-            }
-            else
-            {
-                result = -1;
             }
             return result;
         }
