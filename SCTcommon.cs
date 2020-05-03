@@ -254,13 +254,16 @@ namespace SCTBuilder
         public static double String2DecDeg(string DMS, string Delim = "")
         /// <summary>
         /// Returns a Decimal degrees value from the OpenAIG formatted string
+        ///         where ? is the quadrant
         /// OpenAIG is [#]##:##:##? 
         /// FAA is [#]##-##-##.##?
         /// VRC is ?###.##.##.###  (Leading zero for latitudes)
-        ///     where ? is the quadrant
+        /// NaviGraph is ? [#]## ##.###
         /// </summary>
-        // If possible, find the delimiter
         {
+            // Make sure some idiot didn't send a decimal-degrees string for conversion to decimal!
+            if (DMS.IsNumeric()) return double.Parse(DMS);
+
             double result = -199; double DD; double MM; double SS; string quadrant;
             string tempDMS; double factor; string newDelim;
             if (DMS.Length > 5)
@@ -279,7 +282,7 @@ namespace SCTBuilder
                 else
                 {
                     quadrant = DMS.Substring(0, 1);
-                    tempDMS = DMS.Substring(1, DMS.Length - 1);
+                    tempDMS = DMS.Substring(1, DMS.Length - 1).Trim();
                 }
                 // Now that we know the real Delim, use it to find the values
                 if (newDelim.Length == 0)
@@ -291,7 +294,7 @@ namespace SCTBuilder
                         DD = double.Parse(tempDMS.Substring(0, 3));
                         MM = double.Parse(tempDMS.Substring(3, 2));
                         SS = double.Parse(tempDMS.Substring(5, 2));
-                        if (DMS.Length > 7)                         // Add faction of seconds if they exist
+                        if (DMS.Length > 7)                         // Add fraction of seconds if they exist
                         {
                             factor = (double)Math.Pow(10f, Convert.ToSingle(tempDMS.Length - 7));
                             SS += double.Parse(tempDMS.Substring(6, 2)) / factor;
@@ -315,10 +318,19 @@ namespace SCTBuilder
                 // Has a delimiter
                 {
                     int loc1 = tempDMS.IndexOf(newDelim, 0, tempDMS.Length, StringComparison.CurrentCulture); // end of DD
-                    int loc2 = tempDMS.IndexOf(newDelim, loc1 + 1, tempDMS.Length - loc1 - 1, StringComparison.CurrentCulture);   // End of MM
                     DD = double.Parse(tempDMS.Substring(0, loc1));
-                    MM = double.Parse(tempDMS.Substring(loc1 + 1, loc2 - loc1 - 1));
-                    SS = double.Parse(tempDMS.Substring(loc2 + 1, tempDMS.Length - loc2 - 1));
+                    int loc2 = tempDMS.IndexOf(newDelim, loc1 + 1, tempDMS.Length - loc1 - 1, StringComparison.CurrentCulture); // End of MM
+                    if (loc2 == -1)
+                    // This is a Navigraph format (no minutes as decimal, no seconds)
+                    {
+                        MM = double.Parse(tempDMS.Substring(loc1 + 1));
+                        SS = 0;
+                    }
+                    else
+                    {
+                        MM = double.Parse(tempDMS.Substring(loc1 + 1, loc2 - loc1 - 1));
+                        SS = double.Parse(tempDMS.Substring(loc2 + 1, tempDMS.Length - loc2 - 1));
+                    }
                     result = LatLongCalc.DMS2DecDeg(DD, MM, SS, quadrant);
                 }
                 // Last step: Ensure the result value falls within the range of the latitude or longitude

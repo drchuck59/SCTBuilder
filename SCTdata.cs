@@ -7,5 +7,9 @@
         partial class NGSIDDataTable
         {
         }
+
+        partial class NGSIDDataTable
+        {
+        }
     }
 }

@@ -3,7 +3,7 @@ using System.Net;
 using System.IO;
 using System.IO.Compression;
 using System.Windows.Forms;
-using System.Collections.Generic;
+using System.Globalization;
 
 namespace SCTBuilder
 {
@@ -52,7 +52,7 @@ namespace SCTBuilder
             CycleComboBox.Items.Clear();
             if (selectedYear < curYear)
             {
-                lastCycle = Convert.ToInt32(CycleInfo.AIRACfromDate(DateTime.Parse("12/31/" + selectedYear.ToString())).ToString().Substring(2,2));
+                lastCycle = Convert.ToInt32(CycleInfo.AIRACfromDate(DateTime.Parse("12/31/" + selectedYear.ToString())).ToString(CultureInfo.InvariantCulture).Substring(2,2));
                 if (selectedYear != 2017) firstCycle = 1;
                 for (int i = firstCycle; i < lastCycle; i++)
                     CycleComboBox.Items.Add(i);
@@ -60,7 +60,7 @@ namespace SCTBuilder
             }
             if (selectedYear == curYear)
             {
-                lastCycle = Convert.ToInt32(CycleInfo.AIRACfromDate(DateTime.Now.Date).ToString().Substring(2,2));
+                lastCycle = Convert.ToInt32(CycleInfo.AIRACfromDate(DateTime.Now.Date).ToString(CultureInfo.InvariantCulture).Substring(2,2));
                 for (int i = 1; i <= lastCycle; i++)
                     CycleComboBox.Items.Add(i);
                 CycleComboBox.SelectedItem = lastCycle;
@@ -81,7 +81,7 @@ namespace SCTBuilder
             DateTime tempEnd = CycleInfo.CycleDateFromAIRAC(tempAIRAC).AddDays(28).Date;
             string cr = Environment.NewLine;
             ConfirmationLabel.Text = "AIRAC: " + tempAIRAC.ToString() + cr +
-                "Cycle Dates: " + cr + tempStart.ToString("yyyy'-'MM'-'dd") + " - " + tempEnd.ToString("yyyy'-'MM'-'dd");
+                "Cycle Dates: " + cr + tempStart.ToShortDateString() + " - " + tempEnd.Date.ToShortDateString();
             if (tempEnd < DateTime.Now.Date)
                 ConfirmationLabel.Text += cr + "*** Outdated Cycle ***";
         }
@@ -107,7 +107,7 @@ namespace SCTBuilder
             CycleInfo.CycleDateFromAIRAC(tempAIRAC, true);
             if (!CleanDataFolder()) Close();        // Must have a clean data folder to place data
             // Set up values for the download;
-            string newCycleDate = CycleInfo.CycleStart.ToString("yyyy'-'MM'-'dd");
+            string newCycleDate = CycleInfo.CycleStart.Date.ToString("yyyy'-'MM'-'dd");
             DirectoryInfo di;
             di = Directory.CreateDirectory(FolderMgt.DataFolder + "\\28DaySubscription_Effective_" + newCycleDate + "\\");
             string extractPath = di.FullName;
@@ -166,7 +166,7 @@ namespace SCTBuilder
             if (FolderMgt.DataFolder.Length == 0) return result;
 
             // Search the datafolder for duplicate data subfolders and remove them
-            string newCycleDate = CycleInfo.CycleStart.ToString("yyyy'-'MM'-'dd");
+            string newCycleDate = CycleInfo.CycleStart.Date.ToString("yyyy'-'MM'-'dd");
             string[] dirs = Directory.GetDirectories(@FolderMgt.DataFolder, filter, SearchOption.TopDirectoryOnly);
             foreach (string dir in dirs)
             {

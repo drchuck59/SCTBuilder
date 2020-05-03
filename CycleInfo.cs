@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Xml;
 using System.IO;
+using System.Globalization;
 
 namespace SCTBuilder
 {
     class CycleInfo
     {
-        private readonly static DateTime Start1501 = Convert.ToDateTime("01/08/2015");
+        private readonly static DateTime Start1501 = Convert.ToDateTime("01/08/2015", CultureInfo.InvariantCulture);
         public static int AIRAC = 1501;
         public static DateTime CycleStart;
         public static DateTime CycleEnd;
@@ -238,8 +239,8 @@ namespace SCTBuilder
         {
             // Resets the cycle information
             AIRAC = 1501;
-            CycleStart = Convert.ToDateTime("1/1/1900");
-            CycleEnd = Convert.ToDateTime("1/2/1900");
+            CycleStart = Convert.ToDateTime("1/1/1900", CultureInfo.InvariantCulture);
+            CycleEnd = Convert.ToDateTime("1/2/1900", CultureInfo.InvariantCulture);
             FolderMgt.OutputFolder = string.Empty;
             FolderMgt.DataFolder = string.Empty;
             InfoSection.SponsorARTCC = string.Empty;
@@ -332,8 +333,8 @@ namespace SCTBuilder
             string cr = Environment.NewLine;
             string Message =
                 "AIRAC Cycle: " + AIRAC + cr +
-                "Cycle Start:    " + CycleStart.ToString("dd MMM yyyy") + cr +
-                "Cycle End:     " + CycleEnd.ToString("dd MMM yyyy");
+                "Cycle Start:    " + CycleStart.Date.ToShortDateString()+ cr +
+                "Cycle End:     " + CycleEnd.Date.ToShortDateString();
             if (CycleEnd < DateTime.Today)
             {
                 Message = Message + cr + "*** Outdated Cycle Data ***";
