@@ -262,8 +262,8 @@ namespace SCTBuilder
         /// </summary>
         {
             // Make sure some idiot didn't send a decimal-degrees string for conversion to decimal!
+            DMS = DMS.Trim();
             if (DMS.IsNumeric()) return double.Parse(DMS);
-
             double result = -199; double DD; double MM; double SS; string quadrant;
             string tempDMS; double factor; string newDelim;
             if (DMS.Length > 5)

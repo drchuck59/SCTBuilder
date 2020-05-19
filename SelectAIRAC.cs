@@ -10,6 +10,8 @@ namespace SCTBuilder
     public partial class SelectAIRAC : Form
     {
         readonly string cr = Environment.NewLine;
+        DialogResult result = DialogResult.Cancel;
+
         public SelectAIRAC()
         {
             InitializeComponent();
@@ -130,12 +132,25 @@ namespace SCTBuilder
                 // Unless I messed up, there cannot be a data subdirectory by this name, so create it
                 OKButton.Text = "Extracting files...";
                 OKButton.Refresh();
-                ZipFile.ExtractToDirectory(downloadsPath, extractPath);
-                OKButton.Enabled = false;
-                OKButton.Visible = false;
-                ContinueButton.Enabled = true;
-                ContinueButton.Visible = true;
-                downloadComplete = true;
+                try
+                {
+                    ZipFile.ExtractToDirectory(downloadsPath, extractPath);
+                    OKButton.Enabled = false;
+                    OKButton.Visible = false;
+                    ContinueButton.Enabled = true;
+                    ContinueButton.Visible = true;
+                    downloadComplete = true;
+                    result = DialogResult.OK;
+                }
+                catch
+                {
+                    string msg = "Extraction failed. (Usually because there is already extracted data.) " +
+                            "Retry after manually removing all subscription files from the target folder. " + 
+                            "You can extract manually to the target folder, then reselect the data folder to update the datafiles." + cr +
+                            " (" + di.FullName + ")";
+                    SCTcommon.SendMessage(msg);
+                    DialogResult = DialogResult.Abort;
+                }
             };
             try
             {
@@ -149,6 +164,7 @@ namespace SCTBuilder
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
+                result = DialogResult.Abort;
             }
         }
 
@@ -236,11 +252,13 @@ namespace SCTBuilder
 
         private void ContinueButton_Click(object sender, EventArgs e)
         {
+            this.DialogResult = result;
             Close();
         }
 
         private void MyButtonCancel_Click(object sender, EventArgs e)
         {
+            this.DialogResult = DialogResult.Cancel;
             Close();
         }
     }

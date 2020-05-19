@@ -1,0 +1,125 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>DeltaCompressionDotNet</name>
+    </assembly>
+    <members>
+        <member name="T:DeltaCompressionDotNet.MsDelta.ApplyFlags">
+            <remarks>
+                http://msdn.microsoft.com/en-us/library/bb417345.aspx#deltaflagtypeflags
+            </remarks>
+        </member>
+        <member name="F:DeltaCompressionDotNet.MsDelta.ApplyFlags.None">
+            <summary>Indicates no special handling.</summary>
+        </member>
+        <member name="F:DeltaCompressionDotNet.MsDelta.ApplyFlags.AllowLegacy">
+            <summary>Allow MSDelta to apply deltas created using PatchAPI.</summary>
+        </member>
+        <member name="T:DeltaCompressionDotNet.MsDelta.CreateFlags">
+            <remarks>
+                http://msdn.microsoft.com/en-us/library/bb417345.aspx#deltaflagtypeflags
+            </remarks>
+        </member>
+        <member name="F:DeltaCompressionDotNet.MsDelta.CreateFlags.None">
+            <summary>Indicates no special handling.</summary>
+        </member>
+        <member name="F:DeltaCompressionDotNet.MsDelta.CreateFlags.IgnoreFileSizeLimit">
+            <summary>Allow the source, target and delta files to exceed the default size limit.</summary>
+        </member>
+        <member name="T:DeltaCompressionDotNet.MsDelta.DeltaInput">
+            <remarks>
+                http://msdn.microsoft.com/en-us/library/bb417345.aspx#deltainputstructure
+            </remarks>
+        </member>
+        <member name="F:DeltaCompressionDotNet.MsDelta.DeltaInput.Start">
+            <summary>Memory address non-editable input buffer.</summary>
+        </member>
+        <member name="F:DeltaCompressionDotNet.MsDelta.DeltaInput.Size">
+            <summary>Size of the memory buffer in bytes.</summary>
+        </member>
+        <member name="F:DeltaCompressionDotNet.MsDelta.DeltaInput.Editable">
+            <summary>
+                Defines whether MSDelta is allowed to edit the input buffer. If you make the input editable, the buffer will
+                be zeroed at function return. However this will cause most MSDelta functions to use less memory.
+            </summary>
+        </member>
+        <member name="T:DeltaCompressionDotNet.MsDelta.FileTypeSet">
+            <remarks>
+                http://msdn.microsoft.com/en-us/library/bb417345.aspx#filetypesets
+            </remarks>
+        </member>
+        <member name="F:DeltaCompressionDotNet.MsDelta.FileTypeSet.Executables">
+            <summary>
+                File type set that includes I386, IA64 and AMD64 Portable Executable (PE) files. Others are treated as raw.
+            </summary>
+        </member>
+        <member name="F:DeltaCompressionDotNet.MsDelta.HashAlgId.None">
+            <summary>No signature.</summary>
+        </member>
+        <member name="F:DeltaCompressionDotNet.MsDelta.HashAlgId.Crc32">
+            <summary>32-bit CRC defined in msdelta.dll.</summary>
+        </member>
+        <member name="M:DeltaCompressionDotNet.MsDelta.NativeMethods.ApplyDelta(DeltaCompressionDotNet.MsDelta.ApplyFlags,System.String,System.String,System.String)">
+            <summary>
+                The ApplyDelta function use the specified delta and source files to create a new copy of the target file.
+            </summary>
+            <param name="applyFlags">Either DELTA_FLAG_NONE or DELTA_APPLY_FLAG_ALLOW_PA19.</param>
+            <param name="sourceName">The name of the source file to which the delta is to be applied.</param>
+            <param name="deltaName">The name of the delta to be applied to the source file.</param>
+            <param name="targetName">The name of the target file that is to be created.</param>
+            <returns>
+                Returns TRUE on success or FALSE otherwise.
+            </returns>
+            <remarks>
+                http://msdn.microsoft.com/en-us/library/bb417345.aspx#applydeltaaw
+            </remarks>
+        </member>
+        <member name="M:DeltaCompressionDotNet.MsDelta.NativeMethods.CreateDelta(DeltaCompressionDotNet.MsDelta.FileTypeSet,DeltaCompressionDotNet.MsDelta.CreateFlags,DeltaCompressionDotNet.MsDelta.CreateFlags,System.String,System.String,System.String,System.String,DeltaCompressionDotNet.MsDelta.DeltaInput,System.IntPtr,DeltaCompressionDotNet.MsDelta.HashAlgId,System.String)">
+            <summary>
+                The CreateDelta function creates a delta from the specified source and target files and write the output delta to the designated file name.
+            </summary>
+            <param name="fileTypeSet">The file type set used for Create.</param>
+            <param name="setFlags">The file type set used for Create.</param>
+            <param name="resetFlags">The file type set used for Create.</param>
+            <param name="sourceName">The file type set used for Create.</param>
+            <param name="targetName">The name of the target against which the source is compared.</param>
+            <param name="sourceOptionsName">Reserved. Pass NULL.</param>
+            <param name="targetOptionsName">Reserved. Pass NULL.</param>
+            <param name="globalOptions">Reserved. Pass a DELTA_INPUT structure with lpStart set to NULL and uSize set to 0.</param>
+            <param name="targetFileTime">The time stamp set on the target file after delta Apply. If NULL, the timestamp of the target file during delta Create will be used.</param>
+            <param name="hashAlgId">ALG_ID of the algorithm to be used to generate the target signature.</param>
+            <param name="deltaName">The name of the delta file to be created.</param>
+            <returns>
+                Returns TRUE on success or FALSE otherwise.
+            </returns>
+            <remarks>
+                http://msdn.microsoft.com/en-us/library/bb417345.aspx#createdeltaaw
+            </remarks>
+        </member>
+        <member name="M:DeltaCompressionDotNet.PatchApi.NativeMethods.ApplyPatchToFile(System.String,System.String,System.String,System.UInt32)">
+            <summary>
+                The ApplyPatchToFile function applies the specified delta to the specified source file. The output file is saved
+                under the designated new file name.
+            </summary>
+            <param name="patchFileName">The name of the delta to be applied to the source file.</param>
+            <param name="oldFileName">The name of the source file to which the delta is to be applied.</param>
+            <param name="newFileName">The name of the target file that is to be created.</param>
+            <param name="applyOptionFlags">ApplyPatch Flags.</param>
+            <returns>Returns TRUE on success or FALSE otherwise.</returns>
+            <remarks>http://msdn.microsoft.com/en-us/library/bb417345.aspx#applypatchtofileaw</remarks>
+        </member>
+        <member name="M:DeltaCompressionDotNet.PatchApi.NativeMethods.CreatePatchFile(System.String,System.String,System.String,System.UInt32,System.IntPtr)">
+            <summary>
+                The CreatePatchFile function creates a delta from the specified source and target files and write the delta to the
+                designated file name.
+            </summary>
+            <param name="oldFileName">The name of the source file.</param>
+            <param name="newFileName">The name of the target file.</param>
+            <param name="patchFileName">The name of the output delta file.</param>
+            <param name="optionFlags">Creation Flags.</param>
+            <param name="optionData">Not used. Pass NULL. Pointer to a structure of type PATCH_OPTION_DATA.</param>
+            <returns>Returns TRUE on success or FALSE otherwise.</returns>
+            <remarks>http://msdn.microsoft.com/en-us/library/bb417345.aspx#createpatchfileaw</remarks>
+        </member>
+    </members>
+</doc>

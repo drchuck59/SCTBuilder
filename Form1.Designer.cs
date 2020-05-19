@@ -75,6 +75,8 @@
             this.NGDataFolderTextBox = new System.Windows.Forms.TextBox();
             this.NGDataFolderButton = new System.Windows.Forms.Button();
             this.LimitAPT2ARTCCCheckBox = new System.Windows.Forms.CheckBox();
+            this.QuickSearchLabel = new System.Windows.Forms.Label();
+            this.QuickSearchTextBox = new System.Windows.Forms.TextBox();
             this.ARTCCLabel = new System.Windows.Forms.Label();
             this.AirportLabel = new System.Windows.Forms.Label();
             this.AsstFacilityEngineerLabel = new System.Windows.Forms.Label();
@@ -173,8 +175,6 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.UpdateAIRACbutton = new System.Windows.Forms.Button();
             this.UpdatingLabel = new System.Windows.Forms.Label();
-            this.QuickSearchLabel = new System.Windows.Forms.Label();
-            this.QuickSearchTextBox = new System.Windows.Forms.TextBox();
             this.panelSUAs.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.AllMarginsNumericUpDown)).BeginInit();
             this.FilterGroupBox.SuspendLayout();
@@ -733,6 +733,28 @@
             this.toolTip1.SetToolTip(this.LimitAPT2ARTCCCheckBox, "Airport selection must be enable to select Runways");
             this.LimitAPT2ARTCCCheckBox.UseVisualStyleBackColor = true;
             // 
+            // QuickSearchLabel
+            // 
+            this.QuickSearchLabel.AutoSize = true;
+            this.QuickSearchLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.QuickSearchLabel.Location = new System.Drawing.Point(836, 275);
+            this.QuickSearchLabel.Name = "QuickSearchLabel";
+            this.QuickSearchLabel.Size = new System.Drawing.Size(88, 16);
+            this.QuickSearchLabel.TabIndex = 60;
+            this.QuickSearchLabel.Text = "QuickSearch:";
+            this.toolTip1.SetToolTip(this.QuickSearchLabel, "Searches on SORTED column");
+            this.QuickSearchLabel.Visible = false;
+            // 
+            // QuickSearchTextBox
+            // 
+            this.QuickSearchTextBox.Location = new System.Drawing.Point(931, 275);
+            this.QuickSearchTextBox.Name = "QuickSearchTextBox";
+            this.QuickSearchTextBox.Size = new System.Drawing.Size(100, 20);
+            this.QuickSearchTextBox.TabIndex = 61;
+            this.toolTip1.SetToolTip(this.QuickSearchTextBox, "Searches on SORTED column");
+            this.QuickSearchTextBox.Visible = false;
+            this.QuickSearchTextBox.TextChanged += new System.EventHandler(this.QuickSearchTextBox_TextChanged);
+            // 
             // ARTCCLabel
             // 
             this.ARTCCLabel.AutoSize = true;
@@ -809,7 +831,7 @@
             this.FilterGroupBox.Controls.Add(this.WestLimitTextBox);
             this.FilterGroupBox.Controls.Add(this.txtLatNorth_label);
             this.FilterGroupBox.Controls.Add(this.NorthLimitTextBox);
-            this.FilterGroupBox.Location = new System.Drawing.Point(6, 461);
+            this.FilterGroupBox.Location = new System.Drawing.Point(6, 476);
             this.FilterGroupBox.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
             this.FilterGroupBox.Name = "FilterGroupBox";
             this.FilterGroupBox.Padding = new System.Windows.Forms.Padding(2, 1, 2, 1);
@@ -1727,32 +1749,31 @@
             this.InfoGroupBox.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.InfoGroupBox.Name = "InfoGroupBox";
             this.InfoGroupBox.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.InfoGroupBox.Size = new System.Drawing.Size(375, 155);
+            this.InfoGroupBox.Size = new System.Drawing.Size(375, 170);
             this.InfoGroupBox.TabIndex = 52;
             this.InfoGroupBox.TabStop = false;
             this.InfoGroupBox.Text = "[INFO]";
             // 
             // CenterSquareButton
             // 
-            this.CenterSquareButton.Enabled = false;
-            this.CenterSquareButton.Location = new System.Drawing.Point(215, 125);
+            this.CenterSquareButton.Location = new System.Drawing.Point(118, 127);
             this.CenterSquareButton.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
             this.CenterSquareButton.Name = "CenterSquareButton";
-            this.CenterSquareButton.Size = new System.Drawing.Size(105, 20);
+            this.CenterSquareButton.Size = new System.Drawing.Size(105, 39);
             this.CenterSquareButton.TabIndex = 26;
-            this.CenterSquareButton.Text = "Center Square";
+            this.CenterSquareButton.Text = "Center on \r\ncurrent square";
             this.CenterSquareButton.UseVisualStyleBackColor = true;
             this.CenterSquareButton.Click += new System.EventHandler(this.CenterSquareButton_Click);
             // 
             // CenterAPTButton
             // 
             this.CenterAPTButton.Enabled = false;
-            this.CenterAPTButton.Location = new System.Drawing.Point(122, 125);
+            this.CenterAPTButton.Location = new System.Drawing.Point(227, 128);
             this.CenterAPTButton.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
             this.CenterAPTButton.Name = "CenterAPTButton";
-            this.CenterAPTButton.Size = new System.Drawing.Size(81, 20);
+            this.CenterAPTButton.Size = new System.Drawing.Size(95, 37);
             this.CenterAPTButton.TabIndex = 12;
-            this.CenterAPTButton.Text = "Center on Apt";
+            this.CenterAPTButton.Text = "Center on Apt\r\n(Ignore square)";
             this.CenterAPTButton.UseVisualStyleBackColor = true;
             this.CenterAPTButton.Click += new System.EventHandler(this.CenterAPTButton_Click);
             // 
@@ -1762,9 +1783,9 @@
             this.CenterARTCCButton.Location = new System.Drawing.Point(9, 125);
             this.CenterARTCCButton.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
             this.CenterARTCCButton.Name = "CenterARTCCButton";
-            this.CenterARTCCButton.Size = new System.Drawing.Size(105, 20);
+            this.CenterARTCCButton.Size = new System.Drawing.Size(105, 41);
             this.CenterARTCCButton.TabIndex = 11;
-            this.CenterARTCCButton.Text = "Center ARTCC";
+            this.CenterARTCCButton.Text = "Create square && \r\nCenter on ARTCC";
             this.CenterARTCCButton.UseVisualStyleBackColor = true;
             this.CenterARTCCButton.Click += new System.EventHandler(this.CenterARTCCButton_Click);
             // 
@@ -1861,28 +1882,6 @@
             this.UpdatingLabel.TabIndex = 59;
             this.UpdatingLabel.Text = "  ";
             this.UpdatingLabel.Visible = false;
-            // 
-            // QuickSearchLabel
-            // 
-            this.QuickSearchLabel.AutoSize = true;
-            this.QuickSearchLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.QuickSearchLabel.Location = new System.Drawing.Point(836, 275);
-            this.QuickSearchLabel.Name = "QuickSearchLabel";
-            this.QuickSearchLabel.Size = new System.Drawing.Size(88, 16);
-            this.QuickSearchLabel.TabIndex = 60;
-            this.QuickSearchLabel.Text = "QuickSearch:";
-            this.toolTip1.SetToolTip(this.QuickSearchLabel, "Searches on SORTED column");
-            this.QuickSearchLabel.Visible = false;
-            // 
-            // QuickSearchTextBox
-            // 
-            this.QuickSearchTextBox.Location = new System.Drawing.Point(931, 275);
-            this.QuickSearchTextBox.Name = "QuickSearchTextBox";
-            this.QuickSearchTextBox.Size = new System.Drawing.Size(100, 20);
-            this.QuickSearchTextBox.TabIndex = 61;
-            this.toolTip1.SetToolTip(this.QuickSearchTextBox, "Searches on SORTED column");
-            this.QuickSearchTextBox.Visible = false;
-            this.QuickSearchTextBox.TextChanged += new System.EventHandler(this.QuickSearchTextBox_TextChanged);
             // 
             // Form1
             // 

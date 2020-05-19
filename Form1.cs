@@ -8,6 +8,7 @@ using System.ComponentModel;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Threading.Tasks;
+using Microsoft.CodeAnalysis.CSharp;
 
 namespace SCTBuilder
 {
@@ -72,7 +73,7 @@ namespace SCTBuilder
                 // Load the subscription data
                 if (LoadFAATextData() != -1) PostLoadTasks();
             }
-            // The user never previously did not save a data folder or did not instald a data set
+            // The user never previously did not save a data folder or did not install a data set
             else
             if (iniAIRAC == 0)   // File  corrupted
             {
@@ -300,26 +301,28 @@ namespace SCTBuilder
                 SetSquareAndOffset();       // Save Square and offset to COMMON
                 SetFilterBy();              // Save Lat-Lon filter limits to COMMON
                 UpdatingLabel.Visible = true;
+                QuickSearchLabel.Visible = QuickSearchTextBox.Visible = false;
                 Refresh();
                 FilterBy.Method = "Square";
-                string filter = SetFilter(); bool APTHasRows = false;
+                string filter; bool APTHasRows = false;
                 if (APTsCheckBox.Checked || RWYsCheckBox.Checked || SIDsCheckBox.Checked || STARsCheckBox.Checked)
                 {
-                    if (dgvAPT.Rows.Count == 0)
-                    {
-                        UpdatingLabel.Text = "Selecting airports..."; Refresh();
-                        APTHasRows = SelectTableItems(APT, filter) != 0;
-                    }
-                    else APTHasRows = true;
-                };
+                    if (LimitAPT2ARTCCCheckBox.Checked)
+                        FilterBy.Method = "ARTCC";
+                    else
+                        FilterBy.Method = "Square";
+                    filter = SetFilter();
+                    APTHasRows = SelectTableItems(APT, filter) != 0;
+                }
                 if (SCTchecked.ChkAPT)
                 {
+                    UpdatingLabel.Text = "Building grid view from selection"; UpdatingLabel.Refresh();
                     if (APTHasRows) lastTab = LoadAPTDataGridView();
                 }
                 if (SCTchecked.ChkRWY)
+                {
                     if (APTHasRows)
                     {
-                        UpdatingLabel.Text = "Selecting runways..."; Refresh();
                         if (SelectRWYs() != 0) lastTab = LoadRWYDataGridView();
                         else ClearDataGridView(dgvRWY);
                     }
@@ -328,22 +331,25 @@ namespace SCTBuilder
                         Msg = "Cannot select Runways.  No airports with runways in the selected square.";
                         SCTcommon.SendMessage(Msg);
                     }
+                }
+                FilterBy.Method = "Square";
+                filter = SetFilter();
                 if (SCTchecked.ChkVOR)
                 {
-                    UpdatingLabel.Text = "Selecting VORs..."; Refresh();
                     SelectTableItems(VOR, filter);
+                    UpdatingLabel.Text = "Building grid view from selection"; UpdatingLabel.Refresh();
                     lastTab = LoadVORGridView();
                 }
                 if (SCTchecked.ChkNDB)
                 {
-                    UpdatingLabel.Text = "Selecting NDBs..."; Refresh();
                     SelectTableItems(NDB, filter);
+                    UpdatingLabel.Text = "Building grid view from selection"; UpdatingLabel.Refresh();
                     lastTab = LoadNDBGridView();
                 }
                 if (SCTchecked.ChkFIX)
                 {
-                    UpdatingLabel.Text = "Selecting FIXes..."; Refresh();
                     SelectTableItems(FIX, filter);
+                    UpdatingLabel.Text = "Building grid view from selection"; UpdatingLabel.Refresh();
                     lastTab = LoadFIXGridView();
                 }
                 // AWYs must come after VOR, NDB and FIX
@@ -351,24 +357,28 @@ namespace SCTBuilder
                 {
                     if (dgvVOR.Rows.Count == 0)
                     {
-                        UpdatingLabel.Text = "Selecting VORS (for Airways)..."; Refresh();
                         SelectTableItems(VOR, filter);
                     }
                     if (dgvNDB.Rows.Count == 0)
                     {
-                        UpdatingLabel.Text = "Selecting NDBs (for Airways)..."; Refresh();
                         SelectTableItems(NDB, filter);
                     }
                     if (dgvFIX.Rows.Count == 0)
                     {
-                        UpdatingLabel.Text = "Selecting FIXes (for Airways)..."; Refresh();
                         SelectTableItems(FIX, filter);
                     }
-                    UpdatingLabel.Text = "Selecting Airways...";
-                    if (SelectAWYs() != 0) lastTab = LoadAWYDataGridView();
+                    if (SelectAWYs() != 0)
+                    {
+                        UpdatingLabel.Text = "Building grid view from selection"; UpdatingLabel.Refresh();
+                        lastTab = LoadAWYDataGridView();
+                    }
                     else ClearDataGridView(dgvAWY);
                 }
+                FilterBy.Method = "ARTCC";
+                filter = SetFilter();
                 if (SCTchecked.ChkARB) SelectTableItems(ARB, filter);
+                FilterBy.Method = "Square";
+                filter = SetFilter();
                 if (SCTchecked.ChkSID)
                     // APTs were selected above
                     if (!APTHasRows)
@@ -380,21 +390,21 @@ namespace SCTBuilder
                     {
                         if (dgvVOR.Rows.Count == 0)
                         {
-                            UpdatingLabel.Text = "Selecting VORS (for SIDs)..."; Refresh();
                             SelectTableItems(VOR, filter);
                         }
                         if (dgvNDB.Rows.Count == 0)
                         {
-                            UpdatingLabel.Text = "Selecting NDBs (for SIDs)..."; Refresh();
                             SelectTableItems(NDB, filter);
                         }
                         if (dgvFIX.Rows.Count == 0)
                         {
-                            UpdatingLabel.Text = "Selecting FIXes (for SIDs)..."; Refresh();
                             SelectTableItems(FIX, filter);
                         }
-                        UpdatingLabel.Text = "Selecting SIDs..."; Refresh();
-                        if (SelectSSD(true) != 0) lastTab = LoadSSDDataGridView(true);
+                        if (SelectSSD(true) != 0)
+                        {
+                            UpdatingLabel.Text = "Building grid view from selection"; UpdatingLabel.Refresh();
+                            lastTab = LoadSSDDataGridView(true);
+                        }
                     }
                 if (SCTchecked.ChkSTAR)
                 {
@@ -408,21 +418,21 @@ namespace SCTBuilder
                     {
                         if (dgvVOR.Rows.Count == 0)
                         {
-                            UpdatingLabel.Text = "Selecting VORS (for STARs)..."; Refresh();
                             SelectTableItems(VOR, filter);
                         }
                         if (dgvNDB.Rows.Count == 0)
                         {
-                            UpdatingLabel.Text = "Selecting NDBs (for Stars)..."; Refresh();
                             SelectTableItems(NDB, filter);
                         }
                         if (dgvFIX.Rows.Count == 0)
                         {
-                            UpdatingLabel.Text = "Selecting FIXes (for STARs)..."; Refresh();
                             SelectTableItems(FIX, filter);
                         }
-                        UpdatingLabel.Text = "Selecting STARS..."; Refresh();
-                        if (SelectSSD(false) != 0) lastTab = LoadSSDDataGridView(false);
+                        if (SelectSSD(false) != 0)
+                        {
+                            UpdatingLabel.Text = "Building grid view from selection";
+                            lastTab = LoadSSDDataGridView(false);
+                        }
                     }
                 }
                 SelectedTabControl.SelectedTab = SelectedTabControl.TabPages[lastTab];
@@ -444,38 +454,16 @@ namespace SCTBuilder
 
         private int SelectTableItems(DataTable dt, string filter)
         {
-            DataView dataView = new DataView(dt); int result;
+            string table = dt.TableName;
+            DataView dataView = new DataView(dt); 
             ClearSelected(dataView);
             dataView.RowFilter = filter;
+            int result = dataView.Count;
             SetSelected(dataView);
-            result = dataView.Count;
-            Console.WriteLine("Selected " + result + " rows from " + dt.TableName);
+            Console.WriteLine("Selected " + result + " rows from " + table);
             dataView.Dispose();
             return result;
         }
-
-        //private int SelectAPTs()
-        //{
-        //    string filter;
-        //    if (SCTchecked.LimitAPT2ARTC)
-        //    {
-        //        FilterBy.Method = "ARTCC";
-        //        filter = SetFilter();
-        //    }
-        //    else
-        //    {
-        //        FilterBy.Method = "Square";
-        //        filter = SetFilter();
-        //    }
-        //    Console.WriteLine("Selecting airports using ");
-        //    DataView dataView = new DataView(APT); int result;
-        //    ClearSelected(dataView);
-        //    dataView.RowFilter = filter;
-        //    SetSelected(dataView);
-        //    result = dataView.Count;
-        //    dataView.Dispose();
-        //    return result;
-        //}
 
         private int SelectRWYs()
         {
@@ -493,7 +481,7 @@ namespace SCTBuilder
             }
             dvRWY.RowFilter = "[Selected]";
             result = dvRWY.Count;
-            Console.WriteLine("Selected " + result + " rows from RWYs");
+            UpdatingLabel.Text = "Selecting " + result + " runways..."; UpdatingLabel.Refresh();
             dvRWY.Dispose();
             dvAPT.Dispose();
             SelectedTabControl.SelectedTab = SelectedTabControl.TabPages["RWYtabPage"];
@@ -505,22 +493,76 @@ namespace SCTBuilder
             // Always select all airways in the selection box
             FilterBy.Method = "Square";
             string filter = SetFilter();
+            string awy1; int SeqNo;
             DataView dvAWY = new DataView(AWY);
             ClearSelected(dvAWY);
             dvAWY.RowFilter = filter;
+            int result = dvAWY.Count;
+            UpdatingLabel.Text = "Selecting " + result + " airways..."; UpdatingLabel.Refresh();
             SetSelected(dvAWY);
             dvAWY.RowFilter = "[Selected]";
+            result = dvAWY.Count;
+            UpdatingLabel.Text = "Validating " + result + " airways..."; UpdatingLabel.Refresh();
+            DataTable dtAWYcheck = dvAWY.ToTable(true, "AWYID");
+            foreach (DataRow dataRow in dtAWYcheck.Rows)
+            {
+                awy1 = dataRow[0].ToString();
+                dvAWY.RowFilter = "[SELECTED] and [AWYID] = '" + awy1 + "'";
+                // Console.WriteLine("Testing " + awy1 + " has " + dvAWY.Count + " rows.");
+                if (dvAWY.Count == 1)
+                {
+                    SeqNo = (int)dvAWY[0]["Sequence"];
+                    // Add the next leg unless it's the last leg
+                    dvAWY.RowFilter = "([AWYID] = '" + awy1 + "') AND " +
+                    "([Sequence] = " + (SeqNo + 10).ToString() + ")";
+                    if (dvAWY.Count != 0)
+                    {
+                        dvAWY[0]["SELECTED"] = true;
+                        SelectAWYNavaid(dvAWY[0]["NAVAID"].ToString());
+                    }
+                    // As long as it not the first waypoint, add the prior leg
+                    if (SeqNo != 10)
+                    {
+                        dvAWY.RowFilter = "([AWYID] = '" + awy1 + "') AND " +
+                        "([Sequence] = " + (SeqNo - 10).ToString() + ")";
+                        dvAWY[0]["SELECTED"] = true;
+                        SelectAWYNavaid(dvAWY[0]["NAVAID"].ToString());
+                    }
+                }
+            }
             // Clean up
-            int result = dvAWY.Count;
             dvAWY.Dispose();
-            Console.WriteLine("Selected " + result + " rows from AWYs");
             return result;
+        }
+
+        private void SelectAWYNavaid(string navaid)
+        {
+            // Assures that navaids represented in a child table SELECTED row have been SELECTED
+            string filter = "[FacilityID] = '" + navaid + "'";
+            DataView dvVOR = new DataView(VOR)
+            {
+                RowFilter = filter
+            };
+            DataView dvNDB = new DataView(NDB)
+            {
+                RowFilter = filter
+            };
+            DataView dvFIX = new DataView(FIX)
+            {
+                RowFilter = filter
+            };
+            if (dvVOR.Count != 0) dvVOR[0]["SELECTED"] = true;
+            if (dvNDB.Count != 0) dvNDB[0]["SELECTED"] = true;
+            if (dvFIX.Count != 0) dvFIX[0]["SELECTED"] = true;
+            dvVOR.Dispose();
+            dvNDB.Dispose();
+            dvFIX.Dispose();
         }
 
         private string LoadAPTDataGridView()
         {
             DataView dvAPT = new DataView(APT);
-            DataTable dtAPT = dvAPT.ToTable(true, "Selected", Conversions.ICOA("FacilityID"), "Name", "ID");
+            DataTable dtAPT = dvAPT.ToTable(true, "Selected", Conversions.ICOA("FacilityID"), "Name", "ID", "ARTCC");
             dgvAPT.DataSource = dtAPT;
             (dgvAPT.DataSource as DataTable).DefaultView.RowFilter = "[Selected]";
             dgvAPT.Columns[1].HeaderText = "Apt";
@@ -536,7 +578,7 @@ namespace SCTBuilder
         {
             //  Facility ID and RWYs
             DataView dvRWY = new DataView(RWY);
-            DataTable dtRWY = dvRWY.ToTable(true, "Selected", "FacilityName", "RwyIdentifier", "ID");
+            DataTable dtRWY = dvRWY.ToTable(true, "Selected", "FacilityName", "RwyIdentifier", "ID", "ARTCC");
             dgvRWY.DataSource = dtRWY;
             (dgvRWY.DataSource as DataTable).DefaultView.RowFilter = "[Selected]";
             foreach (DataGridViewColumn dc in dgvRWY.Columns) dc.ReadOnly = true;
@@ -584,8 +626,11 @@ namespace SCTBuilder
             DataView dvFIX = new DataView(FIX);
             DataTable dtFIX = dvFIX.ToTable(true, "Selected", "FacilityID", "Use");
             dgvFIX.DataSource = dtFIX;
+            (dgvFIX.DataSource as DataTable).DefaultView.RowFilter = "[SELECTED]";
+            foreach (DataGridViewColumn dc in dgvFIX.Columns) dc.ReadOnly = true;
+            dgvFIX.Columns[0].ReadOnly = false;
             dgvFIX.Columns[1].HeaderText = "ID";
-            dgvFIX.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.DisplayedCells);
+            dgvFIX.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
             dvFIX.Dispose();
             return "FIXtabPage";
         }
@@ -611,69 +656,49 @@ namespace SCTBuilder
 
         private int SelectSSD(bool isSID)
         {
-            // This one is different and gets [Selected] based upon included APTs
-            // To make this one faster, use a DataView rather than the dataviewgrid
-            // First, get all the airports affected (It's easier to just make a new one)
-            var SSDID = new List<string>(); string IDfilter;
-            string Proc = "STAR";  if (isSID) Proc = "STAR"; int PctDone; int DoneCounter = 0;
-            // Clear only the SID or STAR selections
+            string proc = "STARs"; if (isSID) proc = "SIDs";
+            string UpdateText = "Clearing prior selections in " + proc;
+            UpdatingLabel.Text = UpdateText; UpdatingLabel.Refresh();
             DataView dvSSD = new DataView(SSD)
             {
                 RowFilter = "[IsSID] = " + isSID
             };
             ClearSelected(dvSSD);
             Application.DoEvents();
-            // Get 'selected' airports
+            // Get 'selected' airports and build a unique list
             DataView dvAPT = new DataView(APT)
             {
                 RowFilter = "[SELECTED]"
             };
-            //// Try this LINQ method
-            //DataTable dtResult = new DataTable();
-            //var sql =
-            //    from DataRowView SSDdrv in dvSSD
-            //    where SSDdrv.Row.Field<string>("FixType") == "'AA'"
-            //    join DataRowView APTdrv in dvAPT
-            //    on SSDdrv.Row.Field<string>("NavAid") equals APTdrv.Row.Field<string>("FacilityID") into lj
-            //    select new
-            //    {
-            //        SSID = SSDdrv.Row.Field<string>("ID").ToString()
-            //    };
-            //Console.WriteLine(sql.ToList().Count);
-
-
-            //****************************************************************************
-            // Build a list of uniques Facility IDs
+            UpdateText = "Selecting " + proc + " across ";
+            UpdatingLabel.Text = UpdateText + dvAPT.Count + " airports."; UpdatingLabel.Refresh();
             DataTable dtAirports = dvAPT.ToTable(true, "FacilityID");
-            string AAfilter = "([FixType] = 'AA') AND ([IsSID] = " + isSID + ") AND ";
-            // Loop the list to get SID/STAR IDs for those airports
+            // Go through each APT, to find SSDID and not selected
+            string AAfilter = "([FixType] = 'AA') AND ([IsSID] = " + isSID + ") AND " +
+                "([SELECTED] = " + false + ")";
+            // This loop will find the SSDID for each airport NOT selected.
+            // As the loop runs, duplicates will be skipped by the filter
             foreach (DataRow dtAptRow in dtAirports.AsEnumerable())
             {
-                string FacIDfilter = "([NavAid] = '" + dtAptRow["FacilityID"].ToString() + "')";
+                string FacIDfilter = " AND ([NavAid] = '" + dtAptRow["FacilityID"].ToString() + "')";
                 dvSSD.RowFilter = AAfilter + FacIDfilter;
+                UpdateText = "Selecting " + proc + " for " + dtAptRow["FacilityID"].ToString();
+                UpdatingLabel.Text = UpdateText; UpdatingLabel.Refresh();
                 DataTable IDdata = dvSSD.ToTable(true, "ID");
-                foreach (DataRow data in IDdata.AsEnumerable())
+                if (IDdata.Rows.Count != 0)
                 {
-                    SSDID.Add(data["ID"].ToString());
+                    foreach (DataRow data in IDdata.AsEnumerable())
+                    {
+                        dvSSD.RowFilter = "[ID] = '" + data[0].ToString() + "'";
+                        SetSelected(dvSSD);
+                    }
                 }
-                Application.DoEvents();
             }
-            // Make the list IEnumerable and distinct values
-            IEnumerable<string> distinctSSDID = SSDID.Distinct();
-            // Run that list of SID/STAR IDs to mark the rows 'selected'
-            Console.WriteLine("Selecting " + distinctSSDID.Count() + " " + Proc + "s");
-            foreach (var item in distinctSSDID)
-            {
-                DoneCounter++;
-                PctDone = DoneCounter / distinctSSDID.Count() * 100;
-                IDfilter = "[ID] = '" + item.ToString() + "'";
-                dvSSD.RowFilter = IDfilter;
-                SetSelected(dvSSD);
-                UpdatingLabel.Text = "Selecting " + Proc + "s... (" + PctDone + ")"; Refresh();
-            }
-            // *****************************************************************************
-            Console.WriteLine("Done ");
-            return distinctSSDID.Count();
+            dvSSD.RowFilter = "[SELECTED]";
+            DataTable dtReturnCount = dvSSD.ToTable(true, "ID");
+            dvSSD.Dispose();
+            dvAPT.Dispose();
+            return dtReturnCount.Rows.Count;
         }
 
         private string LoadSSDDataGridView(bool isSID)
@@ -689,12 +714,15 @@ namespace SCTBuilder
             {
                 DataTable dtSID = dvSSD.ToTable(true, "Selected", "NavAid", "TransCode", "TransName", "ID");
                 dgvSID.DataSource = dtSID;
+                (dgvSID.DataSource as DataTable).DefaultView.RowFilter = "[Selected]";
+                foreach (DataGridViewColumn dc in dgvSID.Columns) dc.ReadOnly = true;
+                dgvAWY.Columns[0].ReadOnly = false;
                 dgvSID.Columns[1].HeaderText = "Apt";
                 dgvSID.Columns[2].HeaderText = "SID";
                 dgvSID.Columns[3].HeaderText = "Name";
                 dgvSID.Columns[4].Visible = false;      // This is for later use
                 dgvSID.Sort(dgvSID.Columns["NavAid"], ListSortDirection.Ascending);
-                dgvSID.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.DisplayedCells);
+                dgvSID.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
                 dvSSD.Dispose();
                 SelectedTabControl.SelectedTab = SelectedTabControl.TabPages["SIDtabPage"];
             }
@@ -702,6 +730,9 @@ namespace SCTBuilder
             {
                 DataTable dtSTAR = dvSSD.ToTable(true, "Selected", "NavAid", "TransCode", "TransName", "ID");
                 dgvSTAR.DataSource = dtSTAR;
+                (dgvSTAR.DataSource as DataTable).DefaultView.RowFilter = "[Selected]";
+                foreach (DataGridViewColumn dc in dgvSTAR.Columns) dc.ReadOnly = true;
+                dgvSTAR.Columns[0].ReadOnly = false;
                 dgvSTAR.Columns[1].HeaderText = "Apt";
                 dgvSTAR.Columns[2].HeaderText = "STAR";
                 dgvSTAR.Columns[3].HeaderText = "Name";
@@ -709,7 +740,7 @@ namespace SCTBuilder
                 dgvSTAR.Sort(dgvSTAR.Columns["NavAid"], ListSortDirection.Ascending);
                 SelectedTabControl.SelectedTab = SelectedTabControl.TabPages["STARtabPage"];
                 dvSSD.Dispose();
-                dgvSTAR.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.DisplayedCells);
+                dgvSTAR.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
             }
             if (isSID) return "SIDtabPage";
             else return "STARtabPage";
@@ -775,9 +806,18 @@ namespace SCTBuilder
             // If the filter is applied, selected boxes are true
             // otherwise, ALL the selected boxes are false
             // But if the ShowAll box is checked, ignore the update
+            int result = dv.Count; int Counter = 0;
+            string UpdateText = "Selecting " + result + " rows from " + dv.Table.TableName;
+            if (dv.Table.TableName != "SSD")
+            {
+                UpdatingLabel.Text = UpdateText; UpdatingLabel.Refresh();
+            }
             foreach (DataRowView row in dv)
             {
+                Counter++;
                 row["Selected"] = true;
+                UpdatingLabel.Text = UpdateText + " (" + (Counter*100/dv.Count).ToString() + "% done)"; 
+                UpdatingLabel.Refresh();
             }
         }
         private void UpdateGridCount()
@@ -1053,7 +1093,12 @@ namespace SCTBuilder
             if (dgvSTAR.DataSource != null) ToggleSelectedDGV(dgvSTAR);
             UpdateGridCount();
             if (chkbxShowAll.Checked) chkbxShowAll.BackColor = Color.White;
-            else chkbxShowAll.BackColor = Color.Transparent;
+            else
+            {
+                chkbxShowAll.BackColor = Color.Transparent;
+                QuickSearchLabel.Visible = QuickSearchTextBox.Visible = false;
+            }
+
         }
 
         private void ToggleSelectedDGV(DataGridView dgv)
@@ -1245,15 +1290,15 @@ namespace SCTBuilder
             SIDNameCheckBox.Enabled = SIDsCheckBox.Checked;
             if (SIDsCheckBox.Checked)
             {
-                if (!APTsCheckBox.Checked)
-                {
-                    Msg = "In order to select SIDs, airports and NavAids will be selected.";
-                    SendMessage(Msg);
-                    APTsCheckBox.Checked = true;
-                    VORsCheckBox.Checked = true;
-                    NDBsCheckBox.Checked = true;
-                    FIXesCheckBox.Checked = true;
-                }
+                Msg = "In order to select SIDs, airports and NavAids will be selected," + cr +
+                    "and airports will be limited to primary ARTCC.  UNcheck the limit box" + cr +
+                    "for ALL airports in square - expect several minutes to complete survey!";
+                SendMessage(Msg);
+                APTsCheckBox.Checked = true;
+                LimitAPT2ARTCCCheckBox.Checked = true;
+                VORsCheckBox.Checked = true;
+                NDBsCheckBox.Checked = true;
+                FIXesCheckBox.Checked = true;
             }
         }
 
@@ -1262,15 +1307,15 @@ namespace SCTBuilder
             STARNameCheckBox.Enabled = STARsCheckBox.Checked;
             if (STARsCheckBox.Checked)
             {
-                if (!APTsCheckBox.Checked)
-                {
-                    Msg = "In order to select STARs, airports and NavAids will be selected.";
-                    SendMessage(Msg);
-                    APTsCheckBox.Checked = true;
-                    VORsCheckBox.Checked = true;
-                    NDBsCheckBox.Checked = true;
-                    FIXesCheckBox.Checked = true;
-                }
+                Msg = "In order to select STARs, airports and NavAids will be selected," + cr +
+                    "and airports will be limited to primary ARTCC.  UNcheck the limit box" + cr +
+                    "for ALL airports in square - expect several minutes to complete survey!";
+                SendMessage(Msg);
+                APTsCheckBox.Checked = true;
+                LimitAPT2ARTCCCheckBox.Checked = true;
+                VORsCheckBox.Checked = true;
+                NDBsCheckBox.Checked = true;
+                FIXesCheckBox.Checked = true;
             }
         }
 
@@ -1384,7 +1429,7 @@ namespace SCTBuilder
                 else
                 {
                     InfoSection.SouthSquare = SLat;
-                    GetSquareAndOffset();
+                    SouthLimitTextBox.Text = Conversions.DecDeg2SCT(SLat, true);
                 }
             }
             CheckARTCC2SquareButton();
@@ -1414,7 +1459,7 @@ namespace SCTBuilder
                 else
                 {
                     InfoSection.NorthSquare = NLat;
-                    GetSquareAndOffset();
+                    NorthLimitTextBox.Text = Conversions.DecDeg2SCT(NLat, true);
                 }
             }
             CheckARTCC2SquareButton();
@@ -1444,7 +1489,7 @@ namespace SCTBuilder
                 else
                 {
                     InfoSection.WestSquare = WLon;
-                    SetSquareAndOffset();
+                    WestLimitTextBox.Text = Conversions.DecDeg2SCT(WLon, false);
                 }
             }
             CheckARTCC2SquareButton();
@@ -1474,7 +1519,7 @@ namespace SCTBuilder
                 else
                 {
                     InfoSection.EastSquare = ELon;
-                    SetSquareAndOffset();
+                    EastLimitTextBox.Text = Conversions.DecDeg2SCT(ELon, false);
                 }
             }
             CheckARTCC2SquareButton();
@@ -1532,9 +1577,17 @@ namespace SCTBuilder
             {
                 Form getAIRAC = new SelectAIRAC();
                 DialogResult dialogResult = getAIRAC.ShowDialog();
+                while (dialogResult != DialogResult.None)
+                { Application.DoEvents(); }
+
                 if (dialogResult == DialogResult.OK)
                 {
                     if (LoadFAATextData() != -1) PostLoadTasks();
+                }
+                else if (dialogResult == DialogResult.Abort)
+                {
+                    Msg = "FAA download returned an error.  Correct the error and retry.";
+                    SCTcommon.SendMessage(Msg, MessageBoxIcon.Error);
                 }
                 else
                     Console.WriteLine("Returned with Cancel");
@@ -1548,17 +1601,23 @@ namespace SCTBuilder
         private void CenterARTCCButton_Click(object sender, EventArgs e)
         {
             SquarebyARTCC();
-            InfoSection.CenterLatitude_Dec = (InfoSection.NorthSquare + InfoSection.SouthSquare) / 2;
-            CenterLatTextBox.Text = InfoSection.CenterLatitude_SCT;
-            InfoSection.CenterLongitude_Dec = (InfoSection.WestSquare + InfoSection.EastSquare) / 2;
-            CenterLonTextBox.Text = InfoSection.CenterLongitude_SCT;
-            MagVarTextBox.Text = InfoSection.MagneticVariation.ToString();
+            CenterSquare();
         }
 
         private void CenterSquareButton_Click(object sender, EventArgs e)
         {
-            if ( (NorthLimitTextBox.TextLength != 0) && (SouthLimitTextBox.TextLength != 0) &&
-                (EastLimitTextBox.TextLength != 0) && (WestLimitTextBox.TextLength != 0) )
+            if ((NorthLimitTextBox.TextLength != 0) && (SouthLimitTextBox.TextLength != 0) &&
+                (EastLimitTextBox.TextLength != 0) && (WestLimitTextBox.TextLength != 0))
+                CenterSquare();
+            else
+            {
+                Msg = "Must have value in all Square textboxes to find center.";
+                SCTcommon.SendMessage(Msg);
+            }
+        }
+
+        private void CenterSquare()
+        {
             InfoSection.CenterLatitude_Dec = (InfoSection.NorthSquare + InfoSection.SouthSquare) / 2;
             CenterLatTextBox.Text = InfoSection.CenterLatitude_SCT;
             InfoSection.CenterLongitude_Dec = (InfoSection.WestSquare + InfoSection.EastSquare) / 2;
@@ -1626,7 +1685,13 @@ namespace SCTBuilder
 
         private void SCTtoolStripButton_Click(object sender, EventArgs e)
         {
+            SCTtoolStripButton.ToolTipText = "Please wait for the completion message."; Refresh();
+            UpdatingLabel.Visible = true;
+            UpdatingLabel.Text = "Writing files. Please wait for completion message."; UpdatingLabel.Refresh();
+            UseWaitCursor = true;
             SCToutput.WriteSCT();
+            UpdatingLabel.Visible = false;
+            UseWaitCursor = false;
         }
 
         private void LabelGeneratorforDiagramsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1681,12 +1746,20 @@ namespace SCTBuilder
 
         private void CenterAPTButton_Click(object sender, EventArgs e)
         {
-            double[] coords = SCTcommon.GetCoords(AirportComboBox.Text, "APT");
-            InfoSection.CenterLatitude_Dec = coords[0];
-            InfoSection.CenterLongitude_Dec = coords[1];
-            CenterLatTextBox.Text = InfoSection.CenterLatitude_SCT;
-            CenterLonTextBox.Text = InfoSection.CenterLongitude_SCT;
-            MagVarTextBox.Text = InfoSection.MagneticVariation.ToString("0.00");
+            if (AirportComboBox.SelectedIndex != -1)
+            {
+                double[] coords = SCTcommon.GetCoords(AirportComboBox.Text, "APT");
+                InfoSection.CenterLatitude_Dec = coords[0];
+                InfoSection.CenterLongitude_Dec = coords[1];
+                CenterLatTextBox.Text = InfoSection.CenterLatitude_SCT;
+                CenterLonTextBox.Text = InfoSection.CenterLongitude_SCT;
+                MagVarTextBox.Text = InfoSection.MagneticVariation.ToString("0.00");
+            }
+            else
+            {
+                Msg = "You must first select an airport to use it as a center point.";
+                SCTcommon.SendMessage(Msg);
+            }
         }
 
         private void UseARTCCAsSquareButton_Click(object sender, EventArgs e)

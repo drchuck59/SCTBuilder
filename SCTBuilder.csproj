@@ -27,7 +27,7 @@
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
     <AutorunEnabled>true</AutorunEnabled>
-    <ApplicationRevision>2</ApplicationRevision>
+    <ApplicationRevision>6</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -71,7 +71,7 @@
     <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>image_scanner_radar_icon_ca7_icon.ico</ApplicationIcon>
+    <ApplicationIcon>radar_icon.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject>SCTBuilder.Program</StartupObject>
@@ -187,12 +187,6 @@
     </Compile>
     <Compile Include="About.Designer.cs">
       <DependentUpon>About.cs</DependentUpon>
-    </Compile>
-    <Compile Include="AIRACUpdateForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="AIRACUpdateForm.Designer.cs">
-      <DependentUpon>AIRACUpdateForm.cs</DependentUpon>
     </Compile>
     <Compile Include="CycleInfo.cs" />
     <Compile Include="DMS_DecDeg.cs">
@@ -330,7 +324,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="image_scanner_radar_icon_ca7_icon.ico" />
+    <Content Include="radar_icon.ico" />
   </ItemGroup>
   <ItemGroup>
     <Analyzer Include="packages\Microsoft.CodeAnalysis.Analyzers.3.0.0\analyzers\dotnet\cs\Microsoft.CodeAnalysis.Analyzers.dll" />

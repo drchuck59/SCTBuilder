@@ -303,6 +303,11 @@
               Looks up a localized string similar to The changes must not overlap..
             </summary>
         </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.ChangingVersionOfAssemblyReferenceIsNotAllowedDuringDebugging">
+            <summary>
+              Looks up a localized string similar to Changing the version of an assembly reference is not allowed during debugging: &apos;{0}&apos; changed version to &apos;{1}&apos;..
+            </summary>
+        </member>
         <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.Class1">
             <summary>
               Looks up a localized string similar to class.
@@ -675,6 +680,11 @@
               Looks up a localized string similar to Module copy can&apos;t be used to create an assembly metadata..
             </summary>
         </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.ModuleHasInvalidAttributes">
+            <summary>
+              Looks up a localized string similar to Module has invalid attributes..
+            </summary>
+        </member>
         <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.MultithreadedAnalyzerExecutionNote">
             <summary>
               Looks up a localized string similar to NOTE: Elapsed time may be less than analyzer execution time because analyzers can run concurrently..
@@ -1008,6 +1018,11 @@
         <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.TypeParameter">
             <summary>
               Looks up a localized string similar to type parameter.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.UnableToDetermineSpecificCauseOfFailure">
+            <summary>
+              Looks up a localized string similar to Unable to determine specific cause of the failure..
             </summary>
         </member>
         <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.UnexpectedTypeOfNodeInList">
@@ -1662,7 +1677,7 @@
         <member name="F:Microsoft.CodeAnalysis.CodeGen.LocalDefinition._pdbAttributes">
             <see cref="P:Microsoft.Cci.ILocalDefinition.PdbAttributes"/>.
         </member>
-        <member name="M:Microsoft.CodeAnalysis.CodeGen.LocalDefinition.#ctor(Microsoft.CodeAnalysis.ILocalSymbol,System.String,Microsoft.Cci.ITypeReference,System.Int32,Microsoft.CodeAnalysis.SynthesizedLocalKind,Microsoft.CodeAnalysis.CodeGen.LocalDebugId,System.Reflection.Metadata.LocalVariableAttributes,Microsoft.CodeAnalysis.LocalSlotConstraints,System.Collections.Immutable.ImmutableArray{System.Boolean},System.Collections.Immutable.ImmutableArray{System.String})">
+        <member name="M:Microsoft.CodeAnalysis.CodeGen.LocalDefinition.#ctor(Microsoft.CodeAnalysis.Symbols.ILocalSymbolInternal,System.String,Microsoft.Cci.ITypeReference,System.Int32,Microsoft.CodeAnalysis.SynthesizedLocalKind,Microsoft.CodeAnalysis.CodeGen.LocalDebugId,System.Reflection.Metadata.LocalVariableAttributes,Microsoft.CodeAnalysis.LocalSlotConstraints,System.Collections.Immutable.ImmutableArray{System.Boolean},System.Collections.Immutable.ImmutableArray{System.String})">
             <summary>
             Creates a new LocalDefinition.
             </summary>
@@ -1698,12 +1713,12 @@
             Structure that represents a local signature (as in <a href="http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-335.pdf">ECMA-335</a>, Partition I, §8.6.1.3 Local signatures).
             </summary>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.CodeGen.LocalSlotManager.GetLocal(Microsoft.CodeAnalysis.ILocalSymbol)">
+        <member name="M:Microsoft.CodeAnalysis.CodeGen.LocalSlotManager.GetLocal(Microsoft.CodeAnalysis.Symbols.ILocalSymbolInternal)">
             <summary>
             Retrieve a local slot by its symbol.
             </summary>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.CodeGen.LocalSlotManager.FreeLocal(Microsoft.CodeAnalysis.ILocalSymbol)">
+        <member name="M:Microsoft.CodeAnalysis.CodeGen.LocalSlotManager.FreeLocal(Microsoft.CodeAnalysis.Symbols.ILocalSymbolInternal)">
             <summary>
             Release a local slot by its symbol.
             Slot is not associated with symbol after this.
@@ -1762,6 +1777,11 @@
         <member name="P:Microsoft.CodeAnalysis.CodeGen.MethodBody.Microsoft#Cci#IMethodBody#ImportScope">
             <summary>
             This is a list of the using directives that were in scope for this method body.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeGen.MethodBody.HasStackalloc">
+            <summary>
+            True if there's a stackalloc somewhere in the method.
             </summary>
         </member>
         <member name="T:Microsoft.CodeAnalysis.CodeGen.PermissionSetAttributeWithFileReference">
@@ -3999,7 +4019,7 @@
             Get the symbol for the predefined type member from the COR Library referenced by this compilation.
             </summary>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.Compilation.IsSystemTypeReference(Microsoft.CodeAnalysis.ITypeSymbol)">
+        <member name="M:Microsoft.CodeAnalysis.Compilation.IsSystemTypeReference(Microsoft.CodeAnalysis.Symbols.ITypeSymbolInternal)">
             <summary>
             Returns true if the type is System.Type.
             </summary>
@@ -4231,7 +4251,7 @@
             Return true if the compilation contains any code or types.
             </summary>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.Compilation.CompileMethods(Microsoft.CodeAnalysis.Emit.CommonPEModuleBuilder,System.Boolean,System.Boolean,System.Boolean,Microsoft.CodeAnalysis.DiagnosticBag,System.Predicate{Microsoft.CodeAnalysis.ISymbol},System.Threading.CancellationToken)">
+        <member name="M:Microsoft.CodeAnalysis.Compilation.CompileMethods(Microsoft.CodeAnalysis.Emit.CommonPEModuleBuilder,System.Boolean,System.Boolean,System.Boolean,Microsoft.CodeAnalysis.DiagnosticBag,System.Predicate{Microsoft.CodeAnalysis.Symbols.ISymbolInternal},System.Threading.CancellationToken)">
             <summary>
             Report declaration diagnostics and compile and synthesize method bodies.
             </summary>
@@ -4407,7 +4427,7 @@
             Guarded by <see cref="F:Microsoft.CodeAnalysis.CommonReferenceManager.SymbolCacheAndReferenceManagerStateGuard"/>.
             </summary>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.Compilation.CacheRetargetingAssemblySymbolNoLock(Microsoft.CodeAnalysis.IAssemblySymbol)">
+        <member name="M:Microsoft.CodeAnalysis.Compilation.CacheRetargetingAssemblySymbolNoLock(Microsoft.CodeAnalysis.Symbols.IAssemblySymbolInternal)">
             <summary>
             Adds given retargeting assembly for this compilation into the cache.
             <see cref="F:Microsoft.CodeAnalysis.CommonReferenceManager.SymbolCacheAndReferenceManagerStateGuard"/> must be locked while calling this method.
@@ -5388,7 +5408,7 @@
             symbol is simply Symbol.ContainingSymbol.
             </summary>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.Emit.SymbolMatcher.MapSynthesizedMembers(System.Collections.Immutable.ImmutableDictionary{Microsoft.CodeAnalysis.ISymbol,System.Collections.Immutable.ImmutableArray{Microsoft.CodeAnalysis.ISymbol}},System.Collections.Immutable.ImmutableDictionary{Microsoft.CodeAnalysis.ISymbol,System.Collections.Immutable.ImmutableArray{Microsoft.CodeAnalysis.ISymbol}})">
+        <member name="M:Microsoft.CodeAnalysis.Emit.SymbolMatcher.MapSynthesizedMembers(System.Collections.Immutable.ImmutableDictionary{Microsoft.CodeAnalysis.Symbols.ISymbolInternal,System.Collections.Immutable.ImmutableArray{Microsoft.CodeAnalysis.Symbols.ISymbolInternal}},System.Collections.Immutable.ImmutableDictionary{Microsoft.CodeAnalysis.Symbols.ISymbolInternal,System.Collections.Immutable.ImmutableArray{Microsoft.CodeAnalysis.Symbols.ISymbolInternal}})">
             <summary>
             Merges synthesized members generated during lowering of the current compilation with aggregate synthesized members 
             from all previous source generations (gen >= 1).
@@ -11415,44 +11435,6 @@
             Get options for a given <see cref="T:Microsoft.CodeAnalysis.AdditionalText"/>
             </summary>
         </member>
-        <member name="T:Microsoft.CodeAnalysis.Diagnostics.AnalyzerDriver`1">
-            <summary>
-            Driver to execute diagnostic analyzers for a given compilation.
-            It uses a <see cref="T:Microsoft.CodeAnalysis.Diagnostics.AsyncQueue`1"/> of <see cref="T:Microsoft.CodeAnalysis.Diagnostics.CompilationEvent"/>s to drive its analysis.
-            </summary>
-        </member>
-        <member name="M:Microsoft.CodeAnalysis.Diagnostics.AnalyzerDriver`1.#ctor(System.Collections.Immutable.ImmutableArray{Microsoft.CodeAnalysis.Diagnostics.DiagnosticAnalyzer},System.Func{Microsoft.CodeAnalysis.SyntaxNode,`0},Microsoft.CodeAnalysis.Diagnostics.AnalyzerManager,System.Func{Microsoft.CodeAnalysis.SyntaxTrivia,System.Boolean})">
-            <summary>
-            Create an analyzer driver.
-            </summary>
-            <param name="analyzers">The set of analyzers to include in the analysis</param>
-            <param name="getKind">A delegate that returns the language-specific kind for a given syntax node</param>
-            <param name="analyzerManager">AnalyzerManager to manage analyzers for the lifetime of analyzer host.</param>
-            <param name="isComment">Delegate to identify if the given trivia is a comment.</param>
-        </member>
-        <member name="M:Microsoft.CodeAnalysis.Diagnostics.AnalyzerDriver`1.TryExecuteDeclaringReferenceActions(Microsoft.CodeAnalysis.Diagnostics.SymbolDeclaredCompilationEvent,Microsoft.CodeAnalysis.Diagnostics.AnalysisScope,Microsoft.CodeAnalysis.Diagnostics.AnalysisState,System.Boolean,Microsoft.CodeAnalysis.Diagnostics.AnalyzerActions,System.Threading.CancellationToken)">
-            <summary>
-            Tries to execute syntax node, code block and operation actions for all declarations for the given symbol.
-            </summary>
-            <returns>
-            True, if successfully executed the actions for the given analysis scope OR no actions were required to be executed for the given analysis scope.
-            False, otherwise.
-            </returns>
-        </member>
-        <member name="M:Microsoft.CodeAnalysis.Diagnostics.AnalyzerDriver`1.TryExecuteDeclaringReferenceActions(Microsoft.CodeAnalysis.SyntaxReference,System.Int32,Microsoft.CodeAnalysis.Diagnostics.SymbolDeclaredCompilationEvent,Microsoft.CodeAnalysis.Diagnostics.AnalysisScope,Microsoft.CodeAnalysis.Diagnostics.AnalysisState,Microsoft.CodeAnalysis.Diagnostics.AnalyzerDriver{`0}.GroupedAnalyzerActions,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Threading.CancellationToken)">
-            <summary>
-            Tries to execute syntax node, code block and operation actions for the given declaration.
-            </summary>
-            <returns>
-            True, if successfully executed the actions for the given analysis scope OR no actions were required to be executed for the given analysis scope.
-            False, otherwise.
-            </returns>
-        </member>
-        <member name="T:Microsoft.CodeAnalysis.Diagnostics.AnalyzerDriver`1.GroupedAnalyzerActions">
-            <summary>
-            <see cref="T:Microsoft.CodeAnalysis.Diagnostics.AnalyzerActions"/> grouped by <see cref="T:Microsoft.CodeAnalysis.Diagnostics.DiagnosticAnalyzer"/>, and possibly other entities, such as <see cref="T:Microsoft.CodeAnalysis.OperationKind"/>, <see cref="T:Microsoft.CodeAnalysis.SymbolKind"/>, etc.
-            </summary>
-        </member>
         <member name="T:Microsoft.CodeAnalysis.Diagnostics.AnalyzerDriver">
             <summary>
             Driver to execute diagnostic analyzers for a given compilation.
@@ -11507,6 +11489,12 @@
             <summary>
             Map from analyzers to their <see cref="T:Microsoft.CodeAnalysis.Diagnostics.GeneratedCodeAnalysisFlags"/> setting. 
             </summary>
+        </member>
+        <member name="F:Microsoft.CodeAnalysis.Diagnostics.AnalyzerDriver._analyzerActions">
+            <summary>
+            The set of registered analyzer actions.
+            </summary>
+            <seealso cref="P:Microsoft.CodeAnalysis.Diagnostics.AnalyzerDriver.AnalyzerActions"/>
         </member>
         <member name="F:Microsoft.CodeAnalysis.Diagnostics.AnalyzerDriver._unsuppressedAnalyzers">
             <summary>
@@ -11760,6 +11748,44 @@
             <summary>
             Subset of processed analyzers.
             NOTE: This property is only non-null for <see cref="F:Microsoft.CodeAnalysis.Diagnostics.AnalyzerDriver.EventProcessedStateKind.PartiallyProcessed"/>.
+            </summary>
+        </member>
+        <member name="T:Microsoft.CodeAnalysis.Diagnostics.AnalyzerDriver`1">
+            <summary>
+            Driver to execute diagnostic analyzers for a given compilation.
+            It uses a <see cref="T:Microsoft.CodeAnalysis.Diagnostics.AsyncQueue`1"/> of <see cref="T:Microsoft.CodeAnalysis.Diagnostics.CompilationEvent"/>s to drive its analysis.
+            </summary>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Diagnostics.AnalyzerDriver`1.#ctor(System.Collections.Immutable.ImmutableArray{Microsoft.CodeAnalysis.Diagnostics.DiagnosticAnalyzer},System.Func{Microsoft.CodeAnalysis.SyntaxNode,`0},Microsoft.CodeAnalysis.Diagnostics.AnalyzerManager,System.Func{Microsoft.CodeAnalysis.SyntaxTrivia,System.Boolean})">
+            <summary>
+            Create an analyzer driver.
+            </summary>
+            <param name="analyzers">The set of analyzers to include in the analysis</param>
+            <param name="getKind">A delegate that returns the language-specific kind for a given syntax node</param>
+            <param name="analyzerManager">AnalyzerManager to manage analyzers for the lifetime of analyzer host.</param>
+            <param name="isComment">Delegate to identify if the given trivia is a comment.</param>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Diagnostics.AnalyzerDriver`1.TryExecuteDeclaringReferenceActions(Microsoft.CodeAnalysis.Diagnostics.SymbolDeclaredCompilationEvent,Microsoft.CodeAnalysis.Diagnostics.AnalysisScope,Microsoft.CodeAnalysis.Diagnostics.AnalysisState,System.Boolean,Microsoft.CodeAnalysis.Diagnostics.AnalyzerActions@,System.Threading.CancellationToken)">
+            <summary>
+            Tries to execute syntax node, code block and operation actions for all declarations for the given symbol.
+            </summary>
+            <returns>
+            True, if successfully executed the actions for the given analysis scope OR no actions were required to be executed for the given analysis scope.
+            False, otherwise.
+            </returns>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Diagnostics.AnalyzerDriver`1.TryExecuteDeclaringReferenceActions(Microsoft.CodeAnalysis.SyntaxReference,System.Int32,Microsoft.CodeAnalysis.Diagnostics.SymbolDeclaredCompilationEvent,Microsoft.CodeAnalysis.Diagnostics.AnalysisScope,Microsoft.CodeAnalysis.Diagnostics.AnalysisState,Microsoft.CodeAnalysis.Diagnostics.AnalyzerDriver{`0}.GroupedAnalyzerActions,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Threading.CancellationToken)">
+            <summary>
+            Tries to execute syntax node, code block and operation actions for the given declaration.
+            </summary>
+            <returns>
+            True, if successfully executed the actions for the given analysis scope OR no actions were required to be executed for the given analysis scope.
+            False, otherwise.
+            </returns>
+        </member>
+        <member name="T:Microsoft.CodeAnalysis.Diagnostics.AnalyzerDriver`1.GroupedAnalyzerActions">
+            <summary>
+            <see cref="T:Microsoft.CodeAnalysis.Diagnostics.AnalyzerActions"/> grouped by <see cref="T:Microsoft.CodeAnalysis.Diagnostics.DiagnosticAnalyzer"/>, and possibly other entities, such as <see cref="T:Microsoft.CodeAnalysis.OperationKind"/>, <see cref="T:Microsoft.CodeAnalysis.SymbolKind"/>, etc.
             </summary>
         </member>
         <member name="T:Microsoft.CodeAnalysis.Diagnostics.AnalyzerExecutor">
@@ -13705,7 +13731,7 @@
             Actions registered by a particular analyzer.
             </summary>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.Diagnostics.AnalyzerActions.Append(Microsoft.CodeAnalysis.Diagnostics.AnalyzerActions,System.Boolean)">
+        <member name="M:Microsoft.CodeAnalysis.Diagnostics.AnalyzerActions.Append(Microsoft.CodeAnalysis.Diagnostics.AnalyzerActions@,System.Boolean)">
             <summary>
             Append analyzer actions from <paramref name="otherActions"/> to actions from this instance.
             </summary>
@@ -16853,6 +16879,20 @@
             <summary>
             Deal with labeled blocks that were not added to the graph because labels were never found
             </summary>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.FlowAnalysis.ControlFlowGraphBuilder.VisitStatementsOneOrAll(Microsoft.CodeAnalysis.IOperation,System.Collections.Immutable.ImmutableArray{Microsoft.CodeAnalysis.IOperation},System.Int32)">
+            <summary>
+            Either visits a single operation, or a using <see cref="T:Microsoft.CodeAnalysis.Operations.IVariableDeclarationGroupOperation"/> and all subsequent statements
+            </summary>
+            <param name="operation">The statement to visit</param>
+            <param name="statements">All statements in the block containing this node</param>
+            <param name="startIndex">The current statement being visited in <paramref name="statements"/></param>
+            <returns>True if this visited all of the statements</returns>
+            <remarks>
+            The operation being visited is not necessarily equal to statements[startIndex]. 
+            When traversing down a set of labels, we set operation to the label.Operation and recurse, but statements[startIndex] still refers to the original parent label 
+            as we haven't actually moved down the original statement list
+            </remarks>
         </member>
         <member name="T:Microsoft.CodeAnalysis.FlowAnalysis.ControlFlowGraphBuilder.EvalStackFrame">
             <summary>
@@ -20718,7 +20758,7 @@
             <param name="symbols">Assembly symbols for references of the current compilation.</param>
             <param name="originalIdentities">Identities in the baseline. <paramref name="originalIdentities"/>[i] corresponds to <paramref name="symbols"/>[i].</param>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.CommonReferenceManager`2.GetMetadataReference(Microsoft.CodeAnalysis.IAssemblySymbol)">
+        <member name="M:Microsoft.CodeAnalysis.CommonReferenceManager`2.GetMetadataReference(Microsoft.CodeAnalysis.Symbols.IAssemblySymbolInternal)">
             <summary>
             Gets the <see cref="T:Microsoft.CodeAnalysis.MetadataReference"/> that corresponds to the assembly symbol. 
             </summary>
@@ -21580,13 +21620,6 @@
               b) not setting this option will produce "int[][,]".
             </summary>
         </member>
-        <member name="F:Microsoft.CodeAnalysis.SymbolDisplayCompilerInternalOptions.IncludeNonNullableTypeModifier">
-            <summary>
-            Append '!' to non-nullable reference types.
-            Note this causes SymbolDisplay to pull on IsNullable and therefore NonNullTypes,
-            so don't use this option in binding, in order to avoid cycles.
-            </summary>
-        </member>
         <member name="F:Microsoft.CodeAnalysis.SymbolDisplayCompilerInternalOptions.UseValueTuple">
             <summary>
             Display `System.ValueTuple` instead of tuple syntax `(...)`.
@@ -22316,6 +22349,11 @@
             Allow the use of <c>default</c> instead of <c>default(T)</c> where applicable.
             </summary>
         </member>
+        <member name="F:Microsoft.CodeAnalysis.SymbolDisplayMiscellaneousOptions.IncludeNotNullableReferenceTypeModifier">
+            <summary>
+            Append '!' to non-nullable reference types.
+            </summary>
+        </member>
         <member name="T:Microsoft.CodeAnalysis.SymbolDisplayParameterOptions">
             <summary>
             Specifies how parameters are displayed in the description of a (member, property/indexer, or delegate) symbol.
@@ -22563,12 +22601,68 @@
             Collection of anonymous type templates is sealed 
             </summary>
         </member>
+        <member name="P:Microsoft.CodeAnalysis.Symbols.IAssemblySymbolInternal.Identity">
+            <summary>
+            Gets the name of this assembly.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Symbols.IFieldSymbolInternal.IsVolatile">
+            <summary>
+            Returns true if this field was declared as "volatile". 
+            </summary>
+        </member>
         <member name="P:Microsoft.CodeAnalysis.Symbols.IMethodSymbolInternal.IsIterator">
             <summary>
             True if the method is a source method implemented as an iterator.
             </summary>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.Symbols.ISymbolInternal.Equals(Microsoft.CodeAnalysis.ISymbol,Microsoft.CodeAnalysis.TypeCompareKind)">
+        <member name="P:Microsoft.CodeAnalysis.Symbols.IMethodSymbolInternal.IsAsync">
+            <summary>
+            Returns true if this method is an async method
+            </summary>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Symbols.IMethodSymbolInternal.Construct(Microsoft.CodeAnalysis.Symbols.ITypeSymbolInternal[])">
+            <summary>
+            Returns a constructed method given its type arguments.
+            </summary>
+            <param name="typeArguments">The immediate type arguments to be replaced for type
+            parameters in the method.</param>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Symbols.INamedTypeSymbolInternal.EnumUnderlyingType">
+            <summary>
+            For enum types, gets the underlying type. Returns null on all other
+            kinds of types.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Symbols.INamespaceSymbolInternal.IsGlobalNamespace">
+            <summary>
+            Returns whether this namespace is the unnamed, global namespace that is 
+            at the root of all namespaces.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Symbols.ISourceAssemblySymbolInternal.SignatureKey">
+            <summary>
+            The contents of the AssemblySignatureKeyAttribute
+            </summary>
+        </member>
+        <member name="T:Microsoft.CodeAnalysis.Symbols.ISymbolInternal">
+            <summary>
+            Interface implemented by the compiler's internal representation of a symbol.
+            An object implementing this interface might also implement <see cref="T:Microsoft.CodeAnalysis.ISymbol"/> (as is done in VB),
+            or the compiler's symbols might be wrapped to implement ISymbol (as is done in C#).
+            </summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Symbols.ISymbolInternal.Kind">
+            <summary>
+            Gets the <see cref="T:Microsoft.CodeAnalysis.SymbolKind"/> indicating what kind of symbol it is.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Symbols.ISymbolInternal.Name">
+            <summary>
+            Gets the symbol name. Returns the empty string if unnamed.
+            </summary>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Symbols.ISymbolInternal.Equals(Microsoft.CodeAnalysis.Symbols.ISymbolInternal,Microsoft.CodeAnalysis.TypeCompareKind)">
             <summary>
             Allows a symbol to support comparisons that involve child type symbols
             </summary>
@@ -22576,6 +22670,155 @@
             Because TypeSymbol equality can differ based on e.g. nullability, any symbols that contain TypeSymbols can also differ in the same way
             This call allows the symbol to accept a comparison kind that should be used when comparing its contained types
             </remarks>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Symbols.ISymbolInternal.ContainingSymbol">
+            <summary>
+            Gets the <see cref="T:Microsoft.CodeAnalysis.Symbols.ISymbolInternal"/> for the immediately containing symbol.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Symbols.ISymbolInternal.ContainingAssembly">
+            <summary>
+            Gets the <see cref="T:Microsoft.CodeAnalysis.Symbols.IAssemblySymbolInternal"/> for the containing assembly. Returns null if the
+            symbol is shared across multiple assemblies.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Symbols.ISymbolInternal.ContainingModule">
+            <summary>
+            Gets the <see cref="T:Microsoft.CodeAnalysis.Symbols.IModuleSymbolInternal"/> for the containing module. Returns null if the
+            symbol is shared across multiple modules.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Symbols.ISymbolInternal.ContainingType">
+            <summary>
+            Gets the <see cref="T:Microsoft.CodeAnalysis.Symbols.INamedTypeSymbolInternal"/> for the containing type. Returns null if the
+            symbol is not contained within a type.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Symbols.ISymbolInternal.ContainingNamespace">
+            <summary>
+            Gets the <see cref="T:Microsoft.CodeAnalysis.Symbols.INamespaceSymbolInternal"/> for the nearest enclosing namespace. Returns null if the
+            symbol isn't contained in a namespace.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Symbols.ISymbolInternal.IsDefinition">
+            <summary>
+            Gets a value indicating whether the symbol is the original definition. Returns false
+            if the symbol is derived from another symbol, by type substitution for instance.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Symbols.ISymbolInternal.Locations">
+            <summary>
+            Gets the locations where the symbol was originally defined, either in source or
+            metadata. Some symbols (for example, partial classes) may be defined in more than one
+            location.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Symbols.ISymbolInternal.IsImplicitlyDeclared">
+            <summary>
+            Returns true if this symbol was automatically created by the compiler, and does not have
+            an explicit corresponding source code declaration. 
+            </summary> 
+            <remarks>
+            This is intended for symbols that are ordinary symbols in the language sense, and may be
+            used by code, but that are simply declared implicitly rather than with explicit language
+            syntax.
+            
+            <para>
+            Examples include (this list is not exhaustive):
+            <list type="bullet">
+            <item><description>The default constructor for a class or struct that is created if one is not provided.</description></item>
+            <item><description>The BeginInvoke/Invoke/EndInvoke methods for a delegate.</description></item>
+            <item><description>The generated backing field for an auto property or a field-like event.</description></item>
+            <item><description>The "this" parameter for non-static methods.</description></item>
+            <item><description>The "value" parameter for a property setter.</description></item>
+            <item><description>The parameters on indexer accessor methods (not on the indexer itself).</description></item>
+            <item><description>Methods in anonymous types.</description></item>
+            </list>
+            </para>
+            </remarks>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Symbols.ISymbolInternal.DeclaredAccessibility">
+            <summary>
+            Gets a <see cref="T:Microsoft.CodeAnalysis.Accessibility"/> indicating the declared accessibility for the symbol.
+            Returns NotApplicable if no accessibility is declared.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Symbols.ISymbolInternal.IsStatic">
+            <summary>
+            Gets a value indicating whether the symbol is static.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Symbols.ISymbolInternal.IsVirtual">
+            <summary>
+            Gets a value indicating whether the symbol is virtual.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Symbols.ISymbolInternal.IsOverride">
+            <summary>
+            Gets a value indicating whether the symbol is an override of a base class symbol.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Symbols.ISymbolInternal.IsAbstract">
+            <summary>
+            Gets a value indicating whether the symbol is abstract.
+            </summary>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Symbols.ISymbolInternal.GetISymbol">
+            <summary>
+            Returns an <see cref="T:Microsoft.CodeAnalysis.ISymbol"/> instance associated with this symbol.
+            </summary>
+        </member>
+        <member name="T:Microsoft.CodeAnalysis.Symbols.ISynthesizedMethodBodyImplementationSymbol">
+            <summary>
+            Synthesized symbol that implements a method body feature (iterator, async, lambda, etc.)
+            </summary>
+            <remarks>
+            This interface is reserved for implementation by its associated APIs. We reserve the right to
+            change it in the future.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Symbols.ISynthesizedMethodBodyImplementationSymbol.Method">
+            <summary>
+            The symbol whose body lowering produced this synthesized symbol, 
+            or null if the symbol is synthesized based on declaration.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Symbols.ISynthesizedMethodBodyImplementationSymbol.HasMethodBodyDependency">
+            <summary>
+            True if this symbol body needs to be updated when the <see cref="P:Microsoft.CodeAnalysis.Symbols.ISynthesizedMethodBodyImplementationSymbol.Method"/> body is updated.
+            False if <see cref="P:Microsoft.CodeAnalysis.Symbols.ISynthesizedMethodBodyImplementationSymbol.Method"/> is null.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Symbols.ITypeSymbolInternal.TypeKind">
+            <summary>
+            An enumerated value that identifies whether this type is an array, pointer, enum, and so on.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Symbols.ITypeSymbolInternal.SpecialType">
+            <summary>
+            An enumerated value that identifies certain 'special' types such as <see cref="T:System.Object"/>. 
+            Returns <see cref="F:Microsoft.CodeAnalysis.SpecialType.None"/> if the type is not special.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Symbols.ITypeSymbolInternal.IsReferenceType">
+            <summary>
+            True if this type is known to be a reference type. It is never the case that
+            <see cref="P:Microsoft.CodeAnalysis.Symbols.ITypeSymbolInternal.IsReferenceType"/> and <see cref="P:Microsoft.CodeAnalysis.Symbols.ITypeSymbolInternal.IsValueType"/> both return true. However, for an unconstrained type
+            parameter, <see cref="P:Microsoft.CodeAnalysis.Symbols.ITypeSymbolInternal.IsReferenceType"/> and <see cref="P:Microsoft.CodeAnalysis.Symbols.ITypeSymbolInternal.IsValueType"/> will both return false.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Symbols.ITypeSymbolInternal.IsValueType">
+            <summary>
+            True if this type is known to be a value type. It is never the case that
+            <see cref="P:Microsoft.CodeAnalysis.Symbols.ITypeSymbolInternal.IsReferenceType"/> and <see cref="P:Microsoft.CodeAnalysis.Symbols.ITypeSymbolInternal.IsValueType"/> both return true. However, for an unconstrained type
+            parameter, <see cref="P:Microsoft.CodeAnalysis.Symbols.ITypeSymbolInternal.IsReferenceType"/> and <see cref="P:Microsoft.CodeAnalysis.Symbols.ITypeSymbolInternal.IsValueType"/> will both return false.
+            </summary>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Symbols.ITypeSymbolInternal.GetITypeSymbol">
+            <summary>
+            Returns an <see cref="T:Microsoft.CodeAnalysis.ITypeSymbol"/> instance associated with this symbol.
+            This API and <see cref="M:Microsoft.CodeAnalysis.Symbols.ISymbolInternal.GetISymbol"/> should return the same object.
+            </summary>
         </member>
         <member name="F:Microsoft.CodeAnalysis.AttributeUsageInfo.Default">
             <summary>
@@ -22628,7 +22871,7 @@
             (b) None of conditional symbols are true at the attribute source location.
             </summary>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.AttributeData.IsTargetEarlyAttribute(Microsoft.CodeAnalysis.INamedTypeSymbol,System.Int32,Microsoft.CodeAnalysis.AttributeDescription)">
+        <member name="M:Microsoft.CodeAnalysis.AttributeData.IsTargetEarlyAttribute(Microsoft.CodeAnalysis.Symbols.INamedTypeSymbolInternal,System.Int32,Microsoft.CodeAnalysis.AttributeDescription)">
             <summary>
             Checks if an applied attribute with the given attributeType matches the namespace name and type name of the given early attribute's description
             and the attribute description has a signature with parameter count equal to the given attributeArgCount.
@@ -23926,7 +24169,7 @@
         </member>
         <member name="P:Microsoft.CodeAnalysis.INamedTypeSymbol.TupleUnderlyingType">
             <summary>
-            If this is a tuple type symbol, returns the symbol for its underlying type.
+            If this is a tuple type with element names, returns the symbol for the tuple type without names.
             Otherwise, returns null.
             The type argument corresponding to the type of the extension field (VT[8].Rest),
             which is at the 8th (one based) position is always a symbol for another tuple, 
@@ -24079,6 +24322,11 @@
         <member name="P:Microsoft.CodeAnalysis.IParameterSymbol.IsThis">
             <summary>
             Returns true if the parameter is the hidden 'this' ('Me' in Visual Basic) parameter.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.IParameterSymbol.IsDiscard">
+            <summary>
+            Returns true if the parameter is a discard parameter.
             </summary>
         </member>
         <member name="P:Microsoft.CodeAnalysis.IParameterSymbol.Type">
@@ -24279,11 +24527,6 @@
             This interface is reserved for implementation by its associated APIs. We reserve the right to
             change it in the future.
             </remarks>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.ISourceAssemblySymbolInternal.SignatureKey">
-            <summary>
-            The contents of the AssemblySignatureKeyAttribute
-            </summary>
         </member>
         <member name="T:Microsoft.CodeAnalysis.ISymbol">
             <summary>
@@ -24571,7 +24814,7 @@
         </member>
         <member name="M:Microsoft.CodeAnalysis.ISymbolExtensions.IsDefaultTupleElement(Microsoft.CodeAnalysis.IFieldSymbol)">
             <summary>
-            Returns true if a given field is a nondefault tuple element
+            Returns true if a given field is a default tuple element
             </summary>
         </member>
         <member name="M:Microsoft.CodeAnalysis.ISymbolExtensions.IsTupleElement(Microsoft.CodeAnalysis.IFieldSymbol)">
@@ -24594,27 +24837,6 @@
             Given that an assembly with identity assemblyGrantingAccessIdentity granted access to assemblyWantingAccess,
             check the public keys to ensure the internals-visible-to check should succeed. This is used by both the
             C# and VB implementations as a helper to implement `bool IAssemblySymbol.GivesAccessTo(IAssemblySymbol toAssembly)`.
-            </summary>
-        </member>
-        <member name="T:Microsoft.CodeAnalysis.ISynthesizedMethodBodyImplementationSymbol">
-            <summary>
-            Synthesized symbol that implements a method body feature (iterator, async, lambda, etc.)
-            </summary>
-            <remarks>
-            This interface is reserved for implementation by its associated APIs. We reserve the right to
-            change it in the future.
-            </remarks>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.ISynthesizedMethodBodyImplementationSymbol.Method">
-            <summary>
-            The symbol whose body lowering produced this synthesized symbol, 
-            or null if the symbol is synthesized based on declaration.
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.ISynthesizedMethodBodyImplementationSymbol.HasMethodBodyDependency">
-            <summary>
-            True if this symbol body needs to be updated when the <see cref="P:Microsoft.CodeAnalysis.ISynthesizedMethodBodyImplementationSymbol.Method"/> body is updated.
-            False if <see cref="P:Microsoft.CodeAnalysis.ISynthesizedMethodBodyImplementationSymbol.Method"/> is null.
             </summary>
         </member>
         <member name="T:Microsoft.CodeAnalysis.ITypeParameterSymbol">
@@ -24860,6 +25082,17 @@
             <param name="format">Formatting rules - null implies <see cref="P:Microsoft.CodeAnalysis.SymbolDisplayFormat.MinimallyQualifiedFormat"/></param>
             <returns>A read-only array of string parts.</returns>
         </member>
+        <member name="P:Microsoft.CodeAnalysis.ITypeSymbol.NullableAnnotation">
+            <summary>
+            Nullable annotation associated with the type, or <see cref="F:Microsoft.CodeAnalysis.NullableAnnotation.None"/> if there are none.
+            </summary>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.ITypeSymbol.WithNullableAnnotation(Microsoft.CodeAnalysis.NullableAnnotation)">
+            <summary>
+            Returns the same type as this type but with the given nullable annotation.
+            </summary>
+            <param name="nullableAnnotation">The nullable annotation to use</param>
+        </member>
         <member name="T:Microsoft.CodeAnalysis.LanguageNames">
             <summary>
             A class that provides constants for common language names.
@@ -25053,6 +25286,14 @@
         <member name="F:Microsoft.CodeAnalysis.NullableFlowState.MaybeNull">
             <summary>
             Expression may be null.
+            </summary>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.NullableFlowStateExtensions.ToAnnotation(Microsoft.CodeAnalysis.NullableFlowState)">
+            <summary>
+            This method directly converts a <see cref="T:Microsoft.CodeAnalysis.NullableFlowState"/> to a <see cref="T:Microsoft.CodeAnalysis.NullableAnnotation"/>,
+            ignoring the <see cref="T:Microsoft.CodeAnalysis.ITypeSymbol"/> to which it is attached. It should only be used when converting
+            an RValue flow state to an RValue annotation for returning via the public API. For general use, please
+            use Microsoft.CodeAnalysis.CSharp.Symbols.TypeWithState.ToTypeWithAnnotations.
             </summary>
         </member>
         <member name="T:Microsoft.CodeAnalysis.DllImportData">
@@ -25292,12 +25533,17 @@
             The value for a non-array constant.
             </summary>
         </member>
+        <member name="P:Microsoft.CodeAnalysis.TypedConstant.ValueInternal">
+            <summary>
+            Unlike <see cref="P:Microsoft.CodeAnalysis.TypedConstant.Value"/> returns <see cref="T:Microsoft.CodeAnalysis.Symbols.ISymbolInternal"/> when the value is a symbol.
+            </summary>
+        </member>
         <member name="P:Microsoft.CodeAnalysis.TypedConstant.Values">
             <summary>
             The value for a <see cref="T:Microsoft.CodeAnalysis.TypedConstant"/> array. 
             </summary>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.TypedConstant.GetTypedConstantKind(Microsoft.CodeAnalysis.ITypeSymbol,Microsoft.CodeAnalysis.Compilation)">
+        <member name="M:Microsoft.CodeAnalysis.TypedConstant.GetTypedConstantKind(Microsoft.CodeAnalysis.Symbols.ITypeSymbolInternal,Microsoft.CodeAnalysis.Compilation)">
             <remarks>
             TypedConstant isn't computing its own kind from the type symbol because it doesn't
             have a way to recognize the well-known type System.Type.
@@ -26708,6 +26954,7 @@
             <summary>
             Gets node at given node index. 
             This WILL force node creation if node has not yet been created.
+            Can still return null for invalid slot numbers
             </summary>
         </member>
         <member name="M:Microsoft.CodeAnalysis.SyntaxNode.ChildNodes">
@@ -26989,6 +27236,12 @@
             nodes and tokens must be equivalent. 
             </param>
         </member>
+        <member name="M:Microsoft.CodeAnalysis.SyntaxNode.SerializeTo(System.IO.Stream,System.Threading.CancellationToken)">
+            <summary>
+            Serializes the node to the given <paramref name="stream"/>.
+            Leaves the <paramref name="stream"/> open for further writes.
+            </summary>
+        </member>
         <member name="M:Microsoft.CodeAnalysis.SyntaxNode.EquivalentToCore(Microsoft.CodeAnalysis.SyntaxNode)">
             <summary>
             Determine if this node is structurally equivalent to another.
@@ -26996,8 +27249,8 @@
         </member>
         <member name="P:Microsoft.CodeAnalysis.SyntaxNode.SyntaxTreeCore">
             <summary>
-            Returns SyntaxTree that owns the node or null if node does not belong to a
-            SyntaxTree
+            Returns SyntaxTree that owns the node. If the node does not belong to a tree then
+            one will be generated.
             </summary>
         </member>
         <member name="M:Microsoft.CodeAnalysis.SyntaxNode.FindTokenCore(System.Int32,System.Boolean)">
@@ -30724,9 +30977,14 @@
             A list exception data within the method body IL.
             </summary>
         </member>
-        <member name="P:Microsoft.Cci.IMethodBody.LocalsAreZeroed">
+        <member name="P:Microsoft.Cci.IMethodBody.AreLocalsZeroed">
             <summary>
             True if the locals are initialized by zeroing the stack upon method entry.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Cci.IMethodBody.HasStackalloc">
+            <summary>
+            True if there's a stackalloc somewhere in the method.
             </summary>
         </member>
         <member name="P:Microsoft.Cci.IMethodBody.LocalVariables">
@@ -32199,6 +32457,11 @@
             True if the type is an interface.
             </summary>
         </member>
+        <member name="P:Microsoft.Cci.ITypeDefinition.IsDelegate">
+            <summary>
+            True if the type is a delegate.
+            </summary>
+        </member>
         <member name="P:Microsoft.Cci.ITypeDefinition.IsRuntimeSpecial">
             <summary>
             True if this type gets special treatment from the runtime.
@@ -33387,6 +33650,18 @@
             would exist in mscorlib.  This helps satisfy both the CoreCLR and Desktop scenarios. 
             </summary>
         </member>
+        <member name="M:Roslyn.Utilities.RoslynLazyInitializer.EnsureInitialized``1(``0@)">
+            <inheritdoc cref="M:System.Threading.LazyInitializer.EnsureInitialized``1(``0@)"/>
+        </member>
+        <member name="M:Roslyn.Utilities.RoslynLazyInitializer.EnsureInitialized``1(``0@,System.Func{``0})">
+            <inheritdoc cref="M:System.Threading.LazyInitializer.EnsureInitialized``1(``0@,System.Func{``0})"/>
+        </member>
+        <member name="M:Roslyn.Utilities.RoslynLazyInitializer.EnsureInitialized``1(``0@,System.Boolean@,System.Object@)">
+            <inheritdoc cref="M:System.Threading.LazyInitializer.EnsureInitialized``1(``0@,System.Boolean@,System.Object@)"/>
+        </member>
+        <member name="M:Roslyn.Utilities.RoslynLazyInitializer.EnsureInitialized``1(``0@,System.Boolean@,System.Object@,System.Func{``0})">
+            <inheritdoc cref="M:System.Threading.LazyInitializer.EnsureInitialized``1(``0@,System.Boolean@,System.Object@,System.Func{``0})"/>
+        </member>
         <member name="M:Roslyn.Utilities.RoslynString.IsNullOrEmpty(System.String)">
             <inheritdoc cref="M:System.String.IsNullOrEmpty(System.String)"/>
         </member>
@@ -33547,11 +33822,9 @@
             </summary>
         </member>
         <member name="F:Roslyn.Utilities.ObjectReader._objectReferenceMap">
-             <summary>
-             Map of reference id's to deserialized objects.
-            
-             These are not readonly because they're structs and we mutate them.
-             </summary>
+            <summary>
+            Map of reference id's to deserialized objects.
+            </summary>
         </member>
         <member name="F:Roslyn.Utilities.ObjectReader._binderSnapshot">
             <summary>
@@ -33561,14 +33834,15 @@
             local copy we can work with without needing to worry about anyone else mutating.
             </summary>
         </member>
-        <member name="M:Roslyn.Utilities.ObjectReader.#ctor(System.IO.Stream,System.Threading.CancellationToken)">
+        <member name="M:Roslyn.Utilities.ObjectReader.#ctor(System.IO.Stream,System.Boolean,System.Threading.CancellationToken)">
             <summary>
             Creates a new instance of a <see cref="T:Roslyn.Utilities.ObjectReader"/>.
             </summary>
             <param name="stream">The stream to read objects from.</param>
+            <param name="leaveOpen">True to leave the <paramref name="stream"/> open after the <see cref="T:Roslyn.Utilities.ObjectWriter"/> is disposed.</param>
             <param name="cancellationToken"></param>
         </member>
-        <member name="M:Roslyn.Utilities.ObjectReader.TryGetReader(System.IO.Stream,System.Threading.CancellationToken)">
+        <member name="M:Roslyn.Utilities.ObjectReader.TryGetReader(System.IO.Stream,System.Boolean,System.Threading.CancellationToken)">
             <summary>
             Attempts to create a <see cref="T:Roslyn.Utilities.ObjectReader"/> from the provided <paramref name="stream"/>.
             If the <paramref name="stream"/> does not start with a valid header, then <see langword="null"/> will
@@ -33617,12 +33891,13 @@
             local copy we can work with without needing to worry about anyone else mutating.
             </summary>
         </member>
-        <member name="M:Roslyn.Utilities.ObjectWriter.#ctor(System.IO.Stream,System.Threading.CancellationToken)">
+        <member name="M:Roslyn.Utilities.ObjectWriter.#ctor(System.IO.Stream,System.Boolean,System.Threading.CancellationToken)">
             <summary>
             Creates a new instance of a <see cref="T:Roslyn.Utilities.ObjectWriter"/>.
             </summary>
             <param name="stream">The stream to write to.</param>
-            <param name="cancellationToken"></param>
+            <param name="leaveOpen">True to leave the <paramref name="stream"/> open after the <see cref="T:Roslyn.Utilities.ObjectWriter"/> is disposed.</param>
+            <param name="cancellationToken">Cancellation token.</param>
         </member>
         <member name="T:Roslyn.Utilities.ObjectWriter.GuidAccessor">
             <summary>
@@ -33967,6 +34242,71 @@
             but not <c>using System.Linq</c>.
             </summary>
         </member>
+        <member name="T:System.Index">
+            <summary>Represent a type can be used to index a collection either from the start or the end.</summary>
+            <remarks>
+            Index is used by the C# compiler to support the new index syntax
+            <code>
+            int[] someArray = new int[5] { 1, 2, 3, 4, 5 } ;
+            int lastElement = someArray[^1]; // lastElement = 5
+            </code>
+            </remarks>
+        </member>
+        <member name="M:System.Index.#ctor(System.Int32,System.Boolean)">
+            <summary>Construct an Index using a value and indicating if the index is from the start or from the end.</summary>
+            <param name="value">The index value. it has to be zero or positive number.</param>
+            <param name="fromEnd">Indicating if the index is from the start or from the end.</param>
+            <remarks>
+            If the Index constructed from the end, index value 1 means pointing at the last element and index value 0 means pointing at beyond last element.
+            </remarks>
+        </member>
+        <member name="P:System.Index.Start">
+            <summary>Create an Index pointing at first element.</summary>
+        </member>
+        <member name="P:System.Index.End">
+            <summary>Create an Index pointing at beyond last element.</summary>
+        </member>
+        <member name="M:System.Index.FromStart(System.Int32)">
+            <summary>Create an Index from the start at the position indicated by the value.</summary>
+            <param name="value">The index value from the start.</param>
+        </member>
+        <member name="M:System.Index.FromEnd(System.Int32)">
+            <summary>Create an Index from the end at the position indicated by the value.</summary>
+            <param name="value">The index value from the end.</param>
+        </member>
+        <member name="P:System.Index.Value">
+            <summary>Returns the index value.</summary>
+        </member>
+        <member name="P:System.Index.IsFromEnd">
+            <summary>Indicates whether the index is from the start or the end.</summary>
+        </member>
+        <member name="M:System.Index.GetOffset(System.Int32)">
+            <summary>Calculate the offset from the start using the giving collection length.</summary>
+            <param name="length">The length of the collection that the Index will be used with. length has to be a positive value</param>
+            <remarks>
+            For performance reason, we don't validate the input length parameter and the returned offset value against negative values.
+            we don't validate either the returned offset is greater than the input length.
+            It is expected Index will be used with collections which always have non negative length/count. If the returned offset is negative and
+            then used to index a collection will get out of range exception which will be same affect as the validation.
+            </remarks>
+        </member>
+        <member name="M:System.Index.Equals(System.Object)">
+            <summary>Indicates whether the current Index object is equal to another object of the same type.</summary>
+            <param name="value">An object to compare with this object</param>
+        </member>
+        <member name="M:System.Index.Equals(System.Index)">
+            <summary>Indicates whether the current Index object is equal to another Index object.</summary>
+            <param name="other">An object to compare with this object</param>
+        </member>
+        <member name="M:System.Index.GetHashCode">
+            <summary>Returns the hash code for this instance.</summary>
+        </member>
+        <member name="M:System.Index.op_Implicit(System.Int32)~System.Index">
+            <summary>Converts integer number to an Index.</summary>
+        </member>
+        <member name="M:System.Index.ToString">
+            <summary>Converts the value of the current Index object to its equivalent string representation.</summary>
+        </member>
         <member name="T:System.Diagnostics.CodeAnalysis.AllowNullAttribute">
             <summary>Specifies that null is allowed as an input even if the corresponding type disallows it.</summary>
         </member>
@@ -34030,6 +34370,60 @@
         </member>
         <member name="P:System.Diagnostics.CodeAnalysis.DoesNotReturnIfAttribute.ParameterValue">
             <summary>Gets the condition parameter value.</summary>
+        </member>
+        <member name="T:System.Range">
+            <summary>Represent a range has start and end indexes.</summary>
+            <remarks>
+            Range is used by the C# compiler to support the range syntax.
+            <code>
+            int[] someArray = new int[5] { 1, 2, 3, 4, 5 };
+            int[] subArray1 = someArray[0..2]; // { 1, 2 }
+            int[] subArray2 = someArray[1..^0]; // { 2, 3, 4, 5 }
+            </code>
+            </remarks>
+        </member>
+        <member name="P:System.Range.Start">
+            <summary>Represent the inclusive start index of the Range.</summary>
+        </member>
+        <member name="P:System.Range.End">
+            <summary>Represent the exclusive end index of the Range.</summary>
+        </member>
+        <member name="M:System.Range.#ctor(System.Index,System.Index)">
+            <summary>Construct a Range object using the start and end indexes.</summary>
+            <param name="start">Represent the inclusive start index of the range.</param>
+            <param name="end">Represent the exclusive end index of the range.</param>
+        </member>
+        <member name="M:System.Range.Equals(System.Object)">
+            <summary>Indicates whether the current Range object is equal to another object of the same type.</summary>
+            <param name="value">An object to compare with this object</param>
+        </member>
+        <member name="M:System.Range.Equals(System.Range)">
+            <summary>Indicates whether the current Range object is equal to another Range object.</summary>
+            <param name="other">An object to compare with this object</param>
+        </member>
+        <member name="M:System.Range.GetHashCode">
+            <summary>Returns the hash code for this instance.</summary>
+        </member>
+        <member name="M:System.Range.ToString">
+            <summary>Converts the value of the current Range object to its equivalent string representation.</summary>
+        </member>
+        <member name="M:System.Range.StartAt(System.Index)">
+            <summary>Create a Range object starting from start index to the end of the collection.</summary>
+        </member>
+        <member name="M:System.Range.EndAt(System.Index)">
+            <summary>Create a Range object starting from first element in the collection to the end Index.</summary>
+        </member>
+        <member name="P:System.Range.All">
+            <summary>Create a Range object starting from first element to the end.</summary>
+        </member>
+        <member name="M:System.Range.GetOffsetAndLength(System.Int32)">
+            <summary>Calculate the start offset and length of range object using a collection length.</summary>
+            <param name="length">The length of the collection that the range will be used with. length has to be a positive value.</param>
+            <remarks>
+            For performance reason, we don't validate the input length parameter against negative values.
+            It is expected Range will be used with collections which always have non negative length/count.
+            We validate the range is inside the length scope though.
+            </remarks>
         </member>
     </members>
 </doc>
