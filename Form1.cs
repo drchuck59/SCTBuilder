@@ -31,6 +31,7 @@ namespace SCTBuilder
         static public DataTable NGSIDTransition = new SCTdata.NGSIDTransitionDataTable();
         static public DataTable NGSTAR = new SCTdata.NGSTARDataTable();
         static public DataTable NGSTARTransition = new SCTdata.NGSTARTransitionDataTable();
+        static public DataTable NGSTARRNW = new SCTdata.NGSTARRNWDataTable();
         static public DataTable NGFixes = new SCTdata.NGFixesDataTable();
         static public DataSet SCT = new SCTdata();
         static public bool ExitClicked = false;
@@ -65,13 +66,19 @@ namespace SCTBuilder
             if (iniAIRAC > 0)
             {
                 // GOOD FILE - Does the DATA match the last used AIRAC?
-                int dataAIRAC = ReadNASR.GetNASR_AIRAC();
+                int dataAIRAC = ReadNASR.AIRAC();
                 if (dataAIRAC != iniAIRAC)
                 {
                     MismatchedXMLmessage();
                 }
                 // Load the subscription data
                 if (LoadFAATextData() != -1) PostLoadTasks();
+                // Check the Navigraph data after loading FAA data
+                int NGAIRAC = ReadNaviGraph.AIRAC();
+                if ((NGAIRAC != -1) && (dataAIRAC != NGAIRAC))
+                {
+                    MismatchedNGmessage(NGAIRAC, dataAIRAC);
+                }
             }
             // The user never previously did not save a data folder or did not install a data set
             else
@@ -112,6 +119,13 @@ namespace SCTBuilder
             SCTcommon.SendMessage(Msg);
         }
 
+        private void MismatchedNGmessage(int NGAIRAC, int dataAIRAC)
+        {
+            Msg = "The Navigraph AIRAC + " + NGAIRAC.ToString() + 
+                " does not match the data AIRAC " + dataAIRAC.ToString() + "." + cr +
+            "The program cannot provide features that require the Navigraph data.";
+            SCTcommon.SendMessage(Msg);
+        }
         private void PostLoadTasks()
         {
             // Assumes we have a fresh FAA text folder and need to update
@@ -142,7 +156,7 @@ namespace SCTBuilder
         private int LoadFAATextData()
         {
             // Get the NASR AIRAC (from NATFIX) to later compare with the folder ID
-            int result = ReadNASR.GetNASR_AIRAC();
+            int result = ReadNASR.AIRAC();
             // This also confirms that the properly named folder does indeed contain data
             if (result != -1)
             {
@@ -316,7 +330,7 @@ namespace SCTBuilder
                 }
                 if (SCTchecked.ChkAPT)
                 {
-                    UpdatingLabel.Text = "Building grid view from selection"; UpdatingLabel.Refresh();
+                    UpdateLabel("Building APT grid view from selection");
                     if (APTHasRows) lastTab = LoadAPTDataGridView();
                 }
                 if (SCTchecked.ChkRWY)
@@ -337,19 +351,19 @@ namespace SCTBuilder
                 if (SCTchecked.ChkVOR)
                 {
                     SelectTableItems(VOR, filter);
-                    UpdatingLabel.Text = "Building grid view from selection"; UpdatingLabel.Refresh();
+                    UpdateLabel("Building VOR grid view from selection");
                     lastTab = LoadVORGridView();
                 }
                 if (SCTchecked.ChkNDB)
                 {
                     SelectTableItems(NDB, filter);
-                    UpdatingLabel.Text = "Building grid view from selection"; UpdatingLabel.Refresh();
+                    UpdateLabel("Building NDB grid view from selection");
                     lastTab = LoadNDBGridView();
                 }
                 if (SCTchecked.ChkFIX)
                 {
                     SelectTableItems(FIX, filter);
-                    UpdatingLabel.Text = "Building grid view from selection"; UpdatingLabel.Refresh();
+                    UpdateLabel("Building FIX grid view from selection");
                     lastTab = LoadFIXGridView();
                 }
                 // AWYs must come after VOR, NDB and FIX
@@ -369,7 +383,7 @@ namespace SCTBuilder
                     }
                     if (SelectAWYs() != 0)
                     {
-                        UpdatingLabel.Text = "Building grid view from selection"; UpdatingLabel.Refresh();
+                        UpdateLabel("Building AWY grid view from selection");
                         lastTab = LoadAWYDataGridView();
                     }
                     else ClearDataGridView(dgvAWY);
@@ -402,7 +416,7 @@ namespace SCTBuilder
                         }
                         if (SelectSSD(true) != 0)
                         {
-                            UpdatingLabel.Text = "Building grid view from selection"; UpdatingLabel.Refresh();
+                            UpdateLabel("Building SID grid view from selection");
                             lastTab = LoadSSDDataGridView(true);
                         }
                     }
@@ -430,7 +444,7 @@ namespace SCTBuilder
                         }
                         if (SelectSSD(false) != 0)
                         {
-                            UpdatingLabel.Text = "Building grid view from selection";
+                            UpdateLabel("Building STAR grid view from selection");
                             lastTab = LoadSSDDataGridView(false);
                         }
                     }
@@ -481,7 +495,7 @@ namespace SCTBuilder
             }
             dvRWY.RowFilter = "[Selected]";
             result = dvRWY.Count;
-            UpdatingLabel.Text = "Selecting " + result + " runways..."; UpdatingLabel.Refresh();
+            UpdateLabel("Selecting " + result + " runways...");
             dvRWY.Dispose();
             dvAPT.Dispose();
             SelectedTabControl.SelectedTab = SelectedTabControl.TabPages["RWYtabPage"];
@@ -498,11 +512,11 @@ namespace SCTBuilder
             ClearSelected(dvAWY);
             dvAWY.RowFilter = filter;
             int result = dvAWY.Count;
-            UpdatingLabel.Text = "Selecting " + result + " airways..."; UpdatingLabel.Refresh();
+            UpdateLabel("Selecting " + result + " airways...");
             SetSelected(dvAWY);
             dvAWY.RowFilter = "[Selected]";
             result = dvAWY.Count;
-            UpdatingLabel.Text = "Validating " + result + " airways..."; UpdatingLabel.Refresh();
+            UpdateLabel("Validating " + result + " airways...");
             DataTable dtAWYcheck = dvAWY.ToTable(true, "AWYID");
             foreach (DataRow dataRow in dtAWYcheck.Rows)
             {
@@ -657,8 +671,7 @@ namespace SCTBuilder
         private int SelectSSD(bool isSID)
         {
             string proc = "STARs"; if (isSID) proc = "SIDs";
-            string UpdateText = "Clearing prior selections in " + proc;
-            UpdatingLabel.Text = UpdateText; UpdatingLabel.Refresh();
+            UpdateLabel("Clearing prior selections in " + proc);
             DataView dvSSD = new DataView(SSD)
             {
                 RowFilter = "[IsSID] = " + isSID
@@ -670,8 +683,7 @@ namespace SCTBuilder
             {
                 RowFilter = "[SELECTED]"
             };
-            UpdateText = "Selecting " + proc + " across ";
-            UpdatingLabel.Text = UpdateText + dvAPT.Count + " airports."; UpdatingLabel.Refresh();
+            UpdateLabel("Selecting " + proc + " across " + dvAPT.Count + " airports.");
             DataTable dtAirports = dvAPT.ToTable(true, "FacilityID");
             // Go through each APT, to find SSDID and not selected
             string AAfilter = "([FixType] = 'AA') AND ([IsSID] = " + isSID + ") AND " +
@@ -682,11 +694,10 @@ namespace SCTBuilder
             {
                 string FacIDfilter = " AND ([NavAid] = '" + dtAptRow["FacilityID"].ToString() + "')";
                 dvSSD.RowFilter = AAfilter + FacIDfilter;
-                UpdateText = "Selecting " + proc + " for " + dtAptRow["FacilityID"].ToString();
-                UpdatingLabel.Text = UpdateText; UpdatingLabel.Refresh();
                 DataTable IDdata = dvSSD.ToTable(true, "ID");
                 if (IDdata.Rows.Count != 0)
                 {
+                    UpdateLabel("Selecting " + proc + " for " + dtAptRow["FacilityID"].ToString());
                     foreach (DataRow data in IDdata.AsEnumerable())
                     {
                         dvSSD.RowFilter = "[ID] = '" + data[0].ToString() + "'";
@@ -706,38 +717,36 @@ namespace SCTBuilder
             // Assumes the SID/STARs have been selected
             DataView dvSSD = new DataView(SSD)
             {
-                RowFilter = "[SELECTED] AND ([FixType] = 'AA') AND ([isSID] = " + isSID + ")",
-                Sort = "NavAid"
+                RowFilter = "([isSID] = " + isSID + ")",
+                Sort = "TransCode"
             };
             // The gridview needs only show the APT affect and SID/STAR
             if (isSID)
             {
-                DataTable dtSID = dvSSD.ToTable(true, "Selected", "NavAid", "TransCode", "TransName", "ID");
+                DataTable dtSID = dvSSD.ToTable(true, "Selected", "TransCode", "TransName", "ID");
                 dgvSID.DataSource = dtSID;
                 (dgvSID.DataSource as DataTable).DefaultView.RowFilter = "[Selected]";
                 foreach (DataGridViewColumn dc in dgvSID.Columns) dc.ReadOnly = true;
-                dgvAWY.Columns[0].ReadOnly = false;
-                dgvSID.Columns[1].HeaderText = "Apt";
-                dgvSID.Columns[2].HeaderText = "SID";
-                dgvSID.Columns[3].HeaderText = "Name";
-                dgvSID.Columns[4].Visible = false;      // This is for later use
-                dgvSID.Sort(dgvSID.Columns["NavAid"], ListSortDirection.Ascending);
+                dgvSID.Columns[0].ReadOnly = false;
+                dgvSID.Columns[1].HeaderText = "SID";
+                dgvSID.Columns[2].HeaderText = "Name";
+                dgvSID.Columns[3].Visible = false;      // This is for later use
+                dgvSID.Sort(dgvSID.Columns["TransCode"], ListSortDirection.Ascending);
                 dgvSID.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
                 dvSSD.Dispose();
                 SelectedTabControl.SelectedTab = SelectedTabControl.TabPages["SIDtabPage"];
             }
             else
             {
-                DataTable dtSTAR = dvSSD.ToTable(true, "Selected", "NavAid", "TransCode", "TransName", "ID");
+                DataTable dtSTAR = dvSSD.ToTable(true, "Selected", "TransCode", "TransName", "ID");
                 dgvSTAR.DataSource = dtSTAR;
                 (dgvSTAR.DataSource as DataTable).DefaultView.RowFilter = "[Selected]";
                 foreach (DataGridViewColumn dc in dgvSTAR.Columns) dc.ReadOnly = true;
                 dgvSTAR.Columns[0].ReadOnly = false;
-                dgvSTAR.Columns[1].HeaderText = "Apt";
-                dgvSTAR.Columns[2].HeaderText = "STAR";
-                dgvSTAR.Columns[3].HeaderText = "Name";
-                dgvSTAR.Columns[4].Visible = false;      // This is for later use
-                dgvSTAR.Sort(dgvSTAR.Columns["NavAid"], ListSortDirection.Ascending);
+                dgvSTAR.Columns[1].HeaderText = "STAR";
+                dgvSTAR.Columns[2].HeaderText = "Name";
+                dgvSTAR.Columns[3].Visible = false;      // This is for later use
+                dgvSTAR.Sort(dgvSTAR.Columns["TransCode"], ListSortDirection.Ascending);
                 SelectedTabControl.SelectedTab = SelectedTabControl.TabPages["STARtabPage"];
                 dvSSD.Dispose();
                 dgvSTAR.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
@@ -807,17 +816,12 @@ namespace SCTBuilder
             // otherwise, ALL the selected boxes are false
             // But if the ShowAll box is checked, ignore the update
             int result = dv.Count; int Counter = 0;
-            string UpdateText = "Selecting " + result + " rows from " + dv.Table.TableName;
-            if (dv.Table.TableName != "SSD")
-            {
-                UpdatingLabel.Text = UpdateText; UpdatingLabel.Refresh();
-            }
             foreach (DataRowView row in dv)
             {
                 Counter++;
                 row["Selected"] = true;
-                UpdatingLabel.Text = UpdateText + " (" + (Counter*100/dv.Count).ToString() + "% done)"; 
-                UpdatingLabel.Refresh();
+                UpdateLabel("Selecting " + result + " rows from " + dv.Table.TableName +
+                    " (" + (Counter*100/dv.Count).ToString() + "% done)"); 
             }
         }
         private void UpdateGridCount()
@@ -1002,15 +1006,6 @@ namespace SCTBuilder
             TestWriteSCT();
         }
 
-        private void NGDataFolderButton_Click(object sender, EventArgs e)
-        {
-            NGDataFolderTextBox.Text = UpdateFolder(NGDataFolderTextBox, "Select NaviGraph data folder");
-            if (NGDataFolderTextBox.TextLength != 0)
-            {
-                UpdateFolderMgt(toFolderMgt: true);
-            }
-        }
-
         private void ClearAllDataGridViews()
         {
             dgvAPT.DataSource = dgvAWY.DataSource = dgvFIX.DataSource = dgvNDB.DataSource =
@@ -1034,8 +1029,6 @@ namespace SCTBuilder
                     FolderMgt.DataFolder = FAADataFolderTextBox.Text;
                 if (FolderMgt.OutputFolder != OutputFolderTextBox.Text)
                     FolderMgt.OutputFolder = OutputFolderTextBox.Text;
-                if (FolderMgt.NGFolder != NGDataFolderTextBox.Text)
-                    FolderMgt.NGFolder = NGDataFolderTextBox.Text;
             }
             else
             {
@@ -1043,8 +1036,6 @@ namespace SCTBuilder
                     FAADataFolderTextBox.Text = FolderMgt.DataFolder;
                 if (FolderMgt.OutputFolder != OutputFolderTextBox.Text)
                     OutputFolderTextBox.Text = FolderMgt.OutputFolder;
-                if (FolderMgt.NGFolder != NGDataFolderTextBox.Text)
-                    NGDataFolderTextBox.Text = FolderMgt.NGFolder;
             }
         }
 
@@ -1687,7 +1678,7 @@ namespace SCTBuilder
         {
             SCTtoolStripButton.ToolTipText = "Please wait for the completion message."; Refresh();
             UpdatingLabel.Visible = true;
-            UpdatingLabel.Text = "Writing files. Please wait for completion message."; UpdatingLabel.Refresh();
+            UpdateLabel("Writing files. Please wait for completion message.");
             UseWaitCursor = true;
             SCToutput.WriteSCT();
             UpdatingLabel.Visible = false;
@@ -1730,8 +1721,7 @@ namespace SCTBuilder
 
         private void IncludeNaviGraphDataToolStripMenuItem_CheckedChanged(object sender, EventArgs e)
         {
-            NGDataFolderLabel.Enabled = NGDataFolderTextBox.Enabled = NGDataFolderButton.Enabled =
-                InfoSection.UseNaviGraph = includeNaviGraphDataToolStripMenuItem.Checked;
+            InfoSection.UseNaviGraph = includeNaviGraphDataToolStripMenuItem.Checked;
         }
 
         private void ARTCCComboBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -1799,6 +1789,10 @@ namespace SCTBuilder
             }
         }
 
+        private void UpdateLabel(string Text)
+        {
+            UpdatingLabel.Text = Text; UpdatingLabel.Refresh();
+        }
         private void QuickSearchTextBox_TextChanged(object sender, EventArgs e)
         {
             if (QuickSearchTextBox.TextLength != 0)
@@ -1812,6 +1806,49 @@ namespace SCTBuilder
                 }
                 chkbxShowAll.Checked = true;
                 chkbxShowAll.BackColor = Color.White;
+            }
+        }
+
+        private void ESEToolStripButton_Click(object sender, EventArgs e)
+        {
+            // ESE files require use of Navigraph data
+        }
+
+        private void dgvSID_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            // The only value that can change is "SELECTED"
+            // This routine will clear the focused SID/STAR
+            if ( (dgvSID.Rows.Count != 0) && (dgvSID.SelectedRows.Count != 0) )
+            {
+                DataGridViewRow row = dgvSID.SelectedRows[0];
+                string SIDID = row.Cells[3].Value.ToString();
+                bool SSDSelected = (bool)row.Cells[0].Value;
+                DataView dvSID = new DataView(SSD)
+                {
+                    RowFilter = "[ID] = '" + SIDID + "'"
+                };
+                if (SSDSelected) SetSelected(dvSID); else ClearSelected(dvSID);
+                dvSID.Dispose();
+                dgvSID.Refresh();
+            }
+        }
+
+        private void dgvSTAR_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            // The only value that can change is "SELECTED"
+            // This routine will clear the focused SID/STAR
+            if ((dgvSTAR.Rows.Count != 0) && (dgvSTAR.SelectedRows.Count != 0) )
+            {
+                DataGridViewRow row = dgvSID.SelectedRows[0];
+                string STARID = row.Cells[3].Value.ToString();
+                bool STARSelected = (bool)row.Cells[0].Value;
+                DataView dvSTAR = new DataView(SSD)
+                {
+                    RowFilter = "[ID] = '" + STARID + "'"
+                };
+                if (STARSelected) SetSelected(dvSTAR); else ClearSelected(dvSTAR);
+                dvSTAR.Dispose();
+                dgvSID.Refresh();
             }
         }
     }

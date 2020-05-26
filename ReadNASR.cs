@@ -11,7 +11,7 @@ namespace SCTBuilder
     public class ReadNASR
     {
 
-        public static int GetNASR_AIRAC()
+        public static int AIRAC()
         {
             // Returns the AIRAC of the current FAA data text files
             // Save the information if the read is successful
@@ -111,7 +111,7 @@ namespace SCTBuilder
                             Long = Convert.ToSingle(Line.Substring(410, 10).Trim()) / 3600;
                             if (Line.Substring(420, 1) == "W") Long *= -1;
                             if (Line.Substring(479, 4).Trim().Length != 0)
-                                Mag = Convert.ToSingle(Line.Substring(479, 4).Trim());
+                                Mag = Conversions.MagVar2DecMag(Line.Substring(479, 4).Trim());
                             var FixItems = new List<object>
                                 {
                                     Line.Substring(4, 4).Trim() + Line.Substring(9, 20).Trim() + Line.Substring(72,40).Trim(), // ID

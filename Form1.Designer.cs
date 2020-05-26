@@ -72,8 +72,6 @@
             this.AllMarginsNumericUpDown = new System.Windows.Forms.NumericUpDown();
             this.RWYsCheckBox = new System.Windows.Forms.CheckBox();
             this.AWYsCheckBox = new System.Windows.Forms.CheckBox();
-            this.NGDataFolderTextBox = new System.Windows.Forms.TextBox();
-            this.NGDataFolderButton = new System.Windows.Forms.Button();
             this.LimitAPT2ARTCCCheckBox = new System.Windows.Forms.CheckBox();
             this.QuickSearchLabel = new System.Windows.Forms.Label();
             this.QuickSearchTextBox = new System.Windows.Forms.TextBox();
@@ -161,7 +159,7 @@
             this.exitProgramToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.SCTtoolStripButton = new System.Windows.Forms.ToolStripButton();
-            this.TxtToolStripButton = new System.Windows.Forms.ToolStripButton();
+            this.ESEToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.gridViewToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
@@ -171,7 +169,8 @@
             this.CenterARTCCButton = new System.Windows.Forms.Button();
             this.label7 = new System.Windows.Forms.Label();
             this.FoldersGroupBox = new System.Windows.Forms.GroupBox();
-            this.NGDataFolderLabel = new System.Windows.Forms.Label();
+            this.label10 = new System.Windows.Forms.Label();
+            this.label9 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.UpdateAIRACbutton = new System.Windows.Forms.Button();
             this.UpdatingLabel = new System.Windows.Forms.Label();
@@ -233,7 +232,7 @@
             // 
             this.txtDataFolder_label.AutoSize = true;
             this.txtDataFolder_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtDataFolder_label.Location = new System.Drawing.Point(10, 30);
+            this.txtDataFolder_label.Location = new System.Drawing.Point(10, 45);
             this.txtDataFolder_label.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.txtDataFolder_label.Name = "txtDataFolder_label";
             this.txtDataFolder_label.Size = new System.Drawing.Size(38, 17);
@@ -243,7 +242,7 @@
             // FAADataFolderTextBox
             // 
             this.FAADataFolderTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.FAADataFolderTextBox.Location = new System.Drawing.Point(48, 25);
+            this.FAADataFolderTextBox.Location = new System.Drawing.Point(52, 40);
             this.FAADataFolderTextBox.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
             this.FAADataFolderTextBox.Name = "FAADataFolderTextBox";
             this.FAADataFolderTextBox.Size = new System.Drawing.Size(281, 23);
@@ -255,7 +254,7 @@
             // OutputFolderTextBox
             // 
             this.OutputFolderTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.OutputFolderTextBox.Location = new System.Drawing.Point(48, 51);
+            this.OutputFolderTextBox.Location = new System.Drawing.Point(52, 85);
             this.OutputFolderTextBox.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
             this.OutputFolderTextBox.Name = "OutputFolderTextBox";
             this.OutputFolderTextBox.Size = new System.Drawing.Size(281, 23);
@@ -267,7 +266,7 @@
             // 
             this.txtOutputFolder_label.AutoSize = true;
             this.txtOutputFolder_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtOutputFolder_label.Location = new System.Drawing.Point(-1, 55);
+            this.txtOutputFolder_label.Location = new System.Drawing.Point(-1, 89);
             this.txtOutputFolder_label.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.txtOutputFolder_label.Name = "txtOutputFolder_label";
             this.txtOutputFolder_label.Size = new System.Drawing.Size(51, 17);
@@ -277,7 +276,7 @@
             // FAADataFolderButton
             // 
             this.FAADataFolderButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.FAADataFolderButton.Location = new System.Drawing.Point(331, 22);
+            this.FAADataFolderButton.Location = new System.Drawing.Point(335, 37);
             this.FAADataFolderButton.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
             this.FAADataFolderButton.Name = "FAADataFolderButton";
             this.FAADataFolderButton.Size = new System.Drawing.Size(28, 22);
@@ -290,7 +289,7 @@
             // OutputFolderButton
             // 
             this.OutputFolderButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.OutputFolderButton.Location = new System.Drawing.Point(331, 49);
+            this.OutputFolderButton.Location = new System.Drawing.Point(335, 83);
             this.OutputFolderButton.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
             this.OutputFolderButton.Name = "OutputFolderButton";
             this.OutputFolderButton.Size = new System.Drawing.Size(28, 22);
@@ -697,29 +696,6 @@
             this.toolTip1.SetToolTip(this.AWYsCheckBox, "VORs, NDB, and FIXes must be enabled to select airways");
             this.AWYsCheckBox.UseVisualStyleBackColor = true;
             this.AWYsCheckBox.CheckedChanged += new System.EventHandler(this.AWYsCheckBox_CheckedChanged);
-            // 
-            // NGDataFolderTextBox
-            // 
-            this.NGDataFolderTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.NGDataFolderTextBox.Location = new System.Drawing.Point(48, 79);
-            this.NGDataFolderTextBox.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
-            this.NGDataFolderTextBox.Name = "NGDataFolderTextBox";
-            this.NGDataFolderTextBox.Size = new System.Drawing.Size(281, 23);
-            this.NGDataFolderTextBox.TabIndex = 5;
-            this.toolTip1.SetToolTip(this.NGDataFolderTextBox, "Folder containing NaviGraph data");
-            // 
-            // NGDataFolderButton
-            // 
-            this.NGDataFolderButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.NGDataFolderButton.Location = new System.Drawing.Point(331, 77);
-            this.NGDataFolderButton.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
-            this.NGDataFolderButton.Name = "NGDataFolderButton";
-            this.NGDataFolderButton.Size = new System.Drawing.Size(28, 22);
-            this.NGDataFolderButton.TabIndex = 6;
-            this.NGDataFolderButton.Text = "...";
-            this.toolTip1.SetToolTip(this.NGDataFolderButton, "Browse to select data folder");
-            this.NGDataFolderButton.UseVisualStyleBackColor = true;
-            this.NGDataFolderButton.Click += new System.EventHandler(this.NGDataFolderButton_Click);
             // 
             // LimitAPT2ARTCCCheckBox
             // 
@@ -1258,6 +1234,7 @@
             this.dgvSID.RowTemplate.Height = 24;
             this.dgvSID.Size = new System.Drawing.Size(456, 302);
             this.dgvSID.TabIndex = 2;
+            this.dgvSID.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvSID_CellValueChanged);
             // 
             // STARtabPage
             // 
@@ -1285,6 +1262,7 @@
             this.dgvSTAR.RowTemplate.Height = 24;
             this.dgvSTAR.Size = new System.Drawing.Size(456, 302);
             this.dgvSTAR.TabIndex = 2;
+            this.dgvSTAR.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvSTAR_CellValueChanged);
             // 
             // lblLogo
             // 
@@ -1663,7 +1641,7 @@
             this.toolStrip1.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.SCTtoolStripButton,
-            this.TxtToolStripButton,
+            this.ESEToolStripButton,
             this.gridViewToolStripButton,
             this.toolStripButton1,
             this.toolStripButton2});
@@ -1686,15 +1664,16 @@
             this.SCTtoolStripButton.ToolTipText = "Files will be compatible with VRC SCT format";
             this.SCTtoolStripButton.Click += new System.EventHandler(this.SCTtoolStripButton_Click);
             // 
-            // TxtToolStripButton
+            // ESEToolStripButton
             // 
-            this.TxtToolStripButton.Enabled = false;
-            this.TxtToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("TxtToolStripButton.Image")));
-            this.TxtToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.TxtToolStripButton.Name = "TxtToolStripButton";
-            this.TxtToolStripButton.Size = new System.Drawing.Size(127, 28);
-            this.TxtToolStripButton.Text = "Generate ESE files";
-            this.TxtToolStripButton.ToolTipText = "Files will be compatible with ESE format";
+            this.ESEToolStripButton.Enabled = false;
+            this.ESEToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("ESEToolStripButton.Image")));
+            this.ESEToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.ESEToolStripButton.Name = "ESEToolStripButton";
+            this.ESEToolStripButton.Size = new System.Drawing.Size(127, 28);
+            this.ESEToolStripButton.Text = "Generate ESE files";
+            this.ESEToolStripButton.ToolTipText = "Files will be compatible with ESE format";
+            this.ESEToolStripButton.Click += new System.EventHandler(this.ESEToolStripButton_Click);
             // 
             // gridViewToolStripButton
             // 
@@ -1804,9 +1783,8 @@
             // 
             // FoldersGroupBox
             // 
-            this.FoldersGroupBox.Controls.Add(this.NGDataFolderLabel);
-            this.FoldersGroupBox.Controls.Add(this.NGDataFolderTextBox);
-            this.FoldersGroupBox.Controls.Add(this.NGDataFolderButton);
+            this.FoldersGroupBox.Controls.Add(this.label10);
+            this.FoldersGroupBox.Controls.Add(this.label9);
             this.FoldersGroupBox.Controls.Add(this.FAADataFolderTextBox);
             this.FoldersGroupBox.Controls.Add(this.txtDataFolder_label);
             this.FoldersGroupBox.Controls.Add(this.txtOutputFolder_label);
@@ -1817,21 +1795,28 @@
             this.FoldersGroupBox.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.FoldersGroupBox.Name = "FoldersGroupBox";
             this.FoldersGroupBox.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.FoldersGroupBox.Size = new System.Drawing.Size(372, 113);
+            this.FoldersGroupBox.Size = new System.Drawing.Size(372, 119);
             this.FoldersGroupBox.TabIndex = 53;
             this.FoldersGroupBox.TabStop = false;
             this.FoldersGroupBox.Text = "Folders";
             // 
-            // NGDataFolderLabel
+            // label10
             // 
-            this.NGDataFolderLabel.AutoSize = true;
-            this.NGDataFolderLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.NGDataFolderLabel.Location = new System.Drawing.Point(15, 82);
-            this.NGDataFolderLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.NGDataFolderLabel.Name = "NGDataFolderLabel";
-            this.NGDataFolderLabel.Size = new System.Drawing.Size(29, 17);
-            this.NGDataFolderLabel.TabIndex = 8;
-            this.NGDataFolderLabel.Text = "NG";
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(49, 71);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(167, 13);
+            this.label10.TabIndex = 6;
+            this.label10.Text = "All output files will go to this folder.";
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(49, 25);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(262, 13);
+            this.label9.TabIndex = 5;
+            this.label9.Text = "FAA and NaviGraph data folders must be in this folder.";
             // 
             // groupBox1
             // 
@@ -2061,7 +2046,7 @@
         private System.Windows.Forms.ToolStripMenuItem selectOutputFolderToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exitProgramToolStripMenuItem1;
         private System.Windows.Forms.ToolStrip toolStrip1;
-        private System.Windows.Forms.ToolStripButton TxtToolStripButton;
+        private System.Windows.Forms.ToolStripButton ESEToolStripButton;
         private System.Windows.Forms.ToolStripButton gridViewToolStripButton;
         private System.Windows.Forms.ToolStripButton toolStripButton1;
         private System.Windows.Forms.ToolStripButton toolStripButton2;
@@ -2099,14 +2084,13 @@
         private System.Windows.Forms.Label UpdatingLabel;
         private System.Windows.Forms.ToolStripMenuItem dMSDecDegToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem useFixesForCoordinatesToolStripMenuItem;
-        private System.Windows.Forms.Label NGDataFolderLabel;
-        private System.Windows.Forms.TextBox NGDataFolderTextBox;
-        private System.Windows.Forms.Button NGDataFolderButton;
         private System.Windows.Forms.ToolStripMenuItem includeNaviGraphDataToolStripMenuItem;
         private System.Windows.Forms.CheckBox LimitAPT2ARTCCCheckBox;
         private System.Windows.Forms.Button CenterSquareButton;
         private System.Windows.Forms.Label QuickSearchLabel;
         private System.Windows.Forms.TextBox QuickSearchTextBox;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.Label label9;
     }
 }
 

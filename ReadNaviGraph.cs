@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Net.WebSockets;
+using Org.BouncyCastle.Crypto.Digests;
 
 namespace SCTBuilder
 {
@@ -11,41 +13,44 @@ namespace SCTBuilder
     {
         static string Msg;
         static string Line = string.Empty;
-        public static void SIDSTARS(string Airport)
+        static string Airport = string.Empty;
+        static List<string> Words = new List<string>();
+        static string SSDcode = string.Empty;
+        static string SSDmod = string.Empty;
+        static List<string> RNWS = new List<string>();
+
+        public static bool SIDSTARS(string Apt)
         {
             // The output strings will be
             // <SID/STAR>:<AIRPORT ICAO>:<RUNWAY>:<TRANSITIONxPROCEDURE>:<ROUTE>
             // There will be a line for every RWY with the Procedure and every RWY with Transition.Procedure
             // Therefore, read all the procedures for each runway and save transitions to reuse later
-
+            Airport = Apt;
+            bool result = false;
             string Section = string.Empty;
-            List<string> RNWS = new List<string>();
-            string SSDcode = string.Empty;
             string FullFilename = SCTcommon.GetFullPathname(FolderMgt.NGFolder, Airport + ".txt");
-            List<string> Words = new List<string>();
             if (FullFilename.IndexOf("ERROR") == -1)
             {
                 using (StreamReader reader = new StreamReader(FullFilename))
                 {
                     Line = reader.ReadLine();
-                    Words.AddRange(ParseLine(Line));
+                    Words.Clear();                              // Start fresh
+                    Words.AddRange(ParseLine());                // A simple subroutine to break the line into words
                     if (Words.Count != 0)
                     {
-                        switch (Words[0])       // Which level is the line
+                        switch (Words[0])                       // Which "level" is the line
                         {
-                            case "Title":
-                                switch (Words[1])           // First word starts in column 0
+                            case "Title":                       // No leading whitespace
+                                switch (Words[1])               // Switch based upon the section we are working with
                                 {
-                                    // Capture the section we are working with
-                                    case "FIXES":           // Indicates start of the FIXes data
+                                    case "FIXES":               // Indicates start of the FIXes data
                                         Section = Words[1];
                                         break;
-                                    case "FIX":             // FiX data - don't need anything except the name but capture all
-                                        if (Section == "FIXES")
-                                            AddFixString(Line);
+                                    case "FIX":                 // FiX data - don't need anything except the name but capture all
+                                        if (Section == "FIXES")  // This should never occur but it cant hurt to check
+                                            AddFixString();
                                         else
                                         {
-                                            // This should never occur
                                             Msg = "Error reading Title FIX";
                                             SCTcommon.SendMessage(Msg);
                                         }
@@ -58,7 +63,7 @@ namespace SCTBuilder
                                         break;
                                     case "RNW":             // As a title only identifies each RNW in the data
                                         if (Section == "RNWS")
-                                            RNWS.Add(Words[1]);
+                                            RNWS.Add(Words[2]);
                                         else
                                         {
                                             // This should never occur
@@ -67,6 +72,7 @@ namespace SCTBuilder
                                         }
                                         break;
                                     case "ENDRNWS":         // Indicates end of the RNW data
+                                        // Don't need it now, but could commit the RNWS to a Datatable here
                                         Section = string.Empty;
                                         break;
                                     case "SIDS":            // Indicates start of the SIDs data
@@ -74,57 +80,51 @@ namespace SCTBuilder
                                         break;
                                     case "SID":
                                         // This begins the read of one SID
-                                        if (SCTcommon.CountListOccurrences(Words, "RNW") == 0)
-                                            SSDcode = Words[3];
-                                        else
-                                            AddSID(Words, Airport, Words[3]);
+                                        SSDcode = Words[3];     // This is always the SSDcode
+                                        // Usually these are multiline and we need the rest of the entry to load
+                                        // Check for a single-line SID - special handling
+                                        if (SCTcommon.CountListOccurrences(Words, "RNW") != 0)
+                                            AddSID_OneLine();
                                         break;
                                     case "STARS":            // Indicates start of the STARs data
                                         Section = Words[1];
                                         break;
                                     case "STAR":
                                         // This begins the read of one STAR
-                                        SSDcode = AddSTAR(Words, Line, Airport);
+                                        SSDcode = AddSTAR();
                                         break;
                                     case "APPROACHES":      // Indicates start of the APPROACHes data
                                         Section = Words[1];
                                         break;
                                     case "APPROACH":
                                         // This begins the read of one APPROACH
+                                        // **** ENTER APPROACH SUBROUTINE ****
                                         SSDcode = Words[1];
                                         break;
-
                                     case "//":                  // Comment line
                                     default:
                                         break;
                                 }
                                 break;
-                            case "Content":
+                            case "Content":                     // This line has one whitespace.  Again, each word is unique to SID or STAR
                                 switch (Words[1])
                                 {
-                                    case "RNW":
-                                        // Should have the SSDcode for the SID and ICOA from calling routine
-                                        AddSID(Words, Airport, SSDcode);
+                                    case "RNW":                 // SID RNW information for the current SID (SSDcode)
+                                        AddSID();
                                         break;
-                                    case "TRANSITION":
-                                        // This Transition is always a STAR transition
-                                        // These transitions can be split across airports or runways
-                                        STARTransition(Words, Line, Airport, SSDcode, RNWS);
+                                    case "TRANSITION":          // Always TRANSITION information for a STAR
+                                        STARTransition();
                                         break;
                                 }
                                 break;
-                            case "Addenda":
+                            case "Addenda":                     // This line has two whitespaces.  Each word is unique to a SID or STAR
                                 switch (Words[1])
                                 {
-                                    case "RNW":
-                                        //Only occurs in STARS
-                                        CopySTAR(Words, SSDcode, Airport);
+                                    case "RNW":                  //Only occurs in STARS
+                                        STAR_RNWS();
                                         break;
-                                    case "TRANSITION":
-                                        // Only occurs in SIDs
-                                        // Can load this group
-                                        // Transitions are inbound and don't specify RWYs
-                                        SIDTransition(Words, SSDcode);
+                                    case "TRANSITION":          // Only occurs in SIDs  SID transitions apply to all RNWs, so don't need a complex DataTable
+                                        SIDTransition();
                                         break;
                                 }
                                 break;
@@ -134,10 +134,12 @@ namespace SCTBuilder
                     Words.Clear();
                 }
             }
+            return result;
         }
 
-        private static void AddFixString(string Line)
+        private static void AddFixString()
         {
+            // Parse the NaviGraph line for FIX in FIXES section
             int LocSpace1 = Line.IndexOf(" ");
             int LocSpace2 = Line.IndexOf(" ", LocSpace1 + 1);
             int LocLat = Line.IndexOf(" N ");
@@ -153,21 +155,24 @@ namespace SCTBuilder
 
             DataView dvNGFix = new DataView(Form1.NGFixes);
             DataRowView newrow = dvNGFix.AddNew();
+            newrow["FacilityID"] = Airport;
             newrow["FixName"] = FixName;
-            newrow["Latitude"] = Conversions.String2DecDeg(Latitude, Delim: " ");
+            newrow["Latitude"] = Conversions.String2DecDeg(Latitude, Delim: " ");           // Subroutine can recognize this as NG string
             newrow["Longitude"] = Conversions.String2DecDeg(Longitude, Delim: " ");
             newrow.EndEdit();
             dvNGFix.Dispose();
         }
 
-        private static void AddSID(List<string> Words, string Airport, string SSDcode)
+        private static void AddSID_OneLine()
         {
+            // Read a SID line which has everything in one line
+            // These have no transitions, so can directly enter into table
             DataView dvNGSID = new DataView(Form1.NGSID);
             DataRowView newFIX;
-            string runway = string.Empty; int Sequence ;
+            string runway = string.Empty; int Sequence;
             string fix = string.Empty; string oldfix = string.Empty;
             //Build a list of RNWs then a list of FIXes
-            for (int r = 1; r <= Words.Count; r++)
+            for (int r = 3; r <= Words.Count; r++)          //  Start at 3d word
             {
                 if (Words[r] == "RNW") runway = Words[r + 1];
                 {
@@ -204,7 +209,108 @@ namespace SCTBuilder
             }
         }
 
-        private static void SIDTransition(List<string>Words, string SSDcode)
+
+        private static void AddSID()
+        {
+            // These are multiline SIDs with one or more RNWs and a series of instructions
+            // Can load each RNW as part of the SID
+            DataView dvNGSID = new DataView(Form1.NGSID);
+            DataRowView newFIX;
+            string runway; int Sequence; string Radial;
+            string fix = string.Empty; string oldfix = string.Empty;
+            //Build a list of RNWs then a list of FIXes
+            for (int r = 2; r <= Words.Count; r++)          //  Start at 2d word (RNW)
+            {
+                runway = Words[r + 1];
+                Sequence = 0;
+                // See if SID has RWY departure instructions
+                if (Line.IndexOf("HDG") != -1)
+                {
+                    int WordStart = 0;
+                    Sequence++;
+                    newFIX = dvNGSID.AddNew();
+                    newFIX["FacilityID"] = Airport;
+                    newFIX["SSDcode"] = SSDcode;
+                    newFIX["RWY"] = runway;
+                    newFIX["Hdg"] = GetValue("HDG");
+                    newFIX["UntilAlt"] = GetValue("UNTIL");
+                    Radial = GetValue("RADIAL");
+                    if (Radial.Length != 0)
+                    {
+                        newFIX["Radial"] = Radial;
+                        newFIX["FIX"] = GetValue("FIX");
+                    }
+                    newFIX["Sequence"] = Sequence;
+                    newFIX.EndEdit();
+                    // Find first occurence of Fix for above, and save the Loc (will need to skip this FIX in next section)
+                    for (int w = 1; w <= Words.Count; w++)
+                    {
+                        if (Words[w] == "FIX")
+                        {
+                            WordStart = w + 1;
+                            break;
+                        }
+                    }
+                    for (int w = WordStart; w <= Words.Count; w++)      // See what I did here?  I skipped the takeoff reference FIX
+                    {
+                        if (Words[w] == "FIX")
+                        {
+                            if (Words[w + 1] == "OVERFLY")  // Should never occur but...
+                                fix += Words[w + 2] + " ";
+                            else
+                                fix += Words[w + 1] + " ";
+                            if (oldfix != fix)
+                            {
+                                Sequence++;
+                                newFIX = dvNGSID.AddNew();
+                                newFIX["FacilityID"] = Airport;
+                                newFIX["SSDcode"] = SSDcode;
+                                newFIX["RWY"] = runway;
+                                newFIX["AltAOA"] = AoARestrict(Line, fix);
+                                newFIX["AltAOB"] = AoBRestrict(Line, fix);
+                                newFIX["AltAt"] = AltAtRestrict(Line, fix);
+                                newFIX["Speed"] = SpeedRestrict(Line, fix);
+                                newFIX["Sequence"] = Sequence;
+                                newFIX.EndEdit();
+                                oldfix = fix;
+                            }
+                        }
+                    }
+                }
+                else
+                // SID did NOT have RWY departure instructions, so can go directly to loading the waypoints
+                {
+                    for (int w = 1; w <= Words.Count; w++)
+                    {
+                        if (Words[w] == "FIX")
+                        {
+                            if (Words[w + 1] == "OVERFLY")
+                                fix += Words[w + 2] + " ";
+                            else
+                                fix += Words[w + 1] + " ";
+                            if (oldfix != fix)
+                            {
+                                Sequence++;
+                                newFIX = dvNGSID.AddNew();
+                                newFIX["FacilityID"] = Airport;
+                                newFIX["SSDcode"] = SSDcode;
+                                newFIX["RWY"] = runway;
+                                newFIX["AltAOA"] = AoARestrict(Line, fix);
+                                newFIX["AltAOB"] = AoBRestrict(Line, fix);
+                                newFIX["AltAt"] = AltAtRestrict(Line, fix);
+                                newFIX["Speed"] = SpeedRestrict(Line, fix);
+                                newFIX["Sequence"] = Sequence;
+                                newFIX.EndEdit();
+                                oldfix = fix;
+                            }
+                        }
+                    }
+                }
+                dvNGSID.Dispose();
+            }
+        }
+
+        private static void SIDTransition()
         {
             // SID Transition FIXes do not have restrictions
             DataView dvNGSIDTransition = new DataView(Form1.NGSIDTransition);
@@ -225,17 +331,16 @@ namespace SCTBuilder
             }
         }
 
-        private static string AddSTAR(List<string>Words, string Line, string Airport)
+        private static string AddSTAR()
         {
-            // IF the STAR name includes the runway, it's a single runway STAR and can be added.
-            // If it does not, it applies to many runways. Load 1 and copy it later.
+            // Add the STAR information.  We'll add the RNWs later.
             DataView dvNGStar = new DataView(Form1.NGSTAR);
-            DataRowView newFIX; int Sequence = 0; string fix; string runway;
-            string SSDcode = string.Empty;
+            DataRowView newFIX; int Sequence = 0; string fix;
+            // This next line captures the modifier in the STAR Name
             if (Words[2].IndexOf(".") != -1)
-                runway = Words[2].Substring(Words[2].IndexOf(".") + 1, 2);
-            else runway = string.Empty;
-            // If this is a multirunway fix, load it for copying later
+                SSDmod = Words[2].Substring(Words[2].IndexOf(".") + 1, 2);
+            else SSDmod = string.Empty;
+            // Load the STAR information (Runways and Transitions get added later)
             for (int f = 1; f <= Words.Count; f++)
             {
                 SSDcode = Words[2];
@@ -246,7 +351,7 @@ namespace SCTBuilder
                     newFIX = dvNGStar.AddNew();
                     newFIX["FacilityID"] = Airport;
                     newFIX["SSDcode"] = SSDcode;
-                    newFIX["RWY"] = runway;
+                    newFIX["SSDmodifier"] = SSDmod;
                     newFIX["Fix"] = fix;
                     newFIX["AltAOA"] = AoARestrict(Line, fix);
                     newFIX["AltAOB"] = AoBRestrict(Line, fix);
@@ -259,51 +364,46 @@ namespace SCTBuilder
             return SSDcode;
         }
 
-        private static void CopySTAR(List<string>Words, string SSDcode, string Airport)
+        private static void STAR_RNWS()
         {
-            // Use this to duplicate STARs for multiple runways
-            DataRow foundRow = null;
+            // Add the RNWs applicable to the SSDcode+SSDmode for the Airport
             DataTable dtNGSTAR = Form1.NGSTAR;
-            int NumRunways = SCTcommon.CountListOccurrences(Words, "RNW");
-            if (NumRunways != 1)
+            for (int r = 1; r <= Words.Count; r++)
             {
-                // If there was only 1 runway, it was added in the STAR process
-                DataView dvNGSTAR = new DataView(Form1.NGSTAR)
+                if (Words[r] == "RNW")
                 {
-                    RowFilter = "([FacilityID] = '" + Airport + "') & " +
-                                "[SSDcode] = '" + SSDcode + "') & " +
-                                ("[RWY] = ''")
-                };
-                if ((dvNGSTAR.Count == 0) || (dvNGSTAR.Count > 1))
-                    SCTcommon.SendMessage("Row count error finding STAR " + SSDcode + " at " + Airport);
-                else
-                    foundRow = dvNGSTAR[0].Row;
-                //  Copy the existing elements
-                string Fix = foundRow["Fix"].ToString();
-                string AltAOA = foundRow["AltAOA"].ToString();
-                string AltAOB = foundRow["AltAOB"].ToString();
-                string AltAt = foundRow["AltAt"].ToString();
-                string Speed = foundRow["Speed"].ToString();
-                int Sequence = Convert.ToInt32(foundRow["Sequence"]);
-                // Insert the first runway
-                dvNGSTAR[0]["RWY"] = Words[2]; 
-                dvNGSTAR.Dispose();
-                // Start past the first Rnw
-                for (int r = 3; r <= Words.Count; r++)
-                {
-                    if (Words[r] == "RNW")
-                    {
-                        Sequence++;
-                        dtNGSTAR.Rows.Add(Airport, SSDcode, Words[r + 1], Fix, AltAOA, AltAOB, AltAt, Speed, Sequence);
-                    }
+                    dtNGSTAR.Rows.Add(Airport, SSDcode, SSDmod, Words[r + 1]);
                 }
             }
         }
 
-        private static void STARTransition(List<string> Words, string Line, string Airport, string SSDcode, List<string>RNWS)
-        { 
-            // If the SSDcode has the runway in the name, this is a single runway transition
-            // If it does not, then the transition applies to all the runways in the STAR
+        private static void STARTransition()
+        {
+            // Transitions apply to each SSDcode+SSDmod (if present, usually is)
+            string TransitionName = Words[2];
+            string fix; DataRowView newFIX; int Sequence = 0;
+            DataView dvNGSTARTransition = new DataView(Form1.NGSTARTransition);
+            {
+                for (int t = 1; t <= Words.Count; t++)
+                {
+                    if (Words[t] == "FIX")
+                    {
+                        fix = Words[t + 1];
+                        newFIX = dvNGSTARTransition.AddNew();
+                        newFIX["FacilityID"] = Airport;
+                        newFIX["SSDcode"] = SSDcode;
+                        newFIX["SSDmodifier"] = SSDmod;
+                        newFIX["TransitionName"] = TransitionName;
+                        newFIX["Fix"] = fix;
+                        newFIX["AltAOA"] = AoARestrict(Line, fix);
+                        newFIX["AltAOB"] = AoBRestrict(Line, fix);
+                        newFIX["AltAt"] = AltAtRestrict(Line, fix);
+                        newFIX["Speed"] = SpeedRestrict(Line, fix);
+                        newFIX["Sequence"] = Sequence;
+                        newFIX.EndEdit();
+                    }
+                }
+            }
         }
 
         private static string SpeedRestrict(string Line, string FIX)
@@ -376,7 +476,26 @@ namespace SCTBuilder
             return result;
         }
 
-        private static string[] ParseLine(string Line)
+
+        private static string GetValue(string Keyword)
+        {
+            // Returns an At or Above restriction, if it exists
+            string result = string.Empty;
+            if (Line.IndexOf(Keyword) != 0)
+            {
+                for (int h = 1; h <= Words.Count; h++)
+                {
+                    if (Words[h] == Keyword)
+                    {
+                        result = Words[h + 1];
+                        h = Words.Count + 1;            // Force break (Could've just used break; but it's not clean coding
+                    }
+                }
+            }
+            return result;
+        }
+
+        private static string[] ParseLine()
         {
             // Parse the line into individual words
             // First word indicates level: Title, Content, Addenda
@@ -420,8 +539,8 @@ namespace SCTBuilder
         {
             // Find the cycleinfo.txt file.  -1 if doesnt exist (bad folder) or return AIRAC
             int result = -1; string Line; string sResult;
-            string FullFilename = SCTcommon.GetFullPathname(FolderMgt.NGFolder, "cycleinfo.txt");
-            if (FullFilename.IndexOf("ERROR") == -1) return result;
+            string FullFilename = SCTcommon.GetFullPathname(FolderMgt.DataFolder, "cycle_info.txt");
+            if (FullFilename.IndexOf("ERROR") != -1) return result;
             using (StreamReader reader = new StreamReader(FullFilename))
             {
                 Line = reader.ReadLine();

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Media;
 using System.Globalization;
+using System.Diagnostics.Eventing.Reader;
 
 namespace SCTBuilder
 {
@@ -110,13 +111,14 @@ namespace SCTBuilder
             if (SCTchecked.ChkSID && path != string.Empty)
             {
                 Console.WriteLine("SIDS...");
+                path = CheckFile(PartialPath, "SID");
                 WriteSIDSTAR(path, UseName:SCTchecked.ChkSSDname, IsSID: true);
                 TextFiles.Add(path);
             }
-            path = CheckFile(PartialPath, "STAR");
-            if (SCTchecked.ChkSTAR && path != string.Empty)
+            if (SCTchecked.ChkSTAR)
             {
                 Console.WriteLine("STARS...");
+                path = CheckFile(path, "STAR");
                 WriteSIDSTAR(path, UseName:SCTchecked.ChkSSDname, IsSID: false);
                 TextFiles.Add(path);
             }
@@ -153,6 +155,8 @@ namespace SCTBuilder
 
         public static string CheckFile(string PartialPath, string file, string type = ".txt")
         {
+            // Looks for the file in the PartialPath.  If found, optionally seeks confirm to overwrite.
+            // RETURNS the fully qualified path to the file unles overwite denied, then returns empty.
             string caption = VersionInfo.Title;
             string Message; MessageBoxIcon icon; MessageBoxButtons buttons;
             DialogResult result;
@@ -501,11 +505,20 @@ namespace SCTBuilder
             AWYView.Dispose();
         }
 
+        private static void WriteSSD(string PartialPath, bool UseFix, bool isSID)
+        {
+            // NOT going to write in the ZJX format. Just create text files for each SID/STAR
+
+        }
+
+
         private static void WriteSIDSTAR(string path, bool UseName, bool IsSID)
         {
+
             // Declare variables
-            string SSDfilter; 
+            string SSDfilter;
             char Mark = Convert.ToChar("=");        // Used in the Diagrams headers
+
             using (StreamWriter sw = new StreamWriter(path))
             {
                 // OK to write the Section header here since it's called only once

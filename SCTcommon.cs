@@ -451,11 +451,15 @@ namespace SCTBuilder
             }
             catch { return -1f; }
         }
-        public static double MagVar2DecMag(string Mag)
+        public static float MagVar2DecMag(string Mag)
         {
+            // For THIS program, W deviations are positive, E deviations are negative
+            float result;
             if (Mag.Trim().Length > 0)
             {
-                return Convert.ToSingle(Mag.Substring(0, Mag.Length - 1).Trim());
+                result = Convert.ToSingle(Mag.Substring(0, Mag.Length - 1).Trim());
+                if (Mag.Right(1) == "E") result *= -1;
+                return result;
             }
             else return 0f;
         }
@@ -653,10 +657,33 @@ namespace SCTBuilder
         }
     }
 
-/// <summary>
-/// Class containing methods to retrieve specific file system paths.
-/// </summary>
-public static class KnownFolders
+    public static class ESEstrings
+    {
+        // Only those not identical to SCTstring
+        public static string RWYout(string[] strOut)
+        {
+            string result = strOut[0] + " " + strOut[1] + " " + strOut[2] + " " + strOut[3] + " "
+                        + strOut[4] + " " + strOut[5] + " " + strOut[6] + " " + strOut[7] + " " + strOut[8];
+            return result;
+        }
+
+        public static string SSDout(bool IsSID, string Airport, string RWY, string Transition, 
+            string SSDname, List<string>Fix)
+        {
+            string SSD;
+            if (IsSID) SSD = "SID"; else SSD = "STAR"; 
+            string result = string.Empty;
+            string Fixes = string.Empty;
+            foreach (string f in Fix) Fixes += f + " ";
+            result = SSD + ":" + Airport + ":" + RWY + ":" + Transition + "x" + SSDname + ":" + Fixes;
+            return result;
+        }
+    }
+
+    /// <summary>
+    /// Class containing methods to retrieve specific file system paths.
+    /// </summary>
+    public static class KnownFolders
     {
         private readonly static string[] _knownFolderGuids = new string[]
         {
