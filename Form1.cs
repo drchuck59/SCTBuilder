@@ -473,7 +473,7 @@ namespace SCTBuilder
             ClearSelected(dataView);
             dataView.RowFilter = filter;
             int result = dataView.Count;
-            SetSelected(dataView);
+            SetSelected(dataView, true);
             Console.WriteLine("Selected " + result + " rows from " + table);
             dataView.Dispose();
             return result;
@@ -486,16 +486,19 @@ namespace SCTBuilder
                 RowFilter = "[Selected]"
             };
             DataView dvRWY = new DataView(RWY);
-            int result;
+            int result = dvAPT.Count;
             ClearSelected(dvRWY);
             foreach (DataRowView drvAPT in dvAPT)
             {
-                dvRWY.RowFilter = "[ID] = '" + drvAPT["ID"] + "'";
-                if (dvRWY.Count != 0) SetSelected(dvRWY);
+                dvRWY.RowFilter = "[ID] = '" + drvAPT["ID"].ToString() + "'";
+                if (dvRWY.Count != 0)
+                {
+                    UpdateLabel("Selecting " + dvRWY.Count + " runways from " + drvAPT["FacilityID"]);
+                    SetSelected(dvRWY, false);
+                }
             }
             dvRWY.RowFilter = "[Selected]";
             result = dvRWY.Count;
-            UpdateLabel("Selecting " + result + " runways...");
             dvRWY.Dispose();
             dvAPT.Dispose();
             SelectedTabControl.SelectedTab = SelectedTabControl.TabPages["RWYtabPage"];
@@ -513,7 +516,7 @@ namespace SCTBuilder
             dvAWY.RowFilter = filter;
             int result = dvAWY.Count;
             UpdateLabel("Selecting " + result + " airways...");
-            SetSelected(dvAWY);
+            SetSelected(dvAWY, true);
             dvAWY.RowFilter = "[Selected]";
             result = dvAWY.Count;
             UpdateLabel("Validating " + result + " airways...");
@@ -810,7 +813,7 @@ namespace SCTBuilder
                 row["Selected"] = false;
             }
         }
-        private void SetSelected(DataView dv)
+        private void SetSelected(DataView dv, bool Label = false)
         {
             // If the filter is applied, selected boxes are true
             // otherwise, ALL the selected boxes are false
@@ -819,9 +822,11 @@ namespace SCTBuilder
             foreach (DataRowView row in dv)
             {
                 Counter++;
+                //Console.WriteLine(row["ID"].ToString());
                 row["Selected"] = true;
-                UpdateLabel("Selecting " + result + " rows from " + dv.Table.TableName +
-                    " (" + (Counter*100/dv.Count).ToString() + "% done)"); 
+                if (Label)
+                    UpdateLabel("Selecting " + result + " rows from " + dv.Table.TableName +
+                       " (" + (Counter * 100 / dv.Count).ToString() + "% done)"); ; 
             }
         }
         private void UpdateGridCount()

@@ -38,9 +38,14 @@ namespace SCTBuilder
         public static double RWYBearing(string Heading, string RwyID)
         {
             if (RwyID.Length == 0) return -1;
+            // If there is no heading, create one from the RWY
             if (Heading.Length == 0)
             {
-                if (!RwyID.All(char.IsDigit)) return Convert.ToSingle(RwyID.Substring(0, RwyID.Length - 1));
+                if (!RwyID.All(char.IsDigit))
+                    if ((RwyID.Length > 1) &&
+                        (RwyID.Substring(0, 1).All(char.IsDigit)))
+                        return Convert.ToSingle(RwyID.Substring(0, RwyID.Length - 1));
+                    else return -1;
                 else return Convert.ToSingle(RwyID);
             }
             if (!Heading.All(char.IsDigit))      // See if this is a compass bearing

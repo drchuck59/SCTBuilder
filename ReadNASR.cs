@@ -189,7 +189,7 @@ namespace SCTBuilder
             char[] FacilityType = { 'A', 'C', 'H' };     // Only interested in Airport, Seaplane, and Heliports
             string FacType = string.Empty; string tempID = string.Empty; string tempBID = string.Empty;
             string tempRID = string.Empty; double tempLatB = 0f; double tempLongB = 0f; string tempFacID = string.Empty;
-            double tempLatR = 0f; double tempLongR = 0f; double tempLength = 0f; bool tempOpen = false;
+            double tempLatR = 0f; double tempLongR = 0f; double tempLength = 0f; bool tempOpen = false; string temp = string.Empty;
             double tempWidth = 0f; double tempHdgB = -1f; double tempHdgR = -1f; string tempRwyID; string tempRwyName = string.Empty;
             double tempElevB = 0f; double tempElevR = 0f; string tempARTCC = string.Empty; string tempFacilityName = string.Empty;
             using (StreamReader reader = new StreamReader(FullFilename))
@@ -203,6 +203,8 @@ namespace SCTBuilder
                         case "APT":
                             // Get the facility type
                             tempID = Line.Substring(3, 11).Trim();
+                            //if (tempID == "03534.*A")
+                            //    Console.WriteLine("ReadNASR:FillAPT found VPA");
                             FacType = Extensions.Right(tempID, 1);
                             tempOpen = Line.Substring(840, 2).Trim() == "O";
 
@@ -230,42 +232,82 @@ namespace SCTBuilder
                             break;
                         case "RWY":
                             /// Only interested in Airport, Seaplane, and Heliports
+                            /// And can only insert runways that have a beginning and ending Lat Long
+                            /// Basically, if any conversion fails, the RWY is invalid and should be skipped
                             tempRwyID = Line.Substring(3, 11).Trim();
-                            if ((tempRwyID == tempID) && tempOpen && (FacType.IndexOfAny(FacilityType) != -1))
+                            if (tempOpen && (tempRwyID == tempID) && (FacType.IndexOfAny(FacilityType) != -1))
                             {
-                                if (
-                                    (tempRwyName != Line.Substring(16, 7).Trim()) && // Don't duplicate RWY name (e.g, 18L/36R)
-                                    (Line.Substring(23, 5).Trim().Length != 0) &&    // tempLength
-                                    (Line.Substring(28, 4).Trim().Length != 0) &&    // tempWidth
-                                    (Line.Substring(65, 3).Trim().Length != 0) &&    // tempBID
-                                    (Line.Substring(68, 3).Trim().Length != 0) &&    // tempHdgB
-                                    (Line.Substring(142, 7).Trim().Length != 0) &&   // tempElevB
-                                    (Line.Substring(287, 3).Trim().Length != 0) &&   // tempRID
-                                    (Line.Substring(290, 3).Trim().Length != 0) &&  // tempHdgR
-                                    (Line.Substring(364, 7).Trim().Length != 0))   // tempElevR
-                                {
-                                    tempRwyName = Line.Substring(16, 7).Trim();
-                                    tempLength = Convert.ToSingle(Line.Substring(23, 5).Trim());
-                                    tempWidth = Convert.ToSingle(Line.Substring(28, 4).Trim());
-                                    tempBID = Line.Substring(65, 3).Trim();
-                                    tempHdgB = LatLongCalc.RWYBearing(Line.Substring(68, 3).Trim(), tempBID);
-                                    tempLatB = Conversions.Seconds2DecDeg(Line.Substring(103, 12).Trim());   // Latitude
-                                    if (tempLatB == -1) tempOpen = false;
-                                    tempLongB = Conversions.Seconds2DecDeg(Line.Substring(130, 12).Trim());  // Longitude
-                                    if (tempLongB == -1) tempOpen = false;
-                                    tempElevB = Convert.ToSingle(Line.Substring(142, 7).Trim());
-                                    tempRID = Line.Substring(287, 3).Trim();
-                                    tempHdgR = LatLongCalc.RWYBearing(Line.Substring(290, 3).Trim(), tempRID);
-                                    tempLatR = Conversions.Seconds2DecDeg(Line.Substring(325, 12).Trim());   // EndLatitude
-                                    if (tempLatR == -1) tempOpen = false;
-                                    tempLongR = Conversions.Seconds2DecDeg(Line.Substring(352, 12).Trim());  // EndLongitude
-                                    if (tempLongR == -1) tempOpen = false;
-                                    tempElevR = Convert.ToSingle(Line.Substring(364, 7).Trim());
-                                }
+                                tempRwyName = Line.Substring(16, 7).Trim();
+                                temp = Line.Substring(23, 5).Trim();
+                                if (temp.Length != 0)
+                                    tempLength = Convert.ToSingle(temp);
                                 else tempOpen = false;
                                 if (tempOpen)
                                 {
-                                    var RwyItems = new List<object>
+                                    temp = Line.Substring(28, 4).Trim();
+                                    if (temp.Length != 0)
+                                        tempWidth = Convert.ToSingle(temp);
+                                    else tempOpen = false;
+                                }
+                                if (tempOpen)
+                                {
+                                    tempBID = Line.Substring(65, 3).Trim();
+                                    if (tempBID.Length == 0) tempOpen = false;
+                                }
+                                if (tempOpen)
+                                {
+                                    tempHdgB = LatLongCalc.RWYBearing(Line.Substring(68, 3).Trim(), tempBID);
+                                    if (tempHdgB == -1) tempOpen = false;
+                                }
+                                if (tempOpen)
+                                {
+                                    tempLatB = Conversions.Seconds2DecDeg(Line.Substring(103, 12).Trim());   // Latitude
+                                    if (tempLatB == -1) tempOpen = false;
+                                }
+                                if (tempOpen)
+                                {
+                                    tempLongB = Conversions.Seconds2DecDeg(Line.Substring(130, 12).Trim());  // Longitude
+                                    if (tempLongB == -1) tempOpen = false;
+                                }
+                                if (tempOpen)
+                                {
+                                    temp = Line.Substring(142, 7).Trim();
+                                    if (temp.Length != 0)
+                                        tempElevB = Convert.ToSingle(Line.Substring(142, 7).Trim());
+                                    else tempOpen = false;
+                                }
+                                if (tempOpen)
+                                {
+                                    tempRID = Line.Substring(287, 3).Trim();
+                                    if (tempRID.Length == 0) tempOpen = false;
+                                }
+                                if (tempOpen)
+                                {
+                                    tempHdgR = LatLongCalc.RWYBearing(Line.Substring(290, 3).Trim(), tempRID);
+                                    if (tempHdgR == -1) tempOpen = false;
+                                }
+                                if (tempOpen)
+                                {
+                                    tempLatR = Conversions.Seconds2DecDeg(Line.Substring(325, 12).Trim());   // EndLatitude
+                                    if (tempLatR == -1) tempOpen = false;
+                                }
+                                if (tempOpen)
+                                {
+                                    tempLongR = Conversions.Seconds2DecDeg(Line.Substring(352, 12).Trim());  // EndLongitude
+                                    if (tempLongR == -1) tempOpen = false;
+                                }
+                                if (tempOpen)
+                                {
+                                    temp = Line.Substring(364, 7).Trim();
+                                    if (temp.Length != 0)
+                                        tempElevR = Convert.ToSingle(Line.Substring(364, 7).Trim());
+                                    else tempOpen = false;
+                                }
+                            }
+                            else tempOpen = false;
+                            if (tempOpen)
+                            {
+                                var RwyItems = new List<object>
                                     {
                                         tempID,                                                 // ID (from APT row)
                                         tempFacID,                                              // Facility ID
@@ -285,8 +327,7 @@ namespace SCTBuilder
                                         tempLongR,                                              // Reciprocal Longitude
                                         tempElevR                                               // Reciprocal Elevation (feet)
                                     };
-                                    AddFixes(RWYtable, RwyItems);
-                                }
+                                AddFixes(RWYtable, RwyItems);
                             }
                             break;
                     }
