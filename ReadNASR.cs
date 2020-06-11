@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using System.Collections.Generic;
 using System.Xml;
 using System.Data;
+using System.Windows.Forms.VisualStyles;
 
 namespace SCTBuilder
 {
@@ -189,7 +190,7 @@ namespace SCTBuilder
             char[] FacilityType = { 'A', 'C', 'H' };     // Only interested in Airport, Seaplane, and Heliports
             string FacType = string.Empty; string tempID = string.Empty; string tempBID = string.Empty;
             string tempRID = string.Empty; double tempLatB = 0f; double tempLongB = 0f; string tempFacID = string.Empty;
-            double tempLatR = 0f; double tempLongR = 0f; double tempLength = 0f; bool tempOpen = false; string temp = string.Empty;
+            double tempLatR = 0f; double tempLongR = 0f; double tempLength = 0f; bool tempOpen = false; string temp;
             double tempWidth = 0f; double tempHdgB = -1f; double tempHdgR = -1f; string tempRwyID; string tempRwyName = string.Empty;
             double tempElevB = 0f; double tempElevR = 0f; string tempARTCC = string.Empty; string tempFacilityName = string.Empty;
             using (StreamReader reader = new StreamReader(FullFilename))
@@ -534,39 +535,73 @@ namespace SCTBuilder
         {
             DataTable SSD = Form1.SSD;
             string FullFilename = SCTcommon.GetFullPathname(FolderMgt.DataFolder, "STARDP.txt");
-            bool isSid; string Line; int Seqno = 0; string SSID = string.Empty;
-            string TransistionCode = string.Empty; string Transition = string.Empty;
+            bool isSid; string Line; int Seqno = 0;
+            string SSDcode; string TransCode = string.Empty; int Loc;
+            string SSDname = string.Empty; string TransName = string.Empty;
             using (StreamReader reader = new StreamReader(FullFilename))
             {
                 while ((Line = reader.ReadLine()) != null)
                 {
                     if (Line.Substring(0, 1) == "D") isSid = true; else isSid = false;
                     Seqno += 10;
-                    string ID = Line.Substring(0, 5).Trim();                // Internal ID
-                    if (ID != SSID)
+                    // NOTE that SSDcode and SSDname will be empty except at beginning of block
+                    SSDcode = Line.Substring(38, 13).Trim();
+                    if (SSDcode.Length != 0)
                     {
-                        TransistionCode = Line.Substring(38, 13).Trim();        // First entry is actual code and name
-                        Transition = Line.Substring(51, 110).Trim();
-                        SSID = ID;
+                        //  If the SSDcode is "NOT ASSIGNED", the SSD is radar-vector type
+                        // Still need to save the data, but only has the SSD full name
+                        // RNAV and Hybrids have an SSDcode and Transition(s)
+                        if (SSDcode == "NOT ASSIGNED")
+                        {
+                            SSDcode = "Radar vector";
+                            TransCode = "RV";
+                        }
+                        else
+                        {
+                            Loc = SSDcode.IndexOf(".");
+                            // SIDS have Transitions after the name. STARS have them in front of the name.
+                            if (isSid)
+                            {
+                                TransCode = SSDcode.Substring(Loc + 1);
+                                SSDcode = SSDcode.Substring(0, Loc);
+                            }
+                            else
+                            {
+                                TransCode = SSDcode.Substring(0, Loc);
+                                SSDcode = SSDcode.Substring(Loc + 1);
+                            }
+                        }
+                        // Store SSD name and Transition name separately (only one can be present)
+                        TransName = string.Empty;
+                        SSDname = Line.Substring(51, 110).Trim();
+                        if (SSDname.Length != 0)
+                        {
+                            if (SSDname.IndexOf("Transition") != -1)
+                            {
+                                TransName = SSDname;
+                                SSDname = string.Empty;
+                            }
+                        }
                     }
-                        var FixItems = new List<object>
+                    else SSDname = TransName = string.Empty;
+
+                    var FixItems = new List<object>
                     {
-                        ID,                                                         // Internal ID
+                        Line.Substring(0, 5).Trim(),                                // Internal ID
                         Line.Substring(30,6).Trim(),                                // NavAid or Airport
                         Line.Substring(10,2).Trim(),                                // FixType incl 'AA'
                         Conversions.String2DecDeg(Line.Substring(13, 8).Trim()),    // Latitude
                         Conversions.String2DecDeg(Line.Substring(21, 9).Trim()),    // Longitude
-                        TransistionCode,
-                        Transition,
-                        Line.Substring(38, 13).Trim(),                              // SSDCode
-                        Line.Substring(51, 110).Trim(),                             // SSDName
+                        SSDcode,                                                    // SSD Code
+                        TransCode,                                                  // Transition Code
+                        SSDname,                                                    // SSDName
+                        TransName,                                                  // TransitionName
                         Seqno,                                                      // Sequence Number (mine)
                         isSid                                                       // Is a SID
                     };
                         AddFixes(SSD, FixItems);
                 }
             }
-            // Console.WriteLine("SSD rows read: " + SSD.Rows.Count);
         }
         public static bool FillLocalSectors()
         {

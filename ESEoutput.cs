@@ -20,7 +20,7 @@ namespace SCTBuilder
             MessageBoxButtons buttons = MessageBoxButtons.OK;
             MessageBoxIcon icon = MessageBoxIcon.Information;
             string PartialPath = FolderMgt.OutputFolder + "\\" +
-                InfoSection.SponsorARTCC + "_";
+                InfoSection.SponsorARTCC + "_ES_";
             string path = CheckFile(PartialPath, "Header");
             if (path != string.Empty)
             {
@@ -201,7 +201,7 @@ namespace SCTBuilder
                 "; Assistant Facilities Engineer:" + InfoSection.AsstFacilityEngineer + cr +
                 "; AIRAC CYCLE: " + CycleInfo.AIRAC + cr +
                 "; Cycle: " + CycleInfo.CycleStart + " to " + CycleInfo.CycleEnd + cr + cr +
-                "; <Add last modified and contributers from prior file>" + cr + cr;
+                "; Contributers and errata at end of file" + cr + cr;
                 sw.WriteLine(Message);
             }
             CycleHeader = cr +

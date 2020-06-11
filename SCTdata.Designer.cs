@@ -4260,13 +4260,13 @@ namespace SCTBuilder {
             
             private global::System.Data.DataColumn columnLongitude;
             
-            private global::System.Data.DataColumn columnTransCode;
-            
-            private global::System.Data.DataColumn columnTransName;
-            
             private global::System.Data.DataColumn columnSSDcode;
             
-            private global::System.Data.DataColumn columnSSDName;
+            private global::System.Data.DataColumn columnTransitionCode;
+            
+            private global::System.Data.DataColumn columnSSDname;
+            
+            private global::System.Data.DataColumn columnTransitionName;
             
             private global::System.Data.DataColumn columnSequence;
             
@@ -4355,22 +4355,6 @@ namespace SCTBuilder {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public global::System.Data.DataColumn TransCodeColumn {
-                get {
-                    return this.columnTransCode;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public global::System.Data.DataColumn TransNameColumn {
-                get {
-                    return this.columnTransName;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public global::System.Data.DataColumn SSDcodeColumn {
                 get {
                     return this.columnSSDcode;
@@ -4379,9 +4363,25 @@ namespace SCTBuilder {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public global::System.Data.DataColumn SSDNameColumn {
+            public global::System.Data.DataColumn TransitionCodeColumn {
                 get {
-                    return this.columnSSDName;
+                    return this.columnTransitionCode;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn SSDnameColumn {
+                get {
+                    return this.columnSSDname;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn TransitionNameColumn {
+                get {
+                    return this.columnTransitionName;
                 }
             }
             
@@ -4470,7 +4470,7 @@ namespace SCTBuilder {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public SSDRow AddSSDRow(string ID, string NavAid, string FixType, float Latitude, float Longitude, string TransCode, string TransName, string SSDcode, string SSDName, int Sequence, bool IsSID, string AOA, string AOB, string SPEED, bool Selected) {
+            public SSDRow AddSSDRow(string ID, string NavAid, string FixType, float Latitude, float Longitude, string SSDcode, string TransitionCode, string SSDname, string TransitionName, int Sequence, bool IsSID, string AOA, string AOB, string SPEED, bool Selected) {
                 SSDRow rowSSDRow = ((SSDRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         ID,
@@ -4478,10 +4478,10 @@ namespace SCTBuilder {
                         FixType,
                         Latitude,
                         Longitude,
-                        TransCode,
-                        TransName,
                         SSDcode,
-                        SSDName,
+                        TransitionCode,
+                        SSDname,
+                        TransitionName,
                         Sequence,
                         IsSID,
                         AOA,
@@ -4515,10 +4515,10 @@ namespace SCTBuilder {
                 this.columnFixType = base.Columns["FixType"];
                 this.columnLatitude = base.Columns["Latitude"];
                 this.columnLongitude = base.Columns["Longitude"];
-                this.columnTransCode = base.Columns["TransCode"];
-                this.columnTransName = base.Columns["TransName"];
                 this.columnSSDcode = base.Columns["SSDcode"];
-                this.columnSSDName = base.Columns["SSDName"];
+                this.columnTransitionCode = base.Columns["TransitionCode"];
+                this.columnSSDname = base.Columns["SSDname"];
+                this.columnTransitionName = base.Columns["TransitionName"];
                 this.columnSequence = base.Columns["Sequence"];
                 this.columnIsSID = base.Columns["IsSID"];
                 this.columnAOA = base.Columns["AOA"];
@@ -4540,14 +4540,14 @@ namespace SCTBuilder {
                 base.Columns.Add(this.columnLatitude);
                 this.columnLongitude = new global::System.Data.DataColumn("Longitude", typeof(float), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnLongitude);
-                this.columnTransCode = new global::System.Data.DataColumn("TransCode", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnTransCode);
-                this.columnTransName = new global::System.Data.DataColumn("TransName", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnTransName);
                 this.columnSSDcode = new global::System.Data.DataColumn("SSDcode", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnSSDcode);
-                this.columnSSDName = new global::System.Data.DataColumn("SSDName", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnSSDName);
+                this.columnTransitionCode = new global::System.Data.DataColumn("TransitionCode", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnTransitionCode);
+                this.columnSSDname = new global::System.Data.DataColumn("SSDname", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnSSDname);
+                this.columnTransitionName = new global::System.Data.DataColumn("TransitionName", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnTransitionName);
                 this.columnSequence = new global::System.Data.DataColumn("Sequence", typeof(int), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnSequence);
                 this.columnIsSID = new global::System.Data.DataColumn("IsSID", typeof(bool), null, global::System.Data.MappingType.Element);
@@ -12020,38 +12020,6 @@ namespace SCTBuilder {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public string TransCode {
-                get {
-                    try {
-                        return ((string)(this[this.tableSSD.TransCodeColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'TransCode\' in table \'SSD\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tableSSD.TransCodeColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public string TransName {
-                get {
-                    try {
-                        return ((string)(this[this.tableSSD.TransNameColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'TransName\' in table \'SSD\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tableSSD.TransNameColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public string SSDcode {
                 get {
                     try {
@@ -12068,17 +12036,49 @@ namespace SCTBuilder {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public string SSDName {
+            public string TransitionCode {
                 get {
                     try {
-                        return ((string)(this[this.tableSSD.SSDNameColumn]));
+                        return ((string)(this[this.tableSSD.TransitionCodeColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'SSDName\' in table \'SSD\' is DBNull.", e);
+                        throw new global::System.Data.StrongTypingException("The value for column \'TransitionCode\' in table \'SSD\' is DBNull.", e);
                     }
                 }
                 set {
-                    this[this.tableSSD.SSDNameColumn] = value;
+                    this[this.tableSSD.TransitionCodeColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public string SSDname {
+                get {
+                    try {
+                        return ((string)(this[this.tableSSD.SSDnameColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'SSDname\' in table \'SSD\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableSSD.SSDnameColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public string TransitionName {
+                get {
+                    try {
+                        return ((string)(this[this.tableSSD.TransitionNameColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'TransitionName\' in table \'SSD\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableSSD.TransitionNameColumn] = value;
                 }
             }
             
@@ -12223,30 +12223,6 @@ namespace SCTBuilder {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public bool IsTransCodeNull() {
-                return this.IsNull(this.tableSSD.TransCodeColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public void SetTransCodeNull() {
-                this[this.tableSSD.TransCodeColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public bool IsTransNameNull() {
-                return this.IsNull(this.tableSSD.TransNameColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public void SetTransNameNull() {
-                this[this.tableSSD.TransNameColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public bool IsSSDcodeNull() {
                 return this.IsNull(this.tableSSD.SSDcodeColumn);
             }
@@ -12259,14 +12235,38 @@ namespace SCTBuilder {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public bool IsSSDNameNull() {
-                return this.IsNull(this.tableSSD.SSDNameColumn);
+            public bool IsTransitionCodeNull() {
+                return this.IsNull(this.tableSSD.TransitionCodeColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public void SetSSDNameNull() {
-                this[this.tableSSD.SSDNameColumn] = global::System.Convert.DBNull;
+            public void SetTransitionCodeNull() {
+                this[this.tableSSD.TransitionCodeColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsSSDnameNull() {
+                return this.IsNull(this.tableSSD.SSDnameColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetSSDnameNull() {
+                this[this.tableSSD.SSDnameColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsTransitionNameNull() {
+                return this.IsNull(this.tableSSD.TransitionNameColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetTransitionNameNull() {
+                this[this.tableSSD.TransitionNameColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]

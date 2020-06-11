@@ -49,7 +49,6 @@
             this.NorthLimitTextBox = new System.Windows.Forms.TextBox();
             this.chkbxShowAll = new System.Windows.Forms.CheckBox();
             this.txtGridViewCount = new System.Windows.Forms.TextBox();
-            this.SIDNameCheckBox = new System.Windows.Forms.CheckBox();
             this.panelSUAs = new System.Windows.Forms.Panel();
             this.SUA_DangerCheckBox = new System.Windows.Forms.CheckBox();
             this.SUA_ProhibitedCheckBox = new System.Windows.Forms.CheckBox();
@@ -64,7 +63,6 @@
             this.CenterLonLabel = new System.Windows.Forms.Label();
             this.MagVarTextBox = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.STARNameCheckBox = new System.Windows.Forms.CheckBox();
             this.UseARTCCAsSquareButton = new System.Windows.Forms.Button();
             this.IdentifierTextBox = new System.Windows.Forms.TextBox();
             this.PreviewButton = new System.Windows.Forms.Button();
@@ -127,18 +125,22 @@
             this.STARsCheckBox = new System.Windows.Forms.CheckBox();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.openDataFolderToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.selectOutputFolderToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.generateFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.selectedComponentsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.entireSCTFilelongToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.preferencesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ConfirmOverwriteOfFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.savePreferencesToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.useFixesForCoordinatesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.drawFIXesOnDiagramsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.drawAltitudeRestrictionsOnDiagramsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.drawSpeedRestrictionsOnDiagramsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.includeNaviGraphDataToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.openDataFolderToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.createSingleOutputFlieToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.savePreferencesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.selectOutputFolderToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.exitProgramToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.LineGeneratorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.arcGneratorradToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -151,12 +153,12 @@
             this.facilitiesListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.xML2SCTToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dMSDecDegToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.sCTColorMgrToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.goToFAA28dayNASRToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openDataFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.selectOutputFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.exitProgramToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.SCTtoolStripButton = new System.Windows.Forms.ToolStripButton();
             this.ESEToolStripButton = new System.Windows.Forms.ToolStripButton();
@@ -174,6 +176,7 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.UpdateAIRACbutton = new System.Windows.Forms.Button();
             this.UpdatingLabel = new System.Windows.Forms.Label();
+            this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panelSUAs.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.AllMarginsNumericUpDown)).BeginInit();
             this.FilterGroupBox.SuspendLayout();
@@ -416,20 +419,6 @@
             this.txtGridViewCount.TabIndex = 29;
             this.toolTip1.SetToolTip(this.txtGridViewCount, "Number displayed / Total in table");
             // 
-            // SIDNameCheckBox
-            // 
-            this.SIDNameCheckBox.AutoSize = true;
-            this.SIDNameCheckBox.Enabled = false;
-            this.SIDNameCheckBox.Location = new System.Drawing.Point(82, 133);
-            this.SIDNameCheckBox.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
-            this.SIDNameCheckBox.Name = "SIDNameCheckBox";
-            this.SIDNameCheckBox.Size = new System.Drawing.Size(90, 17);
-            this.SIDNameCheckBox.TabIndex = 30;
-            this.SIDNameCheckBox.Text = "Use full name";
-            this.toolTip1.SetToolTip(this.SIDNameCheckBox, "If checked, SCT diagrams will use full name for SIDs/STARs. If UNchecked, will us" +
-        "e the abbreviation.");
-            this.SIDNameCheckBox.UseVisualStyleBackColor = true;
-            // 
             // panelSUAs
             // 
             this.panelSUAs.Controls.Add(this.SUA_DangerCheckBox);
@@ -588,20 +577,6 @@
             this.label1.Text = "Mag Var";
             this.toolTip1.SetToolTip(this.label1, "VRC will use this to correct to true bearings");
             // 
-            // STARNameCheckBox
-            // 
-            this.STARNameCheckBox.AutoSize = true;
-            this.STARNameCheckBox.Enabled = false;
-            this.STARNameCheckBox.Location = new System.Drawing.Point(82, 151);
-            this.STARNameCheckBox.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
-            this.STARNameCheckBox.Name = "STARNameCheckBox";
-            this.STARNameCheckBox.Size = new System.Drawing.Size(90, 17);
-            this.STARNameCheckBox.TabIndex = 32;
-            this.STARNameCheckBox.Text = "Use full name";
-            this.toolTip1.SetToolTip(this.STARNameCheckBox, "If checked, SCT diagrams will use full name for SIDs/STARs. If UNchecked, will us" +
-        "e the abbreviation.");
-            this.STARNameCheckBox.UseVisualStyleBackColor = true;
-            // 
             // UseARTCCAsSquareButton
             // 
             this.UseARTCCAsSquareButton.Enabled = false;
@@ -713,13 +688,12 @@
             // 
             this.QuickSearchLabel.AutoSize = true;
             this.QuickSearchLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.QuickSearchLabel.Location = new System.Drawing.Point(836, 275);
+            this.QuickSearchLabel.Location = new System.Drawing.Point(841, 278);
             this.QuickSearchLabel.Name = "QuickSearchLabel";
             this.QuickSearchLabel.Size = new System.Drawing.Size(88, 16);
             this.QuickSearchLabel.TabIndex = 60;
             this.QuickSearchLabel.Text = "QuickSearch:";
-            this.toolTip1.SetToolTip(this.QuickSearchLabel, "Searches on SORTED column");
-            this.QuickSearchLabel.Visible = false;
+            this.toolTip1.SetToolTip(this.QuickSearchLabel, "Searches ALL selected and UNselected items ");
             // 
             // QuickSearchTextBox
             // 
@@ -727,8 +701,7 @@
             this.QuickSearchTextBox.Name = "QuickSearchTextBox";
             this.QuickSearchTextBox.Size = new System.Drawing.Size(100, 20);
             this.QuickSearchTextBox.TabIndex = 61;
-            this.toolTip1.SetToolTip(this.QuickSearchTextBox, "Searches on SORTED column");
-            this.QuickSearchTextBox.Visible = false;
+            this.toolTip1.SetToolTip(this.QuickSearchTextBox, "Searches ALL selected and UNselected items \r\nin last-sorted column.");
             this.QuickSearchTextBox.TextChanged += new System.EventHandler(this.QuickSearchTextBox_TextChanged);
             // 
             // ARTCCLabel
@@ -1044,7 +1017,6 @@
             this.SelectedTabControl.SelectedIndex = 0;
             this.SelectedTabControl.Size = new System.Drawing.Size(466, 338);
             this.SelectedTabControl.TabIndex = 34;
-            this.SelectedTabControl.SelectedIndexChanged += new System.EventHandler(this.SelectedTabControl_SelectedIndexChanged);
             // 
             // APTtabPage
             // 
@@ -1234,6 +1206,7 @@
             this.dgvSID.RowTemplate.Height = 24;
             this.dgvSID.Size = new System.Drawing.Size(456, 302);
             this.dgvSID.TabIndex = 2;
+            this.dgvSID.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DgvSID_CellContentClick);
             this.dgvSID.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvSID_CellValueChanged);
             // 
             // STARtabPage
@@ -1262,6 +1235,7 @@
             this.dgvSTAR.RowTemplate.Height = 24;
             this.dgvSTAR.Size = new System.Drawing.Size(456, 302);
             this.dgvSTAR.TabIndex = 2;
+            this.dgvSTAR.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DgvSTAR_CellContentClick);
             this.dgvSTAR.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvSTAR_CellValueChanged);
             // 
             // lblLogo
@@ -1379,7 +1353,7 @@
             // STARsCheckBox
             // 
             this.STARsCheckBox.AutoSize = true;
-            this.STARsCheckBox.Location = new System.Drawing.Point(13, 151);
+            this.STARsCheckBox.Location = new System.Drawing.Point(82, 133);
             this.STARsCheckBox.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
             this.STARsCheckBox.Name = "STARsCheckBox";
             this.STARsCheckBox.Size = new System.Drawing.Size(60, 17);
@@ -1405,15 +1379,30 @@
             // fileToolStripMenuItem
             // 
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.openDataFolderToolStripMenuItem1,
+            this.selectOutputFolderToolStripMenuItem1,
             this.generateFilesToolStripMenuItem,
             this.preferencesToolStripMenuItem,
-            this.openDataFolderToolStripMenuItem1,
-            this.savePreferencesToolStripMenuItem,
-            this.selectOutputFolderToolStripMenuItem1,
-            this.exitToolStripMenuItem});
+            this.exitProgramToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 22);
             this.fileToolStripMenuItem.Text = "File";
+            // 
+            // openDataFolderToolStripMenuItem1
+            // 
+            this.openDataFolderToolStripMenuItem1.Name = "openDataFolderToolStripMenuItem1";
+            this.openDataFolderToolStripMenuItem1.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
+            this.openDataFolderToolStripMenuItem1.Size = new System.Drawing.Size(227, 22);
+            this.openDataFolderToolStripMenuItem1.Text = "&Open data folder";
+            this.openDataFolderToolStripMenuItem1.Click += new System.EventHandler(this.CmdDataFolder_Click);
+            // 
+            // selectOutputFolderToolStripMenuItem1
+            // 
+            this.selectOutputFolderToolStripMenuItem1.Name = "selectOutputFolderToolStripMenuItem1";
+            this.selectOutputFolderToolStripMenuItem1.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
+            this.selectOutputFolderToolStripMenuItem1.Size = new System.Drawing.Size(227, 22);
+            this.selectOutputFolderToolStripMenuItem1.Text = "&Select output folder...";
+            this.selectOutputFolderToolStripMenuItem1.Click += new System.EventHandler(this.CmdOutputFolder_Click);
             // 
             // generateFilesToolStripMenuItem
             // 
@@ -1421,88 +1410,112 @@
             this.selectedComponentsToolStripMenuItem,
             this.entireSCTFilelongToolStripMenuItem});
             this.generateFilesToolStripMenuItem.Name = "generateFilesToolStripMenuItem";
-            this.generateFilesToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
-            this.generateFilesToolStripMenuItem.Text = "Generate files";
+            this.generateFilesToolStripMenuItem.Size = new System.Drawing.Size(227, 22);
+            this.generateFilesToolStripMenuItem.Text = "&Generate files";
             // 
             // selectedComponentsToolStripMenuItem
             // 
             this.selectedComponentsToolStripMenuItem.Name = "selectedComponentsToolStripMenuItem";
-            this.selectedComponentsToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
-            this.selectedComponentsToolStripMenuItem.Text = "Selected components";
+            this.selectedComponentsToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
+            this.selectedComponentsToolStripMenuItem.Text = "Use VRC formats";
             // 
             // entireSCTFilelongToolStripMenuItem
             // 
             this.entireSCTFilelongToolStripMenuItem.Name = "entireSCTFilelongToolStripMenuItem";
-            this.entireSCTFilelongToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
-            this.entireSCTFilelongToolStripMenuItem.Text = "Entire SCT file (long)";
+            this.entireSCTFilelongToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
+            this.entireSCTFilelongToolStripMenuItem.Text = "Use ES formats";
             // 
             // preferencesToolStripMenuItem
             // 
             this.preferencesToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.ConfirmOverwriteOfFilesToolStripMenuItem,
-            this.savePreferencesToolStripMenuItem1,
-            this.useFixesForCoordinatesToolStripMenuItem,
-            this.includeNaviGraphDataToolStripMenuItem});
+            this.toolStripMenuItem1,
+            this.includeNaviGraphDataToolStripMenuItem,
+            this.createSingleOutputFlieToolStripMenuItem,
+            this.savePreferencesToolStripMenuItem});
             this.preferencesToolStripMenuItem.Name = "preferencesToolStripMenuItem";
-            this.preferencesToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
-            this.preferencesToolStripMenuItem.Text = "Preferences";
+            this.preferencesToolStripMenuItem.Size = new System.Drawing.Size(227, 22);
+            this.preferencesToolStripMenuItem.Text = "&Preferences";
             // 
             // ConfirmOverwriteOfFilesToolStripMenuItem
             // 
             this.ConfirmOverwriteOfFilesToolStripMenuItem.CheckOnClick = true;
             this.ConfirmOverwriteOfFilesToolStripMenuItem.Name = "ConfirmOverwriteOfFilesToolStripMenuItem";
-            this.ConfirmOverwriteOfFilesToolStripMenuItem.Size = new System.Drawing.Size(208, 22);
-            this.ConfirmOverwriteOfFilesToolStripMenuItem.Text = "Confirm overwrite of files";
+            this.ConfirmOverwriteOfFilesToolStripMenuItem.Size = new System.Drawing.Size(281, 22);
+            this.ConfirmOverwriteOfFilesToolStripMenuItem.Text = "Confirm before overwriting output files";
             this.ConfirmOverwriteOfFilesToolStripMenuItem.CheckedChanged += new System.EventHandler(this.ConfirmOverwriteOfFilesToolStripMenuItem_CheckedChanged);
             // 
-            // savePreferencesToolStripMenuItem1
+            // toolStripMenuItem1
             // 
-            this.savePreferencesToolStripMenuItem1.Name = "savePreferencesToolStripMenuItem1";
-            this.savePreferencesToolStripMenuItem1.Size = new System.Drawing.Size(208, 22);
-            this.savePreferencesToolStripMenuItem1.Text = "Save preferences";
+            this.toolStripMenuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.useFixesForCoordinatesToolStripMenuItem,
+            this.drawFIXesOnDiagramsToolStripMenuItem,
+            this.drawAltitudeRestrictionsOnDiagramsToolStripMenuItem,
+            this.drawSpeedRestrictionsOnDiagramsToolStripMenuItem});
+            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(281, 22);
+            this.toolStripMenuItem1.Text = "SID/STAR diagram settings";
             // 
             // useFixesForCoordinatesToolStripMenuItem
             // 
             this.useFixesForCoordinatesToolStripMenuItem.CheckOnClick = true;
             this.useFixesForCoordinatesToolStripMenuItem.Name = "useFixesForCoordinatesToolStripMenuItem";
-            this.useFixesForCoordinatesToolStripMenuItem.Size = new System.Drawing.Size(208, 22);
-            this.useFixesForCoordinatesToolStripMenuItem.Text = "Use Fixes for coordinates";
+            this.useFixesForCoordinatesToolStripMenuItem.Size = new System.Drawing.Size(276, 22);
+            this.useFixesForCoordinatesToolStripMenuItem.Text = "Substitute FIXes for coordinates";
             this.useFixesForCoordinatesToolStripMenuItem.ToolTipText = "If checked, fixes will be used for coordinates where possible";
-            this.useFixesForCoordinatesToolStripMenuItem.CheckedChanged += new System.EventHandler(this.UseFixesForCoordinatesToolStripMenuItem_CheckedChanged);
+            this.useFixesForCoordinatesToolStripMenuItem.Click += new System.EventHandler(this.useFixesForCoordinatesToolStripMenuItem_Click);
+            // 
+            // drawFIXesOnDiagramsToolStripMenuItem
+            // 
+            this.drawFIXesOnDiagramsToolStripMenuItem.Name = "drawFIXesOnDiagramsToolStripMenuItem";
+            this.drawFIXesOnDiagramsToolStripMenuItem.Size = new System.Drawing.Size(276, 22);
+            this.drawFIXesOnDiagramsToolStripMenuItem.Text = "Draw FIXes on diagrams";
+            this.drawFIXesOnDiagramsToolStripMenuItem.Click += new System.EventHandler(this.drawFIXesOnDiagramsToolStripMenuItem_Click);
+            // 
+            // drawAltitudeRestrictionsOnDiagramsToolStripMenuItem
+            // 
+            this.drawAltitudeRestrictionsOnDiagramsToolStripMenuItem.Name = "drawAltitudeRestrictionsOnDiagramsToolStripMenuItem";
+            this.drawAltitudeRestrictionsOnDiagramsToolStripMenuItem.Size = new System.Drawing.Size(276, 22);
+            this.drawAltitudeRestrictionsOnDiagramsToolStripMenuItem.Text = "Draw Altitude restrictions on diagrams";
+            this.drawAltitudeRestrictionsOnDiagramsToolStripMenuItem.Click += new System.EventHandler(this.drawAltitudeRestrictionsOnDiagramsToolStripMenuItem_Click);
+            // 
+            // drawSpeedRestrictionsOnDiagramsToolStripMenuItem
+            // 
+            this.drawSpeedRestrictionsOnDiagramsToolStripMenuItem.Name = "drawSpeedRestrictionsOnDiagramsToolStripMenuItem";
+            this.drawSpeedRestrictionsOnDiagramsToolStripMenuItem.Size = new System.Drawing.Size(276, 22);
+            this.drawSpeedRestrictionsOnDiagramsToolStripMenuItem.Text = "Draw Speed restrictions on diagrams";
+            this.drawSpeedRestrictionsOnDiagramsToolStripMenuItem.Click += new System.EventHandler(this.drawSpeedRestrictionsOnDiagramsToolStripMenuItem_Click);
             // 
             // includeNaviGraphDataToolStripMenuItem
             // 
+            this.includeNaviGraphDataToolStripMenuItem.Checked = true;
+            this.includeNaviGraphDataToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.includeNaviGraphDataToolStripMenuItem.Name = "includeNaviGraphDataToolStripMenuItem";
-            this.includeNaviGraphDataToolStripMenuItem.Size = new System.Drawing.Size(208, 22);
-            this.includeNaviGraphDataToolStripMenuItem.Text = "Include NaviGraph Data";
+            this.includeNaviGraphDataToolStripMenuItem.Size = new System.Drawing.Size(281, 22);
+            this.includeNaviGraphDataToolStripMenuItem.Text = "Include NaviGraph Data if present";
             this.includeNaviGraphDataToolStripMenuItem.CheckedChanged += new System.EventHandler(this.IncludeNaviGraphDataToolStripMenuItem_CheckedChanged);
             // 
-            // openDataFolderToolStripMenuItem1
+            // createSingleOutputFlieToolStripMenuItem
             // 
-            this.openDataFolderToolStripMenuItem1.Name = "openDataFolderToolStripMenuItem1";
-            this.openDataFolderToolStripMenuItem1.Size = new System.Drawing.Size(187, 22);
-            this.openDataFolderToolStripMenuItem1.Text = "Select data folder...";
-            this.openDataFolderToolStripMenuItem1.Click += new System.EventHandler(this.CmdDataFolder_Click);
+            this.createSingleOutputFlieToolStripMenuItem.Checked = true;
+            this.createSingleOutputFlieToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.createSingleOutputFlieToolStripMenuItem.Name = "createSingleOutputFlieToolStripMenuItem";
+            this.createSingleOutputFlieToolStripMenuItem.Size = new System.Drawing.Size(281, 22);
+            this.createSingleOutputFlieToolStripMenuItem.Text = "One file per SCT section";
             // 
             // savePreferencesToolStripMenuItem
             // 
             this.savePreferencesToolStripMenuItem.Name = "savePreferencesToolStripMenuItem";
-            this.savePreferencesToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
+            this.savePreferencesToolStripMenuItem.Size = new System.Drawing.Size(281, 22);
             this.savePreferencesToolStripMenuItem.Text = "Save preferences...";
+            this.savePreferencesToolStripMenuItem.ToolTipText = "Preferences are always saved upon normal exit of program\r\n";
             // 
-            // selectOutputFolderToolStripMenuItem1
+            // exitProgramToolStripMenuItem
             // 
-            this.selectOutputFolderToolStripMenuItem1.Name = "selectOutputFolderToolStripMenuItem1";
-            this.selectOutputFolderToolStripMenuItem1.Size = new System.Drawing.Size(187, 22);
-            this.selectOutputFolderToolStripMenuItem1.Text = "Select output folder...";
-            this.selectOutputFolderToolStripMenuItem1.Click += new System.EventHandler(this.CmdOutputFolder_Click);
-            // 
-            // exitToolStripMenuItem
-            // 
-            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
-            this.exitToolStripMenuItem.Text = "Exit";
-            this.exitToolStripMenuItem.Click += new System.EventHandler(this.CmdExit_Click);
+            this.exitProgramToolStripMenuItem.Name = "exitProgramToolStripMenuItem";
+            this.exitProgramToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.F4)));
+            this.exitProgramToolStripMenuItem.Size = new System.Drawing.Size(227, 22);
+            this.exitProgramToolStripMenuItem.Text = "Exit Program";
             // 
             // toolsToolStripMenuItem
             // 
@@ -1517,7 +1530,8 @@
             this.iLSGeneratorToolStripMenuItem,
             this.facilitiesListToolStripMenuItem,
             this.xML2SCTToolStripMenuItem,
-            this.dMSDecDegToolStripMenuItem});
+            this.dMSDecDegToolStripMenuItem,
+            this.sCTColorMgrToolStripMenuItem});
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
             this.toolsToolStripMenuItem.Size = new System.Drawing.Size(46, 22);
             this.toolsToolStripMenuItem.Text = "Tools";
@@ -1592,6 +1606,12 @@
             this.dMSDecDegToolStripMenuItem.Text = "DMS_DecDeg";
             this.dMSDecDegToolStripMenuItem.Click += new System.EventHandler(this.DMSDecDegToolStripMenuItem_Click);
             // 
+            // sCTColorMgrToolStripMenuItem
+            // 
+            this.sCTColorMgrToolStripMenuItem.Name = "sCTColorMgrToolStripMenuItem";
+            this.sCTColorMgrToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
+            this.sCTColorMgrToolStripMenuItem.Text = "SCT Color Mgr";
+            // 
             // helpToolStripMenuItem
             // 
             this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -1627,14 +1647,6 @@
             this.selectOutputFolderToolStripMenuItem.Name = "selectOutputFolderToolStripMenuItem";
             this.selectOutputFolderToolStripMenuItem.Size = new System.Drawing.Size(32, 19);
             this.selectOutputFolderToolStripMenuItem.Text = "Select Output Folder...";
-            // 
-            // exitProgramToolStripMenuItem1
-            // 
-            this.exitProgramToolStripMenuItem1.Name = "exitProgramToolStripMenuItem1";
-            this.exitProgramToolStripMenuItem1.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.F4)));
-            this.exitProgramToolStripMenuItem1.Size = new System.Drawing.Size(32, 19);
-            this.exitProgramToolStripMenuItem1.Text = "Exit Program";
-            this.exitProgramToolStripMenuItem1.ToolTipText = "Exits this program";
             // 
             // toolStrip1
             // 
@@ -1825,13 +1837,11 @@
             this.groupBox1.Controls.Add(this.APTsCheckBox);
             this.groupBox1.Controls.Add(this.ARTCChighCheckBox);
             this.groupBox1.Controls.Add(this.NDBsCheckBox);
-            this.groupBox1.Controls.Add(this.STARNameCheckBox);
             this.groupBox1.Controls.Add(this.FIXesCheckBox);
             this.groupBox1.Controls.Add(this.STARsCheckBox);
             this.groupBox1.Controls.Add(this.VORsCheckBox);
             this.groupBox1.Controls.Add(this.AWYsCheckBox);
             this.groupBox1.Controls.Add(this.RWYsCheckBox);
-            this.groupBox1.Controls.Add(this.SIDNameCheckBox);
             this.groupBox1.Controls.Add(this.SIDsCheckBox);
             this.groupBox1.Controls.Add(this.ARTCCCheckBox);
             this.groupBox1.Location = new System.Drawing.Point(464, 304);
@@ -1860,13 +1870,20 @@
             this.UpdatingLabel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(224)))), ((int)(((byte)(192)))));
             this.UpdatingLabel.Enabled = false;
             this.UpdatingLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.UpdatingLabel.Location = new System.Drawing.Point(643, 276);
+            this.UpdatingLabel.Location = new System.Drawing.Point(644, 243);
             this.UpdatingLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.UpdatingLabel.Name = "UpdatingLabel";
             this.UpdatingLabel.Size = new System.Drawing.Size(16, 17);
             this.UpdatingLabel.TabIndex = 59;
             this.UpdatingLabel.Text = "  ";
             this.UpdatingLabel.Visible = false;
+            // 
+            // exitToolStripMenuItem
+            // 
+            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
+            this.exitToolStripMenuItem.Text = "Exit";
+            this.exitToolStripMenuItem.Click += new System.EventHandler(this.CmdExit_Click);
             // 
             // Form1
             // 
@@ -2011,7 +2028,6 @@
         private System.Windows.Forms.CheckBox AWYsCheckBox;
         private System.Windows.Forms.CheckBox SIDsCheckBox;
         private System.Windows.Forms.CheckBox ARTCCCheckBox;
-        private System.Windows.Forms.CheckBox SIDNameCheckBox;
         private System.Windows.Forms.Panel panelSUAs;
         private System.Windows.Forms.CheckBox SUA_DangerCheckBox;
         private System.Windows.Forms.CheckBox SUA_ProhibitedCheckBox;
@@ -2031,8 +2047,6 @@
         private System.Windows.Forms.ToolStripMenuItem entireSCTFilelongToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openDataFolderToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem selectOutputFolderToolStripMenuItem1;
-        private System.Windows.Forms.ToolStripMenuItem savePreferencesToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem LineGeneratorToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem arcGneratorradToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem arcGeneratorstartendToolStripMenuItem;
@@ -2044,7 +2058,6 @@
         private System.Windows.Forms.ToolStripMenuItem facilitiesListToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openDataFolderToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem selectOutputFolderToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem exitProgramToolStripMenuItem1;
         private System.Windows.Forms.ToolStrip toolStrip1;
         private System.Windows.Forms.ToolStripButton ESEToolStripButton;
         private System.Windows.Forms.ToolStripButton gridViewToolStripButton;
@@ -2055,7 +2068,6 @@
         private System.Windows.Forms.GroupBox InfoGroupBox;
         private System.Windows.Forms.ToolStripMenuItem preferencesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem ConfirmOverwriteOfFilesToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem savePreferencesToolStripMenuItem1;
         private System.Windows.Forms.GroupBox FoldersGroupBox;
         private System.Windows.Forms.TextBox MagVarTextBox;
         private System.Windows.Forms.Label label1;
@@ -2063,7 +2075,6 @@
         private System.Windows.Forms.Label CenterLonLabel;
         private System.Windows.Forms.TextBox CenterLatTextBox;
         private System.Windows.Forms.Label CenterLatLabel;
-        private System.Windows.Forms.CheckBox STARNameCheckBox;
         private System.Windows.Forms.CheckBox STARsCheckBox;
         private System.Windows.Forms.CheckBox ARTCClowCheckBox;
         private System.Windows.Forms.CheckBox ARTCChighCheckBox;
@@ -2083,7 +2094,6 @@
         private System.Windows.Forms.Button UpdateAIRACbutton;
         private System.Windows.Forms.Label UpdatingLabel;
         private System.Windows.Forms.ToolStripMenuItem dMSDecDegToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem useFixesForCoordinatesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem includeNaviGraphDataToolStripMenuItem;
         private System.Windows.Forms.CheckBox LimitAPT2ARTCCCheckBox;
         private System.Windows.Forms.Button CenterSquareButton;
@@ -2091,6 +2101,16 @@
         private System.Windows.Forms.TextBox QuickSearchTextBox;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.ToolStripMenuItem sCTColorMgrToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem createSingleOutputFlieToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem savePreferencesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem exitProgramToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem useFixesForCoordinatesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem drawFIXesOnDiagramsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem drawAltitudeRestrictionsOnDiagramsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem drawSpeedRestrictionsOnDiagramsToolStripMenuItem;
     }
 }
 

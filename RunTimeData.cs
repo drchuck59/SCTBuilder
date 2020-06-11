@@ -414,8 +414,11 @@ namespace SCTBuilder
         private static string apt = string.Empty;
         private static double centerLat = 0;
         private static double centerLon = 0;
-        private static bool useFixes;
-        private static bool useNaviGraph;
+        private static bool useFixesAsCoords;
+        private static bool drawFixesOnDiagrams;
+        private static bool drawAltRestrictsOnDiagrams;
+        private static bool drawSpeedRestrictsOnDiagrams;
+        private static bool useNaviGraphData;
         private static double northsquare = 0;
         private static double southsquare = 0;
         private static double westsquare = 0;
@@ -506,14 +509,32 @@ namespace SCTBuilder
 
         public static bool UseFixes
         {
-            get { return useFixes; }
-            set { useFixes = value; } 
+            get { return useFixesAsCoords; }
+            set { useFixesAsCoords = value; } 
+        }
+        
+        public static bool DrawFixesOnDiagrams
+        {
+            get { return drawFixesOnDiagrams; }
+            set { drawFixesOnDiagrams = value; }
+        }
+
+        public static bool DrawAltRestrictsOnDiagrams
+        {
+            get { return drawAltRestrictsOnDiagrams; }
+            set { drawAltRestrictsOnDiagrams = value; }
+        }
+
+        public static bool DrawSpeedRestrictsOnDiagrams
+        {
+            get { return drawSpeedRestrictsOnDiagrams; }
+            set { drawSpeedRestrictsOnDiagrams = value; }
         }
 
         public static bool UseNaviGraph
         {
-            get { return useNaviGraph; } 
-            set { useNaviGraph = value; }
+            get { return useNaviGraphData; } 
+            set { useNaviGraphData = value; }
         }
         public static double NorthSquare
         {
