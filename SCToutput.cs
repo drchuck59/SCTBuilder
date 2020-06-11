@@ -471,7 +471,7 @@ namespace SCTBuilder
                         else
                         {
                             CurAwy = row["AWYID"].ToString(); ;
-                            if (CurAwy == PrevAwy)                          // If the new row is the same airway...
+                            if (CurAwy != PrevAwy)                          // If the new row is the same airway...
                             {
                                 if (NavAid1.Length != 0)                  // Write the line
                                 {
