@@ -257,13 +257,12 @@ namespace SCTBuilder
         ///         where ? is the quadrant
         /// OpenAIG is [#]##:##:##? 
         /// FAA is [#]##-##-##.##?
+        /// StarDP is ?ddmmsss The decimal for 3d s is implied
         /// VRC is ?###.##.##.###  (Leading zero for latitudes)
         /// NaviGraph is ? [#]## ##.###
         /// </summary>
         {
-            // Make sure some idiot didn't send a decimal-degrees string for conversion to decimal!
             DMS = DMS.Trim();
-            if (DMS.IsNumeric()) return double.Parse(DMS);
             double result = -199; double DD; double MM; double SS; string quadrant;
             string tempDMS; double factor; string newDelim;
             if (DMS.Length > 5)
@@ -297,7 +296,7 @@ namespace SCTBuilder
                         if (DMS.Length > 7)                         // Add fraction of seconds if they exist
                         {
                             factor = (double)Math.Pow(10f, Convert.ToSingle(tempDMS.Length - 7));
-                            SS += double.Parse(tempDMS.Substring(6, 2)) / factor;
+                            SS += double.Parse(tempDMS.Substring(6)) / factor;
                         }
                     }
                     else
@@ -309,7 +308,7 @@ namespace SCTBuilder
                         if (DMS.Length > 6)                         // Add fraction of seconds if they exist
                         {
                             factor = (double)Math.Pow(10f, Convert.ToSingle(tempDMS.Length - 6));
-                            SS += double.Parse(tempDMS.Substring(5, 2)) / factor;
+                            SS += double.Parse(tempDMS.Substring(5)) / factor;
                         }
                     }
                     result = LatLongCalc.DMS2DecDeg(DD, MM, SS, quadrant);

@@ -177,6 +177,8 @@
             this.UpdateAIRACbutton = new System.Windows.Forms.Button();
             this.UpdatingLabel = new System.Windows.Forms.Label();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.oneFilePerSIDSTARToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.includeAIRPORTFIXESToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panelSUAs.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.AllMarginsNumericUpDown)).BeginInit();
             this.FilterGroupBox.SuspendLayout();
@@ -1451,7 +1453,9 @@
             this.useFixesForCoordinatesToolStripMenuItem,
             this.drawFIXesOnDiagramsToolStripMenuItem,
             this.drawAltitudeRestrictionsOnDiagramsToolStripMenuItem,
-            this.drawSpeedRestrictionsOnDiagramsToolStripMenuItem});
+            this.drawSpeedRestrictionsOnDiagramsToolStripMenuItem,
+            this.oneFilePerSIDSTARToolStripMenuItem,
+            this.includeAIRPORTFIXESToolStripMenuItem});
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
             this.toolStripMenuItem1.Size = new System.Drawing.Size(281, 22);
             this.toolStripMenuItem1.Text = "SID/STAR diagram settings";
@@ -1497,11 +1501,10 @@
             // 
             // createSingleOutputFlieToolStripMenuItem
             // 
-            this.createSingleOutputFlieToolStripMenuItem.Checked = true;
-            this.createSingleOutputFlieToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.createSingleOutputFlieToolStripMenuItem.Enabled = false;
             this.createSingleOutputFlieToolStripMenuItem.Name = "createSingleOutputFlieToolStripMenuItem";
             this.createSingleOutputFlieToolStripMenuItem.Size = new System.Drawing.Size(281, 22);
-            this.createSingleOutputFlieToolStripMenuItem.Text = "One file per SCT section";
+            this.createSingleOutputFlieToolStripMenuItem.Text = "All SCT sections in ONE file";
             // 
             // savePreferencesToolStripMenuItem
             // 
@@ -1509,6 +1512,7 @@
             this.savePreferencesToolStripMenuItem.Size = new System.Drawing.Size(281, 22);
             this.savePreferencesToolStripMenuItem.Text = "Save preferences...";
             this.savePreferencesToolStripMenuItem.ToolTipText = "Preferences are always saved upon normal exit of program\r\n";
+            this.savePreferencesToolStripMenuItem.Click += new System.EventHandler(this.savePreferencesToolStripMenuItem_Click);
             // 
             // exitProgramToolStripMenuItem
             // 
@@ -1885,6 +1889,22 @@
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.CmdExit_Click);
             // 
+            // oneFilePerSIDSTARToolStripMenuItem
+            // 
+            this.oneFilePerSIDSTARToolStripMenuItem.Checked = true;
+            this.oneFilePerSIDSTARToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.oneFilePerSIDSTARToolStripMenuItem.Name = "oneFilePerSIDSTARToolStripMenuItem";
+            this.oneFilePerSIDSTARToolStripMenuItem.Size = new System.Drawing.Size(276, 22);
+            this.oneFilePerSIDSTARToolStripMenuItem.Text = "One file per SID/STAR";
+            // 
+            // includeAIRPORTFIXESToolStripMenuItem
+            // 
+            this.includeAIRPORTFIXESToolStripMenuItem.Checked = true;
+            this.includeAIRPORTFIXESToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.includeAIRPORTFIXESToolStripMenuItem.Name = "includeAIRPORTFIXESToolStripMenuItem";
+            this.includeAIRPORTFIXESToolStripMenuItem.Size = new System.Drawing.Size(276, 22);
+            this.includeAIRPORTFIXESToolStripMenuItem.Text = "Include [AIRPORT]/[FIXES]";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2111,6 +2131,8 @@
         private System.Windows.Forms.ToolStripMenuItem drawFIXesOnDiagramsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem drawAltitudeRestrictionsOnDiagramsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem drawSpeedRestrictionsOnDiagramsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem oneFilePerSIDSTARToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem includeAIRPORTFIXESToolStripMenuItem;
     }
 }
 

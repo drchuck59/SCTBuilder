@@ -535,22 +535,32 @@ namespace SCTBuilder
         {
             DataTable SSD = Form1.SSD;
             string FullFilename = SCTcommon.GetFullPathname(FolderMgt.DataFolder, "STARDP.txt");
-            bool isSid; string Line; int Seqno = 0;
-            string SSDcode; string TransCode = string.Empty; int Loc;
-            string SSDname = string.Empty; string TransName = string.Empty;
+            bool isSid; string Line; int Seqno = 0; string Lat1; string Lon1;
+            string SSDcode; string TransCode; int Loc;
+            string SSDname; string TransitionName; string SSDID;
             using (StreamReader reader = new StreamReader(FullFilename))
             {
                 while ((Line = reader.ReadLine()) != null)
                 {
-                    if (Line.Substring(0, 1) == "D") isSid = true; else isSid = false;
+                    SSDID = Line.Substring(0, 5).Trim();
+                    if (SSDID.Substring(0, 1) == "D") isSid = true; else isSid = false;
                     Seqno += 10;
-                    // NOTE that SSDcode and SSDname will be empty except at beginning of block
-                    SSDcode = Line.Substring(38, 13).Trim();
-                    if (SSDcode.Length != 0)
+                    Lat1 = Line.Substring(13, 8).Trim();           // Latitude
+                    Lon1 = Line.Substring(21, 9).Trim();
+                    SSDname = Line.Substring(51, 110).Trim();
+                    TransitionName = string.Empty;
+                    // If present, this string identifies a new block or Transition
+                    if (SSDname.Length != 0)
                     {
-                        //  If the SSDcode is "NOT ASSIGNED", the SSD is radar-vector type
-                        // Still need to save the data, but only has the SSD full name
-                        // RNAV and Hybrids have an SSDcode and Transition(s)
+                        // If a transition, move the name to the Transition column
+                        if (SSDname.IndexOf("TRANSITION") != -1)
+                        {
+                            TransitionName = SSDname;
+                            SSDname = string.Empty;
+                        }
+                        // Get the corresponding SSDcode
+                        SSDcode = Line.Substring(38, 13).Trim();
+                        // Radar only SIDs don't get a computer code
                         if (SSDcode == "NOT ASSIGNED")
                         {
                             SSDcode = "Radar vector";
@@ -558,8 +568,8 @@ namespace SCTBuilder
                         }
                         else
                         {
-                            Loc = SSDcode.IndexOf(".");
                             // SIDS have Transitions after the name. STARS have them in front of the name.
+                            Loc = SSDcode.IndexOf(".");
                             if (isSid)
                             {
                                 TransCode = SSDcode.Substring(Loc + 1);
@@ -571,31 +581,20 @@ namespace SCTBuilder
                                 SSDcode = SSDcode.Substring(Loc + 1);
                             }
                         }
-                        // Store SSD name and Transition name separately (only one can be present)
-                        TransName = string.Empty;
-                        SSDname = Line.Substring(51, 110).Trim();
-                        if (SSDname.Length != 0)
-                        {
-                            if (SSDname.IndexOf("Transition") != -1)
-                            {
-                                TransName = SSDname;
-                                SSDname = string.Empty;
-                            }
-                        }
                     }
-                    else SSDname = TransName = string.Empty;
-
+                    else SSDname = TransitionName = SSDcode = TransCode = string.Empty;
+                    // Everything else will always be present, so save the data
                     var FixItems = new List<object>
                     {
-                        Line.Substring(0, 5).Trim(),                                // Internal ID
+                        SSDID,                                                      // Internal ID
                         Line.Substring(30,6).Trim(),                                // NavAid or Airport
                         Line.Substring(10,2).Trim(),                                // FixType incl 'AA'
-                        Conversions.String2DecDeg(Line.Substring(13, 8).Trim()),    // Latitude
-                        Conversions.String2DecDeg(Line.Substring(21, 9).Trim()),    // Longitude
+                        Conversions.String2DecDeg(Lat1),                            // Latitude
+                        Conversions.String2DecDeg(Lon1),                            // Longitude
                         SSDcode,                                                    // SSD Code
                         TransCode,                                                  // Transition Code
                         SSDname,                                                    // SSDName
-                        TransName,                                                  // TransitionName
+                        TransitionName,                                             // TransitionName
                         Seqno,                                                      // Sequence Number (mine)
                         isSid                                                       // Is a SID
                     };

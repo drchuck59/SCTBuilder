@@ -1834,5 +1834,14 @@ namespace SCTBuilder
                 SSDIDvalue = string.Empty;
             }
         }
+
+        private void savePreferencesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SetChecked();
+            SetSquareAndOffset();
+            ExitClicked = false;
+            CycleInfo.WriteINIxml();
+            SendMessage("SCT Builder preferences saved.");
+        }
     }
 }

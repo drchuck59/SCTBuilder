@@ -563,8 +563,11 @@ namespace SCTBuilder
 
             // Write the Section header and SID or STAR code (Fullname)
             string Section = "STAR"; if (IsSID) Section = "SID";
-            Debug.WriteLine("[" + Section + "]" + cr + SSDHeader(SSDcode + " (" + SSDname + ")",' '));
-            SSDlines.Add("[" + Section + "]" + cr + SSDHeader(SSDcode + " (" + SSDname + ")",' '));
+            Debug.WriteLine("[" + Section + "]");
+            Debug.WriteLine(SSDHeader(SSDcode, "(" + SSDname + ")"));
+            SSDlines.Add("[" + Section + "]");
+            SSDlines.Add(SSDHeader(SSDcode, "(" + SSDname + ")", 1, '-'));
+
             // Now loop the entire SSD to get the lines, etc.
             foreach (DataRowView SSDrow in dvSSD)
             {
@@ -592,24 +595,14 @@ namespace SCTBuilder
                 TransitionCode = SSDrow["TransitionCode"].ToString();
                 if (TransitionName.Length != 0)
                 {
-                    SSDlines.Add(SSDHeader(TransitionCode + " (" + TransitionName + ")"));
+                    SSDlines.Add(SSDHeader("", TransitionName));
                     lastFix = Lat0 = Long0 = string.Empty;      // Don't draw from previous to this
                 }
                     // Get the waypoint line
                 if ((lastFix.Length != 0) && (curFix.Length != 0) && (lastFix != curFix))
                 {
-                    if (InfoSection.UseFixes)
-                    {
-                        Debug.WriteLine(strLL + lastFix + " " + lastFix + " " + curFix + " " + curFix);
-                        SSDlines.Add(strLL + lastFix + " " + lastFix + " " + curFix + " " + curFix);
-                    }
-                    else
-                    {
-                        Debug.WriteLine(strLL + Lat0 + " " + Long0 + " " + Lat1 + " " +
-                               Long1 + "; " + lastFix + " " + curFix);
-                        SSDlines.Add(strLL + Lat0 + " " + Long0 + " " + Lat1 + " " +
-                            Long1 + "; " + lastFix + ' ' + curFix);
-                    }
+                    Debug.WriteLine(SCTstrings.SSDout(Lat0, Long0, Lat1, Long1, lastFix, curFix, InfoSection.DrawFixesOnDiagrams));
+                    SSDlines.Add(SCTstrings.SSDout(Lat0, Long0, Lat1, Long1, lastFix, curFix, InfoSection.DrawFixesOnDiagrams));
                     // Need to look up and add the ALT and Speed items here
                 }
                 // Shift the values for the next item
@@ -620,7 +613,7 @@ namespace SCTBuilder
             using (StreamWriter sw = new StreamWriter(path))
             {
                 // Write the Airports in this SSD
-                sw.WriteLine("; Airports serviced:");
+                sw.WriteLine("[AIRPORTS]");
                 Debug.WriteLine("Airports serviced:");
                 DataView dvAPT = new DataView(Form1.APT);
                 DataView dvTWR = new DataView(Form1.TWR);
@@ -653,7 +646,7 @@ namespace SCTBuilder
                 }
                 dvAPT.Dispose();
                 // Write the NavAids in this SSD
-                sw.WriteLine(cr + "Fixes Used:");
+                sw.WriteLine(cr + "[FIXES][VOR][NDB]");
                 Debug.WriteLine("Fixes Used:");
                 DataView dvFIX = new DataView(Form1.FIX);
                 DataView dvVOR = new DataView(Form1.VOR);
@@ -696,15 +689,18 @@ namespace SCTBuilder
             APTsUsed.Clear();
         }
 
-        private static string SSDHeader(string Header, char Marker = '=', int MarkerCount = 0)
+        private static string SSDHeader(string Header = "", string Comment = "", int MarkerCount = 0, char Marker = '=')
         {
-            string Mask; string result; int Pad = 27;
-            if (MarkerCount != 0) Mask = new string(Marker, MarkerCount);
-            else Mask = Marker.ToString();
-            result = Mask + Header;
-            if (MarkerCount != 0) result += Mask;
+            // RETURNS a SID/STAR header: Can be just dummy coords (no parameters) if Header string empty
+            string Mask = string.Empty; string result = string.Empty; int Pad = 27;
             string DummyCoords = "N000.00.00.000 E000.00.00.000 N000.00.00.000 E000.00.00.000";
+            if (Header.Length != 0)
+            {
+                if (MarkerCount != 0) Mask = new string(Marker, MarkerCount);
+                result = Mask + Header;                
+            }
             result = result.PadRight(Pad) + DummyCoords;
+            if (Comment.Length != 0) result += " ; " + Comment;
             return result;
         }
 
