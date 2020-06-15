@@ -572,23 +572,57 @@ namespace SCTBuilder
 
     public static class SCTstrings
     {
-        public static string VORNDBout(string[] strOut)
+
+        public static string APTout(string[] strOut, string Apt = "", string Freq = "", 
+            string Lat = "", string Lon = "", string Name = "", string Comment = "")
         {
-            string result = strOut[0] + " " + strOut[1] + " " +
-                        strOut[2] + " " + strOut[3] + " ;" + strOut[4];
+            // ACCEPTS either APT details in a list, or individually
+            // RETURNS [AIRPORT] format for airport
+            string result = string.Empty;
+            if (strOut.Count() != 0)
+            {
+                result = strOut[0].PadRight(4) + " " + strOut[1].PadRight(7) + " " + strOut[2] + " " +
+                strOut[3] + " " + " ; " + strOut[4] + " " + strOut[5];
+            }
+            else
+            {
+                result = Apt.PadRight(4) + " " + Freq.PadRight(7) + " " + Lat + " " + Lon + " " + " ;" + Name + " " + Comment;
+            }
             return result;
         }
-        public static string APTout(string[] strOut)
+
+        public static string FIXout(string[] strOut, string Fix = "", string Lat = "", string Lon = "", string Comment = "")
         {
-            string result = strOut[0] + " " + strOut[1] + " " + strOut[2] + " " +
-                            strOut[3] + " " + " ;" + strOut[4] + " " + strOut[5] + " " + strOut[6];
+            string result;
+            if (strOut.Count() != 0)
+                result = strOut[0].PadRight(5) + " " + strOut[2] + " " + strOut[3] + " ;" + strOut[4];
+            else
+                result = Fix.PadRight(5) + " " + Lat + " " + Lon + " ;" + Comment;
             return result;
         }
-        public static string FIXout(string[] strOut)
+
+        public static string VORout(string[] strOut, string Fac = "", string Freq = "", string Lat = "", 
+            string Lon = "", string Name = "")
         {
-            string result = strOut[0] + " " + strOut[2] + " " + strOut[3] + " ;" + strOut[4];
+            string result;
+            if (strOut.Count() != 0)
+                result = strOut[0].PadRight(3) + " " + strOut[1].PadRight(6) + " " + strOut[2] + " " + strOut[3] + " ;" + strOut[4];
+            else
+                result = Fac.PadRight(5) + " " + Freq.PadRight(7) + " " + Lat + " " + Lon + " ;" + Name;
             return result;
         }
+
+        public static string NDBout(string[] strOut, string Fac = "", string Freq = "", string Lat = "",
+             string Lon = "", string Name = "")
+        {
+            string result;
+            if (strOut.Count() != 0)
+                result = strOut[0].PadRight(3) + " " + strOut[1].PadRight(3) + " " + strOut[2] + " " + strOut[3] + " ;" + strOut[4];
+            else
+                result = Fac.PadRight(3) + " " + Freq.PadRight(3) + " " + Lat + " " + Lon + " ;" + Name;
+            return result;
+        }
+
         public static string RWYout(string[] strOut)
         {
             string result = strOut[0] + " " + strOut[1] + " " + strOut[2] + " " + strOut[3] + " "

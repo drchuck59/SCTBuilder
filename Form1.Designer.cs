@@ -137,6 +137,8 @@
             this.drawFIXesOnDiagramsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.drawAltitudeRestrictionsOnDiagramsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.drawSpeedRestrictionsOnDiagramsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.oneFilePerSIDSTARToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.includeAIRPORTFIXESToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.includeNaviGraphDataToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.createSingleOutputFlieToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.savePreferencesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -177,8 +179,6 @@
             this.UpdateAIRACbutton = new System.Windows.Forms.Button();
             this.UpdatingLabel = new System.Windows.Forms.Label();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.oneFilePerSIDSTARToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.includeAIRPORTFIXESToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panelSUAs.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.AllMarginsNumericUpDown)).BeginInit();
             this.FilterGroupBox.SuspendLayout();
@@ -1466,11 +1466,13 @@
             this.useFixesForCoordinatesToolStripMenuItem.Name = "useFixesForCoordinatesToolStripMenuItem";
             this.useFixesForCoordinatesToolStripMenuItem.Size = new System.Drawing.Size(276, 22);
             this.useFixesForCoordinatesToolStripMenuItem.Text = "Substitute FIXes for coordinates";
-            this.useFixesForCoordinatesToolStripMenuItem.ToolTipText = "If checked, fixes will be used for coordinates where possible";
+            this.useFixesForCoordinatesToolStripMenuItem.ToolTipText = "If checked, fixes will be used for coordinates where possible.\r\nNOT recommended f" +
+    "or new APP/DEP designs.";
             this.useFixesForCoordinatesToolStripMenuItem.Click += new System.EventHandler(this.useFixesForCoordinatesToolStripMenuItem_Click);
             // 
             // drawFIXesOnDiagramsToolStripMenuItem
             // 
+            this.drawFIXesOnDiagramsToolStripMenuItem.CheckOnClick = true;
             this.drawFIXesOnDiagramsToolStripMenuItem.Name = "drawFIXesOnDiagramsToolStripMenuItem";
             this.drawFIXesOnDiagramsToolStripMenuItem.Size = new System.Drawing.Size(276, 22);
             this.drawFIXesOnDiagramsToolStripMenuItem.Text = "Draw FIXes on diagrams";
@@ -1478,6 +1480,8 @@
             // 
             // drawAltitudeRestrictionsOnDiagramsToolStripMenuItem
             // 
+            this.drawAltitudeRestrictionsOnDiagramsToolStripMenuItem.CheckOnClick = true;
+            this.drawAltitudeRestrictionsOnDiagramsToolStripMenuItem.Enabled = false;
             this.drawAltitudeRestrictionsOnDiagramsToolStripMenuItem.Name = "drawAltitudeRestrictionsOnDiagramsToolStripMenuItem";
             this.drawAltitudeRestrictionsOnDiagramsToolStripMenuItem.Size = new System.Drawing.Size(276, 22);
             this.drawAltitudeRestrictionsOnDiagramsToolStripMenuItem.Text = "Draw Altitude restrictions on diagrams";
@@ -1485,10 +1489,34 @@
             // 
             // drawSpeedRestrictionsOnDiagramsToolStripMenuItem
             // 
+            this.drawSpeedRestrictionsOnDiagramsToolStripMenuItem.CheckOnClick = true;
+            this.drawSpeedRestrictionsOnDiagramsToolStripMenuItem.Enabled = false;
             this.drawSpeedRestrictionsOnDiagramsToolStripMenuItem.Name = "drawSpeedRestrictionsOnDiagramsToolStripMenuItem";
             this.drawSpeedRestrictionsOnDiagramsToolStripMenuItem.Size = new System.Drawing.Size(276, 22);
             this.drawSpeedRestrictionsOnDiagramsToolStripMenuItem.Text = "Draw Speed restrictions on diagrams";
             this.drawSpeedRestrictionsOnDiagramsToolStripMenuItem.Click += new System.EventHandler(this.drawSpeedRestrictionsOnDiagramsToolStripMenuItem_Click);
+            // 
+            // oneFilePerSIDSTARToolStripMenuItem
+            // 
+            this.oneFilePerSIDSTARToolStripMenuItem.Checked = true;
+            this.oneFilePerSIDSTARToolStripMenuItem.CheckOnClick = true;
+            this.oneFilePerSIDSTARToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.oneFilePerSIDSTARToolStripMenuItem.Enabled = false;
+            this.oneFilePerSIDSTARToolStripMenuItem.Name = "oneFilePerSIDSTARToolStripMenuItem";
+            this.oneFilePerSIDSTARToolStripMenuItem.Size = new System.Drawing.Size(276, 22);
+            this.oneFilePerSIDSTARToolStripMenuItem.Text = "One file per SID/STAR";
+            this.oneFilePerSIDSTARToolStripMenuItem.Click += new System.EventHandler(this.oneFilePerSIDSTARToolStripMenuItem_Click);
+            // 
+            // includeAIRPORTFIXESToolStripMenuItem
+            // 
+            this.includeAIRPORTFIXESToolStripMenuItem.Checked = true;
+            this.includeAIRPORTFIXESToolStripMenuItem.CheckOnClick = true;
+            this.includeAIRPORTFIXESToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.includeAIRPORTFIXESToolStripMenuItem.Enabled = false;
+            this.includeAIRPORTFIXESToolStripMenuItem.Name = "includeAIRPORTFIXESToolStripMenuItem";
+            this.includeAIRPORTFIXESToolStripMenuItem.Size = new System.Drawing.Size(276, 22);
+            this.includeAIRPORTFIXESToolStripMenuItem.Text = "Include [AIRPORT]/[FIXES]";
+            this.includeAIRPORTFIXESToolStripMenuItem.Click += new System.EventHandler(this.includeAIRPORTFIXESToolStripMenuItem_Click);
             // 
             // includeNaviGraphDataToolStripMenuItem
             // 
@@ -1501,6 +1529,7 @@
             // 
             // createSingleOutputFlieToolStripMenuItem
             // 
+            this.createSingleOutputFlieToolStripMenuItem.CheckOnClick = true;
             this.createSingleOutputFlieToolStripMenuItem.Enabled = false;
             this.createSingleOutputFlieToolStripMenuItem.Name = "createSingleOutputFlieToolStripMenuItem";
             this.createSingleOutputFlieToolStripMenuItem.Size = new System.Drawing.Size(281, 22);
@@ -1520,6 +1549,7 @@
             this.exitProgramToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.F4)));
             this.exitProgramToolStripMenuItem.Size = new System.Drawing.Size(227, 22);
             this.exitProgramToolStripMenuItem.Text = "Exit Program";
+            this.exitProgramToolStripMenuItem.Click += new System.EventHandler(this.exitProgramToolStripMenuItem_Click);
             // 
             // toolsToolStripMenuItem
             // 
@@ -1888,22 +1918,6 @@
             this.exitToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.CmdExit_Click);
-            // 
-            // oneFilePerSIDSTARToolStripMenuItem
-            // 
-            this.oneFilePerSIDSTARToolStripMenuItem.Checked = true;
-            this.oneFilePerSIDSTARToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.oneFilePerSIDSTARToolStripMenuItem.Name = "oneFilePerSIDSTARToolStripMenuItem";
-            this.oneFilePerSIDSTARToolStripMenuItem.Size = new System.Drawing.Size(276, 22);
-            this.oneFilePerSIDSTARToolStripMenuItem.Text = "One file per SID/STAR";
-            // 
-            // includeAIRPORTFIXESToolStripMenuItem
-            // 
-            this.includeAIRPORTFIXESToolStripMenuItem.Checked = true;
-            this.includeAIRPORTFIXESToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.includeAIRPORTFIXESToolStripMenuItem.Name = "includeAIRPORTFIXESToolStripMenuItem";
-            this.includeAIRPORTFIXESToolStripMenuItem.Size = new System.Drawing.Size(276, 22);
-            this.includeAIRPORTFIXESToolStripMenuItem.Text = "Include [AIRPORT]/[FIXES]";
             // 
             // Form1
             // 

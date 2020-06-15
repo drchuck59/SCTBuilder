@@ -56,6 +56,11 @@ namespace SCTBuilder
             WriteXmlElement(xml, "ChkVOR", SCTchecked.ChkVOR.ToString());
             WriteXmlElement(xml, "UseFixNames", InfoSection.UseFixes.ToString());
             WriteXmlElement(xml, "UseNaviGraphData", InfoSection.UseNaviGraph.ToString());
+            WriteXmlElement(xml, "OneSectionSIDSTAR", InfoSection.OneSectionSIDSTAR.ToString());
+            WriteXmlElement(xml, "DrawFixesOnDiagrams", InfoSection.DrawFixesOnDiagrams.ToString());
+            WriteXmlElement(xml, "DrawAltRestrictsOnDiagrams", InfoSection.DrawAltRestrictsOnDiagrams.ToString());
+            WriteXmlElement(xml, "DrawSpeedRestrictsOnDiagrams", InfoSection.DrawSpeedRestrictsOnDiagrams.ToString());
+            WriteXmlElement(xml, "SIDSTARhasRefs", InfoSection.UseNaviGraph.ToString());
             WriteXmlElement(xml, "NorthSquare", InfoSection.NorthSquare.ToString());
             WriteXmlElement(xml, "SouthSquare", InfoSection.SouthSquare.ToString());
             WriteXmlElement(xml, "WestSquare", InfoSection.WestSquare.ToString());
@@ -64,6 +69,8 @@ namespace SCTBuilder
             WriteXmlElement(xml, "WestOffset", InfoSection.WestOffset.ToString());
             WriteXmlElement(xml, "SouthOffset", InfoSection.SouthOffset.ToString());
             WriteXmlElement(xml, "EastOffset", InfoSection.EastOffset.ToString());
+            WriteXmlElement(xml, "CenterLatitude_Dec", InfoSection.CenterLatitude_Dec.ToString());
+            WriteXmlElement(xml, "CenterLongitude_Dec", InfoSection.CenterLongitude_Dec.ToString());
             xml.WriteEndDocument();
             xml.Close();
         }
@@ -200,7 +207,22 @@ namespace SCTBuilder
                                 InfoSection.UseFixes = Convert.ToBoolean(value);
                                 break;
                             case "UseNaviGraphData":
-                                InfoSection.UseNaviGraph = Convert.ToBoolean(value);
+                                InfoSection.UseNaviGraph = Convert.ToBoolean(value);                           
+                                break;
+                            case "OneSectionSIDSTAR":
+                                InfoSection.OneSectionSIDSTAR = Convert.ToBoolean(value);
+                                break;
+                            case "DrawFixesOnDiagrams":
+                                InfoSection.DrawFixesOnDiagrams = Convert.ToBoolean(value);
+                                break;
+                            case "DrawAltRestrictsOnDiagrams":
+                                InfoSection.DrawAltRestrictsOnDiagrams = Convert.ToBoolean(value);
+                                break;
+                            case "DrawSpeedRestrictsOnDiagrams":
+                                InfoSection.DrawSpeedRestrictsOnDiagrams = Convert.ToBoolean(value);
+                                break;
+                            case "SIDSTARhasRefs":
+                                InfoSection.SIDSTARhasRefs = Convert.ToBoolean(value);
                                 break;
                             case "NorthSquare":
                                 InfoSection.NorthSquare = Convert.ToDouble(value);
@@ -225,6 +247,12 @@ namespace SCTBuilder
                                 break;
                             case "EastOffset":
                                 InfoSection.EastOffset = Convert.ToDouble(value);
+                                break;
+                            case "CenterLatitude_Dec":
+                                InfoSection.CenterLatitude_Dec = Convert.ToDouble(value);
+                                break;
+                            case "CenterLongitude_Dec":
+                                InfoSection.CenterLongitude_Dec = Convert.ToDouble(value);
                                 break;
                             default:
                                 break;

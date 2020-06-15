@@ -188,6 +188,7 @@ namespace SCTBuilder
         {
             Debug.WriteLine("Setting Form1 Defaults...");
             UpdateFolderMgt(toFolderMgt: false);
+            LoadMenuPreferences();
             if (LoadARTCCComboBox() != 0)           // Populates the combobox
             {
                 UpdateARTCCComboBox();              // Sets the combobox to the last Sponsor ARTCC
@@ -201,9 +202,25 @@ namespace SCTBuilder
             gridViewToolStripButton.Enabled = true;
             CheckARTCCAsCenterButton();
             CheckARTCC2SquareButton();
+            LoadCenterCoords();
             CenterAPTButton.Enabled = AirportComboBox.SelectedIndex != -1;
             GetChecked();
             TestWriteSCT();
+        }
+
+        private void LoadCenterCoords()
+        {
+            if (InfoSection.CenterLatitude_Dec != 0) 
+                CenterLatTextBox.Text = InfoSection.CenterLatitude_SCT;
+            if (InfoSection.CenterLongitude_Dec != 0)
+                CenterLonTextBox.Text = InfoSection.CenterLongitude_SCT;
+        }
+
+        private void LoadMenuPreferences()
+        {
+            drawFIXesOnDiagramsToolStripMenuItem.Checked = InfoSection.DrawFixesOnDiagrams;
+            drawAltitudeRestrictionsOnDiagramsToolStripMenuItem.Checked = InfoSection.DrawAltRestrictsOnDiagrams;
+            drawSpeedRestrictionsOnDiagramsToolStripMenuItem.Checked = InfoSection.DrawSpeedRestrictsOnDiagrams;
         }
 
         private int LoadARTCCComboBox()
@@ -1788,6 +1805,10 @@ namespace SCTBuilder
         private void useFixesForCoordinatesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             InfoSection.UseFixes = useFixesForCoordinatesToolStripMenuItem.Checked;
+            if (InfoSection.UseFixes)
+                SendMessage("NOTE - a coordinate in a FIX, VOR, or NDB list differs" + cr +
+                    " from same NavAid coord in a SID/STAR definition." + cr +
+                    " With new formats, plotting by Fix/NavAid is no longer recommended.");
         }
 
         private void drawFIXesOnDiagramsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1842,6 +1863,25 @@ namespace SCTBuilder
             ExitClicked = false;
             CycleInfo.WriteINIxml();
             SendMessage("SCT Builder preferences saved.");
+        }
+
+        private void oneFilePerSIDSTARToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            InfoSection.OneSectionSIDSTAR = oneFilePerSIDSTARToolStripMenuItem.Checked;
+        }
+
+        private void includeAIRPORTFIXESToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            InfoSection.SIDSTARhasRefs = includeAIRPORTFIXESToolStripMenuItem.Checked;
+        }
+
+        private void exitProgramToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SetChecked();
+            SetSquareAndOffset();
+            ExitClicked = true;
+            CycleInfo.WriteINIxml();
+            Application.Exit();
         }
     }
 }

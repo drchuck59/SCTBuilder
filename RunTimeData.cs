@@ -232,8 +232,8 @@ namespace SCTBuilder
                     3,13, 1,11, 0, 8, 0, 6, 1, 4, 3 },
             // Ascii 99 (c)
             new int[] {14,18,
-                   15,11,13,13,11,14, 8,14, 6,13, 4,11, 3, 8, 3, 6, 4, 3, 6, 1, 8, 0,11,
-                    0,13, 1,15, 3 },
+                   15,11, 13,13, 11,14, 8,14, 6,13, 4,11, 3,8, 3,6, 4,3, 6,1, 8,0,
+                11,0, 13,1, 15,3 },
             // Ascii 100 (d)
             new int[] {17,19,
                    15,21,15, 0,-1,-1,15,11,13,13,11,14, 8,14, 6,13, 4,11, 3, 8, 3, 6, 4,
@@ -295,11 +295,11 @@ namespace SCTBuilder
             new int[] {5,16, 2,14, 8, 0,-1,-1,14,14, 8, 0 },
             // Ascii 119 (w)
             new int[] {11,22,
-                    3,14, 7, 0,-1,-1,11,14, 7, 0,-1,-1,11,14,15, 0,-1,-1,19,14,15, 0 },
+                    3,14, 7,0, -1,-1, 11,14, 7,0, -1,-1, 11,14, 15,0, -1,-1, 19,14, 15,0 },
             // Ascii 120 (x)
             new int[] {5,17, 3,14,14, 0,-1,-1,14,14, 3, 0 },
             // Ascii 121 (y)
-            new int[] {9,16, 2,14, 8, 0,-1,-1,14,14, 8, 0, 6,-4, 4,-6, 2,-7, 1,-7 },
+            new int[] {9,16, 2,14, 8,0, -1,-1, 14,14, 8,0, 6,-4, 4,-6, 2,-7, 1,-7 },
             // 90 Ascii 122 (z)
             new int[] {8,17, 14,14, 3, 0,-1,-1, 3,14,14,14,-1,-1, 3, 0,14, 0 },
             // Ascii 123 ({)
@@ -321,19 +321,77 @@ namespace SCTBuilder
                     3,6, 3,8, 4,11, 6,12, 8,12, 10,11, 14,8, 16,7, 18,7, 20,8, 21,10,
                     -1,-1, 3,8, 4,10, 6,11, 8,11, 10,10, 14,7, 16,6, 18,6, 20,7, 21,10, 21,12},
         };
-        public static int[][] Symbol = new int[][]
-            {
-            // 0 <4 point star>
-            new int[] { 9, 30,
-                    1,15, 12,18, 15,30, 18,18, 30,15, 18,12, 15,1, 12,12, 1,15},
-            // 1 <5 point star>
-            new int[] { 11, 30,
-               1,18, 12,18, 15,30, 18,18, 30,18, 18,12, 23,1, 15,7, 7,1, 12,12, 1,18 },
-            // 2 <Diamond>
-            new int[] { 5, 30,
-                1,15, 15,30, 30,15, 15,1, 1,15 },
-            };
     }
+
+    public class MapSymbols
+    {
+        // At Scale = 1, 1 unit = 30 seconds DMS
+        // First value is # of vectors, second is width, next pair is center
+        // Triangle - RNAV Fix
+        public static int[] FIX = new int[]
+        { 4, 22, 4,6, 15,25, 26,6, 4,6 };
+        // VOR symbol - hexagon
+        public static int[] VOR = new int[]
+            {7, 21, 5,15, 10,23, 20,23, 26,15, 20,7, 10,7, 5,15};
+        // VORTAC - hexagon with bold angled lines
+        public static int[] VORTAC = new int[]
+            {16, 23, 5,15, 10,23, 20,23, 26,15, 20,7, 10,7, 5,15
+            -1,-1, 4,16, 9,23, -1,-1, 21,23, 26,16, -1,-1, 6,6, 20,6};
+        // TACAN - outline of the VORTAC
+        public static int[] TACAN = new int[]
+            {13, 25, 5,15, 3,17, 8,25, 10,23, 20,22, 22,25, 17,28,
+            26,15, 20,7, 20,5, 10,5, 10,7, 5,15};
+        // VOR-DME - hexagon inside a square
+        public static int[] VORDME = new int[]
+            {13, 21, 5,15, 10,23, 20,23, 26,15, 20,7, 10,7, 5,15, 
+            -1,-1, 5,7, 5,23, 26,23, 26,7, 5,7};
+        // DME - square
+        public static int[] DME = new int[]
+            {5, 21,  5,7, 5,23, 26,23, 26,7, 5,7};
+        // Waypoint - weird star
+        public static int[] WAYPOINT = new int[]
+            {53, 24,  
+                4,16, 15,27, 26,16, 15,5, 4,16, -1,-1, 12,23, 15,26, 18,23, -1,-1, 
+                22,19, 25,16, 22,13, -1,-1, 12,9, 15,6, 18,9, -1,-1, 8,19, 5,16, 
+                8,13, -1 -1, 6,16, 7,17, 7,15, 6,16, -1,-1, 14,24, 15,25, 16,24, 
+                14,24, -1,-1, 23,15, 23,17, 18,24, 23,15, -1,-1, 14,8, 16,8, 15,7,
+                14,8, -1,-1, 3,16, 4,16, -1,-1, 15,27, 15,28, -1,-1, 26,16, 27,16,
+                -1,-1, 15,4, 15,5
+            };
+        // NDB - all
+        public static int[] NDB = new int[]
+        {   66, 22, 
+            14,16, 15,16, 16,14, 14,16, -1,-1, 11,14, 11,16, 14,19, 16,19, 19,16, 
+            19,14, 16,11, 14,11, 11,14, -1,-1, 9,13, 9,17, 11,19, 14,21, 16,21, 
+            19,19, 21,17, 21,13, 19,11, 16,9, 14,9, 11,11, 9,13, -1,-1, 7,15, 
+            8,19, 10,21, 11,22, 15,23, 18,22, 20,21, 22,19, 23,15, 22,11, 18,7, 
+            15,6, 12,7, 10,9, 8,11, 7,15, -1,-1, 4,15, 5,17, 6,20, 8,22, 
+            11,24, 15,25, 19,24, 22,22, 24,20, 25,17, 26,15, 25,13, 24,9, 19,5, 
+            15,4, 11,5, 9,6, 6,9, 5,13, 4,15
+        };
+        // NDB - all
+        public static int[] NDBDME = new int[]
+        {   72, 22, 
+            14,16, 15,16, 16,14, 14,16, -1,-1, 11,14, 11,16, 14,19, 16,19, 19,16, 
+            19,14, 16,11, 14,11, 11,14, -1,-1, 9,13, 9,17, 11,19, 14,21, 16,21, 
+            19,19, 21,17, 21,13, 19,11, 16,9, 14,9, 11,11, 9,13, -1,-1, 7,15, 
+            8,19, 10,21, 11,22, 15,23, 18,22, 20,21, 22,19, 23,15, 22,11, 18,7, 
+            15,6, 12,7, 10,9, 8,11, 7,15, -1,-1, 4,15, 5,17, 6,20, 8,22, 
+            11,24, 15,25, 19,24, 22,22, 24,20, 25,17, 26,15, 25,13, 24,9, 19,5, 
+            15,4, 11,5, 9,6, 6,9, 5,13, 4,15, -1,-1, 4,4, 4,25, 26,25, 
+            4,25, 4,4
+        };
+        // No map relationship
+        public static int[] Octagon = new int[]
+            {9, 30, 1,10, 1,20, 10,30, 20,30, 30,20, 30,10, 20,1, 10,1, 1,10 };
+        public static int[] Star4Pt = new int[]
+            { 9, 30, 1,15, 12,18, 15,30, 18,18, 30,15, 18,12, 15,1, 12,12, 1,15};
+        public static int[] Star5Pt = new int[]
+            { 11, 30, 1,18, 12,18, 15,30, 18,18, 30,18, 18,12, 23,1, 15,7, 7,1, 12,12, 1,18 };
+        public static int[] Diamond = new int[]
+            { 5, 30, 1,15, 15,30, 30,15, 15,1, 1,15 };
+    }
+
     public class TextColors
     {
         public static string RWYTextColor { get; set; }
@@ -418,6 +476,8 @@ namespace SCTBuilder
         private static bool drawFixesOnDiagrams;
         private static bool drawAltRestrictsOnDiagrams;
         private static bool drawSpeedRestrictsOnDiagrams;
+        private static bool oneSectionSidStar;
+        private static bool sIDSTARhasRefs;
         private static bool useNaviGraphData;
         private static double northsquare = 0;
         private static double southsquare = 0;
@@ -536,6 +596,19 @@ namespace SCTBuilder
             get { return useNaviGraphData; } 
             set { useNaviGraphData = value; }
         }
+
+        public static bool OneSectionSIDSTAR
+        {
+            get { return oneSectionSidStar; }
+            set { oneSectionSidStar = value; }
+        }
+
+        public static bool SIDSTARhasRefs
+        {
+            get { return sIDSTARhasRefs; }
+            set { sIDSTARhasRefs = value; }
+        }
+
         public static double NorthSquare
         {
             get { return northsquare; }

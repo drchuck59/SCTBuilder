@@ -260,7 +260,7 @@ namespace SCTBuilder
                     strOut[3] = Conversions.DecDeg2SCT(Convert.ToSingle(row["Longitude"]), false);
                     strOut[4] = row["Name"].ToString();
                     if (!(strOut[2] + strOut[3]).Contains("-1 "))      // Do NOT write VORs having no fix
-                        sw.WriteLine(SCTstrings.VORNDBout(strOut));
+                        sw.WriteLine(SCTstrings.VORout(strOut));
                 }
                 dataView.Dispose();
             }
@@ -288,7 +288,7 @@ namespace SCTBuilder
                     LineOut = strOut[0] + " " + strOut[1] + " " +
                         strOut[2] + " " + strOut[3] + " ;" + strOut[4];
                     if (!(strOut[2] + strOut[3]).Contains("-1 "))      // Do NOT write VORs having no fix
-                        sw.WriteLine(SCTstrings.VORNDBout(strOut));
+                        sw.WriteLine(SCTstrings.NDBout(strOut));
                 }
                 dataView.Dispose();
             }
@@ -349,7 +349,7 @@ namespace SCTBuilder
         }
         private static void WriteFixes(string path)
         {
-            string[] strOut = new string[5];
+            string[] strOut = new string[4];
             DataTable FIX = Form1.FIX;
             DataView dataView = new DataView(FIX)
             {
@@ -366,7 +366,7 @@ namespace SCTBuilder
                     strOut[2] = Conversions.DecDeg2SCT(Convert.ToSingle(row["Latitude"]), true);
                     strOut[3] = Conversions.DecDeg2SCT(Convert.ToSingle(row["Longitude"]), false);
                     strOut[4] = row["Use"].ToString();
-                    sw.WriteLine(SCTstrings.FIXout(strOut));
+                    sw.WriteLine(SCTstrings.FIXout(strOut));  // Uses 0, 2, 3, and 4
                 }
             }
             dataView.Dispose();
@@ -682,7 +682,7 @@ namespace SCTBuilder
                     }
                 }
                 if ((Latitude != 0) && (Longitude != 0))
-                    sw.WriteLine(Hershey.DrawHF(FixName, Latitude, Longitude, Angle, Scale));
+                    sw.WriteLine(Hershey.WriteHF(FixName, Latitude, Longitude, Angle, Scale));
             }
             dvFIX.Dispose();
             dvVOR.Dispose();

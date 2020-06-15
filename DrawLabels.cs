@@ -228,7 +228,7 @@ namespace SCTBuilder
             double Brg = Convert.ToDouble(BearingTextBox.Text);
             double Scale = Convert.ToDouble(ScaleTextBox.Text);
             double test = InfoSection.NMperDegreeLongitude;
-            OutputTextBox.Text += Hershey.DrawHF(LabelTextBox.Text, Lat1, Lon1, Brg, Scale);
+            OutputTextBox.Text += Hershey.WriteHF(LabelTextBox.Text, Lat1, Lon1, Brg + InfoSection.MagneticVariation, Scale);
         }
 
         private void ClearOutputButton_Click(object sender, EventArgs e)
