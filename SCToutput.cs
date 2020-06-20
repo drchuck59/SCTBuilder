@@ -12,6 +12,7 @@ using Mono.Cecil;
 using System.Diagnostics;
 using System.Collections.Specialized;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using MySqlX.XDevAPI.Relational;
 
 namespace SCTBuilder
 {
@@ -93,7 +94,7 @@ namespace SCTBuilder
             {
                 path = CheckFile("AirwayLow");
                 Debug.WriteLine("Low AirWays...");
-                WriteAWY(path, LOWawy: true);
+                WriteAWY(path, IsLow: true);
                 TextFiles.Add(path);
             }
 
@@ -101,7 +102,7 @@ namespace SCTBuilder
             {
                 path = CheckFile("AirwayHigh");
                 Debug.WriteLine("High AirWays...");
-                WriteAWY(path, LOWawy: false);
+                WriteAWY(path, IsLow: false);
                 TextFiles.Add(path);
             }
             if (SCTchecked.ChkSID)
@@ -404,11 +405,14 @@ namespace SCTBuilder
                     strOut[1] = row["EndIdentifier"].ToString().Trim().PadRight(3);
                     MagBHdg = Convert.ToDouble(row["BaseHeading"]) + InfoSection.MagneticVariation;
                     if (MagBHdg > 360) MagBHdg %= 360;
-                    else if (MagBHdg < 0) MagBHdg += 360 % 360;
+                    else if (MagBHdg < 0) 
+                        MagBHdg = (MagBHdg + 360) % 360;
+                    if (MagBHdg == 0) MagBHdg = 360;
                     strOut[2] = Convert.ToString(MagBHdg).PadRight(3);
                     MagEHdg = Convert.ToDouble(row["EndHeading"]) + InfoSection.MagneticVariation;
                     if (MagEHdg > 360) MagEHdg %= 360;
-                    else if (MagEHdg < 0) MagEHdg += 360 % 360;
+                    else if (MagBHdg < 0) MagEHdg = (MagEHdg + 360) % 360;
+                    if (MagBHdg == 0) MagBHdg = 360;
                     strOut[3] = Convert.ToString(MagEHdg).PadRight(3);
                     strOut[4] = Conversions.DecDeg2SCT(Convert.ToSingle(row["Latitude"]), true);
                     strOut[5] = Conversions.DecDeg2SCT(Convert.ToSingle(row["Longitude"]), false);
@@ -423,81 +427,45 @@ namespace SCTBuilder
             }
             dvRWY.Dispose();
         }
-        private static void WriteAWY(string path, bool LOWawy = true)
+        private static void WriteAWY(string path, bool IsLow)
         {
             DataTable AWY = Form1.AWY;
-            string CurAwy = string.Empty; string PrevAwy = string.Empty;
+            string Awy0 = string.Empty; string Awy1 = string.Empty; 
             string NavAid0 = string.Empty; string NavAid1 = string.Empty;
-            string Lat0 = string.Empty; string Long0 = string.Empty;
-            string Lat1 = string.Empty; string Long1 = string.Empty;
-            string filter = "[Selected] AND ";
-            if (LOWawy)
-            {
-                filter += "( ( ([MinEnrAlt] > -1) AND ([MinEnrAlt] < 18000) ) OR ( ([MaxAuthAlt]> -1) AND ([MaxAuthAlt] < 18000) ) )";
-            }
-            else
-            {
-                filter += "( ( ([MinEnrAlt] > -1) AND ([MinEnrAlt] >= 18000) ) OR ( ([MaxAuthAlt]> -1) AND ([MaxAuthAlt] >= 18000) ) )";
-            }
-            DataView AWYView = new DataView(AWY)
+            string Lat0 = string.Empty; string Lat1 = string.Empty;
+            string Lon0 = string.Empty; string Lon1 = string.Empty;
+            bool IsBreak = false;
+            string filter = "[Selected]";
+            if (IsLow) filter += " AND [IsLow]";
+            else filter += " AND NOT [IsLow]";
+            DataView dvAWY = new DataView(AWY)
             {
                 RowFilter = filter,
                 Sort = "AWYID, Sequence",
             };
+            Debug.WriteLine("Found " + dvAWY.Count + " rows");
             using (StreamWriter sw = new StreamWriter(path))
             {
                 sw.WriteLine(CycleHeader);
-                if (LOWawy) sw.WriteLine("[LOW AIRWAY]");
+                if (IsLow) sw.WriteLine("[LOW AIRWAY]");
                 else sw.WriteLine("[HIGH AIRWAY]");
-                foreach (DataRowView row in AWYView)
+                foreach (DataRowView rowAWY in dvAWY)
                 {
-                    if (AWYView.Count != 0)
-                    {
-                        if (CurAwy.Length == 0)                               // Initialize loop
-                        {
-                            CurAwy = row["AWYID"].ToString();
-                            NavAid0 = row["NAVAID"].ToString();
-                            Lat0 = Conversions.DecDeg2SCT(Convert.ToSingle(row["Latitude"]), true);
-                            Long0 = Conversions.DecDeg2SCT(Convert.ToSingle(row["Longitude"]), false);
-                            PrevAwy = CurAwy;
-                        }
-                        else
-                        {
-                            CurAwy = row["AWYID"].ToString(); ;
-                            if (CurAwy != PrevAwy)                          // If the new row is the same airway...
-                            {
-                                if (NavAid1.Length != 0)                  // Write the line
-                                {
-                                    string str = new string(' ', 27 - CurAwy.Length);
-                                    if ((NavAid0.Length != 0) && (NavAid1.Length != 0))     // For the rare occurence of an empty row NavAid, e.g., J1
-                                    {
-                                        sw.WriteLine(SCTstrings.AWYout(CurAwy, Lat0, Long0, Lat1, Long1, NavAid0, NavAid1));
-                                    }
-                                    NavAid0 = NavAid1;
-                                    Lat0 = Lat1;
-                                    Long0 = Long1;
-                                    NavAid1 = string.Empty;
-                                }
-                                else
-                                {
-                                    NavAid1 = row["NAVAID"].ToString();
-                                    Lat1 = Conversions.DecDeg2SCT(Convert.ToSingle(row["Latitude"]), true);
-                                    Long1 = Conversions.DecDeg2SCT(Convert.ToSingle(row["Longitude"]), false);
-                                }
-                            }
-                            else
-                            {
-                                PrevAwy = CurAwy;                           // This is a new airway
-                                NavAid0 = row["NAVAID"].ToString();
-                                Lat0 = Conversions.DecDeg2SCT(Convert.ToSingle(row["Latitude"]), true);
-                                Long0 = Conversions.DecDeg2SCT(Convert.ToSingle(row["Longitude"]), false);
-                                NavAid1 = string.Empty;
-                            }
-                        }
-                    }
+                    Awy1 = rowAWY["AWYID"].ToString();
+                    NavAid1 = rowAWY["NAVAID"].ToString();
+                    Lat1 = Conversions.DecDeg2SCT(Convert.ToSingle(rowAWY["Latitude"]), true);
+                    Lon1 = Conversions.DecDeg2SCT(Convert.ToSingle(rowAWY["Longitude"]), false);
+                    // Continuing segment -is this a break in airway?
+                    IsBreak = (bool)rowAWY["IsBreak"];
+                    if ((Awy1 == Awy0) && !IsBreak)
+                        sw.WriteLine(SCTstrings.AWYout(Awy1, Lat0, Lon0, Lat1, Lon1, NavAid0, NavAid1));
+                    NavAid0 = NavAid1;
+                    Lat0 = Lat1;
+                    Lon0 = Lon1;
+                    Awy0 = Awy1;
                 }
             }
-            AWYView.Dispose();
+            dvAWY.Dispose();
         }
 
         private static void WriteSIDSTAR(bool IsSID)
@@ -714,7 +682,7 @@ namespace SCTBuilder
             if (Header.Length != 0)
             {
                 if (MarkerCount != 0) Mask = new string(Marker, MarkerCount);
-                result = Mask + Header;                
+                result = (Mask + Header).Trim();
             }
             result = result.PadRight(Pad) + DummyCoords;
             if (Comment.Length != 0) result += " ; " + Comment;

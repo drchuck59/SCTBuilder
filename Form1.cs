@@ -137,25 +137,20 @@ namespace SCTBuilder
             UpdateCycleInfoOnForm();
             SetForm1Defaults();
             UpdateEngineers();
+            UpdateLabel("");
         }
 
-        private void UpdateCycleInfoOnForm(bool visible = true, string message = "")
+        public void UpdateCycleInfoOnForm()
         {
-            if (message.Length == 0)
+            if (CycleInfo.AIRAC == 1501)
             {
-                if (CycleInfo.AIRAC == 1501)
-                {
-                    CycleInfoLabel.Text = "No Active Cycle Data!";
-                }
-                else
-                {
-                    CycleInfoLabel.Text = CycleInfo.BuildCycleText();
-                }
+                CycleInfoLabel.Text = "No Active Cycle Data!";
             }
-            else CycleInfoLabel.Text = message;
-            CycleInfoLabel.Visible = visible;
+            else
+            {
+                CycleInfoLabel.Text = CycleInfo.BuildCycleText();
+            }
             CycleInfoLabel.Refresh();
-            Refresh();
         }
 
         private int LoadFAATextData()
@@ -165,7 +160,9 @@ namespace SCTBuilder
             // This also confirms that the properly named folder does indeed contain data
             if (result != -1)
             {
+                CycleInfo.AIRAC = result;
                 CycleInfo.CycleDateFromAIRAC(result, true);     // Save the cycle information
+                UpdateCycleInfoOnForm();
                 CallNASRread();             // Read all the text files
             }
             return result;
@@ -201,7 +198,6 @@ namespace SCTBuilder
             else ClearAirportComboBox();
             gridViewToolStripButton.Enabled = true;
             CheckARTCCAsCenterButton();
-            CheckARTCC2SquareButton();
             LoadCenterCoords();
             CenterAPTButton.Enabled = AirportComboBox.SelectedIndex != -1;
             GetChecked();
@@ -210,7 +206,7 @@ namespace SCTBuilder
 
         private void LoadCenterCoords()
         {
-            if (InfoSection.CenterLatitude_Dec != 0) 
+            if (InfoSection.CenterLatitude_Dec != 0)
                 CenterLatTextBox.Text = InfoSection.CenterLatitude_SCT;
             if (InfoSection.CenterLongitude_Dec != 0)
                 CenterLonTextBox.Text = InfoSection.CenterLongitude_SCT;
@@ -296,7 +292,7 @@ namespace SCTBuilder
         private void ClearAirportComboBox()
         {
             AirportComboBox.DataSource = null;
-            UseARTCCAsSquareButton.Enabled = CenterARTCCButton.Enabled = false;
+            CenterARTCCButton.Enabled = false;
         }
 
         private void UpdateAirportComboBox()
@@ -337,7 +333,6 @@ namespace SCTBuilder
                 SetChecked();               // Save all checkboxes to COMMON
                 SetSquareAndOffset();       // Save Square and offset to COMMON
                 SetFilterBy();              // Save Lat-Lon filter limits to COMMON
-                UpdatingLabel.Visible = true;
                 Refresh();
                 FilterBy.Method = "Square";
                 string filter;
@@ -440,7 +435,7 @@ namespace SCTBuilder
                     }
                 }
                 SelectedTabControl.SelectedTab = SelectedTabControl.TabPages[lastTab];
-                UpdatingLabel.Visible = false;
+                UpdateLabel("");
                 Refresh();
                 SCTtoolStripButton.Enabled = true;
             }
@@ -498,44 +493,52 @@ namespace SCTBuilder
 
         private int SelectAWYs()
         {
-            // Always select all airways in the selection box
+            int MaxSeqNo; int MinSeqNo; int MaxSelSeqNo; int MinSelSeqNo;
+            string awy1; string awyFilter;
+            string seqFilter = " AND ([Sequence] = ";
+            // Set the filter
             FilterBy.Method = "Square";
             string filter = SetFilter();
-            string awy1; int SeqNo;
+            // Clear prior selected
             DataView dvAWY = new DataView(AWY);
             ClearSelected(dvAWY);
+            // Apply the square filter
             dvAWY.RowFilter = filter;
             int result = dvAWY.Count;
-            UpdateLabel("Selecting " + result + " airways...");
+            UpdateLabel("Selecting " + result + " airway segmentss...");
+            // Select all components inside the square
             SetSelected(dvAWY, true);
+            // This filter shouldn't do anything...
             dvAWY.RowFilter = "[Selected]";
             result = dvAWY.Count;
-            UpdateLabel("Validating " + result + " airways...");
+            UpdateLabel("Selected " + result + " airway segments...");
+            // Build a unique list of airways
             DataTable dtAWYcheck = dvAWY.ToTable(true, "AWYID");
+            // Loop the list of Airways to extend a leg beyond the square...
             foreach (DataRow dataRow in dtAWYcheck.Rows)
             {
+                // change filter to just one airway
                 awy1 = dataRow[0].ToString();
-                dvAWY.RowFilter = "[SELECTED] and [AWYID] = '" + awy1 + "'";
-                Debug.WriteLine("Testing " + awy1 + " has " + dvAWY.Count + " rows.");
-                if (dvAWY.Count == 1)
+                awyFilter = "([AWYID] = '" + awy1 + "')";
+                dvAWY.RowFilter = awyFilter;
+                // Get the range of sequence numbers
+                MinSeqNo = SCTcommon.GetMinDataView(dvAWY, "Sequence");
+                MaxSeqNo = SCTcommon.GetMaxDataView(dvAWY, "Sequence");
+                // Filter out the SELECTED for the SELECTED range of sequence numbers
+                dvAWY.RowFilter = "[Selected] AND " + awyFilter;
+                MinSelSeqNo = SCTcommon.GetMinDataView(dvAWY, "Sequence");
+                MaxSelSeqNo = SCTcommon.GetMaxDataView(dvAWY, "Sequence");
+                // Extend one leg outside the square, if able (Doesn't matter if only one waypoint found)
+                if (awy1 == "B9") Debug.WriteLine("Found B9");
+                if (MinSeqNo < MinSelSeqNo)
                 {
-                    SeqNo = (int)dvAWY[0]["Sequence"];
-                    // Add the next leg unless it's the last leg
-                    dvAWY.RowFilter = "([AWYID] = '" + awy1 + "') AND " +
-                    "([Sequence] = " + (SeqNo + 10).ToString() + ")";
-                    if (dvAWY.Count != 0)
-                    {
-                        dvAWY[0]["SELECTED"] = true;
-                        SelectAWYNavaid(dvAWY[0]["NAVAID"].ToString());
-                    }
-                    // As long as it not the first waypoint, add the prior leg
-                    if (SeqNo != 10)
-                    {
-                        dvAWY.RowFilter = "([AWYID] = '" + awy1 + "') AND " +
-                        "([Sequence] = " + (SeqNo - 10).ToString() + ")";
-                        dvAWY[0]["SELECTED"] = true;
-                        SelectAWYNavaid(dvAWY[0]["NAVAID"].ToString());
-                    }
+                    dvAWY.RowFilter = awyFilter + seqFilter + (MinSelSeqNo - 10).ToString() + ")";
+                    SetSelected(dvAWY);
+                }
+                if (MaxSeqNo > MaxSelSeqNo)
+                {
+                    dvAWY.RowFilter = awyFilter + seqFilter + (MaxSelSeqNo + 10).ToString() + ")";
+                    SetSelected(dvAWY);
                 }
             }
             // Clean up
@@ -1144,7 +1147,6 @@ namespace SCTBuilder
                     MessageBoxButtons buttons = MessageBoxButtons.OK;
                     MessageBox.Show(Msg, caption, buttons);
                     FolderMgt.DataFolder = string.Empty;
-                    CycleInfoLabel.Text = "Choose folder to contain FAA text data";
                     e.Cancel = true;
                 }
             }
@@ -1167,7 +1169,6 @@ namespace SCTBuilder
             else ClearAirportComboBox();
             TestWriteSCT();
             CheckARTCCAsCenterButton();
-            CheckARTCC2SquareButton();
         }
 
         private void CheckARTCCAsCenterButton()
@@ -1175,10 +1176,6 @@ namespace SCTBuilder
             CenterARTCCButton.Enabled = ARTCCComboBox.SelectedIndex != -1;
         }
 
-        private void CheckARTCC2SquareButton()
-        {
-            UseARTCCAsSquareButton.Enabled = ARTCCComboBox.SelectedIndex != -1;
-        }
         private void AirportComboBox_Validated(object sender, EventArgs e)
         {
             if (AirportComboBox.SelectedIndex != -1)
@@ -1402,7 +1399,6 @@ namespace SCTBuilder
                     SouthLimitTextBox.Text = Conversions.DecDeg2SCT(SLat, true);
                 }
             }
-            CheckARTCC2SquareButton();
             CheckARTCCAsCenterButton();
         }
 
@@ -1432,7 +1428,6 @@ namespace SCTBuilder
                     NorthLimitTextBox.Text = Conversions.DecDeg2SCT(NLat, true);
                 }
             }
-            CheckARTCC2SquareButton();
             CheckARTCCAsCenterButton();
         }
 
@@ -1462,7 +1457,6 @@ namespace SCTBuilder
                     WestLimitTextBox.Text = Conversions.DecDeg2SCT(WLon, false);
                 }
             }
-            CheckARTCC2SquareButton();
             CheckARTCCAsCenterButton();
         }
 
@@ -1492,7 +1486,6 @@ namespace SCTBuilder
                     EastLimitTextBox.Text = Conversions.DecDeg2SCT(ELon, false);
                 }
             }
-            CheckARTCC2SquareButton();
             CheckARTCCAsCenterButton();
         }
 
@@ -1511,7 +1504,6 @@ namespace SCTBuilder
                 InfoSection.WestSquare = Convert.ToDouble(FixListDataGridView.SelectedRows[0].Cells["Longitude"].Value);
                 GetSquareAndOffset();
             }
-            CheckARTCC2SquareButton();
             CheckARTCCAsCenterButton();
         }
 
@@ -1523,7 +1515,6 @@ namespace SCTBuilder
                 InfoSection.EastSquare = Convert.ToDouble(FixListDataGridView.SelectedRows[0].Cells["Longitude"].Value);
                 GetSquareAndOffset();
             }
-            CheckARTCC2SquareButton();
             CheckARTCCAsCenterButton();
         }
 
@@ -1547,20 +1538,22 @@ namespace SCTBuilder
             {
                 Form getAIRAC = new SelectAIRAC();
                 DialogResult dialogResult = getAIRAC.ShowDialog();
-                while (dialogResult != DialogResult.None)
+                while (dialogResult == DialogResult.None)
                 { Application.DoEvents(); }
-
+                Debug.WriteLine("SelectAIRAC returned " + dialogResult.ToString());
                 if (dialogResult == DialogResult.OK)
                 {
-                    if (LoadFAATextData() != -1) PostLoadTasks();
+                    if (LoadFAATextData() != -1)
+                    {
+                        getAIRAC.Dispose();
+                        PostLoadTasks();
+                    }
                 }
                 else if (dialogResult == DialogResult.Abort)
                 {
                     Msg = "FAA download returned an error.  Correct the error and retry.";
                     SCTcommon.SendMessage(Msg, MessageBoxIcon.Error);
                 }
-                else
-                    Debug.WriteLine("Returned with Cancel");
                 UpdateAIRACbutton.Visible = true;
             }
             else
@@ -1656,11 +1649,10 @@ namespace SCTBuilder
         private void SCTtoolStripButton_Click(object sender, EventArgs e)
         {
             SCTtoolStripButton.ToolTipText = "Please wait for the completion message."; Refresh();
-            UpdatingLabel.Visible = true;
             UpdateLabel("Writing files. Please wait for completion message.");
             UseWaitCursor = true;
             SCToutput.WriteSCT();
-            UpdatingLabel.Visible = false;
+            UpdateLabel("");
             UseWaitCursor = false;
         }
 
@@ -1700,7 +1692,7 @@ namespace SCTBuilder
 
         private void ARTCCComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            CenterARTCCButton.Enabled = UseARTCCAsSquareButton.Enabled = (ARTCCComboBox.SelectedIndex != -1);
+            CenterARTCCButton.Enabled = (ARTCCComboBox.SelectedIndex != -1);
         }
 
         private void AirportComboBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -1758,7 +1750,17 @@ namespace SCTBuilder
 
         private void UpdateLabel(string Text)
         {
-            UpdatingLabel.Text = Text; UpdatingLabel.Refresh();
+            if (Text.Length != 0)
+            {
+                UpdatingLabel.Visible = true;
+                UpdatingLabel.Text = Text;
+                UpdatingLabel.Refresh();
+            }
+            else
+            {
+                UpdatingLabel.Text = "";
+                UpdatingLabel.Visible = false;
+            }
         }
         private void QuickSearchTextBox_TextChanged(object sender, EventArgs e)
         {

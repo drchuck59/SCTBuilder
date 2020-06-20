@@ -122,7 +122,9 @@
               <xs:element name="NavIsFix" msprop:Generator_ColumnVarNameInTable="columnNavIsFix" msprop:Generator_ColumnPropNameInRow="NavIsFix" msprop:Generator_ColumnPropNameInTable="NavIsFixColumn" msprop:Generator_UserColumnName="NavIsFix" type="xs:boolean" minOccurs="0" />
               <xs:element name="Latitude" msprop:Generator_ColumnVarNameInTable="columnLatitude" msprop:Generator_ColumnPropNameInRow="Latitude" msprop:Generator_ColumnPropNameInTable="LatitudeColumn" msprop:Generator_UserColumnName="Latitude" type="xs:float" minOccurs="0" />
               <xs:element name="Longitude" msprop:Generator_ColumnVarNameInTable="columnLongitude" msprop:Generator_ColumnPropNameInRow="Longitude" msprop:Generator_ColumnPropNameInTable="LongitudeColumn" msprop:Generator_UserColumnName="Longitude" type="xs:float" minOccurs="0" />
-              <xs:element name="Selected" msprop:Generator_ColumnVarNameInTable="columnSelected" msprop:Generator_ColumnPropNameInRow="Selected" msprop:Generator_ColumnPropNameInTable="SelectedColumn" msprop:Generator_UserColumnName="Selected" type="xs:boolean" minOccurs="0" />
+              <xs:element name="IsBreak" msprop:Generator_ColumnVarNameInTable="columnIsBreak" msprop:Generator_ColumnPropNameInRow="IsBreak" msprop:Generator_ColumnPropNameInTable="IsBreakColumn" msprop:Generator_UserColumnName="IsBreak" type="xs:boolean" default="false" minOccurs="0" />
+              <xs:element name="IsLow" msprop:Generator_ColumnVarNameInTable="columnIsLow" msprop:Generator_ColumnPropNameInRow="IsLow" msprop:Generator_ColumnPropNameInTable="IsLowColumn" msprop:Generator_UserColumnName="IsLow" type="xs:boolean" default="false" minOccurs="0" />
+              <xs:element name="Selected" msprop:Generator_ColumnVarNameInTable="columnSelected" msprop:Generator_ColumnPropNameInRow="Selected" msprop:Generator_ColumnPropNameInTable="SelectedColumn" msprop:Generator_UserColumnName="Selected" type="xs:boolean" default="false" minOccurs="0" />
             </xs:sequence>
           </xs:complexType>
         </xs:element>

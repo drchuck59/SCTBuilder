@@ -269,12 +269,8 @@ namespace SCTBuilder
             AIRAC = 1501;
             CycleStart = Convert.ToDateTime("1/1/1900", CultureInfo.InvariantCulture);
             CycleEnd = Convert.ToDateTime("1/2/1900", CultureInfo.InvariantCulture);
-            FolderMgt.OutputFolder = string.Empty;
-            FolderMgt.DataFolder = string.Empty;
             InfoSection.SponsorARTCC = string.Empty;
             InfoSection.DefaultAirport = string.Empty;
-            InfoSection.FacilityEngineer = "Facilities Engineer name";
-            InfoSection.AsstFacilityEngineer = "Ass't  Engineer name";
         }
 
         public static int AIRACfromDate(DateTime Cycledate, bool Save2CycleInfo = false)

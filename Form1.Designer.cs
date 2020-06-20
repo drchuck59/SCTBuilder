@@ -63,7 +63,6 @@
             this.CenterLonLabel = new System.Windows.Forms.Label();
             this.MagVarTextBox = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.UseARTCCAsSquareButton = new System.Windows.Forms.Button();
             this.IdentifierTextBox = new System.Windows.Forms.TextBox();
             this.PreviewButton = new System.Windows.Forms.Button();
             this.SetAllMarginsButton = new System.Windows.Forms.Button();
@@ -152,7 +151,6 @@
             this.runwayMarksToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.labelGeneratorforDiagramsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.iLSGeneratorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.facilitiesListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.xML2SCTToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dMSDecDegToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.sCTColorMgrToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -308,7 +306,7 @@
             // 
             this.ARTCCComboBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ARTCCComboBox.FormattingEnabled = true;
-            this.ARTCCComboBox.Location = new System.Drawing.Point(102, 64);
+            this.ARTCCComboBox.Location = new System.Drawing.Point(120, 81);
             this.ARTCCComboBox.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
             this.ARTCCComboBox.Name = "ARTCCComboBox";
             this.ARTCCComboBox.Size = new System.Drawing.Size(54, 23);
@@ -321,7 +319,7 @@
             // 
             this.AirportComboBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.AirportComboBox.FormattingEnabled = true;
-            this.AirportComboBox.Location = new System.Drawing.Point(269, 65);
+            this.AirportComboBox.Location = new System.Drawing.Point(185, 81);
             this.AirportComboBox.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
             this.AirportComboBox.Name = "AirportComboBox";
             this.AirportComboBox.Size = new System.Drawing.Size(58, 23);
@@ -333,7 +331,7 @@
             // AsstFacilityEngineerTextBox
             // 
             this.AsstFacilityEngineerTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AsstFacilityEngineerTextBox.Location = new System.Drawing.Point(101, 42);
+            this.AsstFacilityEngineerTextBox.Location = new System.Drawing.Point(109, 40);
             this.AsstFacilityEngineerTextBox.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
             this.AsstFacilityEngineerTextBox.Name = "AsstFacilityEngineerTextBox";
             this.AsstFacilityEngineerTextBox.Size = new System.Drawing.Size(226, 21);
@@ -344,7 +342,7 @@
             // FacilityEngineerTextBox
             // 
             this.FacilityEngineerTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.FacilityEngineerTextBox.Location = new System.Drawing.Point(101, 21);
+            this.FacilityEngineerTextBox.Location = new System.Drawing.Point(109, 17);
             this.FacilityEngineerTextBox.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
             this.FacilityEngineerTextBox.Name = "FacilityEngineerTextBox";
             this.FacilityEngineerTextBox.Size = new System.Drawing.Size(226, 21);
@@ -517,7 +515,7 @@
             // 
             this.CenterLatLabel.AutoSize = true;
             this.CenterLatLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CenterLatLabel.Location = new System.Drawing.Point(13, 103);
+            this.CenterLatLabel.Location = new System.Drawing.Point(7, 136);
             this.CenterLatLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.CenterLatLabel.Name = "CenterLatLabel";
             this.CenterLatLabel.Size = new System.Drawing.Size(24, 15);
@@ -527,7 +525,7 @@
             // 
             // CenterLatTextBox
             // 
-            this.CenterLatTextBox.Location = new System.Drawing.Point(39, 103);
+            this.CenterLatTextBox.Location = new System.Drawing.Point(35, 133);
             this.CenterLatTextBox.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.CenterLatTextBox.Name = "CenterLatTextBox";
             this.CenterLatTextBox.Size = new System.Drawing.Size(98, 20);
@@ -537,7 +535,7 @@
             // 
             // CenterLonTextBox
             // 
-            this.CenterLonTextBox.Location = new System.Drawing.Point(168, 104);
+            this.CenterLonTextBox.Location = new System.Drawing.Point(169, 133);
             this.CenterLonTextBox.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.CenterLonTextBox.Name = "CenterLonTextBox";
             this.CenterLonTextBox.Size = new System.Drawing.Size(98, 20);
@@ -549,7 +547,7 @@
             // 
             this.CenterLonLabel.AutoSize = true;
             this.CenterLonLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CenterLonLabel.Location = new System.Drawing.Point(137, 105);
+            this.CenterLonLabel.Location = new System.Drawing.Point(137, 136);
             this.CenterLonLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.CenterLonLabel.Name = "CenterLonLabel";
             this.CenterLonLabel.Size = new System.Drawing.Size(28, 15);
@@ -559,7 +557,7 @@
             // 
             // MagVarTextBox
             // 
-            this.MagVarTextBox.Location = new System.Drawing.Point(325, 105);
+            this.MagVarTextBox.Location = new System.Drawing.Point(296, 133);
             this.MagVarTextBox.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.MagVarTextBox.Name = "MagVarTextBox";
             this.MagVarTextBox.Size = new System.Drawing.Size(39, 20);
@@ -571,26 +569,13 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(269, 105);
+            this.label1.Location = new System.Drawing.Point(289, 115);
             this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(53, 15);
             this.label1.TabIndex = 23;
             this.label1.Text = "Mag Var";
             this.toolTip1.SetToolTip(this.label1, "VRC will use this to correct to true bearings");
-            // 
-            // UseARTCCAsSquareButton
-            // 
-            this.UseARTCCAsSquareButton.Enabled = false;
-            this.UseARTCCAsSquareButton.Location = new System.Drawing.Point(38, 127);
-            this.UseARTCCAsSquareButton.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.UseARTCCAsSquareButton.Name = "UseARTCCAsSquareButton";
-            this.UseARTCCAsSquareButton.Size = new System.Drawing.Size(69, 20);
-            this.UseARTCCAsSquareButton.TabIndex = 17;
-            this.UseARTCCAsSquareButton.Text = "Use ARTCC";
-            this.toolTip1.SetToolTip(this.UseARTCCAsSquareButton, "Insert the N, S, E, and W limits of the ARTCC as the selection");
-            this.UseARTCCAsSquareButton.UseVisualStyleBackColor = true;
-            this.UseARTCCAsSquareButton.Click += new System.EventHandler(this.UseARTCCAsSquareButton_Click);
             // 
             // IdentifierTextBox
             // 
@@ -711,19 +696,19 @@
             this.ARTCCLabel.AutoSize = true;
             this.ARTCCLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ARTCCLabel.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.ARTCCLabel.Location = new System.Drawing.Point(5, 65);
+            this.ARTCCLabel.Location = new System.Drawing.Point(120, 65);
             this.ARTCCLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.ARTCCLabel.Name = "ARTCCLabel";
-            this.ARTCCLabel.Size = new System.Drawing.Size(91, 15);
+            this.ARTCCLabel.Size = new System.Drawing.Size(46, 15);
             this.ARTCCLabel.TabIndex = 9;
-            this.ARTCCLabel.Text = "Primary ARTCC";
+            this.ARTCCLabel.Text = "ARTCC";
             this.ARTCCLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // AirportLabel
             // 
             this.AirportLabel.AutoSize = true;
             this.AirportLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AirportLabel.Location = new System.Drawing.Point(211, 66);
+            this.AirportLabel.Location = new System.Drawing.Point(182, 65);
             this.AirportLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.AirportLabel.Name = "AirportLabel";
             this.AirportLabel.Size = new System.Drawing.Size(55, 15);
@@ -735,7 +720,7 @@
             // 
             this.AsstFacilityEngineerLabel.AutoSize = true;
             this.AsstFacilityEngineerLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AsstFacilityEngineerLabel.Location = new System.Drawing.Point(23, 46);
+            this.AsstFacilityEngineerLabel.Location = new System.Drawing.Point(32, 43);
             this.AsstFacilityEngineerLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.AsstFacilityEngineerLabel.Name = "AsstFacilityEngineerLabel";
             this.AsstFacilityEngineerLabel.Size = new System.Drawing.Size(73, 15);
@@ -747,7 +732,7 @@
             // 
             this.FacilityEngineerLabel.AutoSize = true;
             this.FacilityEngineerLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.FacilityEngineerLabel.Location = new System.Drawing.Point(1, 25);
+            this.FacilityEngineerLabel.Location = new System.Drawing.Point(9, 21);
             this.FacilityEngineerLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.FacilityEngineerLabel.Name = "FacilityEngineerLabel";
             this.FacilityEngineerLabel.Size = new System.Drawing.Size(97, 15);
@@ -757,6 +742,7 @@
             // 
             // FilterGroupBox
             // 
+            this.FilterGroupBox.Controls.Add(this.CenterSquareButton);
             this.FilterGroupBox.Controls.Add(this.AllMarginsNumericUpDown);
             this.FilterGroupBox.Controls.Add(this.SetAllMarginsButton);
             this.FilterGroupBox.Controls.Add(this.FixListDataGridView);
@@ -764,7 +750,6 @@
             this.FilterGroupBox.Controls.Add(this.SEByFIXButton);
             this.FilterGroupBox.Controls.Add(this.NWByFIXButton);
             this.FilterGroupBox.Controls.Add(this.label8);
-            this.FilterGroupBox.Controls.Add(this.UseARTCCAsSquareButton);
             this.FilterGroupBox.Controls.Add(this.label5);
             this.FilterGroupBox.Controls.Add(this.label4);
             this.FilterGroupBox.Controls.Add(this.label3);
@@ -782,7 +767,7 @@
             this.FilterGroupBox.Controls.Add(this.WestLimitTextBox);
             this.FilterGroupBox.Controls.Add(this.txtLatNorth_label);
             this.FilterGroupBox.Controls.Add(this.NorthLimitTextBox);
-            this.FilterGroupBox.Location = new System.Drawing.Point(6, 476);
+            this.FilterGroupBox.Location = new System.Drawing.Point(6, 483);
             this.FilterGroupBox.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
             this.FilterGroupBox.Name = "FilterGroupBox";
             this.FilterGroupBox.Padding = new System.Windows.Forms.Padding(2, 1, 2, 1);
@@ -995,7 +980,7 @@
             // 
             this.txtLatNorth_label.AutoSize = true;
             this.txtLatNorth_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtLatNorth_label.Location = new System.Drawing.Point(4, 34);
+            this.txtLatNorth_label.Location = new System.Drawing.Point(1, 34);
             this.txtLatNorth_label.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.txtLatNorth_label.Name = "txtLatNorth_label";
             this.txtLatNorth_label.Size = new System.Drawing.Size(37, 15);
@@ -1562,7 +1547,6 @@
             this.runwayMarksToolStripMenuItem,
             this.labelGeneratorforDiagramsToolStripMenuItem,
             this.iLSGeneratorToolStripMenuItem,
-            this.facilitiesListToolStripMenuItem,
             this.xML2SCTToolStripMenuItem,
             this.dMSDecDegToolStripMenuItem,
             this.sCTColorMgrToolStripMenuItem});
@@ -1579,30 +1563,35 @@
             // 
             // arcGneratorradToolStripMenuItem
             // 
+            this.arcGneratorradToolStripMenuItem.Enabled = false;
             this.arcGneratorradToolStripMenuItem.Name = "arcGneratorradToolStripMenuItem";
             this.arcGneratorradToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
             this.arcGneratorradToolStripMenuItem.Text = "Arc gnerator (radials)";
             // 
             // arcGeneratorstartendToolStripMenuItem
             // 
+            this.arcGeneratorstartendToolStripMenuItem.Enabled = false;
             this.arcGeneratorstartendToolStripMenuItem.Name = "arcGeneratorstartendToolStripMenuItem";
             this.arcGeneratorstartendToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
             this.arcGeneratorstartendToolStripMenuItem.Text = "Arc generator (start/end)";
             // 
             // procedureTurnToolStripMenuItem
             // 
+            this.procedureTurnToolStripMenuItem.Enabled = false;
             this.procedureTurnToolStripMenuItem.Name = "procedureTurnToolStripMenuItem";
             this.procedureTurnToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
             this.procedureTurnToolStripMenuItem.Text = "Procedure turn";
             // 
             // racetrackholdToolStripMenuItem
             // 
+            this.racetrackholdToolStripMenuItem.Enabled = false;
             this.racetrackholdToolStripMenuItem.Name = "racetrackholdToolStripMenuItem";
             this.racetrackholdToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
             this.racetrackholdToolStripMenuItem.Text = "Racetrack (hold)";
             // 
             // runwayMarksToolStripMenuItem
             // 
+            this.runwayMarksToolStripMenuItem.Enabled = false;
             this.runwayMarksToolStripMenuItem.Name = "runwayMarksToolStripMenuItem";
             this.runwayMarksToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
             this.runwayMarksToolStripMenuItem.Text = "Runway Marks";
@@ -1616,18 +1605,14 @@
             // 
             // iLSGeneratorToolStripMenuItem
             // 
+            this.iLSGeneratorToolStripMenuItem.Enabled = false;
             this.iLSGeneratorToolStripMenuItem.Name = "iLSGeneratorToolStripMenuItem";
             this.iLSGeneratorToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
             this.iLSGeneratorToolStripMenuItem.Text = "ILS generator";
             // 
-            // facilitiesListToolStripMenuItem
-            // 
-            this.facilitiesListToolStripMenuItem.Name = "facilitiesListToolStripMenuItem";
-            this.facilitiesListToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
-            this.facilitiesListToolStripMenuItem.Text = "Facilities list";
-            // 
             // xML2SCTToolStripMenuItem
             // 
+            this.xML2SCTToolStripMenuItem.Enabled = false;
             this.xML2SCTToolStripMenuItem.Name = "xML2SCTToolStripMenuItem";
             this.xML2SCTToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
             this.xML2SCTToolStripMenuItem.Text = "XML2SCT";
@@ -1642,6 +1627,7 @@
             // 
             // sCTColorMgrToolStripMenuItem
             // 
+            this.sCTColorMgrToolStripMenuItem.Enabled = false;
             this.sCTColorMgrToolStripMenuItem.Name = "sCTColorMgrToolStripMenuItem";
             this.sCTColorMgrToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
             this.sCTColorMgrToolStripMenuItem.Text = "SCT Color Mgr";
@@ -1752,11 +1738,10 @@
             // 
             // InfoGroupBox
             // 
-            this.InfoGroupBox.Controls.Add(this.CenterSquareButton);
             this.InfoGroupBox.Controls.Add(this.CenterAPTButton);
-            this.InfoGroupBox.Controls.Add(this.CenterARTCCButton);
             this.InfoGroupBox.Controls.Add(this.label7);
             this.InfoGroupBox.Controls.Add(this.MagVarTextBox);
+            this.InfoGroupBox.Controls.Add(this.CenterARTCCButton);
             this.InfoGroupBox.Controls.Add(this.label1);
             this.InfoGroupBox.Controls.Add(this.CenterLonTextBox);
             this.InfoGroupBox.Controls.Add(this.CenterLonLabel);
@@ -1781,19 +1766,19 @@
             // 
             // CenterSquareButton
             // 
-            this.CenterSquareButton.Location = new System.Drawing.Point(118, 127);
+            this.CenterSquareButton.Location = new System.Drawing.Point(14, 126);
             this.CenterSquareButton.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
             this.CenterSquareButton.Name = "CenterSquareButton";
-            this.CenterSquareButton.Size = new System.Drawing.Size(105, 39);
+            this.CenterSquareButton.Size = new System.Drawing.Size(122, 23);
             this.CenterSquareButton.TabIndex = 26;
-            this.CenterSquareButton.Text = "Center on \r\ncurrent square";
+            this.CenterSquareButton.Text = "Center on square";
             this.CenterSquareButton.UseVisualStyleBackColor = true;
             this.CenterSquareButton.Click += new System.EventHandler(this.CenterSquareButton_Click);
             // 
             // CenterAPTButton
             // 
             this.CenterAPTButton.Enabled = false;
-            this.CenterAPTButton.Location = new System.Drawing.Point(227, 128);
+            this.CenterAPTButton.Location = new System.Drawing.Point(247, 68);
             this.CenterAPTButton.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
             this.CenterAPTButton.Name = "CenterAPTButton";
             this.CenterAPTButton.Size = new System.Drawing.Size(95, 37);
@@ -1805,7 +1790,7 @@
             // CenterARTCCButton
             // 
             this.CenterARTCCButton.Enabled = false;
-            this.CenterARTCCButton.Location = new System.Drawing.Point(9, 125);
+            this.CenterARTCCButton.Location = new System.Drawing.Point(9, 65);
             this.CenterARTCCButton.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
             this.CenterARTCCButton.Name = "CenterARTCCButton";
             this.CenterARTCCButton.Size = new System.Drawing.Size(105, 41);
@@ -1819,7 +1804,7 @@
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label7.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.label7.Location = new System.Drawing.Point(75, 88);
+            this.label7.Location = new System.Drawing.Point(76, 115);
             this.label7.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(129, 15);
@@ -2089,7 +2074,6 @@
         private System.Windows.Forms.ToolStripMenuItem runwayMarksToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem labelGeneratorforDiagramsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem iLSGeneratorToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem facilitiesListToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openDataFolderToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem selectOutputFolderToolStripMenuItem;
         private System.Windows.Forms.ToolStrip toolStrip1;
@@ -2098,7 +2082,6 @@
         private System.Windows.Forms.ToolStripButton toolStripButton1;
         private System.Windows.Forms.ToolStripButton toolStripButton2;
         private System.Windows.Forms.ToolStripMenuItem xML2SCTToolStripMenuItem;
-        private System.Windows.Forms.Button UseARTCCAsSquareButton;
         private System.Windows.Forms.GroupBox InfoGroupBox;
         private System.Windows.Forms.ToolStripMenuItem preferencesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem ConfirmOverwriteOfFilesToolStripMenuItem;

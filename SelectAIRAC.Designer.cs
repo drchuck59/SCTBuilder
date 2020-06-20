@@ -43,9 +43,10 @@
             // 
             this.YearComboBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.YearComboBox.FormattingEnabled = true;
-            this.YearComboBox.Location = new System.Drawing.Point(41, 65);
+            this.YearComboBox.Location = new System.Drawing.Point(27, 42);
+            this.YearComboBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.YearComboBox.Name = "YearComboBox";
-            this.YearComboBox.Size = new System.Drawing.Size(121, 33);
+            this.YearComboBox.Size = new System.Drawing.Size(82, 24);
             this.YearComboBox.TabIndex = 0;
             this.YearComboBox.SelectedIndexChanged += new System.EventHandler(this.YearComboBox_SelectedIndexChanged);
             // 
@@ -53,9 +54,10 @@
             // 
             this.YearComboBox_Label.AutoSize = true;
             this.YearComboBox_Label.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.YearComboBox_Label.Location = new System.Drawing.Point(37, 42);
+            this.YearComboBox_Label.Location = new System.Drawing.Point(25, 27);
+            this.YearComboBox_Label.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.YearComboBox_Label.Name = "YearComboBox_Label";
-            this.YearComboBox_Label.Size = new System.Drawing.Size(113, 25);
+            this.YearComboBox_Label.Size = new System.Drawing.Size(81, 17);
             this.YearComboBox_Label.TabIndex = 1;
             this.YearComboBox_Label.Text = "Select Year";
             // 
@@ -63,9 +65,10 @@
             // 
             this.CycleComboBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.CycleComboBox.FormattingEnabled = true;
-            this.CycleComboBox.Location = new System.Drawing.Point(184, 64);
+            this.CycleComboBox.Location = new System.Drawing.Point(123, 42);
+            this.CycleComboBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.CycleComboBox.Name = "CycleComboBox";
-            this.CycleComboBox.Size = new System.Drawing.Size(121, 33);
+            this.CycleComboBox.Size = new System.Drawing.Size(82, 24);
             this.CycleComboBox.TabIndex = 2;
             this.CycleComboBox.SelectedIndexChanged += new System.EventHandler(this.CycleComboBox_SelectedIndexChanged);
             // 
@@ -73,9 +76,10 @@
             // 
             this.CycleComboBox_Label.AutoSize = true;
             this.CycleComboBox_Label.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CycleComboBox_Label.Location = new System.Drawing.Point(183, 42);
+            this.CycleComboBox_Label.Location = new System.Drawing.Point(122, 27);
+            this.CycleComboBox_Label.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.CycleComboBox_Label.Name = "CycleComboBox_Label";
-            this.CycleComboBox_Label.Size = new System.Drawing.Size(122, 25);
+            this.CycleComboBox_Label.Size = new System.Drawing.Size(85, 17);
             this.CycleComboBox_Label.TabIndex = 3;
             this.CycleComboBox_Label.Text = "Select Cycle";
             // 
@@ -83,18 +87,20 @@
             // 
             this.ConfirmationLabel.AutoSize = true;
             this.ConfirmationLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ConfirmationLabel.Location = new System.Drawing.Point(41, 110);
+            this.ConfirmationLabel.Location = new System.Drawing.Point(27, 71);
+            this.ConfirmationLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.ConfirmationLabel.Name = "ConfirmationLabel";
-            this.ConfirmationLabel.Size = new System.Drawing.Size(177, 25);
+            this.ConfirmationLabel.Size = new System.Drawing.Size(125, 17);
             this.ConfirmationLabel.TabIndex = 4;
             this.ConfirmationLabel.Text = "Cycle Confirmation";
             // 
             // MyButtonCancel
             // 
             this.MyButtonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.MyButtonCancel.Location = new System.Drawing.Point(326, 228);
+            this.MyButtonCancel.Location = new System.Drawing.Point(217, 148);
+            this.MyButtonCancel.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.MyButtonCancel.Name = "MyButtonCancel";
-            this.MyButtonCancel.Size = new System.Drawing.Size(72, 34);
+            this.MyButtonCancel.Size = new System.Drawing.Size(48, 22);
             this.MyButtonCancel.TabIndex = 5;
             this.MyButtonCancel.Text = "Cancel";
             this.MyButtonCancel.UseVisualStyleBackColor = true;
@@ -102,10 +108,12 @@
             // 
             // OKButton
             // 
+            this.OKButton.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.OKButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.OKButton.Location = new System.Drawing.Point(27, 218);
+            this.OKButton.Location = new System.Drawing.Point(18, 142);
+            this.OKButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.OKButton.Name = "OKButton";
-            this.OKButton.Size = new System.Drawing.Size(278, 44);
+            this.OKButton.Size = new System.Drawing.Size(185, 29);
             this.OKButton.TabIndex = 6;
             this.OKButton.Text = "Download this AIRAC";
             this.OKButton.UseVisualStyleBackColor = true;
@@ -113,9 +121,10 @@
             // 
             // progressBar1
             // 
-            this.progressBar1.Location = new System.Drawing.Point(27, 265);
+            this.progressBar1.Location = new System.Drawing.Point(18, 172);
+            this.progressBar1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(278, 24);
+            this.progressBar1.Size = new System.Drawing.Size(185, 16);
             this.progressBar1.TabIndex = 7;
             // 
             // ContinueButton
@@ -123,9 +132,10 @@
             this.ContinueButton.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.ContinueButton.Enabled = false;
             this.ContinueButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ContinueButton.Location = new System.Drawing.Point(27, 218);
+            this.ContinueButton.Location = new System.Drawing.Point(18, 141);
+            this.ContinueButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.ContinueButton.Name = "ContinueButton";
-            this.ContinueButton.Size = new System.Drawing.Size(277, 41);
+            this.ContinueButton.Size = new System.Drawing.Size(185, 27);
             this.ContinueButton.TabIndex = 8;
             this.ContinueButton.Text = "Done - Click to continue";
             this.ContinueButton.UseVisualStyleBackColor = true;
@@ -134,11 +144,11 @@
             // 
             // SelectAIRAC
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
             this.CancelButton = this.MyButtonCancel;
-            this.ClientSize = new System.Drawing.Size(436, 311);
+            this.ClientSize = new System.Drawing.Size(291, 202);
             this.ControlBox = false;
             this.Controls.Add(this.ContinueButton);
             this.Controls.Add(this.progressBar1);
@@ -149,6 +159,7 @@
             this.Controls.Add(this.CycleComboBox);
             this.Controls.Add(this.YearComboBox_Label);
             this.Controls.Add(this.YearComboBox);
+            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.Name = "SelectAIRAC";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.ResumeLayout(false);

@@ -184,6 +184,28 @@ namespace SCTBuilder
             }
             return count;
         }
+
+        public static int GetMinDataView(DataView dv, string Column)
+        {
+            int minValue = int.MaxValue;
+            foreach(DataRowView dataRowView in dv)
+            {
+                int current = (int)dataRowView[Column];
+                minValue = Math.Min(minValue, current);
+            }
+            return minValue;
+        }
+
+        public static int GetMaxDataView(DataView dv, string Column)
+        {
+            int maxValue = int.MinValue;
+            foreach (DataRowView dataRowView in dv)
+            {
+                int current = (int)dataRowView[Column];
+                maxValue = Math.Max(maxValue, current);
+            }
+            return maxValue;
+        }
     }
 
     public class Conversions
@@ -568,6 +590,16 @@ namespace SCTBuilder
                    );
         }
 
+        public static bool ContainsAny(this string Haystack, params string[] Needles)
+        {
+            bool result = false;
+            foreach (string Needle in Needles)
+            {
+                result = result || Needles.Any(Haystack.Contains);
+            }
+            return result;
+        }
+
     }
 
     public static class SCTstrings
@@ -578,7 +610,7 @@ namespace SCTBuilder
         {
             // ACCEPTS either APT details in a list, or individually
             // RETURNS [AIRPORT] format for airport
-            string result = string.Empty;
+            string result;
             if (strOut.Count() != 0)
             {
                 result = strOut[0].PadRight(4) + " " + strOut[1].PadRight(7) + " " + strOut[2] + " " +
@@ -705,7 +737,7 @@ namespace SCTBuilder
         {
             string SSD;
             if (IsSID) SSD = "SID"; else SSD = "STAR"; 
-            string result = string.Empty;
+            string result;
             string Fixes = string.Empty;
             foreach (string f in Fix) Fixes += f + " ";
             result = SSD + ":" + Airport + ":" + RWY + ":" + Transition + "x" + SSDname + ":" + Fixes;

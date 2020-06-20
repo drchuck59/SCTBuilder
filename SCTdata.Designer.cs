@@ -3354,6 +3354,10 @@ namespace SCTBuilder {
             
             private global::System.Data.DataColumn columnLongitude;
             
+            private global::System.Data.DataColumn columnIsBreak;
+            
+            private global::System.Data.DataColumn columnIsLow;
+            
             private global::System.Data.DataColumn columnSelected;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -3487,6 +3491,22 @@ namespace SCTBuilder {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn IsBreakColumn {
+                get {
+                    return this.columnIsBreak;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn IsLowColumn {
+                get {
+                    return this.columnIsLow;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public global::System.Data.DataColumn SelectedColumn {
                 get {
                     return this.columnSelected;
@@ -3530,7 +3550,7 @@ namespace SCTBuilder {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public AWYRow AddAWYRow(string AWYID, int Sequence, string ARTCC, string AWYtype, int MinEnrAlt, int MaxAuthAlt, int MinObstClrAlt, string NAVAID, string NAVtype, bool NavIsFix, float Latitude, float Longitude, bool Selected) {
+            public AWYRow AddAWYRow(string AWYID, int Sequence, string ARTCC, string AWYtype, int MinEnrAlt, int MaxAuthAlt, int MinObstClrAlt, string NAVAID, string NAVtype, bool NavIsFix, float Latitude, float Longitude, bool IsBreak, bool IsLow, bool Selected) {
                 AWYRow rowAWYRow = ((AWYRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         AWYID,
@@ -3545,6 +3565,8 @@ namespace SCTBuilder {
                         NavIsFix,
                         Latitude,
                         Longitude,
+                        IsBreak,
+                        IsLow,
                         Selected};
                 rowAWYRow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowAWYRow);
@@ -3580,6 +3602,8 @@ namespace SCTBuilder {
                 this.columnNavIsFix = base.Columns["NavIsFix"];
                 this.columnLatitude = base.Columns["Latitude"];
                 this.columnLongitude = base.Columns["Longitude"];
+                this.columnIsBreak = base.Columns["IsBreak"];
+                this.columnIsLow = base.Columns["IsLow"];
                 this.columnSelected = base.Columns["Selected"];
             }
             
@@ -3610,9 +3634,16 @@ namespace SCTBuilder {
                 base.Columns.Add(this.columnLatitude);
                 this.columnLongitude = new global::System.Data.DataColumn("Longitude", typeof(float), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnLongitude);
+                this.columnIsBreak = new global::System.Data.DataColumn("IsBreak", typeof(bool), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnIsBreak);
+                this.columnIsLow = new global::System.Data.DataColumn("IsLow", typeof(bool), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnIsLow);
                 this.columnSelected = new global::System.Data.DataColumn("Selected", typeof(bool), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnSelected);
                 this.columnSequence.AllowDBNull = false;
+                this.columnIsBreak.DefaultValue = ((bool)(false));
+                this.columnIsLow.DefaultValue = ((bool)(false));
+                this.columnSelected.DefaultValue = ((bool)(false));
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -11268,6 +11299,38 @@ namespace SCTBuilder {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsBreak {
+                get {
+                    try {
+                        return ((bool)(this[this.tableAWY.IsBreakColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'IsBreak\' in table \'AWY\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableAWY.IsBreakColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsLow {
+                get {
+                    try {
+                        return ((bool)(this[this.tableAWY.IsLowColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'IsLow\' in table \'AWY\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableAWY.IsLowColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public bool Selected {
                 get {
                     try {
@@ -11412,6 +11475,30 @@ namespace SCTBuilder {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public void SetLongitudeNull() {
                 this[this.tableAWY.LongitudeColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsIsBreakNull() {
+                return this.IsNull(this.tableAWY.IsBreakColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetIsBreakNull() {
+                this[this.tableAWY.IsBreakColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsIsLowNull() {
+                return this.IsNull(this.tableAWY.IsLowColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetIsLowNull() {
+                this[this.tableAWY.IsLowColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]

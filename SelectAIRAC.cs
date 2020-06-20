@@ -4,13 +4,15 @@ using System.IO;
 using System.IO.Compression;
 using System.Windows.Forms;
 using System.Globalization;
+using System.Diagnostics;
 
 namespace SCTBuilder
 {
     public partial class SelectAIRAC : Form
     {
         readonly string cr = Environment.NewLine;
-        DialogResult result = DialogResult.Cancel;
+        public static string downloadsPath;
+        public static string extractPath;
 
         public SelectAIRAC()
         {
@@ -86,6 +88,7 @@ namespace SCTBuilder
                 "Cycle Dates: " + cr + tempStart.ToShortDateString() + " - " + tempEnd.Date.ToShortDateString();
             if (tempEnd < DateTime.Now.Date)
                 ConfirmationLabel.Text += cr + "*** Outdated Cycle ***";
+            ConfirmationLabel.Refresh();
         }
 
         private void YearComboBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -107,15 +110,18 @@ namespace SCTBuilder
             MyButtonCancel.Visible = false;
             int tempAIRAC = Convert.ToInt32(YearComboBox.Text.Substring(2, 2) + Convert.ToInt32(CycleComboBox.Text).ToString("D2"));
             CycleInfo.CycleDateFromAIRAC(tempAIRAC, true);
-            if (!CleanDataFolder()) Close();        // Must have a clean data folder to place data
+            if (!CleanDataFolder())
+            {
+                InitializeConfirmationLabel();
+                Close();        // Must have a clean data folder to place data
+            }
             // Set up values for the download;
             string newCycleDate = CycleInfo.CycleStart.Date.ToString("yyyy'-'MM'-'dd");
             DirectoryInfo di;
             di = Directory.CreateDirectory(FolderMgt.DataFolder + "\\28DaySubscription_Effective_" + newCycleDate + "\\");
-            string extractPath = di.FullName;
+            extractPath = di.FullName;
             string URL = "https://nfdc.faa.gov/webContent/28DaySub/28DaySubscription_Effective_" + newCycleDate + ".zip";
-            string downloadsPath = KnownFolders.GetPath(KnownFolder.Downloads) + "\\28DaySubscription_Effective_" + newCycleDate + ".zip";
-            //
+            downloadsPath = KnownFolders.GetPath(KnownFolder.Downloads) + "\\28DaySubscription_Effective_" + newCycleDate + ".zip";
 
             // If the zipfile is already downloaded, delete it (safer as it may be corrupted)
             if (File.Exists(downloadsPath)) File.Delete(downloadsPath);
@@ -140,7 +146,6 @@ namespace SCTBuilder
                     ContinueButton.Enabled = true;
                     ContinueButton.Visible = true;
                     downloadComplete = true;
-                    result = DialogResult.OK;
                 }
                 catch
                 {
@@ -164,7 +169,6 @@ namespace SCTBuilder
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
-                result = DialogResult.Abort;
             }
         }
 
@@ -188,7 +192,7 @@ namespace SCTBuilder
             {
                 if (dir.IndexOf(newCycleDate) != -1)
                 {
-                    Msg = "You already have the current dataset" + cr +
+                    Msg = "You already have a current dataset" + cr +
                         "Cycle date: " + newCycleDate + cr +
                         "Are you sure that you want to reinstall it?";
                     DialogResult dialogResult = SCTcommon.SendMessage(Msg, MessageBoxIcon.Question, MessageBoxButtons.YesNo);
@@ -199,9 +203,9 @@ namespace SCTBuilder
                 }
                 else
                 {
-                    if ((dir.IndexOf(filter) != 0) && !Continue)
+                    if (!Continue)
                     {
-                        Msg = "You have more FAA AIRAC folders in the data repository." + cr +
+                        Msg = "You have oen or more FAA AIRAC folders in the data repository." + cr +
                             "This program expects only one FAA folder '28DaySubscription_<date>'." + cr +
                             "Click OK to remove ALL your existing FAA AIRAC folder(s), or BEFORE clicking OK" + cr +
                             "move your old Subscription folders outside of your main data folder" + cr +
@@ -218,11 +222,12 @@ namespace SCTBuilder
                 {
                     if (Directory.Exists(dir))
                     {
-                        Directory.Delete(path: dir, recursive: true);
-                        Continue = false;               // Reset the flag or you might delete ALL the dirs!
+                        DirectoryInfo di = new DirectoryInfo(dir);
+                        //EmptyFolder(di);
+                        //DeleteSubFolders(di);
+                        di.Delete(true);
                     }
                 }
-
             }
             // Need to verify that there are no subscription folders in the data folder
             foreach (string dir in dirs)
@@ -231,6 +236,27 @@ namespace SCTBuilder
             }
             result = foundFilterDir == 0;
             return result;        // Acceptable values are 0 (clean) or 1 (kept old data)
+        }
+
+        private void EmptyFolder(DirectoryInfo directoryInfo)
+        {
+            foreach (FileInfo file in directoryInfo.EnumerateFiles())
+            {
+                file.Delete();
+            }
+
+            foreach (DirectoryInfo subfolder in directoryInfo.EnumerateDirectories())
+            {
+                EmptyFolder(subfolder);
+            }
+        }
+
+        private void DeleteSubFolders(DirectoryInfo directoryInfo)
+        {
+            foreach (DirectoryInfo subfolder in directoryInfo.GetDirectories())
+            {
+                subfolder.Delete(true);
+            }
         }
 
         private string VerifyExtractPath()
@@ -252,13 +278,13 @@ namespace SCTBuilder
 
         private void ContinueButton_Click(object sender, EventArgs e)
         {
-            this.DialogResult = result;
+            Debug.WriteLine("SelectAIRAC closing with " + DialogResult);
             Close();
         }
 
         private void MyButtonCancel_Click(object sender, EventArgs e)
         {
-            this.DialogResult = DialogResult.Cancel;
+            Debug.WriteLine("SelectAIRAC closing with " + DialogResult);
             Close();
         }
     }

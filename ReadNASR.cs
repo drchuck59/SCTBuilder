@@ -5,7 +5,8 @@ using System.Windows.Forms;
 using System.Collections.Generic;
 using System.Xml;
 using System.Data;
-using System.Windows.Forms.VisualStyles;
+using System.Linq;
+using System.Diagnostics;
 
 namespace SCTBuilder
 {
@@ -470,14 +471,18 @@ namespace SCTBuilder
             return (Line.IndexOf(Usage, tab) != -1);
         }
 
+
+
         public static void FillAWY()
         {
             DataTable AWY = Form1.AWY;
             string FullFilename = SCTcommon.GetFullPathname(FolderMgt.DataFolder, "AWY.txt");
-            string Line; string aNAVtype = string.Empty; string aNAVID;
+            string Line; string aNAVtype = string.Empty; string aNAVID; bool IsBreak = false; bool IsLow = false;
             string aSeqNo = string.Empty; bool aFix; string aARTCC = string.Empty; string aMOCA = string.Empty;
             string aMEA = string.Empty; string aMAA = string.Empty; string atype = string.Empty;
             double aLat; double aLong; string aID = string.Empty;
+            string[] LowAirways = new string[6]
+                {"V", "A", "B", "G", "R", "T"};
             using (StreamReader reader = new StreamReader(FullFilename))
             {
                 while ((Line = reader.ReadLine()) != null)
@@ -486,6 +491,7 @@ namespace SCTBuilder
                     {
                         case "AWY1":
                             aID = Line.Substring(4, 5).Trim();                        // Airway ID
+                            IsLow = LowAirways.Any(aID.Contains);
                             aSeqNo = Line.Substring(10, 5).Trim();                    // Sequency values per-Airway
                             atype = Line.Substring(9, 1).Trim();                      // Used only for Alaskan or Hawaiian routes
                             aARTCC = Line.Substring(141, 3).Trim();                   // Controlling ARTCC
@@ -495,6 +501,7 @@ namespace SCTBuilder
                             if (aMAA.Length == 0) aMAA = "-1";
                             aMOCA = Line.Substring(101, 5).Trim();                  // Minimum Obstruction Clearance Altitude (usually blank)
                             if (aMOCA.Length == 0) aMOCA = "-1";
+                            IsBreak = (Line.Substring(106, 1) == "X");              // If present, this point restarts the AWY (break in airway)
                             break;
                         case "AWY2":
                             aFix = Line.Substring(64, 15).Trim() == "FIX";
@@ -517,7 +524,9 @@ namespace SCTBuilder
                                 aNAVtype,
                                 aFix,
                                 aLat,
-                                aLong
+                                aLong,
+                                IsBreak,
+                                IsLow,
                             };
                             AddFixes(AWY, FixItems);
                             break;
