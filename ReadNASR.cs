@@ -544,8 +544,8 @@ namespace SCTBuilder
         {
             DataTable SSD = Form1.SSD;
             string FullFilename = SCTcommon.GetFullPathname(FolderMgt.DataFolder, "STARDP.txt");
-            bool isSid; string Line; int Seqno = 0; string Lat1; string Lon1;
-            string SSDcode; string TransCode; int Loc;
+            bool isSid; string Line; int Seqno = 0; double Lat1; double Lon1;
+            string SSDcode; string TransCode; int Loc; string FixType; string NavAid;
             string SSDname; string TransitionName; string SSDID;
             using (StreamReader reader = new StreamReader(FullFilename))
             {
@@ -554,9 +554,15 @@ namespace SCTBuilder
                     SSDID = Line.Substring(0, 5).Trim();
                     if (SSDID.Substring(0, 1) == "D") isSid = true; else isSid = false;
                     Seqno += 10;
-                    Lat1 = Line.Substring(13, 8).Trim();           // Latitude
-                    Lon1 = Line.Substring(21, 9).Trim();
                     SSDname = Line.Substring(51, 110).Trim();
+                    NavAid = Line.Substring(30, 6).Trim();
+                    if (NavAid == "CWRLD")
+                        Debug.WriteLine("CWRLD");
+                    Lat1 = Conversions.String2DecDeg(Line.Substring(13, 8).Trim());           // Latitude
+                    //Debug.WriteLine("Lat: " + Line.Substring(13, 8).Trim() + " Dec: " + Lat1.ToString());
+                    Lon1 = Conversions.String2DecDeg(Line.Substring(21, 9).Trim());           // Longitude
+                    //Debug.WriteLine("Lon: " + Line.Substring(21, 9).Trim() + " Dec: " + Lon1.ToString());
+                    FixType = Line.Substring(10, 2).Trim();
                     TransitionName = string.Empty;
                     // If present, this string identifies a new block or Transition
                     if (SSDname.Length != 0)
@@ -596,10 +602,10 @@ namespace SCTBuilder
                     var FixItems = new List<object>
                     {
                         SSDID,                                                      // Internal ID
-                        Line.Substring(30,6).Trim(),                                // NavAid or Airport
-                        Line.Substring(10,2).Trim(),                                // FixType incl 'AA'
-                        Conversions.String2DecDeg(Lat1),                            // Latitude
-                        Conversions.String2DecDeg(Lon1),                            // Longitude
+                        NavAid,                                                     // NavAid or Airport
+                        FixType,                                                    // FixType incl 'AA'
+                        Lat1,                                                       // Latitude
+                        Lon1,                                                       // Longitude
                         SSDcode,                                                    // SSD Code
                         TransCode,                                                  // Transition Code
                         SSDname,                                                    // SSDName

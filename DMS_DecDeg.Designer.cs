@@ -72,11 +72,11 @@
             // 
             // LatDMSDegTextBox
             // 
-            this.LatDMSDegTextBox.Location = new System.Drawing.Point(87, 56);
+            this.LatDMSDegTextBox.Location = new System.Drawing.Point(76, 56);
             this.LatDMSDegTextBox.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.LatDMSDegTextBox.MaxLength = 2;
             this.LatDMSDegTextBox.Name = "LatDMSDegTextBox";
-            this.LatDMSDegTextBox.Size = new System.Drawing.Size(25, 20);
+            this.LatDMSDegTextBox.Size = new System.Drawing.Size(36, 20);
             this.LatDMSDegTextBox.TabIndex = 2;
             this.LatDMSDegTextBox.DoubleClick += new System.EventHandler(this.LatDMSTextBox_DoubleClick);
             this.LatDMSDegTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.LatDMSDegTextBox_KeyPress);
@@ -94,7 +94,7 @@
             // 
             // LonDecTextBox
             // 
-            this.LonDecTextBox.Location = new System.Drawing.Point(192, 97);
+            this.LonDecTextBox.Location = new System.Drawing.Point(211, 97);
             this.LonDecTextBox.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.LonDecTextBox.Name = "LonDecTextBox";
             this.LonDecTextBox.Size = new System.Drawing.Size(119, 20);
@@ -107,7 +107,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(189, 80);
+            this.label3.Location = new System.Drawing.Point(208, 80);
             this.label3.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(95, 13);
@@ -116,7 +116,7 @@
             // 
             // LatDecTextBox
             // 
-            this.LatDecTextBox.Location = new System.Drawing.Point(193, 57);
+            this.LatDecTextBox.Location = new System.Drawing.Point(212, 57);
             this.LatDecTextBox.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.LatDecTextBox.Name = "LatDecTextBox";
             this.LatDecTextBox.Size = new System.Drawing.Size(119, 20);
@@ -129,7 +129,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(190, 39);
+            this.label4.Location = new System.Drawing.Point(209, 39);
             this.label4.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(86, 13);
@@ -298,9 +298,9 @@
             // 
             this.LatDMSSecTextBox.Location = new System.Drawing.Point(145, 56);
             this.LatDMSSecTextBox.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.LatDMSSecTextBox.MaxLength = 2;
+            this.LatDMSSecTextBox.MaxLength = 7;
             this.LatDMSSecTextBox.Name = "LatDMSSecTextBox";
-            this.LatDMSSecTextBox.Size = new System.Drawing.Size(34, 20);
+            this.LatDMSSecTextBox.Size = new System.Drawing.Size(50, 20);
             this.LatDMSSecTextBox.TabIndex = 4;
             this.LatDMSSecTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.LatDMSSecTextBox_KeyPress);
             this.LatDMSSecTextBox.Validated += new System.EventHandler(this.LatDMSSecTextBox_Validated);
@@ -309,9 +309,9 @@
             // 
             this.LonDMSSecTextBox.Location = new System.Drawing.Point(145, 97);
             this.LonDMSSecTextBox.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.LonDMSSecTextBox.MaxLength = 2;
+            this.LonDMSSecTextBox.MaxLength = 7;
             this.LonDMSSecTextBox.Name = "LonDMSSecTextBox";
-            this.LonDMSSecTextBox.Size = new System.Drawing.Size(34, 20);
+            this.LonDMSSecTextBox.Size = new System.Drawing.Size(50, 20);
             this.LonDMSSecTextBox.TabIndex = 8;
             this.LonDMSSecTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.LonDMSSecTextBox_KeyPress);
             this.LonDMSSecTextBox.Validated += new System.EventHandler(this.LonDMSSecTextBox_Validated);

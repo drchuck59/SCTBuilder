@@ -251,14 +251,6 @@ namespace SCTBuilder
             }
         }
 
-        private void DeleteSubFolders(DirectoryInfo directoryInfo)
-        {
-            foreach (DirectoryInfo subfolder in directoryInfo.GetDirectories())
-            {
-                subfolder.Delete(true);
-            }
-        }
-
         private string VerifyExtractPath()
         {
             // returns the path to extract the data (the data folder)

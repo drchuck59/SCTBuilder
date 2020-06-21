@@ -218,46 +218,37 @@ namespace SCTBuilder
         private void LatDMSDegTextBox_KeyPress(object sender, KeyPressEventArgs e)
         {
                 char c = e.KeyChar;
-                if (!char.IsControl(c) && !char.IsDigit(c))
-                e.Handled = true;
+                e.Handled = Extensions.Numcheck(c);
         }
 
         private void LatDMSMinTextBox_KeyPress(object sender, KeyPressEventArgs e)
         {
             char c = e.KeyChar;
-            if (!char.IsControl(c) && !char.IsDigit(c))
-                e.Handled = true;
+            e.Handled =Extensions.Numcheck(c);
         }
 
         private void LatDMSSecTextBox_KeyPress(object sender, KeyPressEventArgs e)
         {
-            NumberFormatInfo fi = CultureInfo.CurrentCulture.NumberFormat;
-            char[] d = fi.NumberDecimalSeparator.ToCharArray();
             char c = e.KeyChar;
-            if (!char.IsControl(c) && !char.IsDigit(c) && !(c == d[0]))
-                e.Handled = true;
+            e.Handled = Extensions.DecimalControl(c, ref LatDMSDegTextBox, 4);
         }
 
         private void LonDMSDegTextBox_KeyPress(object sender, KeyPressEventArgs e)
         {
             char c = e.KeyChar;
-            if (!char.IsControl(c) && !char.IsDigit(c))
-                e.Handled = true;
+            e.Handled = Extensions.Numcheck(c);
         }
 
         private void LonDMSMinTextBox_KeyPress(object sender, KeyPressEventArgs e)
         {
             char c = e.KeyChar;
-            if (!char.IsControl(c) && !char.IsDigit(c)) 
-                e.Handled = true;
+            e.Handled = Extensions.Numcheck(c);
         }
 
         private void LonDMSSecTextBox_KeyPress(object sender, KeyPressEventArgs e)
         {
-            NumberFormatInfo fi = CultureInfo.CurrentCulture.NumberFormat;
             char c = e.KeyChar;
-            if (!char.IsControl(c) && !char.IsDigit(c) && !(c.Equals(fi.NumberDecimalSeparator)))
-                e.Handled = true;
+            e.Handled = Extensions.DecimalControl(c, ref LonDMSDegTextBox, 4);
         }
 
         private void LatDecTextBox_Validated(object sender, EventArgs e)
@@ -272,6 +263,7 @@ namespace SCTBuilder
                     LatSCTTextBox.Text = SCTLatitude;
                     DMSLatitude = Conversions.DecDeg2DMS(Lat, true);
                     DecLatitude = Lat;
+                    UpdateDMSboxes(true);
                 }
                 catch
                 {
@@ -519,8 +511,6 @@ namespace SCTBuilder
 
         private void LatDecTextBox_KeyPress(object sender, KeyPressEventArgs e)
         {
-            NumberFormatInfo fi = CultureInfo.CurrentCulture.NumberFormat;
-            char[] d = fi.NumberDecimalSeparator.ToCharArray();
             char c = e.KeyChar;
             if (c == '-')
             {
@@ -529,15 +519,12 @@ namespace SCTBuilder
             }
             else
             {
-                if (!char.IsControl(c) && !char.IsDigit(c) && !(c == d[0]))
-                    e.Handled = true;
+                e.Handled = Extensions.DecimalControl(c, ref LatDecTextBox, 4);
             }
         }
 
         private void LonDecTextBox_KeyPress(object sender, KeyPressEventArgs e)
         {
-            NumberFormatInfo fi = CultureInfo.CurrentCulture.NumberFormat;
-            char[] d = fi.NumberDecimalSeparator.ToCharArray();
             char c = e.KeyChar;
             if (c == '-')
             {
@@ -546,8 +533,7 @@ namespace SCTBuilder
             }
             else
             {
-                if (!char.IsControl(c) && !char.IsDigit(c) && !(c == d[0]))
-                    e.Handled = true;
+                e.Handled = Extensions.DecimalControl(c, ref LonDecTextBox, 4);
             }
         }
     }

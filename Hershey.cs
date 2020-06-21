@@ -99,7 +99,7 @@ namespace SCTBuilder
             }
             // The standard square is 30x30, but don't adjust just yet
             Centered = Adjust(Symbol[2]/-2, -15, Lat, Lon, Angle, Scale);
-            string Result = "; " + FixType + " symbol " + cr;
+            string Result = space + "; " + FixType + " symbol " + cr;
             double TrueAngle = Angle + InfoSection.MagneticVariation;
             for (int i = 2; i < Symbol[0]*2; i += 2)
             {

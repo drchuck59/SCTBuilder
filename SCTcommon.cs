@@ -111,40 +111,107 @@ namespace SCTBuilder
             return MessageBox.Show(Msg, VersionInfo.Title, buttons, icon);
         }
 
-        public static double[] GetCoords(string FIX, string FixType = "APT")
+        public static object[] FixInfo(string FIX)
         {
-            // Returns the lat/lon in double of the desired fix
-            double[] result = new double[2]; DataTable dt;
-            switch (FixType)
+            // Fix, Frequency(opt), Latitude, Longitude, Name, FixType
             {
-                default:
-                case "APT":
-                    dt = Form1.APT;
-                    break;
-                case "VOR":
-                    dt = Form1.VOR;
-                    break;
-                case "NDB":
-                    dt = Form1.NDB;
-                    break;
-                case "FIX":
-                    dt = Form1.FIX;
-                    break;
-            }
-            DataView dataView = new DataView(dt)
-            {
-                RowFilter = "[FacilityID] = '" + FIX + "'"
-            };
+                // Finds the given fix and RETURNS
+                // Fix, Frequency(opt), Latitude, Longitude, Name, FixType
+                List<object> result;
+                string Filter = "[FacilityID] = '" + FIX + "'";
+                // Search each table for the NavAid and return result
+                DataView dvFIX = new DataView(Form1.FIX)
+                {
+                    RowFilter = Filter
+                };
+                if (dvFIX.Count != 0)
+                {
+                    result = new List<object>()
+                    {
+                    FIX,
+                    string.Empty,
+                    dvFIX[0]["Latitude"],
+                    dvFIX[0]["Longitude"],
+                    dvFIX[0]["Use"].ToString(),
+                    "FIX",
+                    };
+                    dvFIX.Dispose();
+                }
+                else
+                {
+                    DataView dvVOR = new DataView(Form1.VOR)
+                    {
+                        RowFilter = Filter
+                    };
+                    if (dvVOR.Count != 0)
+                    {
+                        result = new List<object>()
+                        {
+                        FIX,
+                        dvVOR[0]["Frequency"],
+                        dvVOR[0]["Latitude"],
+                        dvVOR[0]["Longitude"],
+                        dvVOR[0]["Name"].ToString(),
+                        dvVOR[0]["Type"].ToString()
+                        };
+                        dvVOR.Dispose();
+                    }
 
-            if (dataView.Count != 0)
-            {
-                result[0] = Convert.ToDouble(dataView[0]["Latitude"]);
-                result[1] = Convert.ToDouble(dataView[0]["Longitude"]);
+                    else
+                    {
+                        DataView dvNDB = new DataView(Form1.NDB)
+                        {
+                            RowFilter = Filter
+                        };
+                        if (dvNDB.Count != 0)
+                        {
+                            result = new List<object>()
+                        {
+                        FIX,
+                        dvNDB[0]["Frequency"],
+                        dvNDB[0]["Latitude"],
+                        dvNDB[0]["Longitude"],
+                        dvNDB[0]["Type"].ToString(),
+                        "NDB",
+                        };
+                            dvNDB.Dispose();
+                        }
+                        else
+                        {
+                            DataView dvAPT = new DataView(Form1.APT)
+                            {
+                                RowFilter = Filter
+                            };
+                            if (dvAPT.Count != 0)
+                            {
+                                result = new List<object>()
+                                {
+                                FIX,
+                                string.Empty,
+                                dvFIX[0]["Latitude"],
+                                dvFIX[0]["Longitude"],
+                                dvFIX[0]["Use"].ToString(),
+                                "FIX",
+                                };
+                                dvFIX.Dispose();
+                            }
+                            else
+                            {
+                                result = new List<object>()
+                                {
+                                    FIX,
+                                    string.Empty,
+                                    -1,
+                                    -1,
+                                    "NA",
+                                    "NA",
+                                };
+                            }
+                        }
+                    }
+                }
+                return result.ToArray();
             }
-            else
-                result[0] = result[1] = -1f;
-            dataView.Dispose();
-            return result;
         }
 
         public static double GetMagVar(string Arpt)
@@ -600,7 +667,128 @@ namespace SCTBuilder
             return result;
         }
 
+        public static bool Numcheck(char chr)
+        {
+            /** 
+           Purpose    : to allow only numbers 
+           Returns    : True - character is number , False - Other than numbers 
+           **/
+            bool blnRetVal = false;
+            try
+            {
+                if (!char.IsControl(chr) && !char.IsDigit(chr))
+                {
+                    blnRetVal = true;
+                }
+            }
+            catch (Exception)
+            {
+            }
+            return blnRetVal;
+        }
+
+        public static bool DecimalControl(char chrInput, ref TextBox txtBox, int intNoOfDec)
+        {
+            /** 
+            Purpose    : To control the decimal places as per user option 
+            Assumptions: 
+            Effects    : 
+            Inputs     :  
+            Returns    : None 
+            **/
+            bool chrRetVal = false;
+            try
+            {
+                string strSearch = string.Empty;
+
+                if (chrInput == '\b')
+                {
+                    return false;
+                }
+
+                if (intNoOfDec == 0)
+                {
+                    strSearch = "0123456789";
+                    int INDEX = (int)strSearch.IndexOf(chrInput.ToString());
+                    if (strSearch.IndexOf(chrInput.ToString(), 0) == -1)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                else
+                {
+                    strSearch = "0123456789.";
+                    if (strSearch.IndexOf(chrInput, 0) == -1)
+                    {
+                        return true;
+                    }
+                }
+
+                if ((txtBox.Text.Length - txtBox.SelectionStart) > (intNoOfDec) && chrInput == '.')
+                {
+                    return true;
+                }
+
+                if (chrInput == '\b')
+                {
+                    chrRetVal = false;
+                }
+                else
+                {
+                    strSearch = txtBox.Text;
+                    if (strSearch != string.Empty)
+                    {
+                        if (strSearch.IndexOf('.', 0) > -1 && chrInput == '.')
+                        {
+                            return true;
+                        }
+                    }
+                    int intPos;
+                    int intAftDec;
+
+                    strSearch = txtBox.Text;
+                    if (strSearch == string.Empty) return false;
+                    intPos = (strSearch.IndexOf('.', 0));
+
+                    if (intPos == -1)
+                    {
+                        strSearch = "0123456789.";
+                        if (strSearch.IndexOf(chrInput, 0) == -1)
+                        {
+                            chrRetVal = true;
+                        }
+                        else
+                            chrRetVal = false;
+                    }
+                    else
+                    {
+                        if (txtBox.SelectionStart > intPos)
+                        {
+                            intAftDec = txtBox.Text.Length - txtBox.Text.IndexOf('.', 0);
+                            if (intAftDec > intNoOfDec)
+                            {
+                                chrRetVal = true;
+                            }
+                            else
+                                chrRetVal = false;
+                        }
+                        else
+                            chrRetVal = false;
+                    }
+                }
+            }
+            catch (Exception)
+            {
+            }
+            return chrRetVal;
+        }
     }
+
+
 
     public static class SCTstrings
     {
@@ -676,18 +864,35 @@ namespace SCTBuilder
             return result;
         }
 
-        public static string SSDout(string StartLat,
-            string StartLong, string EndLat, string EndLong,
+        public static string SSDout(object StartLat,
+            object StartLong, object EndLat, object EndLong,
             string NavAid0 = "", string NavAid1 = "", bool UseFix = false)
-            // Lat/longs are assumed to be in SCT format!!
+            // If the Lat/Long is NOT a string, convert it
         {
+            string Lat0; string Lat1; string Lon0; string Lon1;
+            if (Extensions.IsNumeric(StartLat.ToString()))
+                Lat0 = Conversions.DecDeg2SCT(Convert.ToDouble(StartLat), true);
+            else
+                Lat0 = StartLat.ToString();
+            if (Extensions.IsNumeric(StartLong.ToString()))
+                Lon0 = Conversions.DecDeg2SCT(Convert.ToDouble(StartLong), false);
+            else
+                Lon0 = StartLong.ToString();
+            if (Extensions.IsNumeric(EndLat.ToString()))
+                Lat1 = Conversions.DecDeg2SCT(Convert.ToDouble(EndLat), true);
+            else
+                Lat1 = EndLat.ToString();
+            if (Extensions.IsNumeric(EndLong.ToString()))
+                Lon1 = Conversions.DecDeg2SCT(Convert.ToDouble(EndLong), false);
+            else
+                Lon1 = EndLong.ToString();
             string str = new string(' ', 27);
             string result;
             if (!UseFix)
-                result = str + StartLat + " " + StartLong + " " + EndLat + " " + EndLong +
+                result = str + Lat0 + " " + Lon0 + " " + Lat1 + " " + Lon1 +
                     " ; " + NavAid0 + " " + NavAid1;
             else
-                result = str + NavAid0 + " " + NavAid0 + " " + NavAid1 + " " + NavAid1;
+                result = str + Lat0 + " " + Lon0 + " " + Lat1 + " " + Lon1;
             return result;
         }
 

@@ -34,6 +34,7 @@ namespace SCTBuilder
         static public DataTable NGSTARTransition = new SCTdata.NGSTARTransitionDataTable();
         static public DataTable NGSTARRNW = new SCTdata.NGSTARRNWDataTable();
         static public DataTable NGFixes = new SCTdata.NGFixesDataTable();
+        static public DataTable NGRTE = new SCTdata.NGRTEDataTable();
         static public DataSet SCT = new SCTdata();
         static public bool ExitClicked = false;
         static public bool NGexists = false;
@@ -82,8 +83,12 @@ namespace SCTBuilder
                 if ((NGAIRAC != -1) && (dataAIRAC != NGAIRAC))
                 {
                     MismatchedNGmessage(NGAIRAC, dataAIRAC);
+                    NGexists = false;
                 }
-                else NGexists = true;
+                else
+                {
+                    NGexists = true;
+                }
             }
             // No data folder or did not install a data set
             else
@@ -97,6 +102,18 @@ namespace SCTBuilder
                 NoXMLmessage();
             }
             TestWriteSCT();                 // Update the output button
+        }
+
+        public static void ReadNGFiles()
+        {
+            // Updates existing data with NG data
+            // As the files are used differently, some are preloaded, others are loaded as needed
+            if (NGexists)
+            {
+                ReadNaviGraph.NavRTE();
+                ReadNaviGraph.NavFIX();
+                ReadNaviGraph.NavAID();
+            }
         }
 
         private void NoXMLmessage()
@@ -540,34 +557,21 @@ namespace SCTBuilder
                     dvAWY.RowFilter = awyFilter + seqFilter + (MaxSelSeqNo + 10).ToString() + ")";
                     SetSelected(dvAWY);
                 }
+                string FullFilename = SCTcommon.GetFullPathname(FolderMgt.NGFolder, "wpNavRTE.txt");
+                if (FullFilename.IndexOf("Error") == -1)
+                {
+                    DataView dvRTE = new DataView(NGRTE);
+                    ClearSelected(dvRTE);
+                    FilterBy.Method = "Square";
+                    filter = SetFilter();
+                    // Apply the square filter
+                    dvRTE.RowFilter = filter;
+
+                }
             }
             // Clean up
             dvAWY.Dispose();
             return result;
-        }
-
-        private void SelectAWYNavaid(string navaid)
-        {
-            // Assures that navaids represented in a child table SELECTED row have been SELECTED
-            string filter = "[FacilityID] = '" + navaid + "'";
-            DataView dvVOR = new DataView(VOR)
-            {
-                RowFilter = filter
-            };
-            DataView dvNDB = new DataView(NDB)
-            {
-                RowFilter = filter
-            };
-            DataView dvFIX = new DataView(FIX)
-            {
-                RowFilter = filter
-            };
-            if (dvVOR.Count != 0) dvVOR[0]["SELECTED"] = true;
-            if (dvNDB.Count != 0) dvNDB[0]["SELECTED"] = true;
-            if (dvFIX.Count != 0) dvFIX[0]["SELECTED"] = true;
-            dvVOR.Dispose();
-            dvNDB.Dispose();
-            dvFIX.Dispose();
         }
 
         private string LoadAPTDataGridView()
@@ -695,7 +699,7 @@ namespace SCTBuilder
                 dvSSD.RowFilter = AAfilter + FacIDfilter;
                 if (dvSSD.Count > 0)
                 {
-                    Debug.WriteLine("Found: " + dvSSD.Count + " using ([NavAid] = '" + dtAptRow["FacilityID"].ToString() + "')");
+                    //Debug.WriteLine("Found: " + dvSSD.Count + " using ([NavAid] = '" + dtAptRow["FacilityID"].ToString() + "')");
                     DataTable IDdata = dvSSD.ToTable(true, "ID");
                     if (IDdata.Rows.Count != 0)
                     {
@@ -1704,9 +1708,9 @@ namespace SCTBuilder
         {
             if (AirportComboBox.SelectedIndex != -1)
             {
-                double[] coords = SCTcommon.GetCoords(AirportComboBox.Text, "APT");
-                InfoSection.CenterLatitude_Dec = coords[0];
-                InfoSection.CenterLongitude_Dec = coords[1];
+                object[] coords = SCTcommon.FixInfo(AirportComboBox.Text);
+                InfoSection.CenterLatitude_Dec = (double)coords[2];
+                InfoSection.CenterLongitude_Dec = (double)coords[3];
                 CenterLatTextBox.Text = InfoSection.CenterLatitude_SCT;
                 CenterLonTextBox.Text = InfoSection.CenterLongitude_SCT;
                 MagVarTextBox.Text = InfoSection.MagneticVariation.ToString("0.00");
