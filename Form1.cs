@@ -1670,7 +1670,8 @@ namespace SCTBuilder
 
         private void APTsCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            RWYsCheckBox.Enabled = LimitAPT2ARTCCCheckBox.Enabled = APTsCheckBox.Checked;
+            if (APTsCheckBox.Checked == false)
+                RWYsCheckBox.Enabled = LimitAPT2ARTCCCheckBox.Enabled = false;
         }
 
         private void RWYsCheckBox_CheckedChanged(object sender, EventArgs e)
@@ -1780,8 +1781,8 @@ namespace SCTBuilder
             if (AirportComboBox.SelectedIndex != -1)
             {
                 object[] coords = SCTcommon.GetNavData(AirportComboBox.Text);
-                InfoSection.CenterLatitude_Dec = (double)coords[2];
-                InfoSection.CenterLongitude_Dec = (double)coords[3];
+                InfoSection.CenterLatitude_Dec = Convert.ToDouble(coords[2]);
+                InfoSection.CenterLongitude_Dec = Convert.ToDouble(coords[3]);
                 CenterLatTextBox.Text = InfoSection.CenterLatitude_SCT;
                 CenterLonTextBox.Text = InfoSection.CenterLongitude_SCT;
                 MagVarTextBox.Text = InfoSection.MagneticVariation.ToString("0.00");
@@ -1882,10 +1883,6 @@ namespace SCTBuilder
         private void useFixesForCoordinatesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             InfoSection.UseFixesAsCoords = useFixesAsCoordinatesToolStripMenuItem.Checked;
-            if (InfoSection.UseFixesAsCoords)
-                SendMessage("NOTE - a coordinate in a FIX, VOR, or NDB list differs" + cr +
-                    " from same NavAid coord in a SID/STAR definition." + cr +
-                    " With new formats, plotting by Fix/NavAid is no longer recommended.");
         }
 
         private void drawAltitudeRestrictionsOnDiagramsToolStripMenuItem_Click(object sender, EventArgs e)
