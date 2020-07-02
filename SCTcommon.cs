@@ -111,14 +111,15 @@ namespace SCTBuilder
             return MessageBox.Show(Msg, VersionInfo.Title, buttons, icon);
         }
 
-        public static object[] FixInfo(string FIX)
+        public static object[] GetNavData(string FIX)
         {
             // Fix, Frequency(opt), Latitude, Longitude, Name, FixType
             {
-                // Finds the given fix and RETURNS
-                // Fix, Frequency(opt), Latitude, Longitude, Name, FixType
+                // Finds the given fix and 
+                // RETURNS ID(opt), FacilityID, Frequency(opt), Latitude, Longitude, Name, FixType
                 List<object> result;
                 string Filter = "[FacilityID] = '" + FIX + "'";
+                string Freq;
                 // Search each table for the NavAid and return result
                 DataView dvFIX = new DataView(Form1.FIX)
                 {
@@ -129,11 +130,12 @@ namespace SCTBuilder
                     result = new List<object>()
                     {
                     FIX,
+                    dvFIX[0]["FacilityID"].ToString(),
                     string.Empty,
-                    dvFIX[0]["Latitude"],
-                    dvFIX[0]["Longitude"],
+                    Convert.ToDouble(dvFIX[0]["Latitude"]),
+                    Convert.ToDouble(dvFIX[0]["Longitude"]),
                     dvFIX[0]["Use"].ToString(),
-                    "FIX",
+                    "FIX"
                     };
                     dvFIX.Dispose();
                 }
@@ -147,12 +149,13 @@ namespace SCTBuilder
                     {
                         result = new List<object>()
                         {
-                        FIX,
-                        dvVOR[0]["Frequency"],
-                        dvVOR[0]["Latitude"],
-                        dvVOR[0]["Longitude"],
+                        dvVOR[0]["ID"].ToString(),
+                        dvVOR[0]["FacilityID"].ToString(),
+                        dvVOR[0]["Frequency"].ToString(),
+                        Convert.ToDouble(dvVOR[0]["Latitude"]),
+                        Convert.ToDouble(dvVOR[0]["Longitude"]),
                         dvVOR[0]["Name"].ToString(),
-                        dvVOR[0]["Type"].ToString()
+                        dvVOR[0]["FixType"].ToString()
                         };
                         dvVOR.Dispose();
                     }
@@ -167,14 +170,15 @@ namespace SCTBuilder
                         {
                             result = new List<object>()
                         {
-                        FIX,
-                        dvNDB[0]["Frequency"],
-                        dvNDB[0]["Latitude"],
-                        dvNDB[0]["Longitude"],
-                        dvNDB[0]["Type"].ToString(),
-                        "NDB",
-                        };
-                            dvNDB.Dispose();
+                            dvNDB[0]["ID"].ToString(),
+                            dvNDB[0]["FacilityID"].ToString(),
+                            dvNDB[0]["Frequency"],
+                            Convert.ToDouble(dvNDB[0]["Latitude"]),
+                            Convert.ToDouble(dvNDB[0]["Longitude"]),
+                            dvNDB[0]["Name"].ToString(),
+                            dvNDB[0]["FixType"].ToString()
+                            };
+
                         }
                         else
                         {
@@ -184,16 +188,23 @@ namespace SCTBuilder
                             };
                             if (dvAPT.Count != 0)
                             {
+                                DataView dvTWR = new DataView(Form1.TWR)
+                                {
+                                    RowFilter = "[FacilityID] = '" + FIX + "'"
+                                };
+                                if (dvTWR.Count > 0) Freq = dvTWR[0]["LCLfreq"].ToString();
+                                else Freq = "122.800";
                                 result = new List<object>()
                                 {
                                 FIX,
-                                string.Empty,
-                                dvFIX[0]["Latitude"],
-                                dvFIX[0]["Longitude"],
-                                dvFIX[0]["Use"].ToString(),
-                                "FIX",
+                                Freq,
+                                dvAPT[0]["Latitude"],
+                                dvAPT[0]["Longitude"],
+                                dvAPT[0]["Name"].ToString(),
+                                "APT",
                                 };
-                                dvFIX.Dispose();
+                                dvTWR.Dispose();
+                                dvAPT.Dispose();
                             }
                             else
                             {
@@ -630,9 +641,9 @@ namespace SCTBuilder
 
     public static class Extensions
     {
-        /// <summary>
-        /// Get substring of specified number of characters on the right.
-        /// </summary>
+        /**
+        Get substring of specified number of characters on the right.
+        **/
         public static string Right(this string value, int length)
         {
             if (string.IsNullOrEmpty(value)) return string.Empty;
@@ -648,6 +659,9 @@ namespace SCTBuilder
 
         public static string Left(this string value, int maxLength)
         {
+            /**
+            Get substring of specified number of characters on the left.
+            **/
             if (string.IsNullOrEmpty(value)) return value;
             maxLength = Math.Abs(maxLength);
 
@@ -659,6 +673,12 @@ namespace SCTBuilder
 
         public static bool ContainsAny(this string Haystack, params string[] Needles)
         {
+            /**
+            Purpose   : to find a more than 1 string in a larger string
+            Reason    : IndexOf searches for only 1 string, whereas this
+                        searches a list of strings
+            Returns   : True - at least one substring found , False -  no substrings found
+            **/ 
             bool result = false;
             foreach (string Needle in Needles)
             {
@@ -667,7 +687,7 @@ namespace SCTBuilder
             return result;
         }
 
-        public static bool Numcheck(char chr)
+        public static bool CharIsDigit(char chr)
         {
             /** 
            Purpose    : to allow only numbers 
@@ -687,15 +707,45 @@ namespace SCTBuilder
             return blnRetVal;
         }
 
-        public static bool DecimalControl(char chrInput, ref TextBox txtBox, int intNoOfDec)
+        public static bool IsValidCoord(char chr, TextBox tb)
         {
             /** 
-            Purpose    : To control the decimal places as per user option 
-            Assumptions: 
-            Effects    : 
-            Inputs     :  
-            Returns    : None 
-            **/
+           Purpose    : to allow only numbers, decimal, and minus in first position
+           Returns    : True - character is valid , False - Other than numbers 
+           **/
+            bool result = false;
+            if (chr == '-')
+            {
+                if (tb.TextLength > 0)
+                    result = false;
+            }
+            else
+            {
+                result = Extensions.CharIsDecimal(chr, ref tb, 4);
+            }
+            return result;
+        }
+
+        public static bool IsASCII (char chr)
+        {
+            /** 
+           Purpose    : to allow only ASCII character set
+           Returns    : True - character is valid , False - Other than ASCII 
+           **/
+            bool IsASCII;
+            int ASCII = chr;
+            if ((ASCII >= 32) & (ASCII < 127))
+                IsASCII = true;
+            else IsASCII = false;
+            return IsASCII;
+        }
+
+        public static bool CharIsDecimal(char chrInput, ref TextBox txtBox, int intNoOfDec)
+        {
+            /** 
+           Purpose    : to allow only numbers and decimal with i# behind decimal
+           Returns    : True - character is valid , False - Other than numbers 
+           **/
             bool chrRetVal = false;
             try
             {
@@ -815,20 +865,40 @@ namespace SCTBuilder
         {
             string result;
             if (strOut.Count() != 0)
-                result = strOut[0].PadRight(5) + " " + strOut[2] + " " + strOut[3] + " ;" + strOut[4];
+            {
+                result = strOut[0].PadRight(5) + " " + strOut[2] + " " + strOut[3];
+                if (strOut[4].Trim().Length != 0) result += " ; " + strOut[4].Trim();
+            }
             else
-                result = Fix.PadRight(5) + " " + Lat + " " + Lon + " ;" + Comment;
+            {
+                result = Fix.PadRight(5) + " " + Lat + " " + Lon;
+                if (Comment.Trim().Length != 0) result += " ; " + Comment.Trim();
+            }
             return result;
         }
 
-        public static string VORout(string[] strOut, string Fac = "", string Freq = "", string Lat = "", 
-            string Lon = "", string Name = "")
+        public static string CharOut(string Lat0, string Lon0, string Lat1, string Lon1, char c = ' ')
+        {
+            string space = new string(' ', 27);
+            string result = space +
+                 String.Format(" ", 27) + Lat0 + " " + Lon0 + " " + Lat1 + " " + Lon1;
+            return result;
+        }
+
+        public static string VORout(string[] strOut, string Fix = "", string Freq = "", string Lat = "",
+            string Lon = "", string Name = "", string FixType = "")
         {
             string result;
             if (strOut.Count() != 0)
-                result = strOut[0].PadRight(3) + " " + strOut[1].PadRight(6) + " " + strOut[2] + " " + strOut[3] + " ;" + strOut[4];
+            {
+                result = strOut[0].PadRight(5) + " " + strOut[1].PadRight(6) + " " + strOut[2] + " " + strOut[3] + " ; " + strOut[4];
+                if (strOut[5].ToString().Length != 0) result += " (" + strOut[5].ToString() + ")";
+            }
             else
-                result = Fac.PadRight(5) + " " + Freq.PadRight(7) + " " + Lat + " " + Lon + " ;" + Name;
+            {
+                result = Fix.PadRight(5) + " " + Freq.PadRight(7) + " " + Lat + " " + Lon + " ;" + Name;
+                if (FixType.Length != 0) result += "(" + FixType + ")";
+            }
             return result;
         }
 
@@ -886,13 +956,16 @@ namespace SCTBuilder
                 Lon1 = Conversions.DecDeg2SCT(Convert.ToDouble(EndLong), false);
             else
                 Lon1 = EndLong.ToString();
-            string str = new string(' ', 27);
+            string space = new string(' ', 27);
             string result;
             if (!UseFix)
-                result = str + Lat0 + " " + Lon0 + " " + Lat1 + " " + Lon1 +
-                    " ; " + NavAid0 + " " + NavAid1;
+            {
+                result = space + Lat0 + " " + Lon0 + " " + Lat1 + " " + Lon1;
+                if ((NavAid0.Length != 0) || (NavAid1.Length != 0))
+                    result += " ; " + NavAid0 + " " + NavAid1;
+            }
             else
-                result = str + Lat0 + " " + Lon0 + " " + Lat1 + " " + Lon1;
+                result = space + Lat0 + " " + Lon0 + " " + Lat1 + " " + Lon1;
             return result;
         }
 

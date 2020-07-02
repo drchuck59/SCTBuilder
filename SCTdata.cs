@@ -4,6 +4,10 @@
 
     partial class SCTdata
     {
+        partial class NDBDataTable
+        {
+        }
+
         partial class NGSTARRNWDataTable
         {
         }

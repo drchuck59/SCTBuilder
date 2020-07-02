@@ -35,14 +35,11 @@
             this.label2 = new System.Windows.Forms.Label();
             this.LatTextBox = new System.Windows.Forms.TextBox();
             this.LonTextBox = new System.Windows.Forms.TextBox();
-            this.AlignLeftButton = new System.Windows.Forms.Button();
-            this.AlignCenterButton = new System.Windows.Forms.Button();
-            this.AlignRightButton = new System.Windows.Forms.Button();
             this.FixImportGroupBox = new System.Windows.Forms.GroupBox();
+            this.IncludeSymbolCheckBox = new System.Windows.Forms.CheckBox();
             this.FixListDataGridView = new System.Windows.Forms.DataGridView();
             this.IdentifierLabel = new System.Windows.Forms.Label();
             this.IdentifierTextBox = new System.Windows.Forms.TextBox();
-            this.CopyClipButton = new System.Windows.Forms.Button();
             this.DrawButton = new System.Windows.Forms.Button();
             this.OutputTextBox = new System.Windows.Forms.TextBox();
             this.Copy2ClipboardButton = new System.Windows.Forms.Button();
@@ -50,9 +47,11 @@
             this.SaveOutput2FileButton = new System.Windows.Forms.Button();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.BearingTextBox = new System.Windows.Forms.TextBox();
-            this.label3 = new System.Windows.Forms.Label();
             this.ScaleTextBox = new System.Windows.Forms.TextBox();
+            this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
             this.FixImportGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.FixListDataGridView)).BeginInit();
             this.SuspendLayout();
@@ -61,28 +60,33 @@
             // 
             this.Label1Label.AutoSize = true;
             this.Label1Label.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Label1Label.Location = new System.Drawing.Point(61, 92);
+            this.Label1Label.Location = new System.Drawing.Point(41, 15);
+            this.Label1Label.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.Label1Label.Name = "Label1Label";
-            this.Label1Label.Size = new System.Drawing.Size(60, 25);
+            this.Label1Label.Size = new System.Drawing.Size(43, 17);
             this.Label1Label.TabIndex = 0;
             this.Label1Label.Text = "Label";
             // 
             // LabelTextBox
             // 
             this.LabelTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelTextBox.Location = new System.Drawing.Point(127, 87);
+            this.LabelTextBox.Location = new System.Drawing.Point(85, 12);
+            this.LabelTextBox.Margin = new System.Windows.Forms.Padding(2);
             this.LabelTextBox.Name = "LabelTextBox";
-            this.LabelTextBox.Size = new System.Drawing.Size(200, 30);
+            this.LabelTextBox.Size = new System.Drawing.Size(135, 23);
             this.LabelTextBox.TabIndex = 1;
+            this.toolTip1.SetToolTip(this.LabelTextBox, "Limited to printable ASCII chars");
             this.LabelTextBox.Click += new System.EventHandler(this.LabelTextBox_Click);
+            this.LabelTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.LabelTextBox_KeyPress);
             // 
             // label1
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(40, 130);
+            this.label1.Location = new System.Drawing.Point(27, 39);
+            this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(81, 25);
+            this.label1.Size = new System.Drawing.Size(59, 17);
             this.label1.TabIndex = 2;
             this.label1.Text = "Latitude";
             // 
@@ -90,74 +94,60 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(23, 166);
+            this.label2.Location = new System.Drawing.Point(15, 63);
+            this.label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(98, 25);
+            this.label2.Size = new System.Drawing.Size(71, 17);
             this.label2.TabIndex = 3;
             this.label2.Text = "Longitude";
             // 
             // LatTextBox
             // 
             this.LatTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LatTextBox.Location = new System.Drawing.Point(127, 127);
+            this.LatTextBox.Location = new System.Drawing.Point(85, 38);
+            this.LatTextBox.Margin = new System.Windows.Forms.Padding(2);
             this.LatTextBox.Name = "LatTextBox";
-            this.LatTextBox.Size = new System.Drawing.Size(200, 30);
+            this.LatTextBox.Size = new System.Drawing.Size(135, 23);
             this.LatTextBox.TabIndex = 4;
+            this.LatTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.LatTextBox_KeyPress);
             this.LatTextBox.Validated += new System.EventHandler(this.LatTextBox_Validated);
             // 
             // LonTextBox
             // 
             this.LonTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LonTextBox.Location = new System.Drawing.Point(127, 163);
+            this.LonTextBox.Location = new System.Drawing.Point(85, 60);
+            this.LonTextBox.Margin = new System.Windows.Forms.Padding(2);
             this.LonTextBox.Name = "LonTextBox";
-            this.LonTextBox.Size = new System.Drawing.Size(200, 30);
+            this.LonTextBox.Size = new System.Drawing.Size(135, 23);
             this.LonTextBox.TabIndex = 5;
             this.LonTextBox.Validated += new System.EventHandler(this.LonTextBox_Validated);
             // 
-            // AlignLeftButton
-            // 
-            this.AlignLeftButton.Location = new System.Drawing.Point(333, 91);
-            this.AlignLeftButton.Name = "AlignLeftButton";
-            this.AlignLeftButton.Size = new System.Drawing.Size(75, 30);
-            this.AlignLeftButton.TabIndex = 6;
-            this.AlignLeftButton.Text = "Left";
-            this.AlignLeftButton.UseVisualStyleBackColor = true;
-            this.AlignLeftButton.Click += new System.EventHandler(this.AlignLeftButton_Click);
-            // 
-            // AlignCenterButton
-            // 
-            this.AlignCenterButton.Location = new System.Drawing.Point(414, 92);
-            this.AlignCenterButton.Name = "AlignCenterButton";
-            this.AlignCenterButton.Size = new System.Drawing.Size(75, 30);
-            this.AlignCenterButton.TabIndex = 7;
-            this.AlignCenterButton.Text = "Center";
-            this.AlignCenterButton.UseVisualStyleBackColor = true;
-            this.AlignCenterButton.Click += new System.EventHandler(this.AlignCenterButton_Click);
-            // 
-            // AlignRightButton
-            // 
-            this.AlignRightButton.Location = new System.Drawing.Point(495, 92);
-            this.AlignRightButton.Name = "AlignRightButton";
-            this.AlignRightButton.Size = new System.Drawing.Size(75, 30);
-            this.AlignRightButton.TabIndex = 8;
-            this.AlignRightButton.Text = "Right";
-            this.AlignRightButton.UseVisualStyleBackColor = true;
-            this.AlignRightButton.Click += new System.EventHandler(this.AlignRightButton_Click);
-            // 
             // FixImportGroupBox
             // 
+            this.FixImportGroupBox.Controls.Add(this.label5);
+            this.FixImportGroupBox.Controls.Add(this.IncludeSymbolCheckBox);
             this.FixImportGroupBox.Controls.Add(this.FixListDataGridView);
             this.FixImportGroupBox.Controls.Add(this.IdentifierLabel);
             this.FixImportGroupBox.Controls.Add(this.IdentifierTextBox);
             this.FixImportGroupBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.FixImportGroupBox.Location = new System.Drawing.Point(348, 130);
-            this.FixImportGroupBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.FixImportGroupBox.Location = new System.Drawing.Point(232, 11);
+            this.FixImportGroupBox.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
             this.FixImportGroupBox.Name = "FixImportGroupBox";
-            this.FixImportGroupBox.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.FixImportGroupBox.Size = new System.Drawing.Size(342, 248);
+            this.FixImportGroupBox.Padding = new System.Windows.Forms.Padding(2, 1, 2, 1);
+            this.FixImportGroupBox.Size = new System.Drawing.Size(228, 234);
             this.FixImportGroupBox.TabIndex = 9;
             this.FixImportGroupBox.TabStop = false;
             this.FixImportGroupBox.Text = "Import From Fix";
+            // 
+            // IncludeSymbolCheckBox
+            // 
+            this.IncludeSymbolCheckBox.AutoSize = true;
+            this.IncludeSymbolCheckBox.Location = new System.Drawing.Point(14, 203);
+            this.IncludeSymbolCheckBox.Name = "IncludeSymbolCheckBox";
+            this.IncludeSymbolCheckBox.Size = new System.Drawing.Size(175, 21);
+            this.IncludeSymbolCheckBox.TabIndex = 20;
+            this.IncludeSymbolCheckBox.Text = "Include Symbol over Fix";
+            this.IncludeSymbolCheckBox.UseVisualStyleBackColor = true;
             // 
             // FixListDataGridView
             // 
@@ -167,8 +157,8 @@
             this.FixListDataGridView.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.DisplayedCellsExceptHeaders;
             this.FixListDataGridView.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.EnableWithoutHeaderText;
             this.FixListDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.FixListDataGridView.Location = new System.Drawing.Point(21, 69);
-            this.FixListDataGridView.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.FixListDataGridView.Location = new System.Drawing.Point(14, 45);
+            this.FixListDataGridView.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
             this.FixListDataGridView.MultiSelect = false;
             this.FixListDataGridView.Name = "FixListDataGridView";
             this.FixListDataGridView.ReadOnly = true;
@@ -176,7 +166,7 @@
             this.FixListDataGridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.AutoSizeToAllHeaders;
             this.FixListDataGridView.RowTemplate.Height = 28;
             this.FixListDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.FixListDataGridView.Size = new System.Drawing.Size(304, 166);
+            this.FixListDataGridView.Size = new System.Drawing.Size(203, 154);
             this.FixListDataGridView.TabIndex = 2;
             this.toolTip1.SetToolTip(this.FixListDataGridView, "Double click fix to copy");
             this.FixListDataGridView.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.FixListDataGridView_CellDoubleClick);
@@ -185,40 +175,31 @@
             // 
             this.IdentifierLabel.AutoSize = true;
             this.IdentifierLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.IdentifierLabel.Location = new System.Drawing.Point(16, 32);
+            this.IdentifierLabel.Location = new System.Drawing.Point(11, 21);
+            this.IdentifierLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.IdentifierLabel.Name = "IdentifierLabel";
-            this.IdentifierLabel.Size = new System.Drawing.Size(85, 25);
+            this.IdentifierLabel.Size = new System.Drawing.Size(62, 17);
             this.IdentifierLabel.TabIndex = 1;
             this.IdentifierLabel.Text = "Identifier";
             // 
             // IdentifierTextBox
             // 
             this.IdentifierTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.IdentifierTextBox.Location = new System.Drawing.Point(107, 28);
-            this.IdentifierTextBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.IdentifierTextBox.Location = new System.Drawing.Point(71, 18);
+            this.IdentifierTextBox.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
             this.IdentifierTextBox.Name = "IdentifierTextBox";
-            this.IdentifierTextBox.Size = new System.Drawing.Size(100, 30);
+            this.IdentifierTextBox.Size = new System.Drawing.Size(68, 23);
             this.IdentifierTextBox.TabIndex = 0;
             this.IdentifierTextBox.TabStop = false;
             this.IdentifierTextBox.TextChanged += new System.EventHandler(this.IdentifierTextBox_TextChanged);
             // 
-            // CopyClipButton
-            // 
-            this.CopyClipButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CopyClipButton.Location = new System.Drawing.Point(576, 66);
-            this.CopyClipButton.Name = "CopyClipButton";
-            this.CopyClipButton.Size = new System.Drawing.Size(114, 59);
-            this.CopyClipButton.TabIndex = 10;
-            this.CopyClipButton.Text = "Copy From Other Form";
-            this.CopyClipButton.UseVisualStyleBackColor = true;
-            this.CopyClipButton.Click += new System.EventHandler(this.CopyClipButton_Click);
-            // 
             // DrawButton
             // 
             this.DrawButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.DrawButton.Location = new System.Drawing.Point(57, 330);
+            this.DrawButton.Location = new System.Drawing.Point(38, 214);
+            this.DrawButton.Margin = new System.Windows.Forms.Padding(2);
             this.DrawButton.Name = "DrawButton";
-            this.DrawButton.Size = new System.Drawing.Size(243, 48);
+            this.DrawButton.Size = new System.Drawing.Size(162, 31);
             this.DrawButton.TabIndex = 11;
             this.DrawButton.Text = "Generate Text Drawing";
             this.DrawButton.UseVisualStyleBackColor = true;
@@ -226,20 +207,22 @@
             // 
             // OutputTextBox
             // 
-            this.OutputTextBox.Location = new System.Drawing.Point(57, 384);
+            this.OutputTextBox.Location = new System.Drawing.Point(38, 250);
+            this.OutputTextBox.Margin = new System.Windows.Forms.Padding(2);
             this.OutputTextBox.Multiline = true;
             this.OutputTextBox.Name = "OutputTextBox";
-            this.OutputTextBox.Size = new System.Drawing.Size(640, 696);
+            this.OutputTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.OutputTextBox.Size = new System.Drawing.Size(428, 454);
             this.OutputTextBox.TabIndex = 12;
             this.OutputTextBox.WordWrap = false;
             // 
             // Copy2ClipboardButton
             // 
             this.Copy2ClipboardButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Copy2ClipboardButton.Location = new System.Drawing.Point(359, 1085);
-            this.Copy2ClipboardButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.Copy2ClipboardButton.Location = new System.Drawing.Point(239, 705);
+            this.Copy2ClipboardButton.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
             this.Copy2ClipboardButton.Name = "Copy2ClipboardButton";
-            this.Copy2ClipboardButton.Size = new System.Drawing.Size(118, 80);
+            this.Copy2ClipboardButton.Size = new System.Drawing.Size(79, 52);
             this.Copy2ClipboardButton.TabIndex = 13;
             this.Copy2ClipboardButton.Text = "Copy to Clipboard";
             this.Copy2ClipboardButton.UseVisualStyleBackColor = true;
@@ -248,10 +231,10 @@
             // 
             this.ClearOutputButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(128)))));
             this.ClearOutputButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ClearOutputButton.Location = new System.Drawing.Point(584, 1085);
-            this.ClearOutputButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.ClearOutputButton.Location = new System.Drawing.Point(389, 705);
+            this.ClearOutputButton.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
             this.ClearOutputButton.Name = "ClearOutputButton";
-            this.ClearOutputButton.Size = new System.Drawing.Size(117, 80);
+            this.ClearOutputButton.Size = new System.Drawing.Size(78, 52);
             this.ClearOutputButton.TabIndex = 15;
             this.ClearOutputButton.Text = "Clear Contents";
             this.ClearOutputButton.UseVisualStyleBackColor = false;
@@ -260,10 +243,10 @@
             // SaveOutput2FileButton
             // 
             this.SaveOutput2FileButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.SaveOutput2FileButton.Location = new System.Drawing.Point(470, 1085);
-            this.SaveOutput2FileButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.SaveOutput2FileButton.Location = new System.Drawing.Point(313, 705);
+            this.SaveOutput2FileButton.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
             this.SaveOutput2FileButton.Name = "SaveOutput2FileButton";
-            this.SaveOutput2FileButton.Size = new System.Drawing.Size(122, 80);
+            this.SaveOutput2FileButton.Size = new System.Drawing.Size(81, 52);
             this.SaveOutput2FileButton.TabIndex = 14;
             this.SaveOutput2FileButton.Text = "Save to File";
             this.SaveOutput2FileButton.UseVisualStyleBackColor = true;
@@ -271,49 +254,78 @@
             // BearingTextBox
             // 
             this.BearingTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BearingTextBox.Location = new System.Drawing.Point(127, 199);
+            this.BearingTextBox.Location = new System.Drawing.Point(85, 84);
+            this.BearingTextBox.Margin = new System.Windows.Forms.Padding(2);
+            this.BearingTextBox.MaxLength = 3;
             this.BearingTextBox.Name = "BearingTextBox";
-            this.BearingTextBox.Size = new System.Drawing.Size(200, 30);
+            this.BearingTextBox.Size = new System.Drawing.Size(38, 23);
             this.BearingTextBox.TabIndex = 17;
             this.BearingTextBox.Text = "90";
+            this.toolTip1.SetToolTip(this.BearingTextBox, "Default bearing is horizontal");
+            this.BearingTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.BearingTextBox_KeyPress);
             this.BearingTextBox.Validated += new System.EventHandler(this.BearingTextBox_Validated);
+            // 
+            // ScaleTextBox
+            // 
+            this.ScaleTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ScaleTextBox.Location = new System.Drawing.Point(182, 84);
+            this.ScaleTextBox.Margin = new System.Windows.Forms.Padding(2);
+            this.ScaleTextBox.Name = "ScaleTextBox";
+            this.ScaleTextBox.Size = new System.Drawing.Size(38, 23);
+            this.ScaleTextBox.TabIndex = 19;
+            this.ScaleTextBox.Text = "1.0";
+            this.toolTip1.SetToolTip(this.ScaleTextBox, "Scaling only! Default 1=0.25 NM square");
+            this.ScaleTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.ScaleTextBox_KeyPress);
+            this.ScaleTextBox.Validated += new System.EventHandler(this.ScaleTextBox_Validated);
             // 
             // label3
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(40, 202);
+            this.label3.Location = new System.Drawing.Point(27, 86);
+            this.label3.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(79, 25);
+            this.label3.Size = new System.Drawing.Size(57, 17);
             this.label3.TabIndex = 16;
             this.label3.Text = "Bearing";
-            // 
-            // ScaleTextBox
-            // 
-            this.ScaleTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ScaleTextBox.Location = new System.Drawing.Point(127, 235);
-            this.ScaleTextBox.Name = "ScaleTextBox";
-            this.ScaleTextBox.Size = new System.Drawing.Size(200, 30);
-            this.ScaleTextBox.TabIndex = 19;
-            this.ScaleTextBox.Text = "0.5";
-            this.ScaleTextBox.Validated += new System.EventHandler(this.ScaleTextBox_Validated);
             // 
             // label4
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(7, 238);
+            this.label4.Location = new System.Drawing.Point(140, 86);
+            this.label4.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(112, 25);
+            this.label4.Size = new System.Drawing.Size(43, 17);
             this.label4.TabIndex = 18;
-            this.label4.Text = "Scale (NM)";
+            this.label4.Text = "Scale";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label5.Location = new System.Drawing.Point(148, 15);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(69, 26);
+            this.label5.TabIndex = 21;
+            this.label5.Text = "(Double click\r\nrow to insert)";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(41, 109);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(174, 26);
+            this.label6.TabIndex = 20;
+            this.label6.Text = "NOTE: Label can be changed after\r\n            inserting FIX information.";
             // 
             // DrawLabels
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ActiveCaption;
-            this.ClientSize = new System.Drawing.Size(778, 1175);
+            this.ClientSize = new System.Drawing.Size(519, 764);
+            this.Controls.Add(this.label6);
             this.Controls.Add(this.ScaleTextBox);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.BearingTextBox);
@@ -323,19 +335,17 @@
             this.Controls.Add(this.SaveOutput2FileButton);
             this.Controls.Add(this.OutputTextBox);
             this.Controls.Add(this.DrawButton);
-            this.Controls.Add(this.CopyClipButton);
             this.Controls.Add(this.FixImportGroupBox);
-            this.Controls.Add(this.AlignRightButton);
-            this.Controls.Add(this.AlignCenterButton);
-            this.Controls.Add(this.AlignLeftButton);
             this.Controls.Add(this.LonTextBox);
             this.Controls.Add(this.LatTextBox);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.LabelTextBox);
             this.Controls.Add(this.Label1Label);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "DrawLabels";
-            this.Text = "DrawLabels";
+            this.Text = "Draw Labels";
+            this.Load += new System.EventHandler(this.DrawLabels_Load);
             this.FixImportGroupBox.ResumeLayout(false);
             this.FixImportGroupBox.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.FixListDataGridView)).EndInit();
@@ -352,14 +362,10 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox LatTextBox;
         private System.Windows.Forms.TextBox LonTextBox;
-        private System.Windows.Forms.Button AlignLeftButton;
-        private System.Windows.Forms.Button AlignCenterButton;
-        private System.Windows.Forms.Button AlignRightButton;
         private System.Windows.Forms.GroupBox FixImportGroupBox;
         private System.Windows.Forms.DataGridView FixListDataGridView;
         private System.Windows.Forms.Label IdentifierLabel;
         private System.Windows.Forms.TextBox IdentifierTextBox;
-        private System.Windows.Forms.Button CopyClipButton;
         private System.Windows.Forms.Button DrawButton;
         private System.Windows.Forms.TextBox OutputTextBox;
         private System.Windows.Forms.Button Copy2ClipboardButton;
@@ -370,5 +376,8 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox ScaleTextBox;
         private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.CheckBox IncludeSymbolCheckBox;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label label6;
     }
 }

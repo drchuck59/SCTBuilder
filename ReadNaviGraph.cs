@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Net.WebSockets;
 using Org.BouncyCastle.Crypto.Digests;
+using System.Windows.Forms;
 
 namespace SCTBuilder
 {
@@ -21,32 +22,26 @@ namespace SCTBuilder
 
         public static void NavAID()
         {
-            string ParseLine; string aID;
-            string FullFilename = SCTcommon.GetFullPathname(FolderMgt.NGFolder, "wpNavAID.txt");
-            DataView dvVOR = new DataView(Form1.VOR);
-            DataView dvNDB = new DataView(Form1.NDB);
+            string FullFilename = SCTcommon.GetFullPathname(FolderMgt.DataFolder, "wpNavAID.txt");
+            DataTable wpNavAid = Form1.NGNavAID;
+            DataRow dataRow;
             if (FullFilename.IndexOf("Error") == -1)
             {
+                wpNavAid.Clear();
                 using (StreamReader sr = new StreamReader(FullFilename))
                 {
                     while ((Line = sr.ReadLine()) != null)
                     {
                         if (Line.Substring(0, 1) != ";")
                         {
-                            ParseLine = Line;
-                            aID = ParseLine.Substring(0, 5).Trim();
-                            dvVOR.RowFilter = "[FacilityID] == '" + aID + "'";
-                            if (dvVOR.Count != 0)
-                            {
-                                dvVOR[0]["DecLat"] = Convert.ToDouble(ParseLine.Substring(29, 10).Trim());
-                                dvVOR[0]["DecLon"] = Convert.ToDouble(ParseLine.Substring(40, 10).Trim());
-                            }
-                            dvNDB.RowFilter = "[FacilityID] == '" + aID + "'";
-                            if (dvNDB.Count != 0)
-                            {
-                                dvNDB[0]["DecLat"] = Convert.ToDouble(ParseLine.Substring(29, 10).Trim());
-                                dvNDB[0]["DecLon"] = Convert.ToDouble(ParseLine.Substring(40, 10).Trim());
-                            }
+                            dataRow = wpNavAid.NewRow();
+                            dataRow["Name"] = Line.Substring(0, 14).Trim();
+                            dataRow["FacilityID"] = Line.Substring(24, 5).Trim();
+                            dataRow["Type"] = Line.Substring(29, 4).Trim();
+                            dataRow["Latitude"] = Convert.ToDouble(Line.Substring(33, 10).Trim());
+                            dataRow["Longitude"] = Convert.ToDouble(Line.Substring(43, 11).Trim());
+                            dataRow["Frequency"] = Line.Substring(54, 6).Trim();
+                            dataRow.EndEdit();
                         }
                     }
                 }
@@ -55,9 +50,10 @@ namespace SCTBuilder
 
         public static void NavFIX()
         {
-            string ParseLine; string aID;
-            string FullFilename = SCTcommon.GetFullPathname(FolderMgt.NGFolder, "wpNavFIX.txt");
-            DataView dvFIX = new DataView(Form1.FIX);
+            DataRow datarow;
+            string FullFilename = SCTcommon.GetFullPathname(FolderMgt.DataFolder, "wpNavFIX.txt");
+            DataTable dtNGFIX = Form1.NGFixes;
+            dtNGFIX.Clear();
             if (FullFilename.IndexOf("Error") == -1)
             {
                 using (StreamReader sr = new StreamReader(FullFilename))
@@ -66,14 +62,11 @@ namespace SCTBuilder
                     {
                         if (Line.Substring(0, 1) != ";")
                         {
-                            ParseLine = Line;
-                            aID = ParseLine.Substring(0, 5).Trim();
-                            dvFIX.RowFilter = "[FacilityID] == '" + aID + "'";
-                            if (dvFIX.Count != 0)
-                            {
-                                dvFIX[0]["DecLat"] = Convert.ToDouble(ParseLine.Substring(29, 10).Trim());
-                                dvFIX[0]["DecLon"] = Convert.ToDouble(ParseLine.Substring(40, 10).Trim());
-                            }
+                            datarow = dtNGFIX.NewRow();
+                            datarow["FacilityID"] = Line.Substring(0, 5).Trim();
+                            datarow[1] = Convert.ToDouble(Line.Substring(29, 10).Trim());
+                            datarow[2] = Convert.ToDouble(Line.Substring(39, 11).Trim());
+                            datarow.EndEdit();
                         }
                     }
                 }
@@ -82,41 +75,54 @@ namespace SCTBuilder
 
         public static void NavRTE()
         {
-            string ParseLine; string aID;
-            string[] LowAirways = new string[6]
-                {"V", "A", "B", "G", "R", "T"};
-            string FullFilename = SCTcommon.GetFullPathname(FolderMgt.NGFolder, "wpNavRTE.txt");
-            DataView dvAWY = new DataView(Form1.AWY);
-            if (FullFilename.IndexOf("Error") == -1)
+            // Add NaviGraph routes that are NOT in FAA table
+            // That is - Ultra, Oceanic, and World routes
+            string curID; string prevID = string.Empty;
+            bool IDexists = false; bool Adding = false;
+            string FullFilename = SCTcommon.GetFullPathname(FolderMgt.DataFolder, "wpNavRTE.txt");
+            DataView dvRTE = new DataView(Form1.NGRTE);
+            if (FullFilename.IndexOf("Error") != -1)
             {
                 using (StreamReader sr = new StreamReader(FullFilename))
                 {
-                    while ((Line=sr.ReadLine()) != null)
+                    while ((Line=sr.ReadLine()) != null)    // Until EOF
                     {
-                        if (Line.Substring(0,1) != ";")
+                        if (Line.Substring(0, 1) != ";")     // Check for comment
                         {
-                            ParseLine = Line;
-                            aID = ParseLine.Substring(0, ParseLine.IndexOf(" ")).Trim();
-                            dvAWY.RowFilter = "[AWYID] == '" + aID + "'";
-                            if (dvAWY.Count == 0)
+                            curID = Line.Substring(0, Line.IndexOf(" ")).Trim();
+                            Adding = curID == prevID;
+                            if (!Adding)
                             {
-                                DataRowView dvRTE = dvAWY.AddNew();
-                                dvRTE["AWYID"] = aID;
-                                ParseLine = ParseLine.Substring(ParseLine.IndexOf(" ") + 1);
-                                dvRTE["Sequence"] = Convert.ToInt32(ParseLine.Substring(0, ParseLine.IndexOf(" ")).Trim()) * 10;
-                                ParseLine = ParseLine.Substring(ParseLine.IndexOf(" ") + 1);
-                                dvRTE["NavAid"] = ParseLine.Substring(0, ParseLine.IndexOf(" ")).Trim();
-                                ParseLine = ParseLine.Substring(ParseLine.IndexOf(" ") + 1);
-                                dvRTE["Latitude"] = Convert.ToDouble(ParseLine.Substring(0, ParseLine.IndexOf(" ")).Trim());
-                                ParseLine = ParseLine.Substring(ParseLine.IndexOf(" ") + 1);
-                                dvRTE["Longitude"] = Convert.ToDouble(ParseLine.Substring(0, ParseLine.IndexOf(" ")).Trim());
-                                dvRTE["IsLow"] = LowAirways.Any(aID.Contains);
-                                dvRTE.EndEdit();
+                                dvRTE.RowFilter = "[AWYID] = '" + curID + "'";
+                                IDexists = (dvRTE.Count != 0);
                             }
+                            if (Adding || !IDexists)
+                            {
+                                AddRTE(dvRTE, Line);
+                            }
+                            prevID = curID;
                         }
                     }
                 }
             }
+        }
+
+        private static void AddRTE(DataView dv, string Line)
+        {
+            string curID = Line.Substring(0, Line.IndexOf(" ")).Trim();
+            string[] LowAirways = new string[6] {"V", "A", "B", "G", "R", "T"};
+            DataRowView dvRTE = dv.AddNew();
+            dvRTE["AWYID"] = curID;
+            Line = Line.Substring(Line.IndexOf(" ") + 1);
+            dvRTE["Sequence"] = Convert.ToInt32(Line.Substring(0, Line.IndexOf(" ")).Trim()) * 10;
+            Line = Line.Substring(Line.IndexOf(" ") + 1);
+            dvRTE["NavAid"] = Line.Substring(0, Line.IndexOf(" ")).Trim();
+            Line = Line.Substring(Line.IndexOf(" ") + 1);
+            dvRTE["Latitude"] = Convert.ToDouble(Line.Substring(0, Line.IndexOf(" ")).Trim());
+            Line = Line.Substring(Line.IndexOf(" ") + 1);
+            dvRTE["Longitude"] = Convert.ToDouble(Line.Substring(0, Line.IndexOf(" ")).Trim());
+            dvRTE["IsLow"] = LowAirways.Any(curID.Contains);
+            dvRTE.EndEdit();
         }
 
         public static bool SIDSTARS(string Apt)
@@ -128,7 +134,7 @@ namespace SCTBuilder
             Airport = Apt;
             bool result = false;
             string Section = string.Empty;
-            string FullFilename = SCTcommon.GetFullPathname(FolderMgt.NGFolder, Airport + ".txt");
+            string FullFilename = SCTcommon.GetFullPathname(FolderMgt.DataFolder, Airport + ".txt");
             if (FullFilename.IndexOf("ERROR") == -1)
             {
                 using (StreamReader reader = new StreamReader(FullFilename))

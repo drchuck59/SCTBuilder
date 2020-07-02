@@ -13,13 +13,22 @@ using System.Diagnostics;
 using System.Collections.Specialized;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using MySqlX.XDevAPI.Relational;
+using System.Security.Permissions;
 
 namespace SCTBuilder
 {
     class SCToutput
     {
-        public static string CycleHeader;
-        public static readonly string cr = Environment.NewLine;
+        static string CycleHeader;
+        static readonly string cr = Environment.NewLine;
+        static List<object> FixData = new List<object>();
+        static List<object> VORData = new List<object>();
+        static List<object> NDBData = new List<object>();
+        static List<string> SSDlines = new List<string>();
+        static List<string> FixesUsed = new List<string>();
+        static List<string> APTsUsed = new List<string>();
+        static string BigResult = string.Empty;
+
         public static void WriteSCT()
         {
             // DataTable LS = Form1.LocalSector;
@@ -188,7 +197,7 @@ namespace SCTBuilder
             else return string.Empty;
         }
 
-    private static void WriteHeader(string path)
+        private static void WriteHeader(string path)
         {
             using (StreamWriter sw = File.CreateText(path))
             {
@@ -214,7 +223,7 @@ namespace SCTBuilder
         }
         private static void WriteColors(string path)
         {
-            DataTable dtColors = Form1.Colors; 
+            DataTable dtColors = Form1.Colors;
             string Output = "; Color definition table" + cr;
             Debug.WriteLine(dtColors.Rows.Count + " colors in color table");
             foreach (DataRow row in dtColors.Rows)
@@ -339,9 +348,9 @@ namespace SCTBuilder
                         strOut[5] = " (Public) ";
                     else
                         strOut[5] = " {Private} ";
-                    strOut[6] = ATIS; 
+                    strOut[6] = ATIS;
                     if (ATIS.Length != 0) strOut[6] = ATIStype + strOut[6];
-                        else strOut[6] = string.Empty;
+                    else strOut[6] = string.Empty;
                     if (!(strOut[2] + " " + strOut[3]).Contains("-1 "))      // Do NOT write APTs having no fix
                         sw.WriteLine(SCTstrings.APTout(strOut));
                 }
@@ -405,7 +414,7 @@ namespace SCTBuilder
                     strOut[1] = row["EndIdentifier"].ToString().Trim().PadRight(3);
                     MagBHdg = Convert.ToDouble(row["BaseHeading"]) + InfoSection.MagneticVariation;
                     if (MagBHdg > 360) MagBHdg %= 360;
-                    else if (MagBHdg < 0) 
+                    else if (MagBHdg < 0)
                         MagBHdg = (MagBHdg + 360) % 360;
                     if (MagBHdg == 0) MagBHdg = 360;
                     strOut[2] = Convert.ToString(MagBHdg).PadRight(3);
@@ -430,7 +439,7 @@ namespace SCTBuilder
         private static void WriteAWY(string path, bool IsLow)
         {
             DataTable AWY = Form1.AWY;
-            string Awy0 = string.Empty; string Awy1; 
+            string Awy0 = string.Empty; string Awy1;
             string NavAid0 = string.Empty; string NavAid1;
             string Lat0 = string.Empty; string Lat1;
             string Lon0 = string.Empty; string Lon1;
@@ -470,9 +479,12 @@ namespace SCTBuilder
 
         private static void WriteSIDSTAR(bool IsSID)
         {
-            // Creates a list of IDs by SID or STAR, then loops for output
-            // To write a full set, turn on the single file and turn off the SSD references
+            // Calling routine for SID and STAR diagrams
+            // SSD = Either SID or STAR, depending on flag
+            string path;
             string SSDfilter;
+            string Section = "STAR"; if (IsSID) Section = "SID";
+
             DataTable SSD = Form1.SSD;
             // Get the list of Selected SSDs
             if (IsSID) SSDfilter = "[IsSID]"; else SSDfilter = "NOT [IsSID]";
@@ -483,62 +495,93 @@ namespace SCTBuilder
                 Sort = "ID",
             };
             DataTable SSDlist = dvSSD.ToTable(true, "ID");
-            if (InfoSection.OneSectionSIDSTAR)
-            { }
+
+            // Loop the SSDIDs. Create a text file for each one...
+            // No other way to manage the one-file and multifile option
+
+            if (InfoSection.OneFilePerSidStar)
+            {
+                foreach (DataRow drSSDlist in SSDlist.Rows)
+                {
+                    
+                    // Clear the prior data, if any
+                    FixData = new List<object>();
+                    VORData = new List<object>();
+                    NDBData = new List<object>();
+                    SSDlines = new List<string>();
+                    FixesUsed = new List<string>();
+                    APTsUsed = new List<string>();
+                    BigResult = string.Empty;
+                    // Get the SSD in question - on this loop, the path is the SSDname
+                    dvSSD.RowFilter = "ID = '" + drSSDlist[0].ToString() + "'";
+                    // Pass the single row of SSD data to the writing programs
+                    if (dvSSD.Count != 0)
+                        BuildSSD(dvSSD);
+                    // Creating a file for each dvSSD...
+                    path = CheckFile(dvSSD[0]["SSDcode"].ToString());
+                    using (StreamWriter sw = new StreamWriter(path))
+                    {
+                        sw.WriteLine(CycleHeader);
+                        if (InfoSection.IncludeSidStarReferences)
+                            WriteSSDrefs(sw);
+                        // Is this a SID or STAR section?  The 1st character will tell
+                        sw.WriteLine(cr + "[" + Section + "]");
+                        WriteSSDLines(sw);          // Since Labels depend on lines, call them there
+                    }
+                }
+            }
             else
             {
-                // Loop the SSDIDs. Create a text file for each one...
-                foreach (DataRow drSSD in SSDlist.Rows)
+                FixData = new List<object>();
+                VORData = new List<object>();
+                NDBData = new List<object>();
+                SSDlines = new List<string>();
+                FixesUsed = new List<string>();
+                APTsUsed = new List<string>();
+                BigResult = string.Empty;
+                foreach (DataRow drSSDlist in SSDlist.Rows)
                 {
-                    dvSSD.RowFilter = "ID = '" + drSSD[0].ToString() + "'";
-                    Debug.WriteLine("Calling WriteSSD with ID = " + drSSD[0].ToString());
-                    WriteSSD(drSSD[0].ToString());
+                    // Get the SSD in question - on this loop, the path is the SSDname
+                    dvSSD.RowFilter = "ID = '" + drSSDlist[0].ToString() + "'";
+                    if (dvSSD.Count != 0)
+                        BuildSSD(dvSSD);
+                }
+                // Create ONE file for all the SSDs
+                path = CheckFile(Section);
+                using (StreamWriter sw = new StreamWriter(path))
+                {
+                    sw.WriteLine(CycleHeader);
+                    if (InfoSection.IncludeSidStarReferences)
+                        WriteSSDrefs(sw);
+                    // Is this a SID or STAR section?  The 1st character will tell
+                    sw.WriteLine("[" + Section + "]");
+                    WriteSSDLines(sw);          // Since Labels depend on lines, call them there
                 }
             }
             dvSSD.Dispose();
             SSDlist.Dispose();
         }
 
-        private static void WriteSSD(string SSDID)
+        public static void BuildSSD (DataView dvSSD)
         {
-            // Writes ONE SID or STAR from ONE SSD dataview (preselected)
-            // Expects folder path, Use FIXes for lat long or not, and SID or STAR
-            // Everything goes in List<string>s first, then write them out in order
+            // Builds ONE SID or STAR from ONE SSD dataview (preselected)
+            // RETURNS a string for the diagram
+            // Everything goes in List<string>s first
             object[] NavData;
-            List<object> FixData = new List<object>();
-            List<object> VORData = new List<object>();
-            List<object> NDBData = new List<object>();
-            List<string> SSDlines = new List<string>();
-            List<string> FixesUsed = new List<string>();
-            List<string> APTsUsed = new List<string>();
-            string[] strOut = new string[6];
 
             // Various and sundry variables for the loop
-            double Lat1 = -1; double Long1 = -1; string space = new string(' ', 27);
-            double Lat0 = -1; double Long0 = -1;
+            double Lat1 = -1; double Lon1 = -1; string space = new string(' ', 27);
+            double Lat0 = -1; double Lon0 = -1;
             string lastFix = string.Empty; string curFix; string FixType0;
             string FixType1; string SSDname; string TransitionName;
             string SSDcode; string TransitionCode;
             int FixCount0; int FixCount1;
-            // Get the SSD in question
-            DataView dvSSD = new DataView(Form1.SSD)
-            {
-                RowFilter = "[ID] = '" + SSDID + "'",
-                Sort = "Sequence"
-            };
-            // Is this a SID or STAR?  The 1st character will tell
-            bool IsSID = false; if (dvSSD[0][0].ToString().Substring(0, 1) == "D") IsSID = true;
-            // Build the string of waypoints and save APTs or FIXes
 
             // Get the name and code for this SSD
             SSDname = dvSSD[0]["SSDName"].ToString();
             SSDcode = dvSSD[0]["SSDcode"].ToString();
 
-            // Write the Section header and SID or STAR code (Fullname)
-            string Section = "STAR"; if (IsSID) Section = "SID";
-            Debug.WriteLine("[" + Section + "]");
-            Debug.WriteLine(SSDHeader(SSDcode, "(" + SSDname + ")"));
-            SSDlines.Add("[" + Section + "]");
+            SSDlines.Add(cr);
             SSDlines.Add(SSDHeader(SSDcode, "(" + SSDname + ")", 1, '-'));
 
             // Now loop the entire SSD to get the lines, etc.
@@ -548,10 +591,10 @@ namespace SCTBuilder
                 // Regardless, do a shift at the end (Making values empty indicates pen up)
                 curFix = SSDrow["NavAid"].ToString();
 
-                    // The FixType tells us what to do next
+                // The FixType tells us what to do next
                 FixType1 = SSDrow["FixType"].ToString();
                 // If it's an airport, record the APT ICOA and move to next row
-                if (FixType1 == "AA")
+                if (FixType1 == "AA" || FixType1 == "NA")
                 {
                     // Save the APTs for later...
                     Add2ListIfNew(APTsUsed, curFix);
@@ -559,51 +602,23 @@ namespace SCTBuilder
                 }
                 else
                 {
-                    // Save the FIX for later...
+                    // Save the FIX for later if new...
                     FixCount0 = FixesUsed.Count;
                     Add2ListIfNew(FixesUsed, curFix);
                     FixCount1 = FixesUsed.Count;
-                    // If this is a new fix, save the data for later use
+                    // NavData: ID(opt), FacilityID, Frequency(opt), Latitude, Longitude, NameOrFixUse, FixType
+                    NavData = SCTcommon.GetNavData(curFix);
                     if (FixCount1 > FixCount0)
                     {
-                        NavData = SCTcommon.FixInfo(curFix);
-                        switch (NavData[5].ToString())
-                        {
-                            case "FIX":
-                                FixData.Add(NavData);
-                                Debug.WriteLine(NavData[2].ToString());
-                                Lat1 = Convert.ToDouble(NavData[2]);
-                                Long1 = Convert.ToDouble(NavData[3]);
-                                break;
-                            case "VOR":
-                                VORData.Add(NavData);
-                                Lat1 = Convert.ToDouble(NavData[2]);
-                                Long1 = Convert.ToDouble(NavData[3]);
-                                break;
-                            case "NDB":
-                                NDBData.Add(NavData);
-                                Lat1 = Convert.ToDouble(NavData[2]);
-                                Long1 = Convert.ToDouble(NavData[3]);
-                                break;
-                            case "NA":
-                            default:
-                                break;
-                        }
-                        // Preferable to use the FIX, but if not found, use Navigraph (decimal), then FAA (converted DMS) data
-                        if (Lat1 == -1)
-                        {
-                            if (Form1.NGexists)
-                            {
-                                Lat1 = (double)SSDrow["DecLat"];
-                                Long1 = (double)SSDrow["DecLon"];
-                            }
-                            else
-                            {
-                                Lat1 = (double)SSDrow["Latitude"];
-                                Long1 = (double)SSDrow["Longitude"];
-                            }
-                        }
+                        if (NavData[6].ToString().IndexOf("FIX") != -1)
+                            FixData.Add(NavData);
+                        if (NavData[6].ToString().IndexOf("VOR") != -1)
+                            VORData.Add(NavData);
+                        if (NavData[6].ToString().IndexOf("NDB") != -1)
+                            NDBData.Add(NavData);
                     }
+                    Lat1 = Convert.ToDouble(NavData[3]);
+                    Lon1 = Convert.ToDouble(NavData[4]);
                 }
                 // If there's a Transition Name, it starts a new line set.
                 // Keep these coordinates to start the line
@@ -612,106 +627,106 @@ namespace SCTBuilder
                 if (TransitionName.Length != 0)
                 {
                     SSDlines.Add(space + "; " + TransitionName);
-                    curFix = string.Empty;      // Pen up
                 }
-                    // Finally get the line between waypoints
-                if ((lastFix.Length != 0) && (curFix.Length != 0) && (lastFix != curFix))
+                else
                 {
-                    Debug.WriteLine(SCTstrings.SSDout(Lat0, Long0, Lat1, Long1, lastFix, curFix, InfoSection.UseFixes));
-                    SSDlines.Add(SCTstrings.SSDout(Lat0, Long0, Lat1, Long1, lastFix, curFix, InfoSection.UseFixes));
-                    // Need to look up and add the ALT and Speed items here
+                    // Finally get the line between waypoints
+                    if ((lastFix.Length != 0) && (curFix.Length != 0) && (lastFix != curFix))
+                    {
+                        // Debug.WriteLine(SCTstrings.SSDout(Lat0, Lon0, Lat1, Lon1, lastFix, curFix, InfoSection.UseFixesAsCoords));
+                        SSDlines.Add(SCTstrings.SSDout(Lat0, Lon0, Lat1, Lon1, lastFix, curFix, InfoSection.UseFixesAsCoords));
+                        // Draw the fix names.  Angle and Scale not used for SSDs
+                    }
                 }
                 // Shift the values for the next item
-                Lat0 = Lat1; Long0 = Long1; lastFix = curFix; FixType0 = FixType1;
+                Lat0 = Lat1; Lon0 = Lon1; lastFix = curFix; FixType0 = FixType1;
+                TransitionCode = TransitionName = string.Empty;
             }
+            // Lastly insert the symbols and labels
+            if (InfoSection.DrawFixSymbolsOnDiagrams || InfoSection.DrawFixLabelsOnDiagrams)
+                SSDlines.Add(DrawFixInfo(FixesUsed));
+            // Need to add the ALT and Speed items here
+        }
+
+        public static void WriteSSDrefs(StreamWriter sw)
+        {
+            // Sends the results of BuildSSD to the designated file
+            // This is the header references
             // Write the file for this SSD
-            string path = CheckFile(SSDcode);
-            using (StreamWriter sw = new StreamWriter(path))
+            string[] strOut = new string[6];
+            sw.WriteLine(cr + "[AIRPORT]");
+            DataView dvAPT = new DataView(Form1.APT);
+            DataView dvTWR = new DataView(Form1.TWR);
+            foreach (string Arpt in APTsUsed)
             {
-                // Write the Airports in this SSD
-                sw.WriteLine("[AIRPORTS]");
-                Debug.WriteLine("Airports serviced:");
-                DataView dvAPT = new DataView(Form1.APT);
-                DataView dvTWR = new DataView(Form1.TWR);
-                foreach(string Arpt in APTsUsed)
+                dvAPT.RowFilter = "FacilityID = '" + Arpt + "'";
+                dvTWR.RowFilter = "FacilityID = '" + Arpt + "'";
+                strOut[0] = Conversions.ICOA(Arpt);
+                if (dvTWR.Count != 0)
+                    strOut[1] = string.Format("{0:000.000}", dvTWR[0]["LCLfreq"].ToString());
+                else
+                    strOut[1] = "122.8  ";
+                strOut[2] = Conversions.DecDeg2SCT(Convert.ToDouble(dvAPT[0]["Latitude"]), true);
+                strOut[3] = Conversions.DecDeg2SCT(Convert.ToDouble(dvAPT[0]["Longitude"]), false);
+                strOut[4] = dvAPT[0]["Name"].ToString();
+                sw.WriteLine(SCTstrings.APTout(strOut.ToArray()));
+            }
+            dvAPT.Dispose();
+            dvTWR.Dispose();
+            // Write the NavAids for this curFix
+            // Fix, Frequency(opt), Latitude, Longitude, Name, FixType
+            if (VORData.Count > 0)
+            {
+                // NavData: ID(opt), FacilityID, Frequency(opt), Latitude, Longitude, Name, FixType
+                sw.WriteLine(cr + "[VOR]");
+                foreach (object[] VORs in VORData)
                 {
-                        dvAPT.RowFilter = "FacilityID = '" + Arpt + "'";
-                        dvTWR.RowFilter = "FacilityID = '" + Arpt + "'";
-                        strOut[0] = Conversions.ICOA(Arpt);
-                        if (dvTWR.Count != 0)
-                            strOut[1] = string.Format("{0:000.000}", dvTWR[0]["LCLfreq"].ToString());
-                        else
-                            strOut[1] = "122.8  ";
-                    strOut[2] = Conversions.DecDeg2SCT(Convert.ToDouble(dvAPT[0]["Latitude"]), true);
-                    strOut[3] = Conversions.DecDeg2SCT(Convert.ToDouble(dvAPT[0]["Longitude"]), false);
-                    strOut[4] = dvAPT[0]["Name"].ToString();
-                    Debug.WriteLine(SCTstrings.APTout(strOut.ToArray()));
-                    sw.WriteLine(SCTstrings.APTout(strOut.ToArray()));
-                }
-                dvAPT.Dispose();
-                dvTWR.Dispose();
-                // GWrite the NavAids for this curFix
-                Debug.WriteLine("Fixes Used:");
-                // Fix, Frequency(opt), Latitude, Longitude, Name, FixType
-                if (VORData.Count > 0)
-                {
-                    sw.WriteLine(cr + "[VOR]");
-                    foreach (object[] result in VORData)
-                    {
-                        strOut[0] = result[0].ToString();
-                        strOut[1] = result[1].ToString();
-                        strOut[2] = Conversions.DecDeg2SCT(Convert.ToDouble(result[2]), true);
-                        strOut[3] = Conversions.DecDeg2SCT(Convert.ToDouble(result[3]), false);
-                        strOut[4] = result[4].ToString();
-                        sw.WriteLine(SCTstrings.VORout(strOut));
-                    }
-                }
-                if (NDBData.Count > 0)
-                {
-                    sw.WriteLine(cr + "[NDB]");
-                    foreach (object[] result in NDBData)
-                    {
-                        strOut[0] = result[0].ToString();
-                        strOut[1] = result[1].ToString();
-                        strOut[2] = Conversions.DecDeg2SCT(Convert.ToDouble(result[2]), true);
-                        strOut[3] = Conversions.DecDeg2SCT(Convert.ToDouble(result[3]), false);
-                        strOut[4] = result[4].ToString();
-                        sw.WriteLine(SCTstrings.NDBout(strOut));
-                    }
-                }
-                if (FixData.Count > 0)
-                {
-                    sw.WriteLine(cr + "[FIXES]");
-                    foreach (object[] result in FixData)
-                    {
-                        strOut[0] = result[0].ToString();
-                        strOut[2] = Conversions.DecDeg2SCT(Convert.ToDouble(result[2]), true);
-                        strOut[3] = Conversions.DecDeg2SCT(Convert.ToDouble(result[3]), false);
-                        strOut[4] = result[5].ToString();
-                        sw.WriteLine(SCTstrings.FIXout(strOut));
-                    }
-                }
-                dvSSD.Dispose();
-                // Write the lines for this SSD
-                sw.WriteLine();
-                foreach (string Line in SSDlines)
-                    sw.WriteLine(Line);
-
-                if (InfoSection.DrawFixesOnDiagrams)
-                {
-                    // Draw the fix names
-                    sw.WriteLine(space + "; Fix Labels for " + SSDname);
-                    DrawFixText(FixesUsed, sw);
-                    // Will need to add the DrawFixNames for ALT and SPEED here
+                    // strOut expects 0-Fix, 1-Freq, 2-Lat, 3-Lon, 4-Name, 5-Type
+                    strOut[0] = VORs[1].ToString();
+                    strOut[1] = VORs[2].ToString();
+                    strOut[2] = Conversions.DecDeg2SCT(Convert.ToDouble(VORs[3]), true);
+                    strOut[3] = Conversions.DecDeg2SCT(Convert.ToDouble(VORs[4]), false);
+                    strOut[4] = VORs[5].ToString();
+                    strOut[5] = VORs[6].ToString();
+                    sw.WriteLine(SCTstrings.VORout(strOut));
                 }
             }
-            SSDlines.Clear();
-            FixesUsed.Clear();
-            APTsUsed.Clear();
-            FixData.Clear();
-            VORData.Clear();
-            NDBData.Clear();
+            // NavData: ID(opt), FacilityID, Frequency(opt), Latitude, Longitude, Name, FixType
+            if (NDBData.Count > 0)
+            {
+                sw.WriteLine(cr + "[NDB]");
+                foreach (object[] NDBs in NDBData)
+                {
+                    strOut[0] = NDBs[1].ToString();
+                    strOut[1] = NDBs[2].ToString();
+                    strOut[2] = Conversions.DecDeg2SCT(Convert.ToDouble(NDBs[3]), true);
+                    strOut[3] = Conversions.DecDeg2SCT(Convert.ToDouble(NDBs[4]), false);
+                    strOut[4] = NDBs[5].ToString();
+                    strOut[5] = NDBs[6].ToString();
+                    sw.WriteLine(SCTstrings.NDBout(strOut));
+                }
+            }
+            // NavData: ID(opt), FacilityID, Frequency(opt), Latitude, Longitude, FixUse, FixType
+            if (FixData.Count > 0)
+            {
+                sw.WriteLine(cr + "[FIXES]");
+                foreach (object[] FIXes in FixData)
+                {
+                    strOut[0] = FIXes[1].ToString();
+                    strOut[2] = Conversions.DecDeg2SCT(Convert.ToDouble(FIXes[3]), true);
+                    strOut[3] = Conversions.DecDeg2SCT(Convert.ToDouble(FIXes[4]), false);
+                    strOut[4] = FIXes[5].ToString();
+                    sw.WriteLine(SCTstrings.FIXout(strOut));
+                }
+            }
+        }
 
+        private static void WriteSSDLines(StreamWriter sw)
+        {
+            foreach (string Line in SSDlines)
+            {
+                sw.WriteLine(Line);         // These have crs on each line
+            }
         }
 
         private static string SSDHeader(string Header = "", string Comment = "", int MarkerCount = 0, char Marker = '=')
@@ -741,32 +756,40 @@ namespace SCTBuilder
         }
 
 
-        private static void DrawFixText(List<string> FixNames, StreamWriter sw)
+        private static string DrawFixInfo(List<string> FixNames, int Angle = 0, float Scale = 1f)
         {
-            double Angle = 0f;
-            //double TrueAngle = Angle + InfoSection.MagneticVariation;
-            double Scale = 0.025f;
-            double Latitude;
-            double Longitude;
-            double[] AdjustedCoords;
-            string FixType; 
+            // Calling function for fixes in diagrams
+            // Because labels and/or symbols might be drawn
+            // Will need to add the DrawFixNames for ALT and SPEED here
+            string result = string.Empty;
+            float Latitude;
+            float Longitude;
+            float[] AdjustedCoords = null;
             foreach (string Fix in FixNames)
             {
                 // FixInfo returns: 0-Fix (calling ID), 1-Freq, 2-Lat, 3-Lon, 4-Name or Use, 5-Type
-                object[] FixData = SCTcommon.FixInfo(Fix);
-                if ((FixData[1].ToString() != "Not Found") && (FixData[0].ToString().Length != 0))        
+                object[] FixData = SCTcommon.GetNavData(Fix);
+                if ((FixData[5].ToString() != "NA") && (FixData[0].ToString().Length != 0))        
                 {
-                    Latitude = Convert.ToDouble(FixData[2]);
-                    Longitude = Convert.ToDouble(FixData[3]);
-                    FixType = FixData[5].ToString();
+                    Latitude = Convert.ToSingle(FixData[3]);
+                    Longitude = Convert.ToSingle(FixData[4]);
                     if ((Latitude != 0) && (Longitude != 0))
                     {
-                        sw.WriteLine(Hershey.DrawSymbol(FixType, Latitude, Longitude, Angle, Scale));
-                        AdjustedCoords = Hershey.Adjust(15, -15, Latitude, Longitude, Angle, Scale);
-                        sw.WriteLine(Hershey.WriteHF(Fix, AdjustedCoords[0], AdjustedCoords[1], Angle, Scale));
+                        if (InfoSection.DrawFixSymbolsOnDiagrams)
+                        {
+                            result += Hershey.DrawSymbol(FixData);
+                            AdjustedCoords = Hershey.Adjust(Latitude, Longitude, 15, -30);
+                        }
+                        if (InfoSection.DrawFixLabelsOnDiagrams)
+                        {
+                            if (!InfoSection.DrawFixSymbolsOnDiagrams)
+                                AdjustedCoords = Hershey.Adjust(Latitude, Longitude, 5, 0);
+                            result += Hershey.WriteHF(Fix, AdjustedCoords[0], AdjustedCoords[1], Angle, Scale);
+                        }
                     }
                 }
             }
+            return result;
         }
 
         private static void WriteARB(string path, bool High)

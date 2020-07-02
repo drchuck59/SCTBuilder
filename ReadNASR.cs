@@ -83,13 +83,14 @@ namespace SCTBuilder
             /// <summary>
             /// Since both VORs and NDBs are in the same FAA table, do both of them here
             /// </summary>
-            // MessageBox.Show("Filling VOR_NDB", VersionInfo.Title, MessageBoxButtons.OK, MessageBoxIcon.Information);
             DataTable VORtable = Form1.VOR;
             DataTable NDBtable = Form1.NDB;
             if (VORtable.Rows.Count != 0) VORtable.Clear();     // Must start with empty tables
             if (NDBtable.Rows.Count != 0) NDBtable.Clear();
             string FullFilename = SCTcommon.GetFullPathname(FolderMgt.DataFolder, "NAV.txt");
-            string FixType; double Lat; double Long; double Mag;
+
+            string ID; string FacilityID; string FacName; double Lat; double Lon;
+            string Frequency; string ARTCC; string State; double MagVar = 0; string FixType; 
             using (StreamReader reader = new StreamReader(FullFilename))
             {
                 string Temp = DateTime.Now.ToString("yyyyMMdd");
@@ -102,33 +103,41 @@ namespace SCTBuilder
                     switch (Line.Substring(0, 4))
                     {
                         case "NAV1":
-                            Mag = 0f;
-                            FixType = Line.Substring(8, 20).Trim();                     // FixType
-                            if (Line.Substring(28, 4).Trim().Length == 0) break;        // Skip fixes with no ID
+                            if (Line.Substring(28, 4).Trim().Length == 0) break;                          // Skip fixes with no ID
                             if (Line.Substring(533, 6).Trim().Length == 0) break;       // Skip fixes with no transmitter
                             if (Line.Substring(385, 10).Trim().Length == 0) break;      // Skip fixes with no location
                             if (Line.Substring(410, 10).Trim().Length == 0) break;
-                            Lat = Convert.ToSingle(Line.Substring(385, 10).Trim()) / 3600;
+
+                            ID = Line.Substring(4, 4).Trim() + Line.Substring(8, 20).Trim() + Line.Substring(72, 40).Trim(); // ID
+                            FacilityID = Line.Substring(28, 4).Trim(); 
+                            FixType = Line.Substring(8, 20).Trim();                             // FixType
+                            FacName = Line.Substring(42, 30).Trim();                            // Name 
+                            ARTCC = Line.Substring(337, 4).Trim();                              // ARTCC
+                            Frequency = Line.Substring(533, 6).Trim();                          // Frequency
+                            State = Line.Substring(142, 2).Trim();                              // State
+                            Lat = Convert.ToSingle(Line.Substring(385, 10).Trim()) / 3600;      // Latitude
                             if (Line.Substring(398, 1) == "S") Lat *= -1;
-                            Long = Convert.ToSingle(Line.Substring(410, 10).Trim()) / 3600;
-                            if (Line.Substring(420, 1) == "W") Long *= -1;
+                            Lon = Convert.ToSingle(Line.Substring(410, 10).Trim()) / 3600;      // Longitude
+                            if (Line.Substring(420, 1) == "W") Lon *= -1;
                             if (Line.Substring(479, 4).Trim().Length != 0)
-                                Mag = Conversions.MagVar2DecMag(Line.Substring(479, 4).Trim());
+                                MagVar = Conversions.MagVar2DecMag(Line.Substring(479, 5).Trim()); //Mag Var
                             var FixItems = new List<object>
                                 {
-                                    Line.Substring(4, 4).Trim() + Line.Substring(9, 20).Trim() + Line.Substring(72,40).Trim(), // ID
-                                    Line.Substring(28, 4).Trim(),                            // Facility ID
-                                    Line.Substring(42,30).Trim(),                           // Name
-                                    Lat,                                                    // Latitude
-                                    Long,                                                   // Longitude
-                                    Line.Substring(533,6).Trim(),                           // Frequency
-                                    Line.Substring(337, 4).Trim(),                          // ARTCC
-                                    Line.Substring(142, 2).Trim(),                           // State
-                                    Mag,                                                    // Magnetic Variation
-                                    FixType,                                                // Type of fix
+                                    ID,
+                                    FacilityID,
+                                    FacName,
+                                    Lat,
+                                    Lon,
+                                    Frequency,
+                                    ARTCC,
+                                    State,
+                                    MagVar,
+                                    FixType,
                                 };
-                            // Console.WriteLine(Line.Substring(0, 28).Trim().ToString());
+                            // NOTE that we are NOT adding VOT, CONSOLAN, FAN MARKER or DME-only
                             if (FixType.IndexOf("VOR", 0, FixType.Length) > -1)
+                                AddFixes(VORtable, FixItems);
+                            else if (FixType.IndexOf("TACAN", 0, FixType.Length) > -1)
                                 AddFixes(VORtable, FixItems);
                             else if (FixType.IndexOf("NDB", 0, FixType.Length) > -1)
                                 AddFixes(NDBtable, FixItems);

@@ -1,71 +1,33 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
+using System.Drawing;
 
 
 namespace SCTBuilder
 {
     public class Hershey
     {
-        public static double[] EndPosition (string Message, double Lat, double Lon, double Angle, double Scale)
-        {
-            // RETURNS Lat and Long of bottom right position of Message
-            // To super/sub script, add Height as "B" (Pivot is "mx+b")
-            // e.g, a New position would be EndPosition + Adjust
-            double B = 0f;
-            double[] result = new double[2];
-            double MsgWidth = Width(Message);
-            double TrueAngle = Angle + InfoSection.MagneticVariation;
-            result[0] = Lat + ScaleX(PivotX(TrueAngle, MsgWidth, B), Scale);
-            result[1] = Lon + ScaleY(PivotY(TrueAngle, MsgWidth, B), Scale);
-            return result;
-        }
 
-        public static double[] Adjust (double LeftRight, double UpDown, 
-            double Lat, double Lon, double Angle, double Scale)
+        public static float[] Adjust (float lat, float lon, 
+            float LeftRightSeconds, float UpDownSeconds, int Angle = 0, float Scale = 1)
         {
             // X and Y are Hershey units (one char is 30 x 30)
-            // RETURNS the new Lat Long from the request
-            double[] result = new double[2];
-            double Width = LeftRight;
-            double Offset = UpDown;
-            double TrueAngle = Angle + InfoSection.MagneticVariation;
-            result[0] = Lat + ScaleX(PivotX(TrueAngle, Width, Offset), Scale);
-            result[1] = Lon + ScaleY(PivotY(TrueAngle, Width, Offset), Scale);
+            // Latitude is Y and Longitude is X
+            float[] result = new float[2];
+            PointF Origin = new PointF(lon, lat);
+            SizeF Offset = new SizeF(LeftRightSeconds/3600, UpDownSeconds/3600);
+            PointF Coord = PointF.Add(Origin, Offset);
+            int angle = (int)InfoSection.MagneticVariation + Angle;
+            Coord = LatLongCalc.RotatePoint(Coord, Origin, angle);
+            result[0] = Coord.Y; result[1] = Coord.X;
             return result;
         }
 
-        private static double Height(double Scale)
+        private static int[] SymbolRef(string FixType)
         {
-            return 30 * InfoSection.NMperDegreeLatitude * Scale;
-        }
-
-        private static double Width(string Message)
-        {
-            // Returns the width in Hershey units for a given string
-            int AsciiC; int[] SmplxC; double SWidth = 0;
-            foreach (char c in Message)
-            {
-                AsciiC = c;
-                if ((AsciiC - 32 >= 0) & (AsciiC - 32 < 95))
-                    AsciiC -= 32;
-                else AsciiC = 10;     // 10 is '*' for 'error'
-                SmplxC = RomanSimplex.Simplex[AsciiC];
-                SWidth += SmplxC[1];
-            }
-            return SWidth;
-        }
-
-        public static string DrawSymbol(string FixType, double Lat, double Lon, double Angle, double Scale)
-        {
-            double X; double Y; double VectorLat; double VectorLong;
-            string Lat0 = string.Empty; string Lon0 = string.Empty;string Lat1; string Lon1;
-            string cr = Environment.NewLine; string space = new string(' ', 27);
-            double[] Centered = new double[2];
             int[] Symbol;
             switch (FixType)
             {
-                case "FIX":
+                case "REP-PT":
                 default:
                     Symbol = MapSymbols.FIX;
                     break;
@@ -89,6 +51,7 @@ namespace SCTBuilder
                     Symbol = MapSymbols.WAYPOINT;
                     break;
                 case "NDB/DME":
+                case "MARINE NDB/DME":
                     Symbol = MapSymbols.NDBDME;
                     break;
                 case "NDB":
@@ -97,41 +60,93 @@ namespace SCTBuilder
                     Symbol = MapSymbols.NDB;
                     break;
             }
-            // The standard square is 30x30, but don't adjust just yet
-            Centered = Adjust(Symbol[2]/-2, -15, Lat, Lon, Angle, Scale);
-            string Result = space + "; " + FixType + " symbol " + cr;
-            double TrueAngle = Angle + InfoSection.MagneticVariation;
-            for (int i = 2; i < Symbol[0]*2; i += 2)
-            {
-                Y = Symbol[i + 1]; X = Symbol[i];                     // Used to adjust which is X and the other Y Symbols are X,Y
-                if ((X == -1) & (Y == -1))                            // Next point is a break
-                    Lat1 = Lon1 = string.Empty;
-                else                                           
-                {
-                    VectorLat = ScaleX(PivotX(TrueAngle, X, Y), Scale);            // These adjust the vectors for the desire text angle
-                    VectorLong = ScaleY(PivotY(TrueAngle, X, Y), Scale);
-                    Lat1 = Conversions.DecDeg2SCT(Centered[0] + VectorLat, true);
-                    Lon1 = Conversions.DecDeg2SCT(Centered[1] + VectorLong, false);
-                }
-                if ((Lat0.Length != 0) && (Lat1.Length != 0) && (Lat0 != Lat1))
-                {
-                    Result += SCTstrings.SSDout(Lat0, Lon0, Lat1, Lon1) + cr;
-                }
-                Lat0 = Lat1; Lon0 = Lon1;                            // No matter what happened, move End to Start
-            }
-            // Console.WriteLine(Result);
-            return Result;                                      // Lat Long string to draw ONE character!  (Sheesh)
+            return Symbol;
         }
 
-        public static string WriteHF(string Message, double Lat, double Long, double Angle, double Scale)
+        public static string DrawSymbol(object[] FixData)
         {
-            // NOTE!! Angle is determined by calling routine!  Did it include Mag Var?
-            // *** Need to subscript the Message down 15 and right 15.
-            double curLat = Lat;
-            double curLong = Long;
+            // FixData contains: ID(opt), FacilityID, Frequency(opt), Latitude, Longitude, NameOrUse, FixType
+            string Lat0; string Lon0; string Lat1; string Lon1;
+            string cr = Environment.NewLine; string space = new string(' ', 27);
+            int angle = (int)InfoSection.MagneticVariation;
+            string Fix = FixData[1].ToString();
+            string FixType = FixData[6].ToString();
+            if (FixType == "FIX")
+                FixType = FixData[5].ToString();
+            float lat = Convert.ToSingle(FixData[3]);
+            float lon = Convert.ToSingle(FixData[4]);
+            int[] Symbol = SymbolRef(FixType);
+            // Declare values used in loop below
+            PointF[] Coords = new PointF[Symbol[0]];
+            float myX; float myY;                      
+            // Loop through the symbol points, creating the initial pattern
+            int Counter = 0; 
+            for (int i = 2; i <= Symbol[0] * 2; i += 2)
+            {
+                myX = Symbol[i + 1]; myY = Symbol[i];           // Lat is Y, Lon is X
+                if ((myY != -1) && (myX != -1))
+                    Coords[Counter] = new PointF(myX /= 3600F, myY /= 3600F);
+                else
+                    Coords[Counter] = new PointF(-1F, -1F);
+                Counter++;
+            }
+            // Rotate the symbol to True North - with the first point as the origin (skip breaks)
+            // WHY is Mag Var correct, but rotation is NOT?
+            PointF PenUp = new PointF(-1, -1);
+            for (int i = 0; i < Coords.Length; i++)
+            {
+                if (Coords[i] != PenUp)
+                {
+                    Coords[i] = LatLongCalc.RotatePoint(Coords[i], Coords[0], angle);
+                }
+            }
+            // Get the centroid
+            PointF centroid = LatLongCalc.Centroid(Coords);
+            // Find the offset of the centroid from the FIX
+            SizeF CentOffset = new SizeF(lon-centroid.X, lat - centroid.Y);
+            // Move the symbol so it appears over the FIX
+            for (int i = 0; i < Coords.Length; i++)
+            {
+                if (Coords[i] != PenUp)
+                {
+                    Coords[i] = PointF.Add(Coords[i], CentOffset);
+                }
+            }
+            // Now write out the symbol strings in typical end-to-start rotation
+            PointF start = PointF.Empty; PointF end;
+            string Result = space + "; Symbol for " + FixType + " " + Fix + cr;
+            foreach (PointF pointF in Coords)
+            {
+                if (pointF != PenUp)
+                    end = pointF;
+                else
+                    end = PointF.Empty;
+                if (!(start.IsEmpty) && !(end.IsEmpty))
+                {
+                    Lat0 = Conversions.DecDeg2SCT(start.Y, true);
+                    Lat1 = Conversions.DecDeg2SCT(end.Y, true);
+                    Lon0 = Conversions.DecDeg2SCT(start.X, false);
+                    Lon1 = Conversions.DecDeg2SCT(end.X, false);
+                    Result += SCTstrings.SSDout(Lat0, Lon0, Lat1, Lon1) + cr;
+                }
+                start = end;
+            }
+            return Result;
+        }
+
+        public static string WriteHF(string Message, double Lat, double Lon, int Angle = 0, float Scale = 1)
+        {
+            // Lat is 'Y'!! Lon is 'X'!!
+            float curLat = (float)Lat;
+            float curLon = (float)Lon;
+            PointF origin = new PointF(curLon, curLat);
+            PointF nextChar = origin;
+            float scale = Scale / 3600F;
+            int angle = (int)InfoSection.MagneticVariation + Angle;
             string space = new string(' ', 27);
             string cr = Environment.NewLine;
-            int AsciiC; int[] SmplxC; string Result = string.Empty;
+            int AsciiC; int[] SmplxC; 
+            string Result = string.Empty;
             foreach (char c in Message)
             {
                 AsciiC = c;
@@ -139,89 +154,54 @@ namespace SCTBuilder
                     AsciiC -= 32;
                 else AsciiC = 10;     // 10 is '*' for 'error'
                 SmplxC = RomanSimplex.Simplex[AsciiC];
-                Result += DrawChar(SmplxC, curLat, curLong, Angle, Scale, c);
-                curLong += ScaleX(PivotX(Angle, SmplxC[1]), Scale);
-                curLat += ScaleY(PivotY(Angle, SmplxC[1]), Scale);
+                Result += DrawChar(c, SmplxC, nextChar, Angle, Scale);
+                // Use points to update here
+                SizeF offset = new SizeF(SmplxC[1] * scale, 0);
+                nextChar = PointF.Add(nextChar, offset);
+                nextChar = LatLongCalc.RotatePoint(nextChar, origin, angle);
+                origin = nextChar;
             }
             //Console.WriteLine(space + "; " + Message + Environment.NewLine + Result);
-            return space + "; " + Message + cr + Result;
+            return space + "; Label " + Message + cr + Result;
         }
 
-        private static string DrawChar(int[] hFont, double Lat, double Long, double Angle, double Scale, char c = ' ')
+        private static string DrawChar(char c, int[] hFont, PointF origin, int Angle, float Scale)
         {
             // Each vector needs to be (a) rotate to the angle of the line of text and (b) Scaled
             // One unit vector = 1 second or 90-100 feet.  Use the Scale function to adjust.
-            string Result = string.Empty; double X; double Y; double VectorLat; double VectorLong;
-            string DrawStart = string.Empty; string DrawEnd; bool FirstLine = true;
-            string cr = Environment.NewLine; string space = new string(' ', 27);
-            // Console.WriteLine("Passed " + ((hFont.Length - 2) / 2) + " vectors");
+            string result = string.Empty; float X; float Y; 
+            bool isFirst = true; string cr = Environment.NewLine;
+            int angle = (int)InfoSection.MagneticVariation + Angle;
+            float scale = Scale / 3600F;
+            PointF end; PointF start = PointF.Empty; 
+            // Rotate through vectors in usual manner
             for (int i = 2; i < hFont.Length; i += 2)
             {
-                X = hFont[i + 1]; Y = hFont[i];                     // Used to adjust which is X and the other Y
-                // Console.WriteLine("Processing line " + i / 2 + " (" + X + ", " + Y + ")");
-                if (DrawStart.Length == 0)                          // Start or break in character lines - get next vector
+                Y = hFont[i + 1]; X = hFont[i];                     // X-Lon, Y-Lat
+                if ((X == -1) || (Y == -1))                          // Next point is a break
+                    end = PointF.Empty;
+                else                                                // Get next vector (which will get moved to Start)
                 {
-                    if ((X == -1) & (Y == -1))                      // Next point is a break (highly unlikely)
-                        DrawEnd = string.Empty;
-                    else                                            // Get next vector (which will get moved to Start)
-                    {
-                        VectorLat = ScaleX(PivotX(Angle, X, Y), Scale);            // These adjust the vectors for the desire text angle
-                        VectorLong = ScaleY(PivotY(Angle, X, Y), Scale);
-                        // Console.WriteLine("X (" + (X/3600f) + ") now " + VectorLat + " and Y (" + (Y/3600f) + ") now " + VectorLong);
-                        DrawEnd = Conversions.DecDeg2SCT(Lat + VectorLat, true) + " "
-                            + Conversions.DecDeg2SCT(Long +  VectorLong, false);
-                    }
+                    SizeF vector = new SizeF(X * scale, Y * scale);
+                    end = PointF.Add(origin, vector);
+                    end = LatLongCalc.RotatePoint(end, origin, angle);
                 }
-                else                                                // Start point has coordinates, see if end point does
-                {
-                    if ((X == -1) & (Y == -1))
-                        DrawEnd = string.Empty;
-                    else                                            // End point also valid - write this char line
+                    if (!(start.IsEmpty) && !(end.IsEmpty))
                     {
-                        VectorLat = ScaleX(PivotX(Angle, X, Y), Scale);            // These adjust the vectors for the desire text angle
-                        VectorLong = ScaleY(PivotY(Angle, X, Y), Scale);
-                        DrawEnd = Conversions.DecDeg2SCT(Lat + VectorLat, true) + " "
-                            + Conversions.DecDeg2SCT(Long + VectorLong, false);
-                        if (DrawStart != DrawEnd)
-                        {
-                            Result += space + DrawStart + " " + DrawEnd;
-                            if (FirstLine)
-                            {
-                                Result += " ; " + c + cr;
-                                FirstLine = false;
-                            }
-                            else Result += cr;
-                        }
+                    result += 
+                        SCTstrings.CharOut(Conversions.DecDeg2SCT(start.Y, true), Conversions.DecDeg2SCT(start.X, false),
+                        Conversions.DecDeg2SCT(end.Y, true), Conversions.DecDeg2SCT(end.X, false));
+                    if (isFirst)
+                    {
+                        result += ";" + c.ToString();
+                        isFirst = false;
                     }
-                }
-                DrawStart = DrawEnd;                            // No matter what happened, move End to Start
+                    result += cr;
+                    }
+                start = end;                            // No matter what happened, move End to Start
             }
             // Console.WriteLine(Result);
-            return Result;                                      // Lat Long string to draw ONE character!  (Sheesh)
-        }
-
-        private static double PivotX(double Angle, double X, double B = 0)
-        {
-            // mx + b... But in our case B offset is usually 0 
-            // Might use B to create super/subscripts.
-            // NOTE!!! Angle is determined by calling routine - did it correct for MagVar?
-            double RadAngle = LatLongCalc.Deg2Rad(Angle);
-            return (X * Convert.ToDouble(Math.Cos(RadAngle))) - (B * Convert.ToDouble(Math.Sin(RadAngle)));
-        }
-
-        private static double PivotY(double Angle, double X, double B = 0)
-        {
-            double RadAngle = LatLongCalc.Deg2Rad(Angle);
-            return (B * Convert.ToDouble(Math.Cos(RadAngle))) + (X * Convert.ToDouble(Math.Sin(RadAngle)));
-        }
-        private static double ScaleX(double DistNM, double Scale)
-        {
-            return DistNM / InfoSection.NMperDegreeLongitude * Scale;
-        }
-
-        private static double ScaleY(double DistNM, double Scale)
-        {
-            return DistNM / InfoSection.NMperDegreeLatitude * Scale;
+            return result;                                      // Lat Long string to draw ONE character!  (Sheesh)
         }
     }
 }

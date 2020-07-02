@@ -523,14 +523,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="SCTBuilder.exe" size="884136">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="SCTBuilder.exe" size="888232">
       <assemblyIdentity name="SCTBuilder" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>N8w+ivJ1dcgQFfWW6JdnYrE4uJFdrBbV/+6nSqYp1LI=</dsig:DigestValue>
+        <dsig:DigestValue>BKoCtuZFCtvtZjVpW4DM26VuknRHAuh+Ju8CrjVoDB4=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

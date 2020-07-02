@@ -147,7 +147,7 @@ namespace SCTBuilder
                 }
                 else
                 {
-                    Msg = "Latitude must fall between -90 and 90 degrees.";
+                    Msg = "Longitude must fall between -180 and 180 degrees.";
                     SendMessage(Msg);
                     LonTextBox.Text = string.Empty;
                 }
@@ -185,7 +185,7 @@ namespace SCTBuilder
             }
             catch
             {
-                Msg = "Bearing must be a number between 0 and 180 degrees";
+                Msg = "Bearing must be a number between 1 and 360 degrees";
                 SendMessage(Msg);
                 BearingTextBox.Text = string.Empty;
             }
@@ -206,34 +206,79 @@ namespace SCTBuilder
             }
         }
 
-        private void AlignLeftButton_Click(object sender, EventArgs e)
-        {
-            LabelTextBox.TextAlign = HorizontalAlignment.Left;
-        }
-
-        private void AlignCenterButton_Click(object sender, EventArgs e)
-        {
-            LabelTextBox.TextAlign = HorizontalAlignment.Center;
-        }
-
-        private void AlignRightButton_Click(object sender, EventArgs e)
-        {
-            LabelTextBox.TextAlign = HorizontalAlignment.Right;
-        }
-
         private void DrawButton_Click(object sender, EventArgs e)
         {
+            string result = string.Empty; 
+            object[] NavData;
             double Lat1 = Conversions.String2DecDeg(LatTextBox.Text, ".");
             double Lon1 = Conversions.String2DecDeg(LonTextBox.Text, ".");
-            double Brg = Convert.ToDouble(BearingTextBox.Text);
-            double Scale = Convert.ToDouble(ScaleTextBox.Text);
-            double test = InfoSection.NMperDegreeLongitude;
-            OutputTextBox.Text += Hershey.WriteHF(LabelTextBox.Text, Lat1, Lon1, Brg + InfoSection.MagneticVariation, Scale);
+            int Brg = Convert.ToInt32(BearingTextBox.Text) - 90;            // Rotation in addition to MagVar
+            float Scale = Convert.ToSingle(ScaleTextBox.Text);              // Scaling beyond internal 1/3600
+            int rowIndex = -1;
+
+            foreach (DataGridViewRow row in FixListDataGridView.Rows)
+            {
+                if (row.Cells[0].Value.ToString().Equals(IdentifierTextBox.Text))
+                {
+                    rowIndex = row.Index;
+                    break;
+                }
+            }
+            result += Hershey.WriteHF(LabelTextBox.Text, Lat1, Lon1, Brg, Scale);
+            if ((rowIndex != -1) && (IncludeSymbolCheckBox.Checked))
+            {                
+                NavData = SCTcommon.GetNavData(IdentifierTextBox.Text);
+                result += Hershey.DrawSymbol(NavData);
+            }
+            OutputTextBox.Text = result;
         }
 
         private void ClearOutputButton_Click(object sender, EventArgs e)
         {
             OutputTextBox.Text = string.Empty;
+        }
+
+        private void LabelTextBox_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            // Label must fall within the printing ASCII char set
+            if (Extensions.IsASCII(e.KeyChar))
+                e.Handled = false;
+            else
+                e.Handled = true;
+        }
+
+        private void DrawLabels_Load(object sender, EventArgs e)
+        {
+            bool CanUseFix = CycleInfo.AIRAC == CycleInfo.CurrentAIRAC;
+            FixImportGroupBox.Enabled = CanUseFix;
+            if (CanUseFix)
+                toolTip1.SetToolTip(FixImportGroupBox, "Begin typing any FIX");
+            else
+                toolTip1.SetToolTip(FixImportGroupBox, "Requires current AIRAC data to lookup FIXes");
+        }
+
+        private void BearingTextBox_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (Extensions.CharIsDigit(e.KeyChar))
+                e.Handled = false;
+            else
+                e.Handled = true;
+        }
+
+        private void ScaleTextBox_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (Extensions.CharIsDecimal(e.KeyChar, ref ScaleTextBox, 1))
+                e.Handled = false;
+            else
+                e.Handled = true;
+        }
+
+        private void LatTextBox_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (Extensions.IsValidCoord(e.KeyChar, LatTextBox))
+                e.Handled = false;
+            else
+                e.Handled = true;
         }
     }
 }

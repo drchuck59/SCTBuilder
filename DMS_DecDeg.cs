@@ -218,37 +218,37 @@ namespace SCTBuilder
         private void LatDMSDegTextBox_KeyPress(object sender, KeyPressEventArgs e)
         {
                 char c = e.KeyChar;
-                e.Handled = Extensions.Numcheck(c);
+                e.Handled = Extensions.CharIsDigit(c);
         }
 
         private void LatDMSMinTextBox_KeyPress(object sender, KeyPressEventArgs e)
         {
             char c = e.KeyChar;
-            e.Handled =Extensions.Numcheck(c);
+            e.Handled =Extensions.CharIsDigit(c);
         }
 
         private void LatDMSSecTextBox_KeyPress(object sender, KeyPressEventArgs e)
         {
             char c = e.KeyChar;
-            e.Handled = Extensions.DecimalControl(c, ref LatDMSDegTextBox, 4);
+            e.Handled = Extensions.CharIsDecimal(c, ref LatDMSDegTextBox, 4);
         }
 
         private void LonDMSDegTextBox_KeyPress(object sender, KeyPressEventArgs e)
         {
             char c = e.KeyChar;
-            e.Handled = Extensions.Numcheck(c);
+            e.Handled = Extensions.CharIsDigit(c);
         }
 
         private void LonDMSMinTextBox_KeyPress(object sender, KeyPressEventArgs e)
         {
             char c = e.KeyChar;
-            e.Handled = Extensions.Numcheck(c);
+            e.Handled = Extensions.CharIsDigit(c);
         }
 
         private void LonDMSSecTextBox_KeyPress(object sender, KeyPressEventArgs e)
         {
             char c = e.KeyChar;
-            e.Handled = Extensions.DecimalControl(c, ref LonDMSDegTextBox, 4);
+            e.Handled = Extensions.CharIsDecimal(c, ref LonDMSDegTextBox, 4);
         }
 
         private void LatDecTextBox_Validated(object sender, EventArgs e)
@@ -519,7 +519,7 @@ namespace SCTBuilder
             }
             else
             {
-                e.Handled = Extensions.DecimalControl(c, ref LatDecTextBox, 4);
+                e.Handled = Extensions.CharIsDecimal(c, ref LatDecTextBox, 4);
             }
         }
 
@@ -533,7 +533,7 @@ namespace SCTBuilder
             }
             else
             {
-                e.Handled = Extensions.DecimalControl(c, ref LonDecTextBox, 4);
+                e.Handled = Extensions.CharIsDecimal(c, ref LonDecTextBox, 4);
             }
         }
     }

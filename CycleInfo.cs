@@ -30,7 +30,6 @@ namespace SCTBuilder
             WriteXmlElement(xml, "LastAIRAC", CycleInfo.AIRAC.ToString());
             WriteXmlElement(xml, "DataFolder", FolderMgt.DataFolder.ToString());
             WriteXmlElement(xml, "OutputFolder", FolderMgt.OutputFolder.ToString());
-            WriteXmlElement(xml, "NaviGraphDataFolder", FolderMgt.NGFolder.ToString());
             WriteXmlElement(xml, "SponsorARTCC", InfoSection.SponsorARTCC.ToString());
             WriteXmlElement(xml, "DefaultAirport", InfoSection.DefaultAirport.ToString());
             WriteXmlElement(xml, "FacilityEngineer", InfoSection.FacilityEngineer.ToString());
@@ -54,13 +53,15 @@ namespace SCTBuilder
             WriteXmlElement(xml, "ChkSUA_Prohibited", SCTchecked.ChkSUA_Prohibited.ToString());
             WriteXmlElement(xml, "ChkSUA_Restricted", SCTchecked.ChkSUA_Restricted.ToString());
             WriteXmlElement(xml, "ChkVOR", SCTchecked.ChkVOR.ToString());
-            WriteXmlElement(xml, "UseFixNames", InfoSection.UseFixes.ToString());
+            WriteXmlElement(xml, "ChkOceanic", SCTchecked.ChkOceanic.ToString());
+            WriteXmlElement(xml, "UseFixesAsCoords", InfoSection.UseFixesAsCoords.ToString());
             WriteXmlElement(xml, "UseNaviGraphData", InfoSection.UseNaviGraph.ToString());
-            WriteXmlElement(xml, "OneSectionSIDSTAR", InfoSection.OneSectionSIDSTAR.ToString());
-            WriteXmlElement(xml, "DrawFixesOnDiagrams", InfoSection.DrawFixesOnDiagrams.ToString());
+            WriteXmlElement(xml, "OneFilePerSidStar", InfoSection.OneFilePerSidStar.ToString());
+            WriteXmlElement(xml, "DrawFixSymbolsOnDiagrams", InfoSection.DrawFixSymbolsOnDiagrams.ToString());
+            WriteXmlElement(xml, "DrawFixLabelsOnDiagrams", InfoSection.DrawFixLabelsOnDiagrams.ToString());
             WriteXmlElement(xml, "DrawAltRestrictsOnDiagrams", InfoSection.DrawAltRestrictsOnDiagrams.ToString());
             WriteXmlElement(xml, "DrawSpeedRestrictsOnDiagrams", InfoSection.DrawSpeedRestrictsOnDiagrams.ToString());
-            WriteXmlElement(xml, "SIDSTARhasRefs", InfoSection.UseNaviGraph.ToString());
+            WriteXmlElement(xml, "IncludeSidStarReferences", InfoSection.IncludeSidStarReferences.ToString());
             WriteXmlElement(xml, "NorthSquare", InfoSection.NorthSquare.ToString());
             WriteXmlElement(xml, "SouthSquare", InfoSection.SouthSquare.ToString());
             WriteXmlElement(xml, "WestSquare", InfoSection.WestSquare.ToString());
@@ -115,12 +116,6 @@ namespace SCTBuilder
                                 if ((temp.Length != 0) && (Directory.Exists(value)))
                                     FolderMgt.OutputFolder = value;
                                 else FolderMgt.OutputFolder = string.Empty;
-                                break;
-                            case "NaviGraphDataFolder":
-                                temp = value;
-                                if ((temp.Length != 0) && (Directory.Exists(value)))
-                                    FolderMgt.NGFolder = value;
-                                else FolderMgt.NGFolder = string.Empty;
                                 break;
                             case "SponsorARTCC":
                                 temp = value;
@@ -203,17 +198,23 @@ namespace SCTBuilder
                             case "ChkVOR":
                                 SCTchecked.ChkVOR = Convert.ToBoolean(value);
                                 break;
-                            case "UseFixNames":
-                                InfoSection.UseFixes = Convert.ToBoolean(value);
+                            case "ChkOceanic":
+                                SCTchecked.ChkOceanic = Convert.ToBoolean(value);
+                                break;
+                            case "UseFixesAsCoords":
+                                InfoSection.UseFixesAsCoords = Convert.ToBoolean(value);
                                 break;
                             case "UseNaviGraphData":
                                 InfoSection.UseNaviGraph = Convert.ToBoolean(value);                           
                                 break;
-                            case "OneSectionSIDSTAR":
-                                InfoSection.OneSectionSIDSTAR = Convert.ToBoolean(value);
+                            case "OneFilePerSidStar":
+                                InfoSection.OneFilePerSidStar = Convert.ToBoolean(value);
                                 break;
-                            case "DrawFixesOnDiagrams":
-                                InfoSection.DrawFixesOnDiagrams = Convert.ToBoolean(value);
+                            case "DrawFixSymbolsOnDiagrams":
+                                InfoSection.DrawFixSymbolsOnDiagrams = Convert.ToBoolean(value);
+                                break;
+                            case "DrawFixLabelsOnDiagrams":
+                                InfoSection.DrawFixLabelsOnDiagrams = Convert.ToBoolean(value);
                                 break;
                             case "DrawAltRestrictsOnDiagrams":
                                 InfoSection.DrawAltRestrictsOnDiagrams = Convert.ToBoolean(value);
@@ -221,8 +222,8 @@ namespace SCTBuilder
                             case "DrawSpeedRestrictsOnDiagrams":
                                 InfoSection.DrawSpeedRestrictsOnDiagrams = Convert.ToBoolean(value);
                                 break;
-                            case "SIDSTARhasRefs":
-                                InfoSection.SIDSTARhasRefs = Convert.ToBoolean(value);
+                            case "IncludeSidStarReferences":
+                                InfoSection.IncludeSidStarReferences = Convert.ToBoolean(value);
                                 break;
                             case "NorthSquare":
                                 InfoSection.NorthSquare = Convert.ToDouble(value);

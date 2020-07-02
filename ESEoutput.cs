@@ -646,8 +646,6 @@ namespace SCTBuilder
 
         private static void WriteFixNames(List<string> FixNames, StreamWriter sw)
         {
-            double Angle = 0f;
-            double Scale = 0.025f;
             double Latitude = 0f;
             double Longitude = 0f;
             string Filter;
@@ -682,7 +680,7 @@ namespace SCTBuilder
                     }
                 }
                 if ((Latitude != 0) && (Longitude != 0))
-                    sw.WriteLine(Hershey.WriteHF(FixName, Latitude, Longitude, Angle, Scale));
+                    sw.WriteLine(Hershey.WriteHF(FixName, Latitude, Longitude));
             }
             dvFIX.Dispose();
             dvVOR.Dispose();

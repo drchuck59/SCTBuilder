@@ -72,11 +72,13 @@
             this.LimitAPT2ARTCCCheckBox = new System.Windows.Forms.CheckBox();
             this.QuickSearchLabel = new System.Windows.Forms.Label();
             this.QuickSearchTextBox = new System.Windows.Forms.TextBox();
+            this.OceanicCheckBox = new System.Windows.Forms.CheckBox();
             this.ARTCCLabel = new System.Windows.Forms.Label();
             this.AirportLabel = new System.Windows.Forms.Label();
             this.AsstFacilityEngineerLabel = new System.Windows.Forms.Label();
             this.FacilityEngineerLabel = new System.Windows.Forms.Label();
             this.FilterGroupBox = new System.Windows.Forms.GroupBox();
+            this.CenterSquareButton = new System.Windows.Forms.Button();
             this.FixListDataGridView = new System.Windows.Forms.DataGridView();
             this.SEByFIXButton = new System.Windows.Forms.Button();
             this.NWByFIXButton = new System.Windows.Forms.Button();
@@ -111,6 +113,8 @@
             this.dgvSID = new System.Windows.Forms.DataGridView();
             this.STARtabPage = new System.Windows.Forms.TabPage();
             this.dgvSTAR = new System.Windows.Forms.DataGridView();
+            this.OceanicTabPage = new System.Windows.Forms.TabPage();
+            this.dgvOceanic = new System.Windows.Forms.DataGridView();
             this.lblLogo = new System.Windows.Forms.Label();
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
             this.APTsCheckBox = new System.Windows.Forms.CheckBox();
@@ -132,12 +136,13 @@
             this.preferencesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ConfirmOverwriteOfFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.useFixesForCoordinatesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.drawFIXesOnDiagramsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.useFixesAsCoordinatesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.drawFIXLabelsOnDiagramsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.drawFixSymbolsStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.oneFilePerSIDSTARToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.includeSidStarReferencesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.drawAltitudeRestrictionsOnDiagramsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.drawSpeedRestrictionsOnDiagramsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.oneFilePerSIDSTARToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.includeAIRPORTFIXESToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.includeNaviGraphDataToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.createSingleOutputFlieToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.savePreferencesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -166,10 +171,9 @@
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
             this.InfoGroupBox = new System.Windows.Forms.GroupBox();
-            this.CenterSquareButton = new System.Windows.Forms.Button();
             this.CenterAPTButton = new System.Windows.Forms.Button();
-            this.CenterARTCCButton = new System.Windows.Forms.Button();
             this.label7 = new System.Windows.Forms.Label();
+            this.CenterARTCCButton = new System.Windows.Forms.Button();
             this.FoldersGroupBox = new System.Windows.Forms.GroupBox();
             this.label10 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
@@ -202,6 +206,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.dgvSID)).BeginInit();
             this.STARtabPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvSTAR)).BeginInit();
+            this.OceanicTabPage.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvOceanic)).BeginInit();
             this.menuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.InfoGroupBox.SuspendLayout();
@@ -691,6 +697,19 @@
             this.toolTip1.SetToolTip(this.QuickSearchTextBox, "Searches ALL selected and UNselected items \r\nin last-sorted column.");
             this.QuickSearchTextBox.TextChanged += new System.EventHandler(this.QuickSearchTextBox_TextChanged);
             // 
+            // OceanicCheckBox
+            // 
+            this.OceanicCheckBox.AutoSize = true;
+            this.OceanicCheckBox.Location = new System.Drawing.Point(95, 104);
+            this.OceanicCheckBox.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
+            this.OceanicCheckBox.Name = "OceanicCheckBox";
+            this.OceanicCheckBox.Size = new System.Drawing.Size(66, 17);
+            this.OceanicCheckBox.TabIndex = 32;
+            this.OceanicCheckBox.Text = "Oceanic";
+            this.toolTip1.SetToolTip(this.OceanicCheckBox, "VORs, NDB, and FIXes must be enabled to select airways");
+            this.OceanicCheckBox.UseVisualStyleBackColor = true;
+            this.OceanicCheckBox.CheckedChanged += new System.EventHandler(this.OceanicCheckBox_CheckedChanged);
+            // 
             // ARTCCLabel
             // 
             this.ARTCCLabel.AutoSize = true;
@@ -775,6 +794,17 @@
             this.FilterGroupBox.TabIndex = 19;
             this.FilterGroupBox.TabStop = false;
             this.FilterGroupBox.Text = "Selection square";
+            // 
+            // CenterSquareButton
+            // 
+            this.CenterSquareButton.Location = new System.Drawing.Point(14, 126);
+            this.CenterSquareButton.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
+            this.CenterSquareButton.Name = "CenterSquareButton";
+            this.CenterSquareButton.Size = new System.Drawing.Size(122, 23);
+            this.CenterSquareButton.TabIndex = 26;
+            this.CenterSquareButton.Text = "Center on square";
+            this.CenterSquareButton.UseVisualStyleBackColor = true;
+            this.CenterSquareButton.Click += new System.EventHandler(this.CenterSquareButton_Click);
             // 
             // FixListDataGridView
             // 
@@ -997,6 +1027,7 @@
             this.SelectedTabControl.Controls.Add(this.AWYtabPage);
             this.SelectedTabControl.Controls.Add(this.SIDtabPage);
             this.SelectedTabControl.Controls.Add(this.STARtabPage);
+            this.SelectedTabControl.Controls.Add(this.OceanicTabPage);
             this.SelectedTabControl.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SelectedTabControl.Location = new System.Drawing.Point(641, 302);
             this.SelectedTabControl.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
@@ -1225,6 +1256,32 @@
             this.dgvSTAR.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DgvSTAR_CellContentClick);
             this.dgvSTAR.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvSTAR_CellValueChanged);
             // 
+            // OceanicTabPage
+            // 
+            this.OceanicTabPage.Controls.Add(this.dgvOceanic);
+            this.OceanicTabPage.Location = new System.Drawing.Point(4, 26);
+            this.OceanicTabPage.Name = "OceanicTabPage";
+            this.OceanicTabPage.Padding = new System.Windows.Forms.Padding(3);
+            this.OceanicTabPage.Size = new System.Drawing.Size(458, 308);
+            this.OceanicTabPage.TabIndex = 8;
+            this.OceanicTabPage.Text = "Oceanic";
+            this.OceanicTabPage.UseVisualStyleBackColor = true;
+            // 
+            // dgvOceanic
+            // 
+            this.dgvOceanic.AllowUserToAddRows = false;
+            this.dgvOceanic.AllowUserToDeleteRows = false;
+            this.dgvOceanic.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.DisplayedCells;
+            this.dgvOceanic.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvOceanic.Location = new System.Drawing.Point(1, 3);
+            this.dgvOceanic.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
+            this.dgvOceanic.Name = "dgvOceanic";
+            this.dgvOceanic.RowHeadersVisible = false;
+            this.dgvOceanic.RowHeadersWidth = 51;
+            this.dgvOceanic.RowTemplate.Height = 24;
+            this.dgvOceanic.Size = new System.Drawing.Size(456, 302);
+            this.dgvOceanic.TabIndex = 3;
+            // 
             // lblLogo
             // 
             this.lblLogo.AutoSize = true;
@@ -1288,7 +1345,7 @@
             // SIDsCheckBox
             // 
             this.SIDsCheckBox.AutoSize = true;
-            this.SIDsCheckBox.Location = new System.Drawing.Point(13, 133);
+            this.SIDsCheckBox.Location = new System.Drawing.Point(13, 144);
             this.SIDsCheckBox.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
             this.SIDsCheckBox.Name = "SIDsCheckBox";
             this.SIDsCheckBox.Size = new System.Drawing.Size(49, 17);
@@ -1300,7 +1357,7 @@
             // ARTCCCheckBox
             // 
             this.ARTCCCheckBox.AutoSize = true;
-            this.ARTCCCheckBox.Location = new System.Drawing.Point(13, 115);
+            this.ARTCCCheckBox.Location = new System.Drawing.Point(13, 126);
             this.ARTCCCheckBox.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
             this.ARTCCCheckBox.Name = "ARTCCCheckBox";
             this.ARTCCCheckBox.Size = new System.Drawing.Size(67, 17);
@@ -1314,7 +1371,7 @@
             this.ARTCClowCheckBox.AutoSize = true;
             this.ARTCClowCheckBox.Checked = true;
             this.ARTCClowCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.ARTCClowCheckBox.Location = new System.Drawing.Point(118, 115);
+            this.ARTCClowCheckBox.Location = new System.Drawing.Point(118, 126);
             this.ARTCClowCheckBox.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
             this.ARTCClowCheckBox.Name = "ARTCClowCheckBox";
             this.ARTCClowCheckBox.Size = new System.Drawing.Size(32, 17);
@@ -1328,7 +1385,7 @@
             this.ARTCChighCheckBox.AutoSize = true;
             this.ARTCChighCheckBox.Checked = true;
             this.ARTCChighCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.ARTCChighCheckBox.Location = new System.Drawing.Point(82, 114);
+            this.ARTCChighCheckBox.Location = new System.Drawing.Point(82, 125);
             this.ARTCChighCheckBox.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
             this.ARTCChighCheckBox.Name = "ARTCChighCheckBox";
             this.ARTCChighCheckBox.Size = new System.Drawing.Size(34, 17);
@@ -1340,7 +1397,7 @@
             // STARsCheckBox
             // 
             this.STARsCheckBox.AutoSize = true;
-            this.STARsCheckBox.Location = new System.Drawing.Point(82, 133);
+            this.STARsCheckBox.Location = new System.Drawing.Point(82, 144);
             this.STARsCheckBox.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
             this.STARsCheckBox.Name = "STARsCheckBox";
             this.STARsCheckBox.Size = new System.Drawing.Size(60, 17);
@@ -1403,13 +1460,13 @@
             // selectedComponentsToolStripMenuItem
             // 
             this.selectedComponentsToolStripMenuItem.Name = "selectedComponentsToolStripMenuItem";
-            this.selectedComponentsToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
+            this.selectedComponentsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.selectedComponentsToolStripMenuItem.Text = "Use VRC formats";
             // 
             // entireSCTFilelongToolStripMenuItem
             // 
             this.entireSCTFilelongToolStripMenuItem.Name = "entireSCTFilelongToolStripMenuItem";
-            this.entireSCTFilelongToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
+            this.entireSCTFilelongToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.entireSCTFilelongToolStripMenuItem.Text = "Use ES formats";
             // 
             // preferencesToolStripMenuItem
@@ -1435,40 +1492,73 @@
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.useFixesForCoordinatesToolStripMenuItem,
-            this.drawFIXesOnDiagramsToolStripMenuItem,
-            this.drawAltitudeRestrictionsOnDiagramsToolStripMenuItem,
-            this.drawSpeedRestrictionsOnDiagramsToolStripMenuItem,
+            this.useFixesAsCoordinatesToolStripMenuItem,
+            this.drawFIXLabelsOnDiagramsToolStripMenuItem,
+            this.drawFixSymbolsStripMenuItem,
             this.oneFilePerSIDSTARToolStripMenuItem,
-            this.includeAIRPORTFIXESToolStripMenuItem});
+            this.includeSidStarReferencesToolStripMenuItem,
+            this.drawAltitudeRestrictionsOnDiagramsToolStripMenuItem,
+            this.drawSpeedRestrictionsOnDiagramsToolStripMenuItem});
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
             this.toolStripMenuItem1.Size = new System.Drawing.Size(281, 22);
             this.toolStripMenuItem1.Text = "SID/STAR diagram settings";
             // 
-            // useFixesForCoordinatesToolStripMenuItem
+            // useFixesAsCoordinatesToolStripMenuItem
             // 
-            this.useFixesForCoordinatesToolStripMenuItem.CheckOnClick = true;
-            this.useFixesForCoordinatesToolStripMenuItem.Name = "useFixesForCoordinatesToolStripMenuItem";
-            this.useFixesForCoordinatesToolStripMenuItem.Size = new System.Drawing.Size(276, 22);
-            this.useFixesForCoordinatesToolStripMenuItem.Text = "Substitute FIXes for coordinates";
-            this.useFixesForCoordinatesToolStripMenuItem.ToolTipText = "If checked, fixes will be used for coordinates where possible.\r\nNOT recommended f" +
+            this.useFixesAsCoordinatesToolStripMenuItem.CheckOnClick = true;
+            this.useFixesAsCoordinatesToolStripMenuItem.Name = "useFixesAsCoordinatesToolStripMenuItem";
+            this.useFixesAsCoordinatesToolStripMenuItem.Size = new System.Drawing.Size(289, 22);
+            this.useFixesAsCoordinatesToolStripMenuItem.Text = "Use FIXes as coordinates in diagrams";
+            this.useFixesAsCoordinatesToolStripMenuItem.ToolTipText = "If checked, fixes will be used for coordinates where possible.\r\nNOT recommended f" +
     "or new APP/DEP designs.";
-            this.useFixesForCoordinatesToolStripMenuItem.Click += new System.EventHandler(this.useFixesForCoordinatesToolStripMenuItem_Click);
+            this.useFixesAsCoordinatesToolStripMenuItem.Click += new System.EventHandler(this.useFixesForCoordinatesToolStripMenuItem_Click);
             // 
-            // drawFIXesOnDiagramsToolStripMenuItem
+            // drawFIXLabelsOnDiagramsToolStripMenuItem
             // 
-            this.drawFIXesOnDiagramsToolStripMenuItem.CheckOnClick = true;
-            this.drawFIXesOnDiagramsToolStripMenuItem.Name = "drawFIXesOnDiagramsToolStripMenuItem";
-            this.drawFIXesOnDiagramsToolStripMenuItem.Size = new System.Drawing.Size(276, 22);
-            this.drawFIXesOnDiagramsToolStripMenuItem.Text = "Draw FIXes on diagrams";
-            this.drawFIXesOnDiagramsToolStripMenuItem.Click += new System.EventHandler(this.drawFIXesOnDiagramsToolStripMenuItem_Click);
+            this.drawFIXLabelsOnDiagramsToolStripMenuItem.Checked = true;
+            this.drawFIXLabelsOnDiagramsToolStripMenuItem.CheckOnClick = true;
+            this.drawFIXLabelsOnDiagramsToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.drawFIXLabelsOnDiagramsToolStripMenuItem.Name = "drawFIXLabelsOnDiagramsToolStripMenuItem";
+            this.drawFIXLabelsOnDiagramsToolStripMenuItem.Size = new System.Drawing.Size(289, 22);
+            this.drawFIXLabelsOnDiagramsToolStripMenuItem.Text = "Draw FIX labels on diagrams";
+            this.drawFIXLabelsOnDiagramsToolStripMenuItem.Click += new System.EventHandler(this.drawFIXLabelsOnDiagramsToolStripMenuItem_Click);
+            // 
+            // drawFixSymbolsStripMenuItem
+            // 
+            this.drawFixSymbolsStripMenuItem.Checked = true;
+            this.drawFixSymbolsStripMenuItem.CheckOnClick = true;
+            this.drawFixSymbolsStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.drawFixSymbolsStripMenuItem.Name = "drawFixSymbolsStripMenuItem";
+            this.drawFixSymbolsStripMenuItem.Size = new System.Drawing.Size(289, 22);
+            this.drawFixSymbolsStripMenuItem.Text = "Draw FIX symbols on diagrams";
+            this.drawFixSymbolsStripMenuItem.Click += new System.EventHandler(this.drawFixSymbolsStripMenuItem_Click);
+            // 
+            // oneFilePerSIDSTARToolStripMenuItem
+            // 
+            this.oneFilePerSIDSTARToolStripMenuItem.Checked = true;
+            this.oneFilePerSIDSTARToolStripMenuItem.CheckOnClick = true;
+            this.oneFilePerSIDSTARToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.oneFilePerSIDSTARToolStripMenuItem.Name = "oneFilePerSIDSTARToolStripMenuItem";
+            this.oneFilePerSIDSTARToolStripMenuItem.Size = new System.Drawing.Size(289, 22);
+            this.oneFilePerSIDSTARToolStripMenuItem.Text = "Create a file for each SID/STAR";
+            this.oneFilePerSIDSTARToolStripMenuItem.Click += new System.EventHandler(this.oneFilePerSIDSTARToolStripMenuItem_Click);
+            // 
+            // includeSidStarReferencesToolStripMenuItem
+            // 
+            this.includeSidStarReferencesToolStripMenuItem.Checked = true;
+            this.includeSidStarReferencesToolStripMenuItem.CheckOnClick = true;
+            this.includeSidStarReferencesToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.includeSidStarReferencesToolStripMenuItem.Name = "includeSidStarReferencesToolStripMenuItem";
+            this.includeSidStarReferencesToolStripMenuItem.Size = new System.Drawing.Size(289, 22);
+            this.includeSidStarReferencesToolStripMenuItem.Text = "Include [AIRPORT] and {FIX] for SID/STAR";
+            this.includeSidStarReferencesToolStripMenuItem.Click += new System.EventHandler(this.includeSidStarReferencesToolStripMenuItem_Click);
             // 
             // drawAltitudeRestrictionsOnDiagramsToolStripMenuItem
             // 
             this.drawAltitudeRestrictionsOnDiagramsToolStripMenuItem.CheckOnClick = true;
             this.drawAltitudeRestrictionsOnDiagramsToolStripMenuItem.Enabled = false;
             this.drawAltitudeRestrictionsOnDiagramsToolStripMenuItem.Name = "drawAltitudeRestrictionsOnDiagramsToolStripMenuItem";
-            this.drawAltitudeRestrictionsOnDiagramsToolStripMenuItem.Size = new System.Drawing.Size(276, 22);
+            this.drawAltitudeRestrictionsOnDiagramsToolStripMenuItem.Size = new System.Drawing.Size(289, 22);
             this.drawAltitudeRestrictionsOnDiagramsToolStripMenuItem.Text = "Draw Altitude restrictions on diagrams";
             this.drawAltitudeRestrictionsOnDiagramsToolStripMenuItem.Click += new System.EventHandler(this.drawAltitudeRestrictionsOnDiagramsToolStripMenuItem_Click);
             // 
@@ -1477,31 +1567,9 @@
             this.drawSpeedRestrictionsOnDiagramsToolStripMenuItem.CheckOnClick = true;
             this.drawSpeedRestrictionsOnDiagramsToolStripMenuItem.Enabled = false;
             this.drawSpeedRestrictionsOnDiagramsToolStripMenuItem.Name = "drawSpeedRestrictionsOnDiagramsToolStripMenuItem";
-            this.drawSpeedRestrictionsOnDiagramsToolStripMenuItem.Size = new System.Drawing.Size(276, 22);
+            this.drawSpeedRestrictionsOnDiagramsToolStripMenuItem.Size = new System.Drawing.Size(289, 22);
             this.drawSpeedRestrictionsOnDiagramsToolStripMenuItem.Text = "Draw Speed restrictions on diagrams";
             this.drawSpeedRestrictionsOnDiagramsToolStripMenuItem.Click += new System.EventHandler(this.drawSpeedRestrictionsOnDiagramsToolStripMenuItem_Click);
-            // 
-            // oneFilePerSIDSTARToolStripMenuItem
-            // 
-            this.oneFilePerSIDSTARToolStripMenuItem.Checked = true;
-            this.oneFilePerSIDSTARToolStripMenuItem.CheckOnClick = true;
-            this.oneFilePerSIDSTARToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.oneFilePerSIDSTARToolStripMenuItem.Enabled = false;
-            this.oneFilePerSIDSTARToolStripMenuItem.Name = "oneFilePerSIDSTARToolStripMenuItem";
-            this.oneFilePerSIDSTARToolStripMenuItem.Size = new System.Drawing.Size(276, 22);
-            this.oneFilePerSIDSTARToolStripMenuItem.Text = "One file per SID/STAR";
-            this.oneFilePerSIDSTARToolStripMenuItem.Click += new System.EventHandler(this.oneFilePerSIDSTARToolStripMenuItem_Click);
-            // 
-            // includeAIRPORTFIXESToolStripMenuItem
-            // 
-            this.includeAIRPORTFIXESToolStripMenuItem.Checked = true;
-            this.includeAIRPORTFIXESToolStripMenuItem.CheckOnClick = true;
-            this.includeAIRPORTFIXESToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.includeAIRPORTFIXESToolStripMenuItem.Enabled = false;
-            this.includeAIRPORTFIXESToolStripMenuItem.Name = "includeAIRPORTFIXESToolStripMenuItem";
-            this.includeAIRPORTFIXESToolStripMenuItem.Size = new System.Drawing.Size(276, 22);
-            this.includeAIRPORTFIXESToolStripMenuItem.Text = "Include [AIRPORT]/[FIXES]";
-            this.includeAIRPORTFIXESToolStripMenuItem.Click += new System.EventHandler(this.includeAIRPORTFIXESToolStripMenuItem_Click);
             // 
             // includeNaviGraphDataToolStripMenuItem
             // 
@@ -1509,7 +1577,8 @@
             this.includeNaviGraphDataToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.includeNaviGraphDataToolStripMenuItem.Name = "includeNaviGraphDataToolStripMenuItem";
             this.includeNaviGraphDataToolStripMenuItem.Size = new System.Drawing.Size(281, 22);
-            this.includeNaviGraphDataToolStripMenuItem.Text = "Include NaviGraph Data if present";
+            this.includeNaviGraphDataToolStripMenuItem.Text = "Use NaviGraph Data if present";
+            this.includeNaviGraphDataToolStripMenuItem.ToolTipText = "If NOT checked, NaviGraph data will be ignored, even if available.";
             this.includeNaviGraphDataToolStripMenuItem.CheckedChanged += new System.EventHandler(this.IncludeNaviGraphDataToolStripMenuItem_CheckedChanged);
             // 
             // createSingleOutputFlieToolStripMenuItem
@@ -1764,17 +1833,6 @@
             this.InfoGroupBox.TabStop = false;
             this.InfoGroupBox.Text = "[INFO]";
             // 
-            // CenterSquareButton
-            // 
-            this.CenterSquareButton.Location = new System.Drawing.Point(14, 126);
-            this.CenterSquareButton.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
-            this.CenterSquareButton.Name = "CenterSquareButton";
-            this.CenterSquareButton.Size = new System.Drawing.Size(122, 23);
-            this.CenterSquareButton.TabIndex = 26;
-            this.CenterSquareButton.Text = "Center on square";
-            this.CenterSquareButton.UseVisualStyleBackColor = true;
-            this.CenterSquareButton.Click += new System.EventHandler(this.CenterSquareButton_Click);
-            // 
             // CenterAPTButton
             // 
             this.CenterAPTButton.Enabled = false;
@@ -1786,18 +1844,6 @@
             this.CenterAPTButton.Text = "Center on Apt\r\n(Ignore square)";
             this.CenterAPTButton.UseVisualStyleBackColor = true;
             this.CenterAPTButton.Click += new System.EventHandler(this.CenterAPTButton_Click);
-            // 
-            // CenterARTCCButton
-            // 
-            this.CenterARTCCButton.Enabled = false;
-            this.CenterARTCCButton.Location = new System.Drawing.Point(9, 65);
-            this.CenterARTCCButton.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
-            this.CenterARTCCButton.Name = "CenterARTCCButton";
-            this.CenterARTCCButton.Size = new System.Drawing.Size(105, 41);
-            this.CenterARTCCButton.TabIndex = 11;
-            this.CenterARTCCButton.Text = "Create square && \r\nCenter on ARTCC";
-            this.CenterARTCCButton.UseVisualStyleBackColor = true;
-            this.CenterARTCCButton.Click += new System.EventHandler(this.CenterARTCCButton_Click);
             // 
             // label7
             // 
@@ -1811,6 +1857,18 @@
             this.label7.TabIndex = 25;
             this.label7.Text = "Centering Coordinates";
             this.label7.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // CenterARTCCButton
+            // 
+            this.CenterARTCCButton.Enabled = false;
+            this.CenterARTCCButton.Location = new System.Drawing.Point(9, 65);
+            this.CenterARTCCButton.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
+            this.CenterARTCCButton.Name = "CenterARTCCButton";
+            this.CenterARTCCButton.Size = new System.Drawing.Size(105, 41);
+            this.CenterARTCCButton.TabIndex = 11;
+            this.CenterARTCCButton.Text = "Create square && \r\nCenter on ARTCC";
+            this.CenterARTCCButton.UseVisualStyleBackColor = true;
+            this.CenterARTCCButton.Click += new System.EventHandler(this.CenterARTCCButton_Click);
             // 
             // FoldersGroupBox
             // 
@@ -1851,6 +1909,7 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.OceanicCheckBox);
             this.groupBox1.Controls.Add(this.LimitAPT2ARTCCCheckBox);
             this.groupBox1.Controls.Add(this.ARTCClowCheckBox);
             this.groupBox1.Controls.Add(this.APTsCheckBox);
@@ -1966,6 +2025,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.dgvSID)).EndInit();
             this.STARtabPage.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgvSTAR)).EndInit();
+            this.OceanicTabPage.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dgvOceanic)).EndInit();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.toolStrip1.ResumeLayout(false);
@@ -2124,12 +2185,16 @@
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exitProgramToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
-        private System.Windows.Forms.ToolStripMenuItem useFixesForCoordinatesToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem drawFIXesOnDiagramsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem useFixesAsCoordinatesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem drawFIXLabelsOnDiagramsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem drawAltitudeRestrictionsOnDiagramsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem drawSpeedRestrictionsOnDiagramsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem oneFilePerSIDSTARToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem includeAIRPORTFIXESToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem includeSidStarReferencesToolStripMenuItem;
+        private System.Windows.Forms.TabPage OceanicTabPage;
+        private System.Windows.Forms.DataGridView dgvOceanic;
+        private System.Windows.Forms.CheckBox OceanicCheckBox;
+        private System.Windows.Forms.ToolStripMenuItem drawFixSymbolsStripMenuItem;
     }
 }
 

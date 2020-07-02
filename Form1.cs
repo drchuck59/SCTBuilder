@@ -35,6 +35,7 @@ namespace SCTBuilder
         static public DataTable NGSTARRNW = new SCTdata.NGSTARRNWDataTable();
         static public DataTable NGFixes = new SCTdata.NGFixesDataTable();
         static public DataTable NGRTE = new SCTdata.NGRTEDataTable();
+        static public DataTable NGNavAID = new SCTdata.NGNavAIDDataTable();
         static public DataSet SCT = new SCTdata();
         static public bool ExitClicked = false;
         static public bool NGexists = false;
@@ -89,6 +90,7 @@ namespace SCTBuilder
                 {
                     NGexists = true;
                 }
+                if (NGexists && InfoSection.UseNaviGraph) ReadNGFiles();
             }
             // No data folder or did not install a data set
             else
@@ -108,12 +110,9 @@ namespace SCTBuilder
         {
             // Updates existing data with NG data
             // As the files are used differently, some are preloaded, others are loaded as needed
-            if (NGexists)
-            {
-                ReadNaviGraph.NavRTE();
-                ReadNaviGraph.NavFIX();
-                ReadNaviGraph.NavAID();
-            }
+            ReadNaviGraph.NavRTE();
+            ReadNaviGraph.NavFIX();
+            ReadNaviGraph.NavAID();
         }
 
         private void NoXMLmessage()
@@ -231,7 +230,11 @@ namespace SCTBuilder
 
         private void LoadMenuPreferences()
         {
-            drawFIXesOnDiagramsToolStripMenuItem.Checked = InfoSection.DrawFixesOnDiagrams;
+            drawFixSymbolsStripMenuItem.Checked = InfoSection.DrawFixSymbolsOnDiagrams;
+            drawFIXLabelsOnDiagramsToolStripMenuItem.Checked = InfoSection.DrawFixLabelsOnDiagrams;
+            includeSidStarReferencesToolStripMenuItem.Checked = InfoSection.IncludeSidStarReferences;
+            oneFilePerSIDSTARToolStripMenuItem.Checked = InfoSection.OneFilePerSidStar;
+            useFixesAsCoordinatesToolStripMenuItem.Checked = InfoSection.UseFixesAsCoords;
             drawAltitudeRestrictionsOnDiagramsToolStripMenuItem.Checked = InfoSection.DrawAltRestrictsOnDiagrams;
             drawSpeedRestrictionsOnDiagramsToolStripMenuItem.Checked = InfoSection.DrawSpeedRestrictsOnDiagrams;
         }
@@ -331,7 +334,7 @@ namespace SCTBuilder
         {
             return APTsCheckBox.Checked || RWYsCheckBox.Checked || AWYsCheckBox.Checked || VORsCheckBox.Checked
                 || NDBsCheckBox.Checked || FIXesCheckBox.Checked || ARTCCCheckBox.Checked
-                || SIDsCheckBox.Checked || STARsCheckBox.Checked;
+                || SIDsCheckBox.Checked || STARsCheckBox.Checked || OceanicCheckBox.Checked;
         }
 
         private bool SquareSelected()
@@ -451,6 +454,13 @@ namespace SCTBuilder
                         lastTab = LoadSSDDataGridView(STAR);
                     }
                 }
+                if (SCTchecked.ChkOceanic)
+                {
+                    UpdateLabel("Building Oceanic grid view from selection");
+                    SelectOceanic();
+                    UpdateLabel("Building RTE grid view from selection");
+                    lastTab = LoadOceanicDataGridView();
+                }
                 SelectedTabControl.SelectedTab = SelectedTabControl.TabPages[lastTab];
                 UpdateLabel("");
                 Refresh();
@@ -546,7 +556,6 @@ namespace SCTBuilder
                 MinSelSeqNo = SCTcommon.GetMinDataView(dvAWY, "Sequence");
                 MaxSelSeqNo = SCTcommon.GetMaxDataView(dvAWY, "Sequence");
                 // Extend one leg outside the square, if able (Doesn't matter if only one waypoint found)
-                if (awy1 == "B9") Debug.WriteLine("Found B9");
                 if (MinSeqNo < MinSelSeqNo)
                 {
                     dvAWY.RowFilter = awyFilter + seqFilter + (MinSelSeqNo - 10).ToString() + ")";
@@ -557,20 +566,63 @@ namespace SCTBuilder
                     dvAWY.RowFilter = awyFilter + seqFilter + (MaxSelSeqNo + 10).ToString() + ")";
                     SetSelected(dvAWY);
                 }
-                string FullFilename = SCTcommon.GetFullPathname(FolderMgt.NGFolder, "wpNavRTE.txt");
-                if (FullFilename.IndexOf("Error") == -1)
-                {
-                    DataView dvRTE = new DataView(NGRTE);
-                    ClearSelected(dvRTE);
-                    FilterBy.Method = "Square";
-                    filter = SetFilter();
-                    // Apply the square filter
-                    dvRTE.RowFilter = filter;
-
-                }
             }
             // Clean up
             dvAWY.Dispose();
+            return result;
+        }
+
+        private int SelectOceanic()
+        {
+            int MaxSeqNo; int MinSeqNo; int MaxSelSeqNo; int MinSelSeqNo;
+            string awy1; string awyFilter;
+            string seqFilter = " AND ([Sequence] = ";
+            // Set the filter
+            FilterBy.Method = "Square";
+            string filter = SetFilter();
+            // Clear prior selected
+            DataView dvRTE = new DataView(NGRTE);
+            ClearSelected(dvRTE);
+            // Apply the square filter
+            dvRTE.RowFilter = filter;
+            int result = dvRTE.Count;
+            UpdateLabel("Selecting " + result + " airway segmentss...");
+            // Select all components inside the square
+            SetSelected(dvRTE, true);
+            // This filter shouldn't do anything...
+            dvRTE.RowFilter = "[Selected]";
+            result = dvRTE.Count;
+            UpdateLabel("Selected " + result + " airway segments...");
+            // Build a unique list of airways
+            DataTable dtRTEcheck = dvRTE.ToTable(true, "AWYID");
+            // Loop the list of Airways to extend a leg beyond the square...
+            foreach (DataRow dataRow in dtRTEcheck.Rows)
+            {
+                // change filter to just one airway
+                awy1 = dataRow[0].ToString();
+                awyFilter = "([AWYID] = '" + awy1 + "')";
+                dvRTE.RowFilter = awyFilter;
+                // Get the range of sequence numbers
+                MinSeqNo = SCTcommon.GetMinDataView(dvRTE, "Sequence");
+                MaxSeqNo = SCTcommon.GetMaxDataView(dvRTE, "Sequence");
+                // Filter out the SELECTED for the SELECTED range of sequence numbers
+                dvRTE.RowFilter = "[Selected] AND " + awyFilter;
+                MinSelSeqNo = SCTcommon.GetMinDataView(dvRTE, "Sequence");
+                MaxSelSeqNo = SCTcommon.GetMaxDataView(dvRTE, "Sequence");
+                // Extend one leg outside the square, if able (Doesn't matter if only one waypoint found)
+                if (MinSeqNo < MinSelSeqNo)
+                {
+                    dvRTE.RowFilter = awyFilter + seqFilter + (MinSelSeqNo - 10).ToString() + ")";
+                    SetSelected(dvRTE);
+                }
+                if (MaxSeqNo > MaxSelSeqNo)
+                {
+                    dvRTE.RowFilter = awyFilter + seqFilter + (MaxSelSeqNo + 10).ToString() + ")";
+                    SetSelected(dvRTE);
+                }
+            }
+            // Clean up
+            dvRTE.Dispose();
             return result;
         }
 
@@ -763,6 +815,20 @@ namespace SCTBuilder
             else return "STARtabPage";
         }
 
+        private string LoadOceanicDataGridView()
+        {
+            DataView dvOceanic = new DataView(NGRTE);
+            DataTable dtOceanic = dvOceanic.ToTable(true, "Selected", "AWYID", "NAVAID");
+            dgvOceanic.DataSource = dtOceanic;
+            (dgvOceanic.DataSource as DataTable).DefaultView.RowFilter = "[Selected]";
+            foreach (DataGridViewColumn dc in dgvVOR.Columns) dc.ReadOnly = true;
+            dgvOceanic.Columns[0].ReadOnly = false;
+            dgvOceanic.Columns[1].HeaderText = "ID";
+            dgvOceanic.Sort(dgvOceanic.Columns[1], ListSortDirection.Ascending);
+            dgvOceanic.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.DisplayedCells);
+            dvOceanic.Dispose();
+            return "OceanicTabPage";
+        }
 
         //private string SetSUAfilter()
         //{
@@ -858,6 +924,9 @@ namespace SCTBuilder
                     break;
                 case "STARs":
                     txtGridViewCount.Text = dgvSTAR.Rows.Count.ToString() + " / " + SSD.Rows.Count.ToString();
+                    break;
+                case "Oceanic":
+                    txtGridViewCount.Text = dgvOceanic.Rows.Count.ToString() + " / " + NGRTE.Rows.Count.ToString();
                     break;
                 default:
                     txtGridViewCount.Text = "Tab not found)";
@@ -1089,13 +1158,13 @@ namespace SCTBuilder
             if (dgvAWY.DataSource != null) ToggleSelectedDGV(dgvAWY);
             if (dgvSID.DataSource != null) ToggleSelectedDGV(dgvSID);
             if (dgvSTAR.DataSource != null) ToggleSelectedDGV(dgvSTAR);
+            if (dgvOceanic.DataSource != null) ToggleSelectedDGV(dgvOceanic);
             UpdateGridCount();
             if (chkbxShowAll.Checked) chkbxShowAll.BackColor = Color.White;
             else
             {
                 chkbxShowAll.BackColor = Color.Transparent;
             }
-
         }
 
         private void ToggleSelectedDGV(DataGridView dgv)
@@ -1217,13 +1286,14 @@ namespace SCTBuilder
             SCTchecked.ChkSID = SIDsCheckBox.Checked;
             SCTchecked.ChkSTAR = STARsCheckBox.Checked;
             SCTchecked.ChkVOR = VORsCheckBox.Checked;
+            SCTchecked.ChkOceanic = OceanicCheckBox.Checked;
             SCTchecked.ChkSUA_ClassB = SUA_ClassBCheckBox.Checked;
             SCTchecked.ChkSUA_ClassC = SUA_ClassCCheckBox.Checked;
             SCTchecked.ChkSUA_ClassD = SUA_ClassDCheckBox.Checked;
             SCTchecked.ChkSUA_Danger = SUA_DangerCheckBox.Checked;
             SCTchecked.ChkSUA_Prohibited = SUA_ProhibitedCheckBox.Checked;
             SCTchecked.ChkSUA_Restricted = SUA_RestrictedCheckBox.Checked;
-            InfoSection.UseFixes = useFixesForCoordinatesToolStripMenuItem.Checked;
+            InfoSection.UseFixesAsCoords = useFixesAsCoordinatesToolStripMenuItem.Checked;
             InfoSection.UseNaviGraph = includeNaviGraphDataToolStripMenuItem.Checked;
         }
         private void GetChecked()
@@ -1238,13 +1308,14 @@ namespace SCTBuilder
             SIDsCheckBox.Checked = SCTchecked.ChkSID;
             STARsCheckBox.Checked = SCTchecked.ChkSTAR;
             VORsCheckBox.Checked = SCTchecked.ChkVOR;
+            OceanicCheckBox.Checked = SCTchecked.ChkOceanic;
             SUA_ClassBCheckBox.Checked = SCTchecked.ChkSUA_ClassB;
             SUA_ClassCCheckBox.Checked = SCTchecked.ChkSUA_ClassC;
             SUA_ClassDCheckBox.Checked = SCTchecked.ChkSUA_ClassD;
             SUA_DangerCheckBox.Checked = SCTchecked.ChkSUA_Danger;
             SUA_ProhibitedCheckBox.Checked = SCTchecked.ChkSUA_Prohibited;
             SUA_RestrictedCheckBox.Checked = SCTchecked.ChkSUA_Restricted;
-            useFixesForCoordinatesToolStripMenuItem.Checked = InfoSection.UseFixes;
+            useFixesAsCoordinatesToolStripMenuItem.Checked = InfoSection.UseFixesAsCoords;
             includeNaviGraphDataToolStripMenuItem.Checked = InfoSection.UseNaviGraph;
         }
 
@@ -1708,7 +1779,7 @@ namespace SCTBuilder
         {
             if (AirportComboBox.SelectedIndex != -1)
             {
-                object[] coords = SCTcommon.FixInfo(AirportComboBox.Text);
+                object[] coords = SCTcommon.GetNavData(AirportComboBox.Text);
                 InfoSection.CenterLatitude_Dec = (double)coords[2];
                 InfoSection.CenterLongitude_Dec = (double)coords[3];
                 CenterLatTextBox.Text = InfoSection.CenterLatitude_SCT;
@@ -1810,16 +1881,11 @@ namespace SCTBuilder
 
         private void useFixesForCoordinatesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            InfoSection.UseFixes = useFixesForCoordinatesToolStripMenuItem.Checked;
-            if (InfoSection.UseFixes)
+            InfoSection.UseFixesAsCoords = useFixesAsCoordinatesToolStripMenuItem.Checked;
+            if (InfoSection.UseFixesAsCoords)
                 SendMessage("NOTE - a coordinate in a FIX, VOR, or NDB list differs" + cr +
                     " from same NavAid coord in a SID/STAR definition." + cr +
                     " With new formats, plotting by Fix/NavAid is no longer recommended.");
-        }
-
-        private void drawFIXesOnDiagramsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            InfoSection.DrawFixesOnDiagrams = drawFIXesOnDiagramsToolStripMenuItem.Checked;
         }
 
         private void drawAltitudeRestrictionsOnDiagramsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1873,12 +1939,7 @@ namespace SCTBuilder
 
         private void oneFilePerSIDSTARToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            InfoSection.OneSectionSIDSTAR = oneFilePerSIDSTARToolStripMenuItem.Checked;
-        }
-
-        private void includeAIRPORTFIXESToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            InfoSection.SIDSTARhasRefs = includeAIRPORTFIXESToolStripMenuItem.Checked;
+            InfoSection.OneFilePerSidStar = oneFilePerSIDSTARToolStripMenuItem.Checked;
         }
 
         private void exitProgramToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1888,6 +1949,26 @@ namespace SCTBuilder
             ExitClicked = true;
             CycleInfo.WriteINIxml();
             Application.Exit();
+        }
+
+        private void OceanicCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            SCTchecked.ChkOceanic = OceanicCheckBox.Checked;
+        }
+
+        private void drawFIXLabelsOnDiagramsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            InfoSection.DrawFixLabelsOnDiagrams = drawFIXLabelsOnDiagramsToolStripMenuItem.Checked;
+        }
+
+        private void drawFixSymbolsStripMenuItem_Click(object sender, EventArgs e)
+        {
+            InfoSection.DrawFixSymbolsOnDiagrams = drawFixSymbolsStripMenuItem.Checked;
+        }
+
+        private void includeSidStarReferencesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            InfoSection.IncludeSidStarReferences = includeSidStarReferencesToolStripMenuItem.Checked;
         }
     }
 }
