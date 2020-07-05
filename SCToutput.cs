@@ -223,7 +223,7 @@ namespace SCTBuilder
         }
         private static void WriteColors(string path)
         {
-            DataTable dtColors = Form1.Colors;
+            DataTable dtColors = Form1.ColorDef;
             string Output = "; Color definition table" + cr;
             Debug.WriteLine(dtColors.Rows.Count + " colors in color table");
             foreach (DataRow row in dtColors.Rows)

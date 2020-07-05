@@ -5,6 +5,9 @@ using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using System.IO;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Text.RegularExpressions;
+using System.Globalization;
 
 namespace SCTBuilder
 {
@@ -1020,6 +1023,94 @@ namespace SCTBuilder
             foreach (string f in Fix) Fixes += f + " ";
             result = SSD + ":" + Airport + ":" + RWY + ":" + Transition + "x" + SSDname + ":" + Fixes;
             return result;
+        }
+    }
+
+    public static class SCTcolors
+    {
+        public static int RGB2Decimal(int R, int G, int B)
+        {
+            return R * 65536 + G * 256 + B;
+        }
+
+        public static string ExtractHexDigits(string input)
+        {
+            // remove any characters that are not digits (like #)
+            var isHexDigit
+                = new Regex("[abcdefABCDEF\\d]+", RegexOptions.Compiled);
+            string newnum = "";
+            foreach (char c in input)
+            {
+                if (isHexDigit.IsMatch(c.ToString()))
+                {
+                    newnum += c.ToString();
+                }
+            }
+            return newnum;
+        }
+        public static Color HexStringToColor(string hexColor)
+        {
+            string hc = ExtractHexDigits(hexColor);
+            if (hc.Length != 6)
+            {
+                // you can choose whether to throw an exception
+                //throw new ArgumentException("hexColor is not exactly 6 digits.");
+                return Color.Empty;
+            }
+            string r = hc.Substring(0, 2);
+            string g = hc.Substring(2, 2);
+            string b = hc.Substring(4, 2);
+            Color color;
+            try
+            {
+                int ri = Int32.Parse(r, NumberStyles.HexNumber);
+                int gi = Int32.Parse(g, NumberStyles.HexNumber);
+                int bi = Int32.Parse(b, NumberStyles.HexNumber);
+                color = Color.FromArgb(ri, gi, bi);
+            }
+            catch
+            {
+                // you can choose whether to throw an exception
+                //throw new ArgumentException("Conversion failed.");
+                return Color.Empty;
+            }
+            return color;
+        }
+        public static void ReadDefineText()
+        {
+            string path; string define; string Name; int ClrValue;
+            string ToParse;
+            ;
+            OpenFileDialog openFile = new OpenFileDialog
+            {
+                Title = "Open text file of #define lines",
+                InitialDirectory = "D:\\OneDrive\\Documents\\vFE_Files\\Resources\\",
+                Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*",
+                RestoreDirectory = true,
+            };
+
+            if (openFile.ShowDialog() == DialogResult.OK)
+            {
+                path = openFile.FileName;
+                string[] Lines = File.ReadAllLines(path);
+                DataView dvColors = new DataView(Form1.ColorDef);
+                
+                foreach (string Line in Lines)
+                {
+                    ToParse = Line;
+                    define = ToParse.Substring(0, ToParse.IndexOf(" ")).Trim();
+                    if (define.IndexOf("#define") != -1)
+                    {
+                        DataRowView dvrColor = dvColors.AddNew();
+                        ToParse = ToParse.Substring(ToParse.IndexOf(" ") + 1);
+                        Name = ToParse.Substring(0, ToParse.IndexOf(" ")).Trim();
+                        ToParse = ToParse.Substring(ToParse.IndexOf(" ") + 1);
+                        ClrValue = Convert.ToInt32(ToParse);
+                        dvrColor[0] = Name; dvrColor[1] = ClrValue;
+                        dvrColor.EndEdit();
+                    }
+                }
+            }
         }
     }
 

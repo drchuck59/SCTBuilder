@@ -101,11 +101,12 @@ namespace SCTBuilder
         public static double Rad2Deg(double radians)
         // Convert  radians into degrees
         {
-            double degrees = (180 / Math.PI) * radians;
+            double degrees = (180f / Math.PI) * radians;
             // Atan returns +/- 180; convert to 0->360
-            degrees = (degrees + 180) % 360;
             return degrees;
         }
+
+
 
         public static PointF RotatePoint(PointF pointToRotate, PointF centerPoint, double angleInDegrees)
         {
@@ -184,22 +185,27 @@ namespace SCTBuilder
             }
         }
 
-        public static double[] Destination(double Lat1, double Lon1, double Dist, double Brg, char Type = 'S')
+        public static double[] Destination(double Latitude, double Longitude, double Dist, double Brg, char Type)
         {
             // Destination given distance and bearing from starting point
             // Reference: https://www.movable-type.co.uk/scripts/latlong.html
+
             double R = EarthRadius(Type);           // Radius of earth to match distance vector
-            double rLat1 = Deg2Rad(Lat1);         // All math must be in radians
-            double rLon1 = Deg2Rad(Lon1);
-            double rBrg = Deg2Rad(Brg);
-            double rLat2 = Math.Asin(Math.Sin(rLat1) * Math.Cos(Dist / R) +
-                          Math.Cos(rLat1) * Math.Sin(Dist / R) * Math.Cos(rBrg));
-            double rLon2 = rLon1 + Math.Atan2(Math.Sin(rBrg) * Math.Sin(Dist / R) * Math.Cos(rLat1),
-                                Math.Cos(Dist / R) - Math.Sin(rLat1) * Math.Sin(rLat2));
+            double radBrg = Deg2Rad(Brg);             // Angles must be in radians
+            double AngDist = Dist / R;
+            double radLat = Deg2Rad(Latitude);
+            double radLon = Deg2Rad(Longitude);
+            double Lat2 = Math.Asin(Math.Sin(radLat) * Math.Cos(AngDist) +
+                          Math.Cos(radLat) * Math.Sin(AngDist) * Math.Cos(radBrg));
+            double forAtanA = Math.Sin(radBrg) * Math.Sin(AngDist) * Math.Cos(radLat);
+            double forAtanB = Math.Cos(AngDist) - Math.Sin(radLat) * Math.Sin(Lat2);
+            double Lon2 = radLon + Math.Atan2(forAtanA, forAtanB);
+            double finalLat = Rad2Deg(Lat2);
+            double finalLon = NormalizedLon(Lon2);
             double[] Endpoint = new double[]
             {
-                Rad2Deg(rLat2),
-                NormalizedLon(rLon2)
+                finalLat,
+                finalLon
             };
             return Endpoint;
         }
@@ -214,16 +220,16 @@ namespace SCTBuilder
             if (IsValidLat(Lat1) && IsValidLon(Lon1) && IsValidLat(Lat2) && IsValidLon(Lon2))
             {
                 double rBrg12; double rBrg21;
-                double rLat1 = Deg2Rad(Lat1); double rLon1 = Deg2Rad(Lon1); double rBrg1 = Deg2Rad(Brg1);
-                double rLat2 = Deg2Rad(Lat2); double rLon2 = Deg2Rad(Lon2); double rBrg2 = Deg2Rad(Brg2);
+                double rBrg1 = Deg2Rad(Brg1);
+                double rBrg2 = Deg2Rad(Brg2);
 
-                double Delta12 = 2 * Math.Asin(Math.Sqrt(Math.Pow(Math.Sin((Lat2 - rLat1) / 2), 2) +
-                                Math.Cos(rLat1) * Math.Cos(rLat2) * Math.Pow(Math.Sin((Lon2 - Lon1) / 2), 2)));
-                double ThetaA = Math.Acos((Math.Sin(rLat2) - Math.Sin(rLat1 * Math.Cos(Delta12))) /
-                                Math.Sin(Delta12 * Math.Cos(rLat1)));
-                double ThetaB = Math.Acos((Math.Sin(rLat1) - Math.Sin(rLat2 * Math.Cos(Delta12))) /
-                                Math.Sin(Delta12 * Math.Cos(rLat2)));
-                if (Math.Sin(rLon2 - rLon1) > 0)
+                double Delta12 = 2 * Math.Asin(Math.Sqrt(Math.Pow(Math.Sin((Lat2 - Lat1) / 2), 2) +
+                                Math.Cos(Lat1) * Math.Cos(Lat2) * Math.Pow(Math.Sin((Lon2 - Lon1) / 2), 2)));
+                double ThetaA = Math.Acos((Math.Sin(Lat2) - Math.Sin(Lat1 * Math.Cos(Delta12))) /
+                                Math.Sin(Delta12 * Math.Cos(Lat1)));
+                double ThetaB = Math.Acos((Math.Sin(Lat1) - Math.Sin(Lat2 * Math.Cos(Delta12))) /
+                                Math.Sin(Delta12 * Math.Cos(Lat2)));
+                if (Math.Sin(Lon2 - Lon1) > 0)
                 {
                     rBrg12 = ThetaA;
                     rBrg21 = 2 * Math.PI - ThetaB;
@@ -247,13 +253,11 @@ namespace SCTBuilder
                                     Math.Sin(Alpha1) * Math.Sin(Alpha2) * Math.Cos(Delta12));
                     double Delta13 = Math.Atan2(Math.Sin(Delta12) * Math.Sin(Alpha1) * Math.Sin(Alpha2),
                                         Math.Cos(Alpha2) + Math.Cos(Alpha1) * Math.Cos(Alpha3));
-                    result[0] = Math.Asin(Math.Sin(rLat1 * Math.Cos(Delta13) +
-                        Math.Cos(rLat1) * Math.Sin(Delta13) * Math.Cos(rBrg1)));
-                    double Lambda13 = Math.Atan2(Math.Sin(rBrg1) * Math.Sin(Delta13) * Math.Cos(rLat1),
-                                        Math.Cos(Delta13) - Math.Sin(rLat1) * Math.Sin(result[0]));
-                    result[1] = rLon1 + Lambda13;
-                    result[0] = Rad2Deg(result[0]);
-                    result[1] = NormalizedLon(result[1]);
+                    result[0] = Math.Asin(Math.Sin(Lat1 * Math.Cos(Delta13) +
+                        Math.Cos(Lat1) * Math.Sin(Delta13) * Math.Cos(rBrg1)));
+                    double Lambda13 = Math.Atan2(Math.Sin(rBrg1) * Math.Sin(Delta13) * Math.Cos(Lat1),
+                                        Math.Cos(Delta13) - Math.Sin(Lat1) * Math.Sin(result[0]));
+                    result[1] = NormalizedLon(Lon1 + Lambda13);
                 }
             }
             else result[0] = result[1] = -1;

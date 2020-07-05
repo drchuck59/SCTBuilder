@@ -26,7 +26,7 @@ namespace SCTBuilder
         static public DataTable SSD = new SCTdata.SSDDataTable();
         static public DataTable SUA = new SCTdata.SUADataTable();
         static public DataTable Polygon = new SCTdata.SUA_PolygonDataTable();
-        static public DataTable Colors = new SCTdata.ColorDefsDataTable();
+        static public DataTable ColorDef = new SCTdata.ColorDefsDataTable();
         static public DataTable LocalSector = new SCTdata.LocalSectorsDataTable();
         static public DataTable NGSID = new SCTdata.NGSIDDataTable();
         static public DataTable NGSIDTransition = new SCTdata.NGSIDTransitionDataTable();
@@ -54,8 +54,8 @@ namespace SCTBuilder
             SCT.Tables.Add(TWR);
             SCT.Tables.Add(AWY);
             SCT.Tables.Add(SSD);
-            SCT.Tables.Add(Colors);
-            SCTcommon.DefineColorConstants(Colors);
+            SCT.Tables.Add(ColorDef);
+            SCTcommon.DefineColorConstants(ColorDef);
         }
 
         private void Form1_Load(object sender, EventArgs e)
