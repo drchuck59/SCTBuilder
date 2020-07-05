@@ -1630,6 +1630,7 @@
             // 
             // arcGeneratorToolStripMenuItem
             // 
+            this.arcGeneratorToolStripMenuItem.Enabled = false;
             this.arcGeneratorToolStripMenuItem.Name = "arcGeneratorToolStripMenuItem";
             this.arcGeneratorToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.arcGeneratorToolStripMenuItem.Text = "Arc generator";
