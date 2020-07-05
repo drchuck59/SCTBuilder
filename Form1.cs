@@ -1967,5 +1967,12 @@ namespace SCTBuilder
         {
             InfoSection.IncludeSidStarReferences = includeSidStarReferencesToolStripMenuItem.Checked;
         }
+
+        private void SSDGeneratorToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Form form = new SSDGenerator();
+            form.ShowDialog(this);
+            form.Dispose();
+        }
     }
 }

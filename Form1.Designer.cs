@@ -149,9 +149,8 @@
             this.exitProgramToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.LineGeneratorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.arcGneratorradToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.arcGeneratorstartendToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.procedureTurnToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.arcGeneratorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.SSDGeneratorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.racetrackholdToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.runwayMarksToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.labelGeneratorforDiagramsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -1460,13 +1459,13 @@
             // selectedComponentsToolStripMenuItem
             // 
             this.selectedComponentsToolStripMenuItem.Name = "selectedComponentsToolStripMenuItem";
-            this.selectedComponentsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.selectedComponentsToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
             this.selectedComponentsToolStripMenuItem.Text = "Use VRC formats";
             // 
             // entireSCTFilelongToolStripMenuItem
             // 
             this.entireSCTFilelongToolStripMenuItem.Name = "entireSCTFilelongToolStripMenuItem";
-            this.entireSCTFilelongToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.entireSCTFilelongToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
             this.entireSCTFilelongToolStripMenuItem.Text = "Use ES formats";
             // 
             // preferencesToolStripMenuItem
@@ -1609,12 +1608,11 @@
             // 
             this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.LineGeneratorToolStripMenuItem,
-            this.arcGneratorradToolStripMenuItem,
-            this.arcGeneratorstartendToolStripMenuItem,
-            this.procedureTurnToolStripMenuItem,
+            this.arcGeneratorToolStripMenuItem,
+            this.labelGeneratorforDiagramsToolStripMenuItem,
+            this.SSDGeneratorToolStripMenuItem,
             this.racetrackholdToolStripMenuItem,
             this.runwayMarksToolStripMenuItem,
-            this.labelGeneratorforDiagramsToolStripMenuItem,
             this.iLSGeneratorToolStripMenuItem,
             this.xML2SCTToolStripMenuItem,
             this.dMSDecDegToolStripMenuItem,
@@ -1626,49 +1624,42 @@
             // LineGeneratorToolStripMenuItem
             // 
             this.LineGeneratorToolStripMenuItem.Name = "LineGeneratorToolStripMenuItem";
-            this.LineGeneratorToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
+            this.LineGeneratorToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.LineGeneratorToolStripMenuItem.Text = "Line generator";
             this.LineGeneratorToolStripMenuItem.Click += new System.EventHandler(this.LineGeneratorToolStripMenuItem_Click);
             // 
-            // arcGneratorradToolStripMenuItem
+            // arcGeneratorToolStripMenuItem
             // 
-            this.arcGneratorradToolStripMenuItem.Enabled = false;
-            this.arcGneratorradToolStripMenuItem.Name = "arcGneratorradToolStripMenuItem";
-            this.arcGneratorradToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
-            this.arcGneratorradToolStripMenuItem.Text = "Arc gnerator (radials)";
+            this.arcGeneratorToolStripMenuItem.Name = "arcGeneratorToolStripMenuItem";
+            this.arcGeneratorToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.arcGeneratorToolStripMenuItem.Text = "Arc generator";
             // 
-            // arcGeneratorstartendToolStripMenuItem
+            // SSDGeneratorToolStripMenuItem
             // 
-            this.arcGeneratorstartendToolStripMenuItem.Enabled = false;
-            this.arcGeneratorstartendToolStripMenuItem.Name = "arcGeneratorstartendToolStripMenuItem";
-            this.arcGeneratorstartendToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
-            this.arcGeneratorstartendToolStripMenuItem.Text = "Arc generator (start/end)";
-            // 
-            // procedureTurnToolStripMenuItem
-            // 
-            this.procedureTurnToolStripMenuItem.Enabled = false;
-            this.procedureTurnToolStripMenuItem.Name = "procedureTurnToolStripMenuItem";
-            this.procedureTurnToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
-            this.procedureTurnToolStripMenuItem.Text = "Procedure turn";
+            this.SSDGeneratorToolStripMenuItem.Name = "SSDGeneratorToolStripMenuItem";
+            this.SSDGeneratorToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.SSDGeneratorToolStripMenuItem.Text = "SID/STAR generator";
+            this.SSDGeneratorToolStripMenuItem.ToolTipText = "Opens a tool to generate ONE SID or STAR diagram";
+            this.SSDGeneratorToolStripMenuItem.Click += new System.EventHandler(this.SSDGeneratorToolStripMenuItem_Click);
             // 
             // racetrackholdToolStripMenuItem
             // 
             this.racetrackholdToolStripMenuItem.Enabled = false;
             this.racetrackholdToolStripMenuItem.Name = "racetrackholdToolStripMenuItem";
-            this.racetrackholdToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
+            this.racetrackholdToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.racetrackholdToolStripMenuItem.Text = "Racetrack (hold)";
             // 
             // runwayMarksToolStripMenuItem
             // 
             this.runwayMarksToolStripMenuItem.Enabled = false;
             this.runwayMarksToolStripMenuItem.Name = "runwayMarksToolStripMenuItem";
-            this.runwayMarksToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
+            this.runwayMarksToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.runwayMarksToolStripMenuItem.Text = "Runway Marks";
             // 
             // labelGeneratorforDiagramsToolStripMenuItem
             // 
             this.labelGeneratorforDiagramsToolStripMenuItem.Name = "labelGeneratorforDiagramsToolStripMenuItem";
-            this.labelGeneratorforDiagramsToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
+            this.labelGeneratorforDiagramsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.labelGeneratorforDiagramsToolStripMenuItem.Text = "Label generator";
             this.labelGeneratorforDiagramsToolStripMenuItem.Click += new System.EventHandler(this.LabelGeneratorforDiagramsToolStripMenuItem_Click);
             // 
@@ -1676,21 +1667,21 @@
             // 
             this.iLSGeneratorToolStripMenuItem.Enabled = false;
             this.iLSGeneratorToolStripMenuItem.Name = "iLSGeneratorToolStripMenuItem";
-            this.iLSGeneratorToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
+            this.iLSGeneratorToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.iLSGeneratorToolStripMenuItem.Text = "ILS generator";
             // 
             // xML2SCTToolStripMenuItem
             // 
             this.xML2SCTToolStripMenuItem.Enabled = false;
             this.xML2SCTToolStripMenuItem.Name = "xML2SCTToolStripMenuItem";
-            this.xML2SCTToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
+            this.xML2SCTToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.xML2SCTToolStripMenuItem.Text = "XML2SCT";
             this.xML2SCTToolStripMenuItem.Click += new System.EventHandler(this.XML2SCTToolStripMenuItem_Click);
             // 
             // dMSDecDegToolStripMenuItem
             // 
             this.dMSDecDegToolStripMenuItem.Name = "dMSDecDegToolStripMenuItem";
-            this.dMSDecDegToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
+            this.dMSDecDegToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.dMSDecDegToolStripMenuItem.Text = "DMS_DecDeg";
             this.dMSDecDegToolStripMenuItem.Click += new System.EventHandler(this.DMSDecDegToolStripMenuItem_Click);
             // 
@@ -1698,7 +1689,7 @@
             // 
             this.sCTColorMgrToolStripMenuItem.Enabled = false;
             this.sCTColorMgrToolStripMenuItem.Name = "sCTColorMgrToolStripMenuItem";
-            this.sCTColorMgrToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
+            this.sCTColorMgrToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.sCTColorMgrToolStripMenuItem.Text = "SCT Color Mgr";
             // 
             // helpToolStripMenuItem
@@ -2128,9 +2119,8 @@
         private System.Windows.Forms.ToolStripMenuItem openDataFolderToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem selectOutputFolderToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem LineGeneratorToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem arcGneratorradToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem arcGeneratorstartendToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem procedureTurnToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem arcGeneratorToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem SSDGeneratorToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem racetrackholdToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem runwayMarksToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem labelGeneratorforDiagramsToolStripMenuItem;

@@ -25,7 +25,7 @@ namespace SCTBuilder
         private static double CalcMag = InfoSection.MagneticVariation;
         private static string OutputType = "SSD";
         string Msg = string.Empty;
-        string cr = Environment.NewLine;
+        readonly string cr = Environment.NewLine;
         MessageBoxIcon icon = MessageBoxIcon.Warning;
 
         public LineGenerator()
@@ -84,7 +84,7 @@ namespace SCTBuilder
             }
             else
             {
-                Msg = "No text in output textbox to copy!";
+                Msg = "No text in output textbox to save!";
                 SCTcommon.SendMessage(Msg);
             }
         }

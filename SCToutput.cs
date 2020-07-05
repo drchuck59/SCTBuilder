@@ -27,8 +27,7 @@ namespace SCTBuilder
         static List<string> SSDlines = new List<string>();
         static List<string> FixesUsed = new List<string>();
         static List<string> APTsUsed = new List<string>();
-        static string BigResult = string.Empty;
-
+        private static string BigResult = string.Empty;
         public static void WriteSCT()
         {
             // DataTable LS = Form1.LocalSector;
@@ -252,7 +251,7 @@ namespace SCTBuilder
         }
         private static void WriteVOR(string path)
         {
-            string[] strOut = new string[5];
+            string[] strOut = new string[6];
             DataView dataView = new DataView(Form1.VOR)
             {
                 RowFilter = "[Selected]",
@@ -269,6 +268,7 @@ namespace SCTBuilder
                     strOut[2] = Conversions.DecDeg2SCT(Convert.ToSingle(row["Latitude"]), true);
                     strOut[3] = Conversions.DecDeg2SCT(Convert.ToSingle(row["Longitude"]), false);
                     strOut[4] = row["Name"].ToString();
+                    strOut[5] = row["FixType"].ToString();
                     if (!(strOut[2] + strOut[3]).Contains("-1 "))      // Do NOT write VORs having no fix
                         sw.WriteLine(SCTstrings.VORout(strOut));
                 }
@@ -562,7 +562,7 @@ namespace SCTBuilder
             SSDlist.Dispose();
         }
 
-        public static void BuildSSD (DataView dvSSD)
+        private static void BuildSSD (DataView dvSSD)
         {
             // Builds ONE SID or STAR from ONE SSD dataview (preselected)
             // RETURNS a string for the diagram
@@ -648,7 +648,7 @@ namespace SCTBuilder
             // Need to add the ALT and Speed items here
         }
 
-        public static void WriteSSDrefs(StreamWriter sw)
+        private static void WriteSSDrefs(StreamWriter sw)
         {
             // Sends the results of BuildSSD to the designated file
             // This is the header references

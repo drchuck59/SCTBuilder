@@ -550,7 +550,7 @@
             this.groupBox3.Controls.Add(this.SSDRadioButton);
             this.groupBox3.Controls.Add(this.ARTCCRadioButton);
             this.groupBox3.Controls.Add(this.AirwayRadioButton);
-            this.groupBox3.Location = new System.Drawing.Point(20, 437);
+            this.groupBox3.Location = new System.Drawing.Point(20, 436);
             this.groupBox3.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Padding = new System.Windows.Forms.Padding(2, 1, 2, 1);

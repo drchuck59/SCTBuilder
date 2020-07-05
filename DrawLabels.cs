@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Windows.Forms;
 
 namespace SCTBuilder
@@ -10,13 +11,6 @@ namespace SCTBuilder
         public DrawLabels()
         {
             InitializeComponent();
-        }
-
-
-        private void SendMessage(string Msg, MessageBoxIcon icon = MessageBoxIcon.Information,
-            MessageBoxButtons buttons = MessageBoxButtons.OK)
-        {
-            MessageBox.Show(Msg, VersionInfo.Title, buttons, icon);
         }
 
         private void IdentifierTextBox_TextChanged(object sender, EventArgs e)
@@ -51,8 +45,7 @@ namespace SCTBuilder
                 else
                 {
                     string Msg = "You must select your FAA data folder before you can search for Fixes.";
-                    MessageBoxIcon icon = MessageBoxIcon.Warning;
-                    SendMessage(Msg, icon);
+                    SCTcommon.SendMessage(Msg);
                     IdentifierTextBox.Text = string.Empty;
                 }
             }
@@ -71,23 +64,6 @@ namespace SCTBuilder
                 Conversions.DecDeg2SCT(Convert.ToDouble(FixListDataGridView.SelectedRows[0].Cells[2].Value), true);
             LabelTextBox.Text = FixListDataGridView.SelectedRows[0].Cells[0].Value.ToString();
             CrossForm.Lon = Convert.ToDouble(FixListDataGridView.SelectedRows[0].Cells[2].Value);
-            CheckGenerate();
-        }
-
-        private void CopyClipButton_Click(object sender, EventArgs e)
-        {
-            string Msg = string.Empty;
-            if (!double.IsNaN(CrossForm.Lat))
-            {
-                LatTextBox.Text = Conversions.DecDeg2SCT(CrossForm.Lat, true);
-            }
-            else Msg = "One or both coordinates are not a decimal coordinate";
-
-            if (!double.IsNaN(CrossForm.Lon))
-                LonTextBox.Text = Conversions.DecDeg2SCT(CrossForm.Lon, false);
-            else Msg = "One or both coordinates are not a number";
-            BearingTextBox.Text = CrossForm.Bearing.ToString();
-            if (Msg.Length != 0) SendMessage(Msg);
             CheckGenerate();
         }
 
@@ -112,7 +88,7 @@ namespace SCTBuilder
                 else
                 {
                     Msg = "Latitude must fall between -90 and 90 degrees.";
-                    SendMessage(Msg);
+                    SCTcommon.SendMessage(Msg);
                     LatTextBox.Text = string.Empty;
                 }
             }
@@ -127,7 +103,7 @@ namespace SCTBuilder
                 else
                 {
                     Msg = "Conversion error or Latitude outside -90 and 90 degrees.";
-                    SendMessage(Msg);
+                    SCTcommon.SendMessage(Msg);
                     LatTextBox.Text = string.Empty;
                 }
             }
@@ -148,7 +124,7 @@ namespace SCTBuilder
                 else
                 {
                     Msg = "Longitude must fall between -180 and 180 degrees.";
-                    SendMessage(Msg);
+                    SCTcommon.SendMessage(Msg);
                     LonTextBox.Text = string.Empty;
                 }
             }
@@ -163,7 +139,7 @@ namespace SCTBuilder
                 else
                 {
                     Msg = "Conversion error or Latitude outside -90 and 90 degrees.";
-                    SendMessage(Msg);
+                    SCTcommon.SendMessage(Msg);
                     LonTextBox.Text = string.Empty;
                 }
             }
@@ -186,7 +162,7 @@ namespace SCTBuilder
             catch
             {
                 Msg = "Bearing must be a number between 1 and 360 degrees";
-                SendMessage(Msg);
+                SCTcommon.SendMessage(Msg);
                 BearingTextBox.Text = string.Empty;
             }
         }
@@ -201,35 +177,26 @@ namespace SCTBuilder
             catch
             {
                 Msg = "Scale must be a number between 0 and 10 nautical miles";
-                SendMessage(Msg);
+                SCTcommon.SendMessage(Msg);
                 ScaleTextBox.Text = string.Empty;
             }
         }
 
         private void DrawButton_Click(object sender, EventArgs e)
         {
-            string result = string.Empty; 
-            object[] NavData;
+            string result = string.Empty;
+            object[] NavData; string curFix;
             double Lat1 = Conversions.String2DecDeg(LatTextBox.Text, ".");
             double Lon1 = Conversions.String2DecDeg(LonTextBox.Text, ".");
             int Brg = Convert.ToInt32(BearingTextBox.Text) - 90;            // Rotation in addition to MagVar
             float Scale = Convert.ToSingle(ScaleTextBox.Text);              // Scaling beyond internal 1/3600
-            int rowIndex = -1;
-
-            foreach (DataGridViewRow row in FixListDataGridView.Rows)
+            if (IncludeSymbolCheckBox.Checked && (FixListDataGridView.CurrentRow != null))
             {
-                if (row.Cells[0].Value.ToString().Equals(IdentifierTextBox.Text))
-                {
-                    rowIndex = row.Index;
-                    break;
-                }
-            }
-            result += Hershey.WriteHF(LabelTextBox.Text, Lat1, Lon1, Brg, Scale);
-            if ((rowIndex != -1) && (IncludeSymbolCheckBox.Checked))
-            {                
-                NavData = SCTcommon.GetNavData(IdentifierTextBox.Text);
+                curFix = FixListDataGridView.CurrentRow.Cells[0].Value.ToString();
+                NavData = SCTcommon.GetNavData(curFix);
                 result += Hershey.DrawSymbol(NavData);
             }
+            result += Hershey.WriteHF(LabelTextBox.Text, Lat1, Lon1, Brg, Scale);
             OutputTextBox.Text = result;
         }
 
@@ -249,7 +216,7 @@ namespace SCTBuilder
 
         private void DrawLabels_Load(object sender, EventArgs e)
         {
-            bool CanUseFix = CycleInfo.AIRAC == CycleInfo.CurrentAIRAC;
+            bool CanUseFix = (CycleInfo.AIRAC != 1501);
             FixImportGroupBox.Enabled = CanUseFix;
             if (CanUseFix)
                 toolTip1.SetToolTip(FixImportGroupBox, "Begin typing any FIX");
@@ -279,6 +246,56 @@ namespace SCTBuilder
                 e.Handled = false;
             else
                 e.Handled = true;
+        }
+
+        private void Copy2ClipboardButton_Click(object sender, EventArgs e)
+        {
+            string Msg;
+            if (OutputTextBox.TextLength != 0)
+            {
+                Clipboard.Clear();
+                Clipboard.SetText(OutputTextBox.Text.ToString());
+                Msg = "Contents of output textbox copied to clipboard";
+            }
+            else
+            {
+                Msg = "No text in output textbox to copy!";
+            }
+            SCTcommon.SendMessage(Msg, MessageBoxIcon.Information);
+        }
+
+        private void SaveOutput2FileButton_Click(object sender, EventArgs e)
+        {
+            string Msg;
+            if (OutputTextBox.TextLength != 0)
+            {
+                SaveFileDialog saveFileDialog1 = new SaveFileDialog
+                {
+                    Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*",
+                    FilterIndex = 2,
+                    RestoreDirectory = true
+                };
+                if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+                {
+                    if (saveFileDialog1.FileName.Length != 0)
+                    {
+                        string path = saveFileDialog1.FileName;
+                        File.WriteAllText(path, OutputTextBox.Text);
+                        Msg = "Output written to " + path;
+                        SCTcommon.SendMessage(Msg);
+                    }
+                }
+                else
+                {
+                    Msg = "No file selected; file not saved.";
+                    SCTcommon.SendMessage(Msg);
+                }
+            }
+            else
+            {
+                Msg = "No text in output textbox to save!";
+                SCTcommon.SendMessage(Msg);
+            }
         }
     }
 }

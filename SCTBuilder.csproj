@@ -188,6 +188,12 @@
     <Compile Include="About.Designer.cs">
       <DependentUpon>About.cs</DependentUpon>
     </Compile>
+    <Compile Include="ArcGenerator.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ArcGenerator.Designer.cs">
+      <DependentUpon>ArcGenerator.cs</DependentUpon>
+    </Compile>
     <Compile Include="CycleInfo.cs" />
     <Compile Include="DMS_DecDeg.cs">
       <SubType>Form</SubType>
@@ -232,6 +238,12 @@
     <Compile Include="SelectAIRAC.Designer.cs">
       <DependentUpon>SelectAIRAC.cs</DependentUpon>
     </Compile>
+    <Compile Include="SSDGenerator.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SSDGenerator.Designer.cs">
+      <DependentUpon>SSDGenerator.cs</DependentUpon>
+    </Compile>
     <Compile Include="XML2SCT.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -251,6 +263,9 @@
     <Compile Include="SCToutput.cs" />
     <EmbeddedResource Include="About.resx">
       <DependentUpon>About.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ArcGenerator.resx">
+      <DependentUpon>ArcGenerator.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="DMS_DecDeg.resx">
       <DependentUpon>DMS_DecDeg.cs</DependentUpon>
@@ -279,6 +294,9 @@
     </Compile>
     <EmbeddedResource Include="SelectAIRAC.resx">
       <DependentUpon>SelectAIRAC.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SSDGenerator.resx">
+      <DependentUpon>SSDGenerator.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="XML2SCT.resx">
       <DependentUpon>XML2SCT.cs</DependentUpon>

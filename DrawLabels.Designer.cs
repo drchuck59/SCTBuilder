@@ -36,6 +36,7 @@
             this.LatTextBox = new System.Windows.Forms.TextBox();
             this.LonTextBox = new System.Windows.Forms.TextBox();
             this.FixImportGroupBox = new System.Windows.Forms.GroupBox();
+            this.label5 = new System.Windows.Forms.Label();
             this.IncludeSymbolCheckBox = new System.Windows.Forms.CheckBox();
             this.FixListDataGridView = new System.Windows.Forms.DataGridView();
             this.IdentifierLabel = new System.Windows.Forms.Label();
@@ -50,7 +51,6 @@
             this.ScaleTextBox = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.FixImportGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.FixListDataGridView)).BeginInit();
@@ -115,7 +115,7 @@
             // LonTextBox
             // 
             this.LonTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LonTextBox.Location = new System.Drawing.Point(85, 60);
+            this.LonTextBox.Location = new System.Drawing.Point(85, 65);
             this.LonTextBox.Margin = new System.Windows.Forms.Padding(2);
             this.LonTextBox.Name = "LonTextBox";
             this.LonTextBox.Size = new System.Drawing.Size(135, 23);
@@ -138,6 +138,16 @@
             this.FixImportGroupBox.TabIndex = 9;
             this.FixImportGroupBox.TabStop = false;
             this.FixImportGroupBox.Text = "Import From Fix";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label5.Location = new System.Drawing.Point(148, 15);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(69, 26);
+            this.label5.TabIndex = 21;
+            this.label5.Text = "(Double click\r\nrow to insert)";
             // 
             // IncludeSymbolCheckBox
             // 
@@ -226,6 +236,7 @@
             this.Copy2ClipboardButton.TabIndex = 13;
             this.Copy2ClipboardButton.Text = "Copy to Clipboard";
             this.Copy2ClipboardButton.UseVisualStyleBackColor = true;
+            this.Copy2ClipboardButton.Click += new System.EventHandler(this.Copy2ClipboardButton_Click);
             // 
             // ClearOutputButton
             // 
@@ -250,11 +261,12 @@
             this.SaveOutput2FileButton.TabIndex = 14;
             this.SaveOutput2FileButton.Text = "Save to File";
             this.SaveOutput2FileButton.UseVisualStyleBackColor = true;
+            this.SaveOutput2FileButton.Click += new System.EventHandler(this.SaveOutput2FileButton_Click);
             // 
             // BearingTextBox
             // 
             this.BearingTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BearingTextBox.Location = new System.Drawing.Point(85, 84);
+            this.BearingTextBox.Location = new System.Drawing.Point(85, 94);
             this.BearingTextBox.Margin = new System.Windows.Forms.Padding(2);
             this.BearingTextBox.MaxLength = 3;
             this.BearingTextBox.Name = "BearingTextBox";
@@ -268,7 +280,7 @@
             // ScaleTextBox
             // 
             this.ScaleTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ScaleTextBox.Location = new System.Drawing.Point(182, 84);
+            this.ScaleTextBox.Location = new System.Drawing.Point(182, 94);
             this.ScaleTextBox.Margin = new System.Windows.Forms.Padding(2);
             this.ScaleTextBox.Name = "ScaleTextBox";
             this.ScaleTextBox.Size = new System.Drawing.Size(38, 23);
@@ -282,7 +294,7 @@
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(27, 86);
+            this.label3.Location = new System.Drawing.Point(27, 96);
             this.label3.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(57, 17);
@@ -293,27 +305,17 @@
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(140, 86);
+            this.label4.Location = new System.Drawing.Point(140, 96);
             this.label4.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(43, 17);
             this.label4.TabIndex = 18;
             this.label4.Text = "Scale";
             // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(148, 15);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(69, 26);
-            this.label5.TabIndex = 21;
-            this.label5.Text = "(Double click\r\nrow to insert)";
-            // 
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(41, 109);
+            this.label6.Location = new System.Drawing.Point(41, 119);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(174, 26);
             this.label6.TabIndex = 20;
@@ -325,6 +327,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ActiveCaption;
             this.ClientSize = new System.Drawing.Size(519, 764);
+            this.Controls.Add(this.FixImportGroupBox);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.ScaleTextBox);
             this.Controls.Add(this.label4);
@@ -335,7 +338,6 @@
             this.Controls.Add(this.SaveOutput2FileButton);
             this.Controls.Add(this.OutputTextBox);
             this.Controls.Add(this.DrawButton);
-            this.Controls.Add(this.FixImportGroupBox);
             this.Controls.Add(this.LonTextBox);
             this.Controls.Add(this.LatTextBox);
             this.Controls.Add(this.label2);
