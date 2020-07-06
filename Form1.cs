@@ -277,6 +277,23 @@ namespace SCTBuilder
             APTtable.Columns.Add("ID", typeof(string));
             APTtable.Columns.Add("FacilityID", typeof(string));
             APTtable.Columns.Add("Class", typeof(string));
+            string Classfilter = string.Empty;
+            if (ClassBCheckBox.Checked) Classfilter = "([Class] = 'B')";
+            if (ClassCCheckBox.Checked)
+            {
+                if (Classfilter.Length != 0) Classfilter += " OR ";
+                Classfilter += "([Class] = 'C')";
+            }
+            if (ClassDCheckBox.Checked)
+            {
+                if (Classfilter.Length != 0) Classfilter += " OR ";
+                Classfilter += "([Class] = 'D')";
+            }
+            if (ClassOtherCheckBox.Checked)
+            {
+                if (Classfilter.Length != 0) Classfilter += " OR ";
+                Classfilter += "( ([Class] = 'E') OR ([Class] = 'F') OR ([Class] = '') )";
+            }
             DataView dvTWR = new DataView(TWR);
             DataView dvAPT = new DataView(APT)
             {
@@ -290,12 +307,16 @@ namespace SCTBuilder
                 {
                     APTtable.Rows.Add(dataRow.Row["ID"], dataRow.Row["FacilityID"], dvTWR[0]["Class"]);
                 }
+                else
+                {
+                    APTtable.Rows.Add(dataRow.Row["ID"], dataRow.Row["FacilityID"], string.Empty);
+                }
             }
             Debug.WriteLine("APTcombobox Rows found: " + APTtable.Rows.Count);
             // Create the dataview, filtering by the selected class
             DataView dvAPTcombo = new DataView(APTtable)
             {
-                RowFilter = "([Class] = 'B') OR ([Class] = 'C') OR ([Class] = 'D')",
+                RowFilter = Classfilter,
                 Sort = "Class, FacilityID"
             };
             DataTable dtAPT = dvAPTcombo.ToTable(true, "ID", "FacilityID");
@@ -1670,7 +1691,14 @@ namespace SCTBuilder
         private void APTsCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             if (APTsCheckBox.Checked == false)
+            {
+                RWYsCheckBox.Checked = LimitAPT2ARTCCCheckBox.Checked = 
                 RWYsCheckBox.Enabled = LimitAPT2ARTCCCheckBox.Enabled = false;
+            }
+            else
+            {
+                RWYsCheckBox.Enabled = LimitAPT2ARTCCCheckBox.Enabled = true;
+            }
         }
 
         private void RWYsCheckBox_CheckedChanged(object sender, EventArgs e)
@@ -1977,6 +2005,26 @@ namespace SCTBuilder
             Form form = new SSDGenerator();
             form.ShowDialog(this);
             form.Dispose();
+        }
+
+        private void ClassBCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            LoadAirportComboBox();
+        }
+
+        private void ClassCCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            LoadAirportComboBox();
+        }
+
+        private void ClassDCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            LoadAirportComboBox();
+        }
+
+        private void ClassOtherCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            LoadAirportComboBox();
         }
     }
 }

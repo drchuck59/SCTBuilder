@@ -441,8 +441,8 @@ namespace SCTBuilder
             DataTable AWY = Form1.AWY;
             string Awy0 = string.Empty; string Awy1;
             string NavAid0 = string.Empty; string NavAid1;
-            string Lat0 = string.Empty; string Lat1;
-            string Lon0 = string.Empty; string Lon1;
+            double Lat0=-1; double Lat1=-1;
+            double Lon0=-1; double Lon1=-1;
             bool IsBreak;
             string filter = "[Selected]";
             if (IsLow) filter += " AND [IsLow]";
@@ -453,6 +453,7 @@ namespace SCTBuilder
                 Sort = "AWYID, Sequence",
             };
             Debug.WriteLine("Found " + dvAWY.Count + " rows");
+            // Rotate output as in other output loops
             using (StreamWriter sw = new StreamWriter(path))
             {
                 sw.WriteLine(CycleHeader);
@@ -462,16 +463,23 @@ namespace SCTBuilder
                 {
                     Awy1 = rowAWY["AWYID"].ToString();
                     NavAid1 = rowAWY["NAVAID"].ToString();
-                    Lat1 = Conversions.DecDeg2SCT(Convert.ToSingle(rowAWY["Latitude"]), true);
-                    Lon1 = Conversions.DecDeg2SCT(Convert.ToSingle(rowAWY["Longitude"]), false);
-                    // Continuing segment -is this a break in airway?
                     IsBreak = (bool)rowAWY["IsBreak"];
-                    if ((Awy1 == Awy0) && !IsBreak)
-                        sw.WriteLine(SCTstrings.AWYout(Awy1, Lat0, Lon0, Lat1, Lon1, NavAid0, NavAid1));
-                    NavAid0 = NavAid1;
-                    Lat0 = Lat1;
-                    Lon0 = Lon1;
-                    Awy0 = Awy1;
+                    Lat1 = Convert.ToSingle(rowAWY["Latitude"]);
+                    Lon1 = Convert.ToSingle(rowAWY["Longitude"]);
+                    if (IsBreak) Lat1 = -1f;            // Break in awy; restart sequence with next
+                    if (Awy1 != Awy0) Lat0 = -1f;       // New air, last segment was written (but save this coord)
+                    {
+                        if ((Lat0 != -1) && (Lat1 != -1))
+                            sw.WriteLine(SCTstrings.AWYout(Awy1, 
+                                Conversions.DecDeg2SCT(Convert.ToSingle(Lat1), true), 
+                                Conversions.DecDeg2SCT(Convert.ToSingle(Lon1), false), 
+                                Conversions.DecDeg2SCT(Convert.ToSingle(Lat1), true), 
+                                Conversions.DecDeg2SCT(Convert.ToSingle(Lon1),false), 
+                                NavAid0, NavAid1));
+                    }
+                    // Shift all items
+                    Awy0 = Awy1; NavAid0 = NavAid1;
+                    Lat0 = Lat1; Lon0 = Lon1; 
                 }
             }
             dvAWY.Dispose();
@@ -802,7 +810,7 @@ namespace SCTBuilder
             string ARBname; string HL;  string filter; string Sector;
             string Lat1; string Long1; string Descr1; string Descr0 = string.Empty;
             string Lat0 = string.Empty; string Long0 = string.Empty;
-            string LatFirst; string LongFirst;
+            string LatFirst = string.Empty; string LongFirst = string.Empty;
             string Output = Environment.NewLine;
             if (High)
             {
@@ -859,7 +867,7 @@ namespace SCTBuilder
                         if (Descr1.IndexOf("POINT OF BEGINNING") != -1)    // Last line in this group
                         {
                             Output += SCTstrings.BoundaryOut(FacID1 + HL, Lat0, Long0, Lat1, Long1, Descr0) + cr;
-
+                            Output += SCTstrings.BoundaryOut(FacID1 + HL, Lat1, Long1, LatFirst, LongFirst) + cr;
                             sw.WriteLine(Output);
                             Lat1 = Long1 = FacID1 = Descr1 = Output = string.Empty;
                         }

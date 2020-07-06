@@ -5,8 +5,6 @@ VisualStudioVersion = 16.0.29215.179
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SCTBuilder", "SCTBuilder.csproj", "{62EDD5CD-ED67-4461-888C-1C435EEF2855}"
 EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "SCT Builder Setup", "..\SCT Builder Setup\SCT Builder Setup.vdproj", "{56679588-C6B7-40CF-B29F-7DA9F53A0CE0}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -17,8 +15,6 @@ Global
 		{62EDD5CD-ED67-4461-888C-1C435EEF2855}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{62EDD5CD-ED67-4461-888C-1C435EEF2855}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{62EDD5CD-ED67-4461-888C-1C435EEF2855}.Release|Any CPU.Build.0 = Release|Any CPU
-		{56679588-C6B7-40CF-B29F-7DA9F53A0CE0}.Debug|Any CPU.ActiveCfg = Debug
-		{56679588-C6B7-40CF-B29F-7DA9F53A0CE0}.Release|Any CPU.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

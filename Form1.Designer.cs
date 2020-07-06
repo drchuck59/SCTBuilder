@@ -150,10 +150,10 @@
             this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.LineGeneratorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.arcGeneratorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.labelGeneratorforDiagramsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.SSDGeneratorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.racetrackholdToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.runwayMarksToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.labelGeneratorforDiagramsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.iLSGeneratorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.xML2SCTToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dMSDecDegToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -180,6 +180,10 @@
             this.UpdateAIRACbutton = new System.Windows.Forms.Button();
             this.UpdatingLabel = new System.Windows.Forms.Label();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ClassBCheckBox = new System.Windows.Forms.CheckBox();
+            this.ClassCCheckBox = new System.Windows.Forms.CheckBox();
+            this.ClassDCheckBox = new System.Windows.Forms.CheckBox();
+            this.ClassOtherCheckBox = new System.Windows.Forms.CheckBox();
             this.panelSUAs.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.AllMarginsNumericUpDown)).BeginInit();
             this.FilterGroupBox.SuspendLayout();
@@ -520,7 +524,7 @@
             // 
             this.CenterLatLabel.AutoSize = true;
             this.CenterLatLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CenterLatLabel.Location = new System.Drawing.Point(7, 136);
+            this.CenterLatLabel.Location = new System.Drawing.Point(7, 160);
             this.CenterLatLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.CenterLatLabel.Name = "CenterLatLabel";
             this.CenterLatLabel.Size = new System.Drawing.Size(24, 15);
@@ -530,7 +534,7 @@
             // 
             // CenterLatTextBox
             // 
-            this.CenterLatTextBox.Location = new System.Drawing.Point(35, 133);
+            this.CenterLatTextBox.Location = new System.Drawing.Point(35, 157);
             this.CenterLatTextBox.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.CenterLatTextBox.Name = "CenterLatTextBox";
             this.CenterLatTextBox.Size = new System.Drawing.Size(98, 20);
@@ -540,7 +544,7 @@
             // 
             // CenterLonTextBox
             // 
-            this.CenterLonTextBox.Location = new System.Drawing.Point(169, 133);
+            this.CenterLonTextBox.Location = new System.Drawing.Point(169, 157);
             this.CenterLonTextBox.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.CenterLonTextBox.Name = "CenterLonTextBox";
             this.CenterLonTextBox.Size = new System.Drawing.Size(98, 20);
@@ -552,7 +556,7 @@
             // 
             this.CenterLonLabel.AutoSize = true;
             this.CenterLonLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CenterLonLabel.Location = new System.Drawing.Point(137, 136);
+            this.CenterLonLabel.Location = new System.Drawing.Point(137, 160);
             this.CenterLonLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.CenterLonLabel.Name = "CenterLonLabel";
             this.CenterLonLabel.Size = new System.Drawing.Size(28, 15);
@@ -562,19 +566,20 @@
             // 
             // MagVarTextBox
             // 
-            this.MagVarTextBox.Location = new System.Drawing.Point(296, 133);
+            this.MagVarTextBox.Location = new System.Drawing.Point(296, 157);
             this.MagVarTextBox.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.MagVarTextBox.Name = "MagVarTextBox";
             this.MagVarTextBox.Size = new System.Drawing.Size(39, 20);
             this.MagVarTextBox.TabIndex = 24;
             this.MagVarTextBox.TabStop = false;
-            this.toolTip1.SetToolTip(this.MagVarTextBox, "VRC will use this to correct to true bearings");
+            this.toolTip1.SetToolTip(this.MagVarTextBox, "VRC will use this to correct to true bearings.\r\nValue obtained from FAA airport s" +
+        "urvey data.");
             // 
             // label1
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(289, 115);
+            this.label1.Location = new System.Drawing.Point(289, 139);
             this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(53, 15);
@@ -1624,7 +1629,7 @@
             // LineGeneratorToolStripMenuItem
             // 
             this.LineGeneratorToolStripMenuItem.Name = "LineGeneratorToolStripMenuItem";
-            this.LineGeneratorToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.LineGeneratorToolStripMenuItem.Size = new System.Drawing.Size(176, 22);
             this.LineGeneratorToolStripMenuItem.Text = "Line generator";
             this.LineGeneratorToolStripMenuItem.Click += new System.EventHandler(this.LineGeneratorToolStripMenuItem_Click);
             // 
@@ -1632,13 +1637,20 @@
             // 
             this.arcGeneratorToolStripMenuItem.Enabled = false;
             this.arcGeneratorToolStripMenuItem.Name = "arcGeneratorToolStripMenuItem";
-            this.arcGeneratorToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.arcGeneratorToolStripMenuItem.Size = new System.Drawing.Size(176, 22);
             this.arcGeneratorToolStripMenuItem.Text = "Arc generator";
+            // 
+            // labelGeneratorforDiagramsToolStripMenuItem
+            // 
+            this.labelGeneratorforDiagramsToolStripMenuItem.Name = "labelGeneratorforDiagramsToolStripMenuItem";
+            this.labelGeneratorforDiagramsToolStripMenuItem.Size = new System.Drawing.Size(176, 22);
+            this.labelGeneratorforDiagramsToolStripMenuItem.Text = "Label generator";
+            this.labelGeneratorforDiagramsToolStripMenuItem.Click += new System.EventHandler(this.LabelGeneratorforDiagramsToolStripMenuItem_Click);
             // 
             // SSDGeneratorToolStripMenuItem
             // 
             this.SSDGeneratorToolStripMenuItem.Name = "SSDGeneratorToolStripMenuItem";
-            this.SSDGeneratorToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.SSDGeneratorToolStripMenuItem.Size = new System.Drawing.Size(176, 22);
             this.SSDGeneratorToolStripMenuItem.Text = "SID/STAR generator";
             this.SSDGeneratorToolStripMenuItem.ToolTipText = "Opens a tool to generate ONE SID or STAR diagram";
             this.SSDGeneratorToolStripMenuItem.Click += new System.EventHandler(this.SSDGeneratorToolStripMenuItem_Click);
@@ -1647,42 +1659,35 @@
             // 
             this.racetrackholdToolStripMenuItem.Enabled = false;
             this.racetrackholdToolStripMenuItem.Name = "racetrackholdToolStripMenuItem";
-            this.racetrackholdToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.racetrackholdToolStripMenuItem.Size = new System.Drawing.Size(176, 22);
             this.racetrackholdToolStripMenuItem.Text = "Racetrack (hold)";
             // 
             // runwayMarksToolStripMenuItem
             // 
             this.runwayMarksToolStripMenuItem.Enabled = false;
             this.runwayMarksToolStripMenuItem.Name = "runwayMarksToolStripMenuItem";
-            this.runwayMarksToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.runwayMarksToolStripMenuItem.Size = new System.Drawing.Size(176, 22);
             this.runwayMarksToolStripMenuItem.Text = "Runway Marks";
-            // 
-            // labelGeneratorforDiagramsToolStripMenuItem
-            // 
-            this.labelGeneratorforDiagramsToolStripMenuItem.Name = "labelGeneratorforDiagramsToolStripMenuItem";
-            this.labelGeneratorforDiagramsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.labelGeneratorforDiagramsToolStripMenuItem.Text = "Label generator";
-            this.labelGeneratorforDiagramsToolStripMenuItem.Click += new System.EventHandler(this.LabelGeneratorforDiagramsToolStripMenuItem_Click);
             // 
             // iLSGeneratorToolStripMenuItem
             // 
             this.iLSGeneratorToolStripMenuItem.Enabled = false;
             this.iLSGeneratorToolStripMenuItem.Name = "iLSGeneratorToolStripMenuItem";
-            this.iLSGeneratorToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.iLSGeneratorToolStripMenuItem.Size = new System.Drawing.Size(176, 22);
             this.iLSGeneratorToolStripMenuItem.Text = "ILS generator";
             // 
             // xML2SCTToolStripMenuItem
             // 
             this.xML2SCTToolStripMenuItem.Enabled = false;
             this.xML2SCTToolStripMenuItem.Name = "xML2SCTToolStripMenuItem";
-            this.xML2SCTToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.xML2SCTToolStripMenuItem.Size = new System.Drawing.Size(176, 22);
             this.xML2SCTToolStripMenuItem.Text = "XML2SCT";
             this.xML2SCTToolStripMenuItem.Click += new System.EventHandler(this.XML2SCTToolStripMenuItem_Click);
             // 
             // dMSDecDegToolStripMenuItem
             // 
             this.dMSDecDegToolStripMenuItem.Name = "dMSDecDegToolStripMenuItem";
-            this.dMSDecDegToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.dMSDecDegToolStripMenuItem.Size = new System.Drawing.Size(176, 22);
             this.dMSDecDegToolStripMenuItem.Text = "DMS_DecDeg";
             this.dMSDecDegToolStripMenuItem.Click += new System.EventHandler(this.DMSDecDegToolStripMenuItem_Click);
             // 
@@ -1690,7 +1695,7 @@
             // 
             this.sCTColorMgrToolStripMenuItem.Enabled = false;
             this.sCTColorMgrToolStripMenuItem.Name = "sCTColorMgrToolStripMenuItem";
-            this.sCTColorMgrToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.sCTColorMgrToolStripMenuItem.Size = new System.Drawing.Size(176, 22);
             this.sCTColorMgrToolStripMenuItem.Text = "SCT Color Mgr";
             // 
             // helpToolStripMenuItem
@@ -1799,6 +1804,10 @@
             // 
             // InfoGroupBox
             // 
+            this.InfoGroupBox.Controls.Add(this.ClassOtherCheckBox);
+            this.InfoGroupBox.Controls.Add(this.ClassDCheckBox);
+            this.InfoGroupBox.Controls.Add(this.ClassCCheckBox);
+            this.InfoGroupBox.Controls.Add(this.ClassBCheckBox);
             this.InfoGroupBox.Controls.Add(this.CenterAPTButton);
             this.InfoGroupBox.Controls.Add(this.label7);
             this.InfoGroupBox.Controls.Add(this.MagVarTextBox);
@@ -1816,11 +1825,11 @@
             this.InfoGroupBox.Controls.Add(this.ARTCCComboBox);
             this.InfoGroupBox.Controls.Add(this.ARTCCLabel);
             this.InfoGroupBox.Controls.Add(this.AirportLabel);
-            this.InfoGroupBox.Location = new System.Drawing.Point(6, 302);
+            this.InfoGroupBox.Location = new System.Drawing.Point(13, 269);
             this.InfoGroupBox.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.InfoGroupBox.Name = "InfoGroupBox";
             this.InfoGroupBox.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.InfoGroupBox.Size = new System.Drawing.Size(375, 170);
+            this.InfoGroupBox.Size = new System.Drawing.Size(375, 196);
             this.InfoGroupBox.TabIndex = 52;
             this.InfoGroupBox.TabStop = false;
             this.InfoGroupBox.Text = "[INFO]";
@@ -1842,7 +1851,7 @@
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label7.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.label7.Location = new System.Drawing.Point(76, 115);
+            this.label7.Location = new System.Drawing.Point(76, 139);
             this.label7.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(129, 15);
@@ -1872,7 +1881,7 @@
             this.FoldersGroupBox.Controls.Add(this.OutputFolderTextBox);
             this.FoldersGroupBox.Controls.Add(this.FAADataFolderButton);
             this.FoldersGroupBox.Controls.Add(this.OutputFolderButton);
-            this.FoldersGroupBox.Location = new System.Drawing.Point(8, 172);
+            this.FoldersGroupBox.Location = new System.Drawing.Point(13, 144);
             this.FoldersGroupBox.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.FoldersGroupBox.Name = "FoldersGroupBox";
             this.FoldersGroupBox.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
@@ -1954,6 +1963,60 @@
             this.exitToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.CmdExit_Click);
+            // 
+            // ClassBCheckBox
+            // 
+            this.ClassBCheckBox.AutoSize = true;
+            this.ClassBCheckBox.Checked = true;
+            this.ClassBCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.ClassBCheckBox.Location = new System.Drawing.Point(74, 110);
+            this.ClassBCheckBox.Name = "ClassBCheckBox";
+            this.ClassBCheckBox.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.ClassBCheckBox.Size = new System.Drawing.Size(100, 17);
+            this.ClassBCheckBox.TabIndex = 26;
+            this.ClassBCheckBox.Text = "Select Class   B";
+            this.ClassBCheckBox.UseVisualStyleBackColor = true;
+            this.ClassBCheckBox.CheckedChanged += new System.EventHandler(this.ClassBCheckBox_CheckedChanged);
+            // 
+            // ClassCCheckBox
+            // 
+            this.ClassCCheckBox.AutoSize = true;
+            this.ClassCCheckBox.Checked = true;
+            this.ClassCCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.ClassCCheckBox.Location = new System.Drawing.Point(180, 110);
+            this.ClassCCheckBox.Name = "ClassCCheckBox";
+            this.ClassCCheckBox.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.ClassCCheckBox.Size = new System.Drawing.Size(33, 17);
+            this.ClassCCheckBox.TabIndex = 27;
+            this.ClassCCheckBox.Text = "C";
+            this.ClassCCheckBox.UseVisualStyleBackColor = true;
+            this.ClassCCheckBox.CheckedChanged += new System.EventHandler(this.ClassCCheckBox_CheckedChanged);
+            // 
+            // ClassDCheckBox
+            // 
+            this.ClassDCheckBox.AutoSize = true;
+            this.ClassDCheckBox.Checked = true;
+            this.ClassDCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.ClassDCheckBox.Location = new System.Drawing.Point(219, 110);
+            this.ClassDCheckBox.Name = "ClassDCheckBox";
+            this.ClassDCheckBox.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.ClassDCheckBox.Size = new System.Drawing.Size(34, 17);
+            this.ClassDCheckBox.TabIndex = 28;
+            this.ClassDCheckBox.Text = "D";
+            this.ClassDCheckBox.UseVisualStyleBackColor = true;
+            this.ClassDCheckBox.CheckedChanged += new System.EventHandler(this.ClassDCheckBox_CheckedChanged);
+            // 
+            // ClassOtherCheckBox
+            // 
+            this.ClassOtherCheckBox.AutoSize = true;
+            this.ClassOtherCheckBox.Location = new System.Drawing.Point(259, 110);
+            this.ClassOtherCheckBox.Name = "ClassOtherCheckBox";
+            this.ClassOtherCheckBox.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.ClassOtherCheckBox.Size = new System.Drawing.Size(64, 17);
+            this.ClassOtherCheckBox.TabIndex = 29;
+            this.ClassOtherCheckBox.Text = "All other";
+            this.ClassOtherCheckBox.UseVisualStyleBackColor = true;
+            this.ClassOtherCheckBox.CheckedChanged += new System.EventHandler(this.ClassOtherCheckBox_CheckedChanged);
             // 
             // Form1
             // 
@@ -2186,6 +2249,10 @@
         private System.Windows.Forms.DataGridView dgvOceanic;
         private System.Windows.Forms.CheckBox OceanicCheckBox;
         private System.Windows.Forms.ToolStripMenuItem drawFixSymbolsStripMenuItem;
+        private System.Windows.Forms.CheckBox ClassDCheckBox;
+        private System.Windows.Forms.CheckBox ClassCCheckBox;
+        private System.Windows.Forms.CheckBox ClassBCheckBox;
+        private System.Windows.Forms.CheckBox ClassOtherCheckBox;
     }
 }
 

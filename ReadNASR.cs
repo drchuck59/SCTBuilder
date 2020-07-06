@@ -64,12 +64,13 @@ namespace SCTBuilder
                 {
                     var FixItems = new List<object>
                     {
+                        Line.Substring(0, 12).Trim(),      // Record identifier
                         Line.Substring(0, 3),             // ARTCC
                         Line.Substring(12, 40).Trim(),    // Name
                         Line.Substring(52, 10).Trim(),    // Boundary type (H/L/Boundary, etc.)
                         Conversions.String2DecDeg(Line.Substring(62, 14).Trim(), "-"),  // Latitude
                         Conversions.String2DecDeg(Line.Substring(76, 14).Trim(), "-"),  // Longitude
-                        Line.Substring(90, 300).Trim(),   // Decode Name
+                        Line.Substring(90, 300).Trim(),                     // Decode Name
                         Convert.ToInt32(Line.Substring(390, 6).Trim())    // Sequence number
                     };
                     if (Line.Substring(396, 1).Trim().Length == 0)       // If length > 0, do not use this coordinate)

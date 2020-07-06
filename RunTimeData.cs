@@ -420,7 +420,7 @@ namespace SCTBuilder
             set { outputFolder = value; }
         }
 
-        public static readonly string INIxml = ".\\SCTbuilder.xml";
+        public static readonly string INIxml = Path.Combine(Path.GetTempPath(), "SCTbuilder.xml");
 
     }
 

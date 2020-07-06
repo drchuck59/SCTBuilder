@@ -121,8 +121,8 @@ namespace SCTBuilder
             di = Directory.CreateDirectory(FolderMgt.DataFolder + "\\28DaySubscription_Effective_" + newCycleDate + "\\");
             extractPath = di.FullName;
             string URL = "https://nfdc.faa.gov/webContent/28DaySub/28DaySubscription_Effective_" + newCycleDate + ".zip";
-            downloadsPath = KnownFolders.GetPath(KnownFolder.Downloads) + "\\28DaySubscription_Effective_" + newCycleDate + ".zip";
-
+            downloadsPath = "\\28DaySubscription_Effective_" + newCycleDate + ".zip";
+            downloadsPath = Path.Combine(Path.GetTempPath(), downloadsPath);
             // If the zipfile is already downloaded, delete it (safer as it may be corrupted)
             if (File.Exists(downloadsPath)) File.Delete(downloadsPath);
             OKButton.Text = "Downloading FAA files";
@@ -146,6 +146,7 @@ namespace SCTBuilder
                     ContinueButton.Enabled = true;
                     ContinueButton.Visible = true;
                     downloadComplete = true;
+                    if (File.Exists(downloadsPath)) File.Delete(downloadsPath);
                 }
                 catch
                 {

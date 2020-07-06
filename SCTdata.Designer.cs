@@ -1119,6 +1119,8 @@ namespace SCTBuilder {
         [global::System.Xml.Serialization.XmlSchemaProviderAttribute("GetTypedTableSchema")]
         public partial class ARBDataTable : global::System.Data.TypedTableBase<ARBRow> {
             
+            private global::System.Data.DataColumn columnID;
+            
             private global::System.Data.DataColumn columnARTCC;
             
             private global::System.Data.DataColumn columnName;
@@ -1168,6 +1170,14 @@ namespace SCTBuilder {
             protected ARBDataTable(global::System.Runtime.Serialization.SerializationInfo info, global::System.Runtime.Serialization.StreamingContext context) : 
                     base(info, context) {
                 this.InitVars();
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn IDColumn {
+                get {
+                    return this.columnID;
+                }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -1279,9 +1289,10 @@ namespace SCTBuilder {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public ARBRow AddARBRow(string ARTCC, string Name, string Decode, float Latitude, float Longitude, string Description, int Sequence, bool DoNotUse, bool Selected) {
+            public ARBRow AddARBRow(string ID, string ARTCC, string Name, string Decode, float Latitude, float Longitude, string Description, int Sequence, bool DoNotUse, bool Selected) {
                 ARBRow rowARBRow = ((ARBRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
+                        ID,
                         ARTCC,
                         Name,
                         Decode,
@@ -1313,6 +1324,7 @@ namespace SCTBuilder {
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             internal void InitVars() {
+                this.columnID = base.Columns["ID"];
                 this.columnARTCC = base.Columns["ARTCC"];
                 this.columnName = base.Columns["Name"];
                 this.columnDecode = base.Columns["Decode"];
@@ -1327,6 +1339,8 @@ namespace SCTBuilder {
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             private void InitClass() {
+                this.columnID = new global::System.Data.DataColumn("ID", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnID);
                 this.columnARTCC = new global::System.Data.DataColumn("ARTCC", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnARTCC);
                 this.columnName = new global::System.Data.DataColumn("Name", typeof(string), null, global::System.Data.MappingType.Element);
@@ -10204,6 +10218,22 @@ namespace SCTBuilder {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public string ID {
+                get {
+                    try {
+                        return ((string)(this[this.tableARB.IDColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'ID\' in table \'ARB\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableARB.IDColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public string ARTCC {
                 get {
                     try {
@@ -10344,6 +10374,18 @@ namespace SCTBuilder {
                 set {
                     this[this.tableARB.SelectedColumn] = value;
                 }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsIDNull() {
+                return this.IsNull(this.tableARB.IDColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetIDNull() {
+                this[this.tableARB.IDColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
