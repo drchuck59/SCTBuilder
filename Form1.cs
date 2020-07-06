@@ -1660,7 +1660,6 @@ namespace SCTBuilder
             CenterLatTextBox.Text = InfoSection.CenterLatitude_SCT;
             InfoSection.CenterLongitude_Dec = (InfoSection.WestSquare + InfoSection.EastSquare) / 2;
             CenterLonTextBox.Text = InfoSection.CenterLongitude_SCT;
-            MagVarTextBox.Text = InfoSection.MagneticVariation.ToString();
         }
 
         private void FixListDataGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)
@@ -1774,6 +1773,11 @@ namespace SCTBuilder
         private void AirportComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             CenterAPTButton.Enabled = AirportComboBox.SelectedIndex != -1;
+            if (AirportComboBox.SelectedIndex != -1)
+            {
+                InfoSection.DefaultAirport = AirportComboBox.Text;
+                MagVarTextBox.Text = InfoSection.MagneticVariation.ToString("0.00");
+            }
         }
 
         private void CenterAPTButton_Click(object sender, EventArgs e)
