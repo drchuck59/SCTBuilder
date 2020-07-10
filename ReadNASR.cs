@@ -491,8 +491,7 @@ namespace SCTBuilder
             string aSeqNo = string.Empty; bool aFix; string aARTCC = string.Empty; string aMOCA = string.Empty;
             string aMEA = string.Empty; string aMAA = string.Empty; string atype = string.Empty;
             double aLat; double aLong; string aID = string.Empty;
-            string[] LowAirways = new string[6]
-                {"V", "A", "B", "G", "R", "T"};
+
             using (StreamReader reader = new StreamReader(FullFilename))
             {
                 while ((Line = reader.ReadLine()) != null)
@@ -501,7 +500,7 @@ namespace SCTBuilder
                     {
                         case "AWY1":
                             aID = Line.Substring(4, 5).Trim();                        // Airway ID
-                            IsLow = LowAirways.Any(aID.Contains);
+                            IsLow = SCTcommon.IsLowAirway(aID);
                             aSeqNo = Line.Substring(10, 5).Trim();                    // Sequency values per-Airway
                             atype = Line.Substring(9, 1).Trim();                      // Used only for Alaskan or Hawaiian routes
                             aARTCC = Line.Substring(141, 3).Trim();                   // Controlling ARTCC

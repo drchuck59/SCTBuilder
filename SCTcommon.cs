@@ -228,6 +228,13 @@ namespace SCTBuilder
             }
         }
 
+        public static bool IsLowAirway(string aID)
+        {
+            string[] LowAirways = new string[6]
+                  {"V", "A", "B", "G", "R", "T"};
+            return LowAirways.Any(aID.Contains);
+        }
+
         public static double GetMagVar(string Arpt)
         {
             double result;

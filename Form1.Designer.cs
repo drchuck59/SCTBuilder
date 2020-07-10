@@ -605,7 +605,7 @@
             this.PreviewButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.PreviewButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.PreviewButton.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.PreviewButton.Location = new System.Drawing.Point(465, 476);
+            this.PreviewButton.Location = new System.Drawing.Point(468, 529);
             this.PreviewButton.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
             this.PreviewButton.Name = "PreviewButton";
             this.PreviewButton.Size = new System.Drawing.Size(169, 70);
@@ -790,7 +790,7 @@
             this.FilterGroupBox.Controls.Add(this.WestLimitTextBox);
             this.FilterGroupBox.Controls.Add(this.txtLatNorth_label);
             this.FilterGroupBox.Controls.Add(this.NorthLimitTextBox);
-            this.FilterGroupBox.Location = new System.Drawing.Point(6, 483);
+            this.FilterGroupBox.Location = new System.Drawing.Point(9, 505);
             this.FilterGroupBox.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
             this.FilterGroupBox.Name = "FilterGroupBox";
             this.FilterGroupBox.Padding = new System.Windows.Forms.Padding(2, 1, 2, 1);
@@ -1825,7 +1825,7 @@
             this.InfoGroupBox.Controls.Add(this.ARTCCComboBox);
             this.InfoGroupBox.Controls.Add(this.ARTCCLabel);
             this.InfoGroupBox.Controls.Add(this.AirportLabel);
-            this.InfoGroupBox.Location = new System.Drawing.Point(13, 269);
+            this.InfoGroupBox.Location = new System.Drawing.Point(16, 291);
             this.InfoGroupBox.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.InfoGroupBox.Name = "InfoGroupBox";
             this.InfoGroupBox.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
@@ -1881,7 +1881,7 @@
             this.FoldersGroupBox.Controls.Add(this.OutputFolderTextBox);
             this.FoldersGroupBox.Controls.Add(this.FAADataFolderButton);
             this.FoldersGroupBox.Controls.Add(this.OutputFolderButton);
-            this.FoldersGroupBox.Location = new System.Drawing.Point(13, 144);
+            this.FoldersGroupBox.Location = new System.Drawing.Point(16, 166);
             this.FoldersGroupBox.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.FoldersGroupBox.Name = "FoldersGroupBox";
             this.FoldersGroupBox.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);

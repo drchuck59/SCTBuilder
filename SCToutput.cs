@@ -466,13 +466,14 @@ namespace SCTBuilder
                     IsBreak = (bool)rowAWY["IsBreak"];
                     Lat1 = Convert.ToSingle(rowAWY["Latitude"]);
                     Lon1 = Convert.ToSingle(rowAWY["Longitude"]);
-                    if (IsBreak) Lat1 = -1f;            // Break in awy; restart sequence with next
+                    if (IsBreak) 
+                        Lat1 = -1f;            // Break in awy; restart sequence with next
                     if (Awy1 != Awy0) Lat0 = -1f;       // New air, last segment was written (but save this coord)
                     {
                         if ((Lat0 != -1) && (Lat1 != -1))
                             sw.WriteLine(SCTstrings.AWYout(Awy1, 
-                                Conversions.DecDeg2SCT(Convert.ToSingle(Lat1), true), 
-                                Conversions.DecDeg2SCT(Convert.ToSingle(Lon1), false), 
+                                Conversions.DecDeg2SCT(Convert.ToSingle(Lat0), true), 
+                                Conversions.DecDeg2SCT(Convert.ToSingle(Lon0), false), 
                                 Conversions.DecDeg2SCT(Convert.ToSingle(Lat1), true), 
                                 Conversions.DecDeg2SCT(Convert.ToSingle(Lon1),false), 
                                 NavAid0, NavAid1));
