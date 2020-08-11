@@ -121,8 +121,9 @@ namespace SCTBuilder
             di = Directory.CreateDirectory(FolderMgt.DataFolder + "\\28DaySubscription_Effective_" + newCycleDate + "\\");
             extractPath = di.FullName;
             string URL = "https://nfdc.faa.gov/webContent/28DaySub/28DaySubscription_Effective_" + newCycleDate + ".zip";
-            downloadsPath = "\\28DaySubscription_Effective_" + newCycleDate + ".zip";
-            downloadsPath = Path.Combine(Path.GetTempPath(), downloadsPath);
+            downloadsPath = "28DaySubscription_Effective_" + newCycleDate + ".zip";
+            downloadsPath = Path.GetTempPath() + downloadsPath;
+            Debug.WriteLine(downloadsPath);
             // If the zipfile is already downloaded, delete it (safer as it may be corrupted)
             if (File.Exists(downloadsPath)) File.Delete(downloadsPath);
             OKButton.Text = "Downloading FAA files";

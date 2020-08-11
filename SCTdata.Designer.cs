@@ -64,8 +64,6 @@ namespace SCTBuilder {
         
         private NGSIDDataTable tableNGSID;
         
-        private NGSTARDataTable tableNGSTAR;
-        
         private NGFixesDataTable tableNGFixes;
         
         private NGSTARRNWDataTable tableNGSTARRNW;
@@ -73,6 +71,10 @@ namespace SCTBuilder {
         private NGRTEDataTable tableNGRTE;
         
         private NGNavAIDDataTable tableNGNavAID;
+        
+        private POFdataDataTable tablePOFdata;
+        
+        private NGSTARDataTable tableNGSTAR;
         
         private global::System.Data.SchemaSerializationMode _schemaSerializationMode = global::System.Data.SchemaSerializationMode.IncludeSchema;
         
@@ -162,9 +164,6 @@ namespace SCTBuilder {
                 if ((ds.Tables["NGSID"] != null)) {
                     base.Tables.Add(new NGSIDDataTable(ds.Tables["NGSID"]));
                 }
-                if ((ds.Tables["NGSTAR"] != null)) {
-                    base.Tables.Add(new NGSTARDataTable(ds.Tables["NGSTAR"]));
-                }
                 if ((ds.Tables["NGFixes"] != null)) {
                     base.Tables.Add(new NGFixesDataTable(ds.Tables["NGFixes"]));
                 }
@@ -176,6 +175,12 @@ namespace SCTBuilder {
                 }
                 if ((ds.Tables["NGNavAID"] != null)) {
                     base.Tables.Add(new NGNavAIDDataTable(ds.Tables["NGNavAID"]));
+                }
+                if ((ds.Tables["POFdata"] != null)) {
+                    base.Tables.Add(new POFdataDataTable(ds.Tables["POFdata"]));
+                }
+                if ((ds.Tables["NGSTAR"] != null)) {
+                    base.Tables.Add(new NGSTARDataTable(ds.Tables["NGSTAR"]));
                 }
                 this.DataSetName = ds.DataSetName;
                 this.Prefix = ds.Prefix;
@@ -399,16 +404,6 @@ namespace SCTBuilder {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
         [global::System.ComponentModel.Browsable(false)]
         [global::System.ComponentModel.DesignerSerializationVisibility(global::System.ComponentModel.DesignerSerializationVisibility.Content)]
-        public NGSTARDataTable NGSTAR {
-            get {
-                return this.tableNGSTAR;
-            }
-        }
-        
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-        [global::System.ComponentModel.Browsable(false)]
-        [global::System.ComponentModel.DesignerSerializationVisibility(global::System.ComponentModel.DesignerSerializationVisibility.Content)]
         public NGFixesDataTable NGFixes {
             get {
                 return this.tableNGFixes;
@@ -442,6 +437,26 @@ namespace SCTBuilder {
         public NGNavAIDDataTable NGNavAID {
             get {
                 return this.tableNGNavAID;
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+        [global::System.ComponentModel.Browsable(false)]
+        [global::System.ComponentModel.DesignerSerializationVisibility(global::System.ComponentModel.DesignerSerializationVisibility.Content)]
+        public POFdataDataTable POFdata {
+            get {
+                return this.tablePOFdata;
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+        [global::System.ComponentModel.Browsable(false)]
+        [global::System.ComponentModel.DesignerSerializationVisibility(global::System.ComponentModel.DesignerSerializationVisibility.Content)]
+        public NGSTARDataTable NGSTAR {
+            get {
+                return this.tableNGSTAR;
             }
         }
         
@@ -572,9 +587,6 @@ namespace SCTBuilder {
                 if ((ds.Tables["NGSID"] != null)) {
                     base.Tables.Add(new NGSIDDataTable(ds.Tables["NGSID"]));
                 }
-                if ((ds.Tables["NGSTAR"] != null)) {
-                    base.Tables.Add(new NGSTARDataTable(ds.Tables["NGSTAR"]));
-                }
                 if ((ds.Tables["NGFixes"] != null)) {
                     base.Tables.Add(new NGFixesDataTable(ds.Tables["NGFixes"]));
                 }
@@ -586,6 +598,12 @@ namespace SCTBuilder {
                 }
                 if ((ds.Tables["NGNavAID"] != null)) {
                     base.Tables.Add(new NGNavAIDDataTable(ds.Tables["NGNavAID"]));
+                }
+                if ((ds.Tables["POFdata"] != null)) {
+                    base.Tables.Add(new POFdataDataTable(ds.Tables["POFdata"]));
+                }
+                if ((ds.Tables["NGSTAR"] != null)) {
+                    base.Tables.Add(new NGSTARDataTable(ds.Tables["NGSTAR"]));
                 }
                 this.DataSetName = ds.DataSetName;
                 this.Prefix = ds.Prefix;
@@ -740,12 +758,6 @@ namespace SCTBuilder {
                     this.tableNGSID.InitVars();
                 }
             }
-            this.tableNGSTAR = ((NGSTARDataTable)(base.Tables["NGSTAR"]));
-            if ((initTable == true)) {
-                if ((this.tableNGSTAR != null)) {
-                    this.tableNGSTAR.InitVars();
-                }
-            }
             this.tableNGFixes = ((NGFixesDataTable)(base.Tables["NGFixes"]));
             if ((initTable == true)) {
                 if ((this.tableNGFixes != null)) {
@@ -768,6 +780,18 @@ namespace SCTBuilder {
             if ((initTable == true)) {
                 if ((this.tableNGNavAID != null)) {
                     this.tableNGNavAID.InitVars();
+                }
+            }
+            this.tablePOFdata = ((POFdataDataTable)(base.Tables["POFdata"]));
+            if ((initTable == true)) {
+                if ((this.tablePOFdata != null)) {
+                    this.tablePOFdata.InitVars();
+                }
+            }
+            this.tableNGSTAR = ((NGSTARDataTable)(base.Tables["NGSTAR"]));
+            if ((initTable == true)) {
+                if ((this.tableNGSTAR != null)) {
+                    this.tableNGSTAR.InitVars();
                 }
             }
         }
@@ -820,8 +844,6 @@ namespace SCTBuilder {
             base.Tables.Add(this.tableNGAPPRTransition);
             this.tableNGSID = new NGSIDDataTable();
             base.Tables.Add(this.tableNGSID);
-            this.tableNGSTAR = new NGSTARDataTable();
-            base.Tables.Add(this.tableNGSTAR);
             this.tableNGFixes = new NGFixesDataTable();
             base.Tables.Add(this.tableNGFixes);
             this.tableNGSTARRNW = new NGSTARRNWDataTable();
@@ -830,6 +852,10 @@ namespace SCTBuilder {
             base.Tables.Add(this.tableNGRTE);
             this.tableNGNavAID = new NGNavAIDDataTable();
             base.Tables.Add(this.tableNGNavAID);
+            this.tablePOFdata = new POFdataDataTable();
+            base.Tables.Add(this.tablePOFdata);
+            this.tableNGSTAR = new NGSTARDataTable();
+            base.Tables.Add(this.tableNGSTAR);
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -954,12 +980,6 @@ namespace SCTBuilder {
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-        private bool ShouldSerializeNGSTAR() {
-            return false;
-        }
-        
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
         private bool ShouldSerializeNGFixes() {
             return false;
         }
@@ -979,6 +999,18 @@ namespace SCTBuilder {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
         private bool ShouldSerializeNGNavAID() {
+            return false;
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+        private bool ShouldSerializePOFdata() {
+            return false;
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+        private bool ShouldSerializeNGSTAR() {
             return false;
         }
         
@@ -1098,9 +1130,6 @@ namespace SCTBuilder {
         public delegate void NGSIDRowChangeEventHandler(object sender, NGSIDRowChangeEvent e);
         
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-        public delegate void NGSTARRowChangeEventHandler(object sender, NGSTARRowChangeEvent e);
-        
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
         public delegate void NGFixesRowChangeEventHandler(object sender, NGFixesRowChangeEvent e);
         
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
@@ -1111,6 +1140,12 @@ namespace SCTBuilder {
         
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
         public delegate void NGNavAIDRowChangeEventHandler(object sender, NGNavAIDRowChangeEvent e);
+        
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+        public delegate void POFdataRowChangeEventHandler(object sender, POFdataRowChangeEvent e);
+        
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+        public delegate void NGSTARRowChangeEventHandler(object sender, NGSTARRowChangeEvent e);
         
         /// <summary>
         ///Represents the strongly named DataTable class.
@@ -8182,9 +8217,9 @@ namespace SCTBuilder {
             
             private global::System.Data.DataColumn columnSSDcode;
             
-            private global::System.Data.DataColumn columnRWY;
+            private global::System.Data.DataColumn columnRwy;
             
-            private global::System.Data.DataColumn columnFIX;
+            private global::System.Data.DataColumn columnFix;
             
             private global::System.Data.DataColumn columnAltAOA;
             
@@ -8201,6 +8236,8 @@ namespace SCTBuilder {
             private global::System.Data.DataColumn columnRadial;
             
             private global::System.Data.DataColumn columnSequence;
+            
+            private global::System.Data.DataColumn columnSelected;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
@@ -8253,17 +8290,17 @@ namespace SCTBuilder {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public global::System.Data.DataColumn RWYColumn {
+            public global::System.Data.DataColumn RwyColumn {
                 get {
-                    return this.columnRWY;
+                    return this.columnRwy;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public global::System.Data.DataColumn FIXColumn {
+            public global::System.Data.DataColumn FixColumn {
                 get {
-                    return this.columnFIX;
+                    return this.columnFix;
                 }
             }
             
@@ -8333,6 +8370,14 @@ namespace SCTBuilder {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn SelectedColumn {
+                get {
+                    return this.columnSelected;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             [global::System.ComponentModel.Browsable(false)]
             public int Count {
                 get {
@@ -8368,13 +8413,13 @@ namespace SCTBuilder {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public NGSIDRow AddNGSIDRow(string FacilityID, string SSDcode, string RWY, string FIX, string AltAOA, string AltAOB, string AltAT, string Speed, string Hdg, string UntilAlt, string Radial, int Sequence) {
+            public NGSIDRow AddNGSIDRow(string FacilityID, string SSDcode, string Rwy, string Fix, string AltAOA, string AltAOB, string AltAT, string Speed, string Hdg, string UntilAlt, string Radial, int Sequence, bool Selected) {
                 NGSIDRow rowNGSIDRow = ((NGSIDRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         FacilityID,
                         SSDcode,
-                        RWY,
-                        FIX,
+                        Rwy,
+                        Fix,
                         AltAOA,
                         AltAOB,
                         AltAT,
@@ -8382,7 +8427,8 @@ namespace SCTBuilder {
                         Hdg,
                         UntilAlt,
                         Radial,
-                        Sequence};
+                        Sequence,
+                        Selected};
                 rowNGSIDRow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowNGSIDRow);
                 return rowNGSIDRow;
@@ -8407,8 +8453,8 @@ namespace SCTBuilder {
             internal void InitVars() {
                 this.columnFacilityID = base.Columns["FacilityID"];
                 this.columnSSDcode = base.Columns["SSDcode"];
-                this.columnRWY = base.Columns["RWY"];
-                this.columnFIX = base.Columns["FIX"];
+                this.columnRwy = base.Columns["Rwy"];
+                this.columnFix = base.Columns["Fix"];
                 this.columnAltAOA = base.Columns["AltAOA"];
                 this.columnAltAOB = base.Columns["AltAOB"];
                 this.columnAltAT = base.Columns["AltAT"];
@@ -8417,6 +8463,7 @@ namespace SCTBuilder {
                 this.columnUntilAlt = base.Columns["UntilAlt"];
                 this.columnRadial = base.Columns["Radial"];
                 this.columnSequence = base.Columns["Sequence"];
+                this.columnSelected = base.Columns["Selected"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -8426,10 +8473,10 @@ namespace SCTBuilder {
                 base.Columns.Add(this.columnFacilityID);
                 this.columnSSDcode = new global::System.Data.DataColumn("SSDcode", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnSSDcode);
-                this.columnRWY = new global::System.Data.DataColumn("RWY", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnRWY);
-                this.columnFIX = new global::System.Data.DataColumn("FIX", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnFIX);
+                this.columnRwy = new global::System.Data.DataColumn("Rwy", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnRwy);
+                this.columnFix = new global::System.Data.DataColumn("Fix", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnFix);
                 this.columnAltAOA = new global::System.Data.DataColumn("AltAOA", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnAltAOA);
                 this.columnAltAOB = new global::System.Data.DataColumn("AltAOB", typeof(string), null, global::System.Data.MappingType.Element);
@@ -8446,6 +8493,8 @@ namespace SCTBuilder {
                 base.Columns.Add(this.columnRadial);
                 this.columnSequence = new global::System.Data.DataColumn("Sequence", typeof(int), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnSequence);
+                this.columnSelected = new global::System.Data.DataColumn("Selected", typeof(bool), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnSelected);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -8577,379 +8626,6 @@ namespace SCTBuilder {
         ///</summary>
         [global::System.Serializable()]
         [global::System.Xml.Serialization.XmlSchemaProviderAttribute("GetTypedTableSchema")]
-        public partial class NGSTARDataTable : global::System.Data.TypedTableBase<NGSTARRow> {
-            
-            private global::System.Data.DataColumn columnFacilityID;
-            
-            private global::System.Data.DataColumn columnSSDCode;
-            
-            private global::System.Data.DataColumn columnSSDmodifier;
-            
-            private global::System.Data.DataColumn columnFIX;
-            
-            private global::System.Data.DataColumn columnAltAOA;
-            
-            private global::System.Data.DataColumn columnAltAOB;
-            
-            private global::System.Data.DataColumn columnAltAT;
-            
-            private global::System.Data.DataColumn columnSpeed;
-            
-            private global::System.Data.DataColumn columnOverflyHdg;
-            
-            private global::System.Data.DataColumn columnSequence;
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public NGSTARDataTable() {
-                this.TableName = "NGSTAR";
-                this.BeginInit();
-                this.InitClass();
-                this.EndInit();
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            internal NGSTARDataTable(global::System.Data.DataTable table) {
-                this.TableName = table.TableName;
-                if ((table.CaseSensitive != table.DataSet.CaseSensitive)) {
-                    this.CaseSensitive = table.CaseSensitive;
-                }
-                if ((table.Locale.ToString() != table.DataSet.Locale.ToString())) {
-                    this.Locale = table.Locale;
-                }
-                if ((table.Namespace != table.DataSet.Namespace)) {
-                    this.Namespace = table.Namespace;
-                }
-                this.Prefix = table.Prefix;
-                this.MinimumCapacity = table.MinimumCapacity;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            protected NGSTARDataTable(global::System.Runtime.Serialization.SerializationInfo info, global::System.Runtime.Serialization.StreamingContext context) : 
-                    base(info, context) {
-                this.InitVars();
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public global::System.Data.DataColumn FacilityIDColumn {
-                get {
-                    return this.columnFacilityID;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public global::System.Data.DataColumn SSDCodeColumn {
-                get {
-                    return this.columnSSDCode;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public global::System.Data.DataColumn SSDmodifierColumn {
-                get {
-                    return this.columnSSDmodifier;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public global::System.Data.DataColumn FIXColumn {
-                get {
-                    return this.columnFIX;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public global::System.Data.DataColumn AltAOAColumn {
-                get {
-                    return this.columnAltAOA;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public global::System.Data.DataColumn AltAOBColumn {
-                get {
-                    return this.columnAltAOB;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public global::System.Data.DataColumn AltATColumn {
-                get {
-                    return this.columnAltAT;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public global::System.Data.DataColumn SpeedColumn {
-                get {
-                    return this.columnSpeed;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public global::System.Data.DataColumn OverflyHdgColumn {
-                get {
-                    return this.columnOverflyHdg;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public global::System.Data.DataColumn SequenceColumn {
-                get {
-                    return this.columnSequence;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            [global::System.ComponentModel.Browsable(false)]
-            public int Count {
-                get {
-                    return this.Rows.Count;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public NGSTARRow this[int index] {
-                get {
-                    return ((NGSTARRow)(this.Rows[index]));
-                }
-            }
-            
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public event NGSTARRowChangeEventHandler NGSTARRowChanging;
-            
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public event NGSTARRowChangeEventHandler NGSTARRowChanged;
-            
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public event NGSTARRowChangeEventHandler NGSTARRowDeleting;
-            
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public event NGSTARRowChangeEventHandler NGSTARRowDeleted;
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public void AddNGSTARRow(NGSTARRow row) {
-                this.Rows.Add(row);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public NGSTARRow AddNGSTARRow(string FacilityID, string SSDCode, string SSDmodifier, string FIX, string AltAOA, string AltAOB, string AltAT, string Speed, string OverflyHdg, string Sequence) {
-                NGSTARRow rowNGSTARRow = ((NGSTARRow)(this.NewRow()));
-                object[] columnValuesArray = new object[] {
-                        FacilityID,
-                        SSDCode,
-                        SSDmodifier,
-                        FIX,
-                        AltAOA,
-                        AltAOB,
-                        AltAT,
-                        Speed,
-                        OverflyHdg,
-                        Sequence};
-                rowNGSTARRow.ItemArray = columnValuesArray;
-                this.Rows.Add(rowNGSTARRow);
-                return rowNGSTARRow;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public override global::System.Data.DataTable Clone() {
-                NGSTARDataTable cln = ((NGSTARDataTable)(base.Clone()));
-                cln.InitVars();
-                return cln;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            protected override global::System.Data.DataTable CreateInstance() {
-                return new NGSTARDataTable();
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            internal void InitVars() {
-                this.columnFacilityID = base.Columns["FacilityID"];
-                this.columnSSDCode = base.Columns["SSDCode"];
-                this.columnSSDmodifier = base.Columns["SSDmodifier"];
-                this.columnFIX = base.Columns["FIX"];
-                this.columnAltAOA = base.Columns["AltAOA"];
-                this.columnAltAOB = base.Columns["AltAOB"];
-                this.columnAltAT = base.Columns["AltAT"];
-                this.columnSpeed = base.Columns["Speed"];
-                this.columnOverflyHdg = base.Columns["OverflyHdg"];
-                this.columnSequence = base.Columns["Sequence"];
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            private void InitClass() {
-                this.columnFacilityID = new global::System.Data.DataColumn("FacilityID", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnFacilityID);
-                this.columnSSDCode = new global::System.Data.DataColumn("SSDCode", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnSSDCode);
-                this.columnSSDmodifier = new global::System.Data.DataColumn("SSDmodifier", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnSSDmodifier);
-                this.columnFIX = new global::System.Data.DataColumn("FIX", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnFIX);
-                this.columnAltAOA = new global::System.Data.DataColumn("AltAOA", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnAltAOA);
-                this.columnAltAOB = new global::System.Data.DataColumn("AltAOB", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnAltAOB);
-                this.columnAltAT = new global::System.Data.DataColumn("AltAT", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnAltAT);
-                this.columnSpeed = new global::System.Data.DataColumn("Speed", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnSpeed);
-                this.columnOverflyHdg = new global::System.Data.DataColumn("OverflyHdg", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnOverflyHdg);
-                this.columnSequence = new global::System.Data.DataColumn("Sequence", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnSequence);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public NGSTARRow NewNGSTARRow() {
-                return ((NGSTARRow)(this.NewRow()));
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            protected override global::System.Data.DataRow NewRowFromBuilder(global::System.Data.DataRowBuilder builder) {
-                return new NGSTARRow(builder);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            protected override global::System.Type GetRowType() {
-                return typeof(NGSTARRow);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            protected override void OnRowChanged(global::System.Data.DataRowChangeEventArgs e) {
-                base.OnRowChanged(e);
-                if ((this.NGSTARRowChanged != null)) {
-                    this.NGSTARRowChanged(this, new NGSTARRowChangeEvent(((NGSTARRow)(e.Row)), e.Action));
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            protected override void OnRowChanging(global::System.Data.DataRowChangeEventArgs e) {
-                base.OnRowChanging(e);
-                if ((this.NGSTARRowChanging != null)) {
-                    this.NGSTARRowChanging(this, new NGSTARRowChangeEvent(((NGSTARRow)(e.Row)), e.Action));
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            protected override void OnRowDeleted(global::System.Data.DataRowChangeEventArgs e) {
-                base.OnRowDeleted(e);
-                if ((this.NGSTARRowDeleted != null)) {
-                    this.NGSTARRowDeleted(this, new NGSTARRowChangeEvent(((NGSTARRow)(e.Row)), e.Action));
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            protected override void OnRowDeleting(global::System.Data.DataRowChangeEventArgs e) {
-                base.OnRowDeleting(e);
-                if ((this.NGSTARRowDeleting != null)) {
-                    this.NGSTARRowDeleting(this, new NGSTARRowChangeEvent(((NGSTARRow)(e.Row)), e.Action));
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public void RemoveNGSTARRow(NGSTARRow row) {
-                this.Rows.Remove(row);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public static global::System.Xml.Schema.XmlSchemaComplexType GetTypedTableSchema(global::System.Xml.Schema.XmlSchemaSet xs) {
-                global::System.Xml.Schema.XmlSchemaComplexType type = new global::System.Xml.Schema.XmlSchemaComplexType();
-                global::System.Xml.Schema.XmlSchemaSequence sequence = new global::System.Xml.Schema.XmlSchemaSequence();
-                SCTdata ds = new SCTdata();
-                global::System.Xml.Schema.XmlSchemaAny any1 = new global::System.Xml.Schema.XmlSchemaAny();
-                any1.Namespace = "http://www.w3.org/2001/XMLSchema";
-                any1.MinOccurs = new decimal(0);
-                any1.MaxOccurs = decimal.MaxValue;
-                any1.ProcessContents = global::System.Xml.Schema.XmlSchemaContentProcessing.Lax;
-                sequence.Items.Add(any1);
-                global::System.Xml.Schema.XmlSchemaAny any2 = new global::System.Xml.Schema.XmlSchemaAny();
-                any2.Namespace = "urn:schemas-microsoft-com:xml-diffgram-v1";
-                any2.MinOccurs = new decimal(1);
-                any2.ProcessContents = global::System.Xml.Schema.XmlSchemaContentProcessing.Lax;
-                sequence.Items.Add(any2);
-                global::System.Xml.Schema.XmlSchemaAttribute attribute1 = new global::System.Xml.Schema.XmlSchemaAttribute();
-                attribute1.Name = "namespace";
-                attribute1.FixedValue = ds.Namespace;
-                type.Attributes.Add(attribute1);
-                global::System.Xml.Schema.XmlSchemaAttribute attribute2 = new global::System.Xml.Schema.XmlSchemaAttribute();
-                attribute2.Name = "tableTypeName";
-                attribute2.FixedValue = "NGSTARDataTable";
-                type.Attributes.Add(attribute2);
-                type.Particle = sequence;
-                global::System.Xml.Schema.XmlSchema dsSchema = ds.GetSchemaSerializable();
-                if (xs.Contains(dsSchema.TargetNamespace)) {
-                    global::System.IO.MemoryStream s1 = new global::System.IO.MemoryStream();
-                    global::System.IO.MemoryStream s2 = new global::System.IO.MemoryStream();
-                    try {
-                        global::System.Xml.Schema.XmlSchema schema = null;
-                        dsSchema.Write(s1);
-                        for (global::System.Collections.IEnumerator schemas = xs.Schemas(dsSchema.TargetNamespace).GetEnumerator(); schemas.MoveNext(); ) {
-                            schema = ((global::System.Xml.Schema.XmlSchema)(schemas.Current));
-                            s2.SetLength(0);
-                            schema.Write(s2);
-                            if ((s1.Length == s2.Length)) {
-                                s1.Position = 0;
-                                s2.Position = 0;
-                                for (; ((s1.Position != s1.Length) 
-                                            && (s1.ReadByte() == s2.ReadByte())); ) {
-                                    ;
-                                }
-                                if ((s1.Position == s1.Length)) {
-                                    return type;
-                                }
-                            }
-                        }
-                    }
-                    finally {
-                        if ((s1 != null)) {
-                            s1.Close();
-                        }
-                        if ((s2 != null)) {
-                            s2.Close();
-                        }
-                    }
-                }
-                xs.Add(dsSchema);
-                return type;
-            }
-        }
-        
-        /// <summary>
-        ///Represents the strongly named DataTable class.
-        ///</summary>
-        [global::System.Serializable()]
-        [global::System.Xml.Serialization.XmlSchemaProviderAttribute("GetTypedTableSchema")]
         public partial class NGFixesDataTable : global::System.Data.TypedTableBase<NGFixesRow> {
             
             private global::System.Data.DataColumn columnFacilityID;
@@ -8957,10 +8633,6 @@ namespace SCTBuilder {
             private global::System.Data.DataColumn columnLatitude;
             
             private global::System.Data.DataColumn columnLongitude;
-            
-            private global::System.Data.DataColumn columnFrequency;
-            
-            private global::System.Data.DataColumn columnSelected;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
@@ -9021,22 +8693,6 @@ namespace SCTBuilder {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public global::System.Data.DataColumn FrequencyColumn {
-                get {
-                    return this.columnFrequency;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public global::System.Data.DataColumn SelectedColumn {
-                get {
-                    return this.columnSelected;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             [global::System.ComponentModel.Browsable(false)]
             public int Count {
                 get {
@@ -9072,14 +8728,12 @@ namespace SCTBuilder {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public NGFixesRow AddNGFixesRow(string FacilityID, double Latitude, double Longitude, string Frequency, bool Selected) {
+            public NGFixesRow AddNGFixesRow(string FacilityID, double Latitude, double Longitude) {
                 NGFixesRow rowNGFixesRow = ((NGFixesRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         FacilityID,
                         Latitude,
-                        Longitude,
-                        Frequency,
-                        Selected};
+                        Longitude};
                 rowNGFixesRow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowNGFixesRow);
                 return rowNGFixesRow;
@@ -9105,8 +8759,6 @@ namespace SCTBuilder {
                 this.columnFacilityID = base.Columns["FacilityID"];
                 this.columnLatitude = base.Columns["Latitude"];
                 this.columnLongitude = base.Columns["Longitude"];
-                this.columnFrequency = base.Columns["Frequency"];
-                this.columnSelected = base.Columns["Selected"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -9118,11 +8770,6 @@ namespace SCTBuilder {
                 base.Columns.Add(this.columnLatitude);
                 this.columnLongitude = new global::System.Data.DataColumn("Longitude", typeof(double), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnLongitude);
-                this.columnFrequency = new global::System.Data.DataColumn("Frequency", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnFrequency);
-                this.columnSelected = new global::System.Data.DataColumn("Selected", typeof(bool), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnSelected);
-                this.columnSelected.DefaultValue = ((bool)(false));
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -10162,6 +9809,912 @@ namespace SCTBuilder {
                 global::System.Xml.Schema.XmlSchemaAttribute attribute2 = new global::System.Xml.Schema.XmlSchemaAttribute();
                 attribute2.Name = "tableTypeName";
                 attribute2.FixedValue = "NGNavAIDDataTable";
+                type.Attributes.Add(attribute2);
+                type.Particle = sequence;
+                global::System.Xml.Schema.XmlSchema dsSchema = ds.GetSchemaSerializable();
+                if (xs.Contains(dsSchema.TargetNamespace)) {
+                    global::System.IO.MemoryStream s1 = new global::System.IO.MemoryStream();
+                    global::System.IO.MemoryStream s2 = new global::System.IO.MemoryStream();
+                    try {
+                        global::System.Xml.Schema.XmlSchema schema = null;
+                        dsSchema.Write(s1);
+                        for (global::System.Collections.IEnumerator schemas = xs.Schemas(dsSchema.TargetNamespace).GetEnumerator(); schemas.MoveNext(); ) {
+                            schema = ((global::System.Xml.Schema.XmlSchema)(schemas.Current));
+                            s2.SetLength(0);
+                            schema.Write(s2);
+                            if ((s1.Length == s2.Length)) {
+                                s1.Position = 0;
+                                s2.Position = 0;
+                                for (; ((s1.Position != s1.Length) 
+                                            && (s1.ReadByte() == s2.ReadByte())); ) {
+                                    ;
+                                }
+                                if ((s1.Position == s1.Length)) {
+                                    return type;
+                                }
+                            }
+                        }
+                    }
+                    finally {
+                        if ((s1 != null)) {
+                            s1.Close();
+                        }
+                        if ((s2 != null)) {
+                            s2.Close();
+                        }
+                    }
+                }
+                xs.Add(dsSchema);
+                return type;
+            }
+        }
+        
+        /// <summary>
+        ///Represents the strongly named DataTable class.
+        ///</summary>
+        [global::System.Serializable()]
+        [global::System.Xml.Serialization.XmlSchemaProviderAttribute("GetTypedTableSchema")]
+        public partial class POFdataDataTable : global::System.Data.TypedTableBase<POFdataRow> {
+            
+            private global::System.Data.DataColumn columnName;
+            
+            private global::System.Data.DataColumn columnRName;
+            
+            private global::System.Data.DataColumn columnFrequency;
+            
+            private global::System.Data.DataColumn columnSecID;
+            
+            private global::System.Data.DataColumn columnARTStag;
+            
+            private global::System.Data.DataColumn columnCallPrefix;
+            
+            private global::System.Data.DataColumn columnCallSuffix;
+            
+            private global::System.Data.DataColumn columnVSCSline1;
+            
+            private global::System.Data.DataColumn columnVSCSline2;
+            
+            private global::System.Data.DataColumn columnLowSquawk;
+            
+            private global::System.Data.DataColumn columnHighSquawk;
+            
+            private global::System.Data.DataColumn columnLatitude;
+            
+            private global::System.Data.DataColumn columnLongitude;
+            
+            private global::System.Data.DataColumn columnLatitude1;
+            
+            private global::System.Data.DataColumn columnLongitude1;
+            
+            private global::System.Data.DataColumn columnLatitude2;
+            
+            private global::System.Data.DataColumn columnLongitude2;
+            
+            private global::System.Data.DataColumn columnLatitude3;
+            
+            private global::System.Data.DataColumn columnLongitude3;
+            
+            private global::System.Data.DataColumn columnSequence;
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public POFdataDataTable() {
+                this.TableName = "POFdata";
+                this.BeginInit();
+                this.InitClass();
+                this.EndInit();
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            internal POFdataDataTable(global::System.Data.DataTable table) {
+                this.TableName = table.TableName;
+                if ((table.CaseSensitive != table.DataSet.CaseSensitive)) {
+                    this.CaseSensitive = table.CaseSensitive;
+                }
+                if ((table.Locale.ToString() != table.DataSet.Locale.ToString())) {
+                    this.Locale = table.Locale;
+                }
+                if ((table.Namespace != table.DataSet.Namespace)) {
+                    this.Namespace = table.Namespace;
+                }
+                this.Prefix = table.Prefix;
+                this.MinimumCapacity = table.MinimumCapacity;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            protected POFdataDataTable(global::System.Runtime.Serialization.SerializationInfo info, global::System.Runtime.Serialization.StreamingContext context) : 
+                    base(info, context) {
+                this.InitVars();
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn NameColumn {
+                get {
+                    return this.columnName;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn RNameColumn {
+                get {
+                    return this.columnRName;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn FrequencyColumn {
+                get {
+                    return this.columnFrequency;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn SecIDColumn {
+                get {
+                    return this.columnSecID;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn ARTStagColumn {
+                get {
+                    return this.columnARTStag;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn CallPrefixColumn {
+                get {
+                    return this.columnCallPrefix;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn CallSuffixColumn {
+                get {
+                    return this.columnCallSuffix;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn VSCSline1Column {
+                get {
+                    return this.columnVSCSline1;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn VSCSline2Column {
+                get {
+                    return this.columnVSCSline2;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn LowSquawkColumn {
+                get {
+                    return this.columnLowSquawk;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn HighSquawkColumn {
+                get {
+                    return this.columnHighSquawk;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn LatitudeColumn {
+                get {
+                    return this.columnLatitude;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn LongitudeColumn {
+                get {
+                    return this.columnLongitude;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn Latitude1Column {
+                get {
+                    return this.columnLatitude1;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn Longitude1Column {
+                get {
+                    return this.columnLongitude1;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn Latitude2Column {
+                get {
+                    return this.columnLatitude2;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn Longitude2Column {
+                get {
+                    return this.columnLongitude2;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn Latitude3Column {
+                get {
+                    return this.columnLatitude3;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn Longitude3Column {
+                get {
+                    return this.columnLongitude3;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn SequenceColumn {
+                get {
+                    return this.columnSequence;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            [global::System.ComponentModel.Browsable(false)]
+            public int Count {
+                get {
+                    return this.Rows.Count;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public POFdataRow this[int index] {
+                get {
+                    return ((POFdataRow)(this.Rows[index]));
+                }
+            }
+            
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public event POFdataRowChangeEventHandler POFdataRowChanging;
+            
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public event POFdataRowChangeEventHandler POFdataRowChanged;
+            
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public event POFdataRowChangeEventHandler POFdataRowDeleting;
+            
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public event POFdataRowChangeEventHandler POFdataRowDeleted;
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void AddPOFdataRow(POFdataRow row) {
+                this.Rows.Add(row);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public POFdataRow AddPOFdataRow(
+                        string Name, 
+                        string RName, 
+                        string Frequency, 
+                        string SecID, 
+                        string ARTStag, 
+                        string CallPrefix, 
+                        string CallSuffix, 
+                        string VSCSline1, 
+                        string VSCSline2, 
+                        string LowSquawk, 
+                        string HighSquawk, 
+                        string Latitude, 
+                        string Longitude, 
+                        string Latitude1, 
+                        string Longitude1, 
+                        string Latitude2, 
+                        string Longitude2, 
+                        string Latitude3, 
+                        string Longitude3, 
+                        int Sequence) {
+                POFdataRow rowPOFdataRow = ((POFdataRow)(this.NewRow()));
+                object[] columnValuesArray = new object[] {
+                        Name,
+                        RName,
+                        Frequency,
+                        SecID,
+                        ARTStag,
+                        CallPrefix,
+                        CallSuffix,
+                        VSCSline1,
+                        VSCSline2,
+                        LowSquawk,
+                        HighSquawk,
+                        Latitude,
+                        Longitude,
+                        Latitude1,
+                        Longitude1,
+                        Latitude2,
+                        Longitude2,
+                        Latitude3,
+                        Longitude3,
+                        Sequence};
+                rowPOFdataRow.ItemArray = columnValuesArray;
+                this.Rows.Add(rowPOFdataRow);
+                return rowPOFdataRow;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public override global::System.Data.DataTable Clone() {
+                POFdataDataTable cln = ((POFdataDataTable)(base.Clone()));
+                cln.InitVars();
+                return cln;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            protected override global::System.Data.DataTable CreateInstance() {
+                return new POFdataDataTable();
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            internal void InitVars() {
+                this.columnName = base.Columns["Name"];
+                this.columnRName = base.Columns["RName"];
+                this.columnFrequency = base.Columns["Frequency"];
+                this.columnSecID = base.Columns["SecID"];
+                this.columnARTStag = base.Columns["ARTStag"];
+                this.columnCallPrefix = base.Columns["CallPrefix"];
+                this.columnCallSuffix = base.Columns["CallSuffix"];
+                this.columnVSCSline1 = base.Columns["VSCSline1"];
+                this.columnVSCSline2 = base.Columns["VSCSline2"];
+                this.columnLowSquawk = base.Columns["LowSquawk"];
+                this.columnHighSquawk = base.Columns["HighSquawk"];
+                this.columnLatitude = base.Columns["Latitude"];
+                this.columnLongitude = base.Columns["Longitude"];
+                this.columnLatitude1 = base.Columns["Latitude1"];
+                this.columnLongitude1 = base.Columns["Longitude1"];
+                this.columnLatitude2 = base.Columns["Latitude2"];
+                this.columnLongitude2 = base.Columns["Longitude2"];
+                this.columnLatitude3 = base.Columns["Latitude3"];
+                this.columnLongitude3 = base.Columns["Longitude3"];
+                this.columnSequence = base.Columns["Sequence"];
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            private void InitClass() {
+                this.columnName = new global::System.Data.DataColumn("Name", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnName);
+                this.columnRName = new global::System.Data.DataColumn("RName", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnRName);
+                this.columnFrequency = new global::System.Data.DataColumn("Frequency", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnFrequency);
+                this.columnSecID = new global::System.Data.DataColumn("SecID", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnSecID);
+                this.columnARTStag = new global::System.Data.DataColumn("ARTStag", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnARTStag);
+                this.columnCallPrefix = new global::System.Data.DataColumn("CallPrefix", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnCallPrefix);
+                this.columnCallSuffix = new global::System.Data.DataColumn("CallSuffix", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnCallSuffix);
+                this.columnVSCSline1 = new global::System.Data.DataColumn("VSCSline1", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnVSCSline1);
+                this.columnVSCSline2 = new global::System.Data.DataColumn("VSCSline2", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnVSCSline2);
+                this.columnLowSquawk = new global::System.Data.DataColumn("LowSquawk", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnLowSquawk);
+                this.columnHighSquawk = new global::System.Data.DataColumn("HighSquawk", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnHighSquawk);
+                this.columnLatitude = new global::System.Data.DataColumn("Latitude", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnLatitude);
+                this.columnLongitude = new global::System.Data.DataColumn("Longitude", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnLongitude);
+                this.columnLatitude1 = new global::System.Data.DataColumn("Latitude1", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnLatitude1);
+                this.columnLongitude1 = new global::System.Data.DataColumn("Longitude1", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnLongitude1);
+                this.columnLatitude2 = new global::System.Data.DataColumn("Latitude2", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnLatitude2);
+                this.columnLongitude2 = new global::System.Data.DataColumn("Longitude2", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnLongitude2);
+                this.columnLatitude3 = new global::System.Data.DataColumn("Latitude3", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnLatitude3);
+                this.columnLongitude3 = new global::System.Data.DataColumn("Longitude3", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnLongitude3);
+                this.columnSequence = new global::System.Data.DataColumn("Sequence", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnSequence);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public POFdataRow NewPOFdataRow() {
+                return ((POFdataRow)(this.NewRow()));
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            protected override global::System.Data.DataRow NewRowFromBuilder(global::System.Data.DataRowBuilder builder) {
+                return new POFdataRow(builder);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            protected override global::System.Type GetRowType() {
+                return typeof(POFdataRow);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            protected override void OnRowChanged(global::System.Data.DataRowChangeEventArgs e) {
+                base.OnRowChanged(e);
+                if ((this.POFdataRowChanged != null)) {
+                    this.POFdataRowChanged(this, new POFdataRowChangeEvent(((POFdataRow)(e.Row)), e.Action));
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            protected override void OnRowChanging(global::System.Data.DataRowChangeEventArgs e) {
+                base.OnRowChanging(e);
+                if ((this.POFdataRowChanging != null)) {
+                    this.POFdataRowChanging(this, new POFdataRowChangeEvent(((POFdataRow)(e.Row)), e.Action));
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            protected override void OnRowDeleted(global::System.Data.DataRowChangeEventArgs e) {
+                base.OnRowDeleted(e);
+                if ((this.POFdataRowDeleted != null)) {
+                    this.POFdataRowDeleted(this, new POFdataRowChangeEvent(((POFdataRow)(e.Row)), e.Action));
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            protected override void OnRowDeleting(global::System.Data.DataRowChangeEventArgs e) {
+                base.OnRowDeleting(e);
+                if ((this.POFdataRowDeleting != null)) {
+                    this.POFdataRowDeleting(this, new POFdataRowChangeEvent(((POFdataRow)(e.Row)), e.Action));
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void RemovePOFdataRow(POFdataRow row) {
+                this.Rows.Remove(row);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public static global::System.Xml.Schema.XmlSchemaComplexType GetTypedTableSchema(global::System.Xml.Schema.XmlSchemaSet xs) {
+                global::System.Xml.Schema.XmlSchemaComplexType type = new global::System.Xml.Schema.XmlSchemaComplexType();
+                global::System.Xml.Schema.XmlSchemaSequence sequence = new global::System.Xml.Schema.XmlSchemaSequence();
+                SCTdata ds = new SCTdata();
+                global::System.Xml.Schema.XmlSchemaAny any1 = new global::System.Xml.Schema.XmlSchemaAny();
+                any1.Namespace = "http://www.w3.org/2001/XMLSchema";
+                any1.MinOccurs = new decimal(0);
+                any1.MaxOccurs = decimal.MaxValue;
+                any1.ProcessContents = global::System.Xml.Schema.XmlSchemaContentProcessing.Lax;
+                sequence.Items.Add(any1);
+                global::System.Xml.Schema.XmlSchemaAny any2 = new global::System.Xml.Schema.XmlSchemaAny();
+                any2.Namespace = "urn:schemas-microsoft-com:xml-diffgram-v1";
+                any2.MinOccurs = new decimal(1);
+                any2.ProcessContents = global::System.Xml.Schema.XmlSchemaContentProcessing.Lax;
+                sequence.Items.Add(any2);
+                global::System.Xml.Schema.XmlSchemaAttribute attribute1 = new global::System.Xml.Schema.XmlSchemaAttribute();
+                attribute1.Name = "namespace";
+                attribute1.FixedValue = ds.Namespace;
+                type.Attributes.Add(attribute1);
+                global::System.Xml.Schema.XmlSchemaAttribute attribute2 = new global::System.Xml.Schema.XmlSchemaAttribute();
+                attribute2.Name = "tableTypeName";
+                attribute2.FixedValue = "POFdataDataTable";
+                type.Attributes.Add(attribute2);
+                type.Particle = sequence;
+                global::System.Xml.Schema.XmlSchema dsSchema = ds.GetSchemaSerializable();
+                if (xs.Contains(dsSchema.TargetNamespace)) {
+                    global::System.IO.MemoryStream s1 = new global::System.IO.MemoryStream();
+                    global::System.IO.MemoryStream s2 = new global::System.IO.MemoryStream();
+                    try {
+                        global::System.Xml.Schema.XmlSchema schema = null;
+                        dsSchema.Write(s1);
+                        for (global::System.Collections.IEnumerator schemas = xs.Schemas(dsSchema.TargetNamespace).GetEnumerator(); schemas.MoveNext(); ) {
+                            schema = ((global::System.Xml.Schema.XmlSchema)(schemas.Current));
+                            s2.SetLength(0);
+                            schema.Write(s2);
+                            if ((s1.Length == s2.Length)) {
+                                s1.Position = 0;
+                                s2.Position = 0;
+                                for (; ((s1.Position != s1.Length) 
+                                            && (s1.ReadByte() == s2.ReadByte())); ) {
+                                    ;
+                                }
+                                if ((s1.Position == s1.Length)) {
+                                    return type;
+                                }
+                            }
+                        }
+                    }
+                    finally {
+                        if ((s1 != null)) {
+                            s1.Close();
+                        }
+                        if ((s2 != null)) {
+                            s2.Close();
+                        }
+                    }
+                }
+                xs.Add(dsSchema);
+                return type;
+            }
+        }
+        
+        /// <summary>
+        ///Represents the strongly named DataTable class.
+        ///</summary>
+        [global::System.Serializable()]
+        [global::System.Xml.Serialization.XmlSchemaProviderAttribute("GetTypedTableSchema")]
+        public partial class NGSTARDataTable : global::System.Data.TypedTableBase<NGSTARRow> {
+            
+            private global::System.Data.DataColumn columnFacilityID;
+            
+            private global::System.Data.DataColumn columnSSDCode;
+            
+            private global::System.Data.DataColumn columnSSDmodifier;
+            
+            private global::System.Data.DataColumn columnFIX;
+            
+            private global::System.Data.DataColumn columnAltAOA;
+            
+            private global::System.Data.DataColumn columnAltAOB;
+            
+            private global::System.Data.DataColumn columnAltAT;
+            
+            private global::System.Data.DataColumn columnSpeed;
+            
+            private global::System.Data.DataColumn columnOverflyHdg;
+            
+            private global::System.Data.DataColumn columnSequence;
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public NGSTARDataTable() {
+                this.TableName = "NGSTAR";
+                this.BeginInit();
+                this.InitClass();
+                this.EndInit();
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            internal NGSTARDataTable(global::System.Data.DataTable table) {
+                this.TableName = table.TableName;
+                if ((table.CaseSensitive != table.DataSet.CaseSensitive)) {
+                    this.CaseSensitive = table.CaseSensitive;
+                }
+                if ((table.Locale.ToString() != table.DataSet.Locale.ToString())) {
+                    this.Locale = table.Locale;
+                }
+                if ((table.Namespace != table.DataSet.Namespace)) {
+                    this.Namespace = table.Namespace;
+                }
+                this.Prefix = table.Prefix;
+                this.MinimumCapacity = table.MinimumCapacity;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            protected NGSTARDataTable(global::System.Runtime.Serialization.SerializationInfo info, global::System.Runtime.Serialization.StreamingContext context) : 
+                    base(info, context) {
+                this.InitVars();
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn FacilityIDColumn {
+                get {
+                    return this.columnFacilityID;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn SSDCodeColumn {
+                get {
+                    return this.columnSSDCode;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn SSDmodifierColumn {
+                get {
+                    return this.columnSSDmodifier;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn FIXColumn {
+                get {
+                    return this.columnFIX;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn AltAOAColumn {
+                get {
+                    return this.columnAltAOA;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn AltAOBColumn {
+                get {
+                    return this.columnAltAOB;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn AltATColumn {
+                get {
+                    return this.columnAltAT;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn SpeedColumn {
+                get {
+                    return this.columnSpeed;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn OverflyHdgColumn {
+                get {
+                    return this.columnOverflyHdg;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn SequenceColumn {
+                get {
+                    return this.columnSequence;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            [global::System.ComponentModel.Browsable(false)]
+            public int Count {
+                get {
+                    return this.Rows.Count;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public NGSTARRow this[int index] {
+                get {
+                    return ((NGSTARRow)(this.Rows[index]));
+                }
+            }
+            
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public event NGSTARRowChangeEventHandler NGSTARRowChanging;
+            
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public event NGSTARRowChangeEventHandler NGSTARRowChanged;
+            
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public event NGSTARRowChangeEventHandler NGSTARRowDeleting;
+            
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public event NGSTARRowChangeEventHandler NGSTARRowDeleted;
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void AddNGSTARRow(NGSTARRow row) {
+                this.Rows.Add(row);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public NGSTARRow AddNGSTARRow(string FacilityID, string SSDCode, string SSDmodifier, string FIX, string AltAOA, string AltAOB, string AltAT, string Speed, string OverflyHdg, string Sequence) {
+                NGSTARRow rowNGSTARRow = ((NGSTARRow)(this.NewRow()));
+                object[] columnValuesArray = new object[] {
+                        FacilityID,
+                        SSDCode,
+                        SSDmodifier,
+                        FIX,
+                        AltAOA,
+                        AltAOB,
+                        AltAT,
+                        Speed,
+                        OverflyHdg,
+                        Sequence};
+                rowNGSTARRow.ItemArray = columnValuesArray;
+                this.Rows.Add(rowNGSTARRow);
+                return rowNGSTARRow;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public override global::System.Data.DataTable Clone() {
+                NGSTARDataTable cln = ((NGSTARDataTable)(base.Clone()));
+                cln.InitVars();
+                return cln;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            protected override global::System.Data.DataTable CreateInstance() {
+                return new NGSTARDataTable();
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            internal void InitVars() {
+                this.columnFacilityID = base.Columns["FacilityID"];
+                this.columnSSDCode = base.Columns["SSDCode"];
+                this.columnSSDmodifier = base.Columns["SSDmodifier"];
+                this.columnFIX = base.Columns["FIX"];
+                this.columnAltAOA = base.Columns["AltAOA"];
+                this.columnAltAOB = base.Columns["AltAOB"];
+                this.columnAltAT = base.Columns["AltAT"];
+                this.columnSpeed = base.Columns["Speed"];
+                this.columnOverflyHdg = base.Columns["OverflyHdg"];
+                this.columnSequence = base.Columns["Sequence"];
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            private void InitClass() {
+                this.columnFacilityID = new global::System.Data.DataColumn("FacilityID", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnFacilityID);
+                this.columnSSDCode = new global::System.Data.DataColumn("SSDCode", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnSSDCode);
+                this.columnSSDmodifier = new global::System.Data.DataColumn("SSDmodifier", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnSSDmodifier);
+                this.columnFIX = new global::System.Data.DataColumn("FIX", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnFIX);
+                this.columnAltAOA = new global::System.Data.DataColumn("AltAOA", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnAltAOA);
+                this.columnAltAOB = new global::System.Data.DataColumn("AltAOB", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnAltAOB);
+                this.columnAltAT = new global::System.Data.DataColumn("AltAT", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnAltAT);
+                this.columnSpeed = new global::System.Data.DataColumn("Speed", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnSpeed);
+                this.columnOverflyHdg = new global::System.Data.DataColumn("OverflyHdg", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnOverflyHdg);
+                this.columnSequence = new global::System.Data.DataColumn("Sequence", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnSequence);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public NGSTARRow NewNGSTARRow() {
+                return ((NGSTARRow)(this.NewRow()));
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            protected override global::System.Data.DataRow NewRowFromBuilder(global::System.Data.DataRowBuilder builder) {
+                return new NGSTARRow(builder);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            protected override global::System.Type GetRowType() {
+                return typeof(NGSTARRow);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            protected override void OnRowChanged(global::System.Data.DataRowChangeEventArgs e) {
+                base.OnRowChanged(e);
+                if ((this.NGSTARRowChanged != null)) {
+                    this.NGSTARRowChanged(this, new NGSTARRowChangeEvent(((NGSTARRow)(e.Row)), e.Action));
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            protected override void OnRowChanging(global::System.Data.DataRowChangeEventArgs e) {
+                base.OnRowChanging(e);
+                if ((this.NGSTARRowChanging != null)) {
+                    this.NGSTARRowChanging(this, new NGSTARRowChangeEvent(((NGSTARRow)(e.Row)), e.Action));
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            protected override void OnRowDeleted(global::System.Data.DataRowChangeEventArgs e) {
+                base.OnRowDeleted(e);
+                if ((this.NGSTARRowDeleted != null)) {
+                    this.NGSTARRowDeleted(this, new NGSTARRowChangeEvent(((NGSTARRow)(e.Row)), e.Action));
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            protected override void OnRowDeleting(global::System.Data.DataRowChangeEventArgs e) {
+                base.OnRowDeleting(e);
+                if ((this.NGSTARRowDeleting != null)) {
+                    this.NGSTARRowDeleting(this, new NGSTARRowChangeEvent(((NGSTARRow)(e.Row)), e.Action));
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void RemoveNGSTARRow(NGSTARRow row) {
+                this.Rows.Remove(row);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public static global::System.Xml.Schema.XmlSchemaComplexType GetTypedTableSchema(global::System.Xml.Schema.XmlSchemaSet xs) {
+                global::System.Xml.Schema.XmlSchemaComplexType type = new global::System.Xml.Schema.XmlSchemaComplexType();
+                global::System.Xml.Schema.XmlSchemaSequence sequence = new global::System.Xml.Schema.XmlSchemaSequence();
+                SCTdata ds = new SCTdata();
+                global::System.Xml.Schema.XmlSchemaAny any1 = new global::System.Xml.Schema.XmlSchemaAny();
+                any1.Namespace = "http://www.w3.org/2001/XMLSchema";
+                any1.MinOccurs = new decimal(0);
+                any1.MaxOccurs = decimal.MaxValue;
+                any1.ProcessContents = global::System.Xml.Schema.XmlSchemaContentProcessing.Lax;
+                sequence.Items.Add(any1);
+                global::System.Xml.Schema.XmlSchemaAny any2 = new global::System.Xml.Schema.XmlSchemaAny();
+                any2.Namespace = "urn:schemas-microsoft-com:xml-diffgram-v1";
+                any2.MinOccurs = new decimal(1);
+                any2.ProcessContents = global::System.Xml.Schema.XmlSchemaContentProcessing.Lax;
+                sequence.Items.Add(any2);
+                global::System.Xml.Schema.XmlSchemaAttribute attribute1 = new global::System.Xml.Schema.XmlSchemaAttribute();
+                attribute1.Name = "namespace";
+                attribute1.FixedValue = ds.Namespace;
+                type.Attributes.Add(attribute1);
+                global::System.Xml.Schema.XmlSchemaAttribute attribute2 = new global::System.Xml.Schema.XmlSchemaAttribute();
+                attribute2.Name = "tableTypeName";
+                attribute2.FixedValue = "NGSTARDataTable";
                 type.Attributes.Add(attribute2);
                 type.Particle = sequence;
                 global::System.Xml.Schema.XmlSchema dsSchema = ds.GetSchemaSerializable();
@@ -15450,33 +16003,33 @@ namespace SCTBuilder {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public string RWY {
+            public string Rwy {
                 get {
                     try {
-                        return ((string)(this[this.tableNGSID.RWYColumn]));
+                        return ((string)(this[this.tableNGSID.RwyColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'RWY\' in table \'NGSID\' is DBNull.", e);
+                        throw new global::System.Data.StrongTypingException("The value for column \'Rwy\' in table \'NGSID\' is DBNull.", e);
                     }
                 }
                 set {
-                    this[this.tableNGSID.RWYColumn] = value;
+                    this[this.tableNGSID.RwyColumn] = value;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public string FIX {
+            public string Fix {
                 get {
                     try {
-                        return ((string)(this[this.tableNGSID.FIXColumn]));
+                        return ((string)(this[this.tableNGSID.FixColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'FIX\' in table \'NGSID\' is DBNull.", e);
+                        throw new global::System.Data.StrongTypingException("The value for column \'Fix\' in table \'NGSID\' is DBNull.", e);
                     }
                 }
                 set {
-                    this[this.tableNGSID.FIXColumn] = value;
+                    this[this.tableNGSID.FixColumn] = value;
                 }
             }
             
@@ -15610,6 +16163,22 @@ namespace SCTBuilder {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool Selected {
+                get {
+                    try {
+                        return ((bool)(this[this.tableNGSID.SelectedColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'Selected\' in table \'NGSID\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableNGSID.SelectedColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public bool IsFacilityIDNull() {
                 return this.IsNull(this.tableNGSID.FacilityIDColumn);
             }
@@ -15634,26 +16203,26 @@ namespace SCTBuilder {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public bool IsRWYNull() {
-                return this.IsNull(this.tableNGSID.RWYColumn);
+            public bool IsRwyNull() {
+                return this.IsNull(this.tableNGSID.RwyColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public void SetRWYNull() {
-                this[this.tableNGSID.RWYColumn] = global::System.Convert.DBNull;
+            public void SetRwyNull() {
+                this[this.tableNGSID.RwyColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public bool IsFIXNull() {
-                return this.IsNull(this.tableNGSID.FIXColumn);
+            public bool IsFixNull() {
+                return this.IsNull(this.tableNGSID.FixColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public void SetFIXNull() {
-                this[this.tableNGSID.FIXColumn] = global::System.Convert.DBNull;
+            public void SetFixNull() {
+                this[this.tableNGSID.FixColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -15751,300 +16320,17 @@ namespace SCTBuilder {
             public void SetSequenceNull() {
                 this[this.tableNGSID.SequenceColumn] = global::System.Convert.DBNull;
             }
-        }
-        
-        /// <summary>
-        ///Represents strongly named DataRow class.
-        ///</summary>
-        public partial class NGSTARRow : global::System.Data.DataRow {
-            
-            private NGSTARDataTable tableNGSTAR;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            internal NGSTARRow(global::System.Data.DataRowBuilder rb) : 
-                    base(rb) {
-                this.tableNGSTAR = ((NGSTARDataTable)(this.Table));
+            public bool IsSelectedNull() {
+                return this.IsNull(this.tableNGSID.SelectedColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public string FacilityID {
-                get {
-                    try {
-                        return ((string)(this[this.tableNGSTAR.FacilityIDColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'FacilityID\' in table \'NGSTAR\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tableNGSTAR.FacilityIDColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public string SSDCode {
-                get {
-                    try {
-                        return ((string)(this[this.tableNGSTAR.SSDCodeColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'SSDCode\' in table \'NGSTAR\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tableNGSTAR.SSDCodeColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public string SSDmodifier {
-                get {
-                    try {
-                        return ((string)(this[this.tableNGSTAR.SSDmodifierColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'SSDmodifier\' in table \'NGSTAR\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tableNGSTAR.SSDmodifierColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public string FIX {
-                get {
-                    try {
-                        return ((string)(this[this.tableNGSTAR.FIXColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'FIX\' in table \'NGSTAR\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tableNGSTAR.FIXColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public string AltAOA {
-                get {
-                    try {
-                        return ((string)(this[this.tableNGSTAR.AltAOAColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'AltAOA\' in table \'NGSTAR\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tableNGSTAR.AltAOAColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public string AltAOB {
-                get {
-                    try {
-                        return ((string)(this[this.tableNGSTAR.AltAOBColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'AltAOB\' in table \'NGSTAR\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tableNGSTAR.AltAOBColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public string AltAT {
-                get {
-                    try {
-                        return ((string)(this[this.tableNGSTAR.AltATColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'AltAT\' in table \'NGSTAR\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tableNGSTAR.AltATColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public string Speed {
-                get {
-                    try {
-                        return ((string)(this[this.tableNGSTAR.SpeedColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'Speed\' in table \'NGSTAR\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tableNGSTAR.SpeedColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public string OverflyHdg {
-                get {
-                    try {
-                        return ((string)(this[this.tableNGSTAR.OverflyHdgColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'OverflyHdg\' in table \'NGSTAR\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tableNGSTAR.OverflyHdgColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public string Sequence {
-                get {
-                    try {
-                        return ((string)(this[this.tableNGSTAR.SequenceColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'Sequence\' in table \'NGSTAR\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tableNGSTAR.SequenceColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public bool IsFacilityIDNull() {
-                return this.IsNull(this.tableNGSTAR.FacilityIDColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public void SetFacilityIDNull() {
-                this[this.tableNGSTAR.FacilityIDColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public bool IsSSDCodeNull() {
-                return this.IsNull(this.tableNGSTAR.SSDCodeColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public void SetSSDCodeNull() {
-                this[this.tableNGSTAR.SSDCodeColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public bool IsSSDmodifierNull() {
-                return this.IsNull(this.tableNGSTAR.SSDmodifierColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public void SetSSDmodifierNull() {
-                this[this.tableNGSTAR.SSDmodifierColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public bool IsFIXNull() {
-                return this.IsNull(this.tableNGSTAR.FIXColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public void SetFIXNull() {
-                this[this.tableNGSTAR.FIXColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public bool IsAltAOANull() {
-                return this.IsNull(this.tableNGSTAR.AltAOAColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public void SetAltAOANull() {
-                this[this.tableNGSTAR.AltAOAColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public bool IsAltAOBNull() {
-                return this.IsNull(this.tableNGSTAR.AltAOBColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public void SetAltAOBNull() {
-                this[this.tableNGSTAR.AltAOBColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public bool IsAltATNull() {
-                return this.IsNull(this.tableNGSTAR.AltATColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public void SetAltATNull() {
-                this[this.tableNGSTAR.AltATColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public bool IsSpeedNull() {
-                return this.IsNull(this.tableNGSTAR.SpeedColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public void SetSpeedNull() {
-                this[this.tableNGSTAR.SpeedColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public bool IsOverflyHdgNull() {
-                return this.IsNull(this.tableNGSTAR.OverflyHdgColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public void SetOverflyHdgNull() {
-                this[this.tableNGSTAR.OverflyHdgColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public bool IsSequenceNull() {
-                return this.IsNull(this.tableNGSTAR.SequenceColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public void SetSequenceNull() {
-                this[this.tableNGSTAR.SequenceColumn] = global::System.Convert.DBNull;
+            public void SetSelectedNull() {
+                this[this.tableNGSID.SelectedColumn] = global::System.Convert.DBNull;
             }
         }
         
@@ -16112,38 +16398,6 @@ namespace SCTBuilder {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public string Frequency {
-                get {
-                    try {
-                        return ((string)(this[this.tableNGFixes.FrequencyColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'Frequency\' in table \'NGFixes\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tableNGFixes.FrequencyColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public bool Selected {
-                get {
-                    try {
-                        return ((bool)(this[this.tableNGFixes.SelectedColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'Selected\' in table \'NGFixes\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tableNGFixes.SelectedColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public bool IsFacilityIDNull() {
                 return this.IsNull(this.tableNGFixes.FacilityIDColumn);
             }
@@ -16176,30 +16430,6 @@ namespace SCTBuilder {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public void SetLongitudeNull() {
                 this[this.tableNGFixes.LongitudeColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public bool IsFrequencyNull() {
-                return this.IsNull(this.tableNGFixes.FrequencyColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public void SetFrequencyNull() {
-                this[this.tableNGFixes.FrequencyColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public bool IsSelectedNull() {
-                return this.IsNull(this.tableNGFixes.SelectedColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public void SetSelectedNull() {
-                this[this.tableNGFixes.SelectedColumn] = global::System.Convert.DBNull;
             }
         }
         
@@ -16749,6 +16979,876 @@ namespace SCTBuilder {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public void SetSelectedNull() {
                 this[this.tableNGNavAID.SelectedColumn] = global::System.Convert.DBNull;
+            }
+        }
+        
+        /// <summary>
+        ///Represents strongly named DataRow class.
+        ///</summary>
+        public partial class POFdataRow : global::System.Data.DataRow {
+            
+            private POFdataDataTable tablePOFdata;
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            internal POFdataRow(global::System.Data.DataRowBuilder rb) : 
+                    base(rb) {
+                this.tablePOFdata = ((POFdataDataTable)(this.Table));
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public string Name {
+                get {
+                    try {
+                        return ((string)(this[this.tablePOFdata.NameColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'Name\' in table \'POFdata\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tablePOFdata.NameColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public string RName {
+                get {
+                    try {
+                        return ((string)(this[this.tablePOFdata.RNameColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'RName\' in table \'POFdata\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tablePOFdata.RNameColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public string Frequency {
+                get {
+                    try {
+                        return ((string)(this[this.tablePOFdata.FrequencyColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'Frequency\' in table \'POFdata\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tablePOFdata.FrequencyColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public string SecID {
+                get {
+                    try {
+                        return ((string)(this[this.tablePOFdata.SecIDColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'SecID\' in table \'POFdata\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tablePOFdata.SecIDColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public string ARTStag {
+                get {
+                    try {
+                        return ((string)(this[this.tablePOFdata.ARTStagColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'ARTStag\' in table \'POFdata\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tablePOFdata.ARTStagColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public string CallPrefix {
+                get {
+                    try {
+                        return ((string)(this[this.tablePOFdata.CallPrefixColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'CallPrefix\' in table \'POFdata\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tablePOFdata.CallPrefixColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public string CallSuffix {
+                get {
+                    try {
+                        return ((string)(this[this.tablePOFdata.CallSuffixColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'CallSuffix\' in table \'POFdata\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tablePOFdata.CallSuffixColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public string VSCSline1 {
+                get {
+                    try {
+                        return ((string)(this[this.tablePOFdata.VSCSline1Column]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'VSCSline1\' in table \'POFdata\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tablePOFdata.VSCSline1Column] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public string VSCSline2 {
+                get {
+                    try {
+                        return ((string)(this[this.tablePOFdata.VSCSline2Column]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'VSCSline2\' in table \'POFdata\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tablePOFdata.VSCSline2Column] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public string LowSquawk {
+                get {
+                    try {
+                        return ((string)(this[this.tablePOFdata.LowSquawkColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'LowSquawk\' in table \'POFdata\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tablePOFdata.LowSquawkColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public string HighSquawk {
+                get {
+                    try {
+                        return ((string)(this[this.tablePOFdata.HighSquawkColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'HighSquawk\' in table \'POFdata\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tablePOFdata.HighSquawkColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public string Latitude {
+                get {
+                    try {
+                        return ((string)(this[this.tablePOFdata.LatitudeColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'Latitude\' in table \'POFdata\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tablePOFdata.LatitudeColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public string Longitude {
+                get {
+                    try {
+                        return ((string)(this[this.tablePOFdata.LongitudeColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'Longitude\' in table \'POFdata\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tablePOFdata.LongitudeColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public string Latitude1 {
+                get {
+                    try {
+                        return ((string)(this[this.tablePOFdata.Latitude1Column]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'Latitude1\' in table \'POFdata\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tablePOFdata.Latitude1Column] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public string Longitude1 {
+                get {
+                    try {
+                        return ((string)(this[this.tablePOFdata.Longitude1Column]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'Longitude1\' in table \'POFdata\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tablePOFdata.Longitude1Column] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public string Latitude2 {
+                get {
+                    try {
+                        return ((string)(this[this.tablePOFdata.Latitude2Column]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'Latitude2\' in table \'POFdata\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tablePOFdata.Latitude2Column] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public string Longitude2 {
+                get {
+                    try {
+                        return ((string)(this[this.tablePOFdata.Longitude2Column]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'Longitude2\' in table \'POFdata\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tablePOFdata.Longitude2Column] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public string Latitude3 {
+                get {
+                    try {
+                        return ((string)(this[this.tablePOFdata.Latitude3Column]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'Latitude3\' in table \'POFdata\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tablePOFdata.Latitude3Column] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public string Longitude3 {
+                get {
+                    try {
+                        return ((string)(this[this.tablePOFdata.Longitude3Column]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'Longitude3\' in table \'POFdata\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tablePOFdata.Longitude3Column] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public int Sequence {
+                get {
+                    try {
+                        return ((int)(this[this.tablePOFdata.SequenceColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'Sequence\' in table \'POFdata\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tablePOFdata.SequenceColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsNameNull() {
+                return this.IsNull(this.tablePOFdata.NameColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetNameNull() {
+                this[this.tablePOFdata.NameColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsRNameNull() {
+                return this.IsNull(this.tablePOFdata.RNameColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetRNameNull() {
+                this[this.tablePOFdata.RNameColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsFrequencyNull() {
+                return this.IsNull(this.tablePOFdata.FrequencyColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetFrequencyNull() {
+                this[this.tablePOFdata.FrequencyColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsSecIDNull() {
+                return this.IsNull(this.tablePOFdata.SecIDColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetSecIDNull() {
+                this[this.tablePOFdata.SecIDColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsARTStagNull() {
+                return this.IsNull(this.tablePOFdata.ARTStagColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetARTStagNull() {
+                this[this.tablePOFdata.ARTStagColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsCallPrefixNull() {
+                return this.IsNull(this.tablePOFdata.CallPrefixColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetCallPrefixNull() {
+                this[this.tablePOFdata.CallPrefixColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsCallSuffixNull() {
+                return this.IsNull(this.tablePOFdata.CallSuffixColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetCallSuffixNull() {
+                this[this.tablePOFdata.CallSuffixColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsVSCSline1Null() {
+                return this.IsNull(this.tablePOFdata.VSCSline1Column);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetVSCSline1Null() {
+                this[this.tablePOFdata.VSCSline1Column] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsVSCSline2Null() {
+                return this.IsNull(this.tablePOFdata.VSCSline2Column);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetVSCSline2Null() {
+                this[this.tablePOFdata.VSCSline2Column] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsLowSquawkNull() {
+                return this.IsNull(this.tablePOFdata.LowSquawkColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetLowSquawkNull() {
+                this[this.tablePOFdata.LowSquawkColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsHighSquawkNull() {
+                return this.IsNull(this.tablePOFdata.HighSquawkColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetHighSquawkNull() {
+                this[this.tablePOFdata.HighSquawkColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsLatitudeNull() {
+                return this.IsNull(this.tablePOFdata.LatitudeColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetLatitudeNull() {
+                this[this.tablePOFdata.LatitudeColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsLongitudeNull() {
+                return this.IsNull(this.tablePOFdata.LongitudeColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetLongitudeNull() {
+                this[this.tablePOFdata.LongitudeColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsLatitude1Null() {
+                return this.IsNull(this.tablePOFdata.Latitude1Column);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetLatitude1Null() {
+                this[this.tablePOFdata.Latitude1Column] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsLongitude1Null() {
+                return this.IsNull(this.tablePOFdata.Longitude1Column);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetLongitude1Null() {
+                this[this.tablePOFdata.Longitude1Column] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsLatitude2Null() {
+                return this.IsNull(this.tablePOFdata.Latitude2Column);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetLatitude2Null() {
+                this[this.tablePOFdata.Latitude2Column] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsLongitude2Null() {
+                return this.IsNull(this.tablePOFdata.Longitude2Column);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetLongitude2Null() {
+                this[this.tablePOFdata.Longitude2Column] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsLatitude3Null() {
+                return this.IsNull(this.tablePOFdata.Latitude3Column);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetLatitude3Null() {
+                this[this.tablePOFdata.Latitude3Column] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsLongitude3Null() {
+                return this.IsNull(this.tablePOFdata.Longitude3Column);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetLongitude3Null() {
+                this[this.tablePOFdata.Longitude3Column] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsSequenceNull() {
+                return this.IsNull(this.tablePOFdata.SequenceColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetSequenceNull() {
+                this[this.tablePOFdata.SequenceColumn] = global::System.Convert.DBNull;
+            }
+        }
+        
+        /// <summary>
+        ///Represents strongly named DataRow class.
+        ///</summary>
+        public partial class NGSTARRow : global::System.Data.DataRow {
+            
+            private NGSTARDataTable tableNGSTAR;
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            internal NGSTARRow(global::System.Data.DataRowBuilder rb) : 
+                    base(rb) {
+                this.tableNGSTAR = ((NGSTARDataTable)(this.Table));
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public string FacilityID {
+                get {
+                    try {
+                        return ((string)(this[this.tableNGSTAR.FacilityIDColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'FacilityID\' in table \'NGSTAR\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableNGSTAR.FacilityIDColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public string SSDCode {
+                get {
+                    try {
+                        return ((string)(this[this.tableNGSTAR.SSDCodeColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'SSDCode\' in table \'NGSTAR\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableNGSTAR.SSDCodeColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public string SSDmodifier {
+                get {
+                    try {
+                        return ((string)(this[this.tableNGSTAR.SSDmodifierColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'SSDmodifier\' in table \'NGSTAR\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableNGSTAR.SSDmodifierColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public string FIX {
+                get {
+                    try {
+                        return ((string)(this[this.tableNGSTAR.FIXColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'FIX\' in table \'NGSTAR\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableNGSTAR.FIXColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public string AltAOA {
+                get {
+                    try {
+                        return ((string)(this[this.tableNGSTAR.AltAOAColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'AltAOA\' in table \'NGSTAR\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableNGSTAR.AltAOAColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public string AltAOB {
+                get {
+                    try {
+                        return ((string)(this[this.tableNGSTAR.AltAOBColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'AltAOB\' in table \'NGSTAR\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableNGSTAR.AltAOBColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public string AltAT {
+                get {
+                    try {
+                        return ((string)(this[this.tableNGSTAR.AltATColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'AltAT\' in table \'NGSTAR\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableNGSTAR.AltATColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public string Speed {
+                get {
+                    try {
+                        return ((string)(this[this.tableNGSTAR.SpeedColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'Speed\' in table \'NGSTAR\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableNGSTAR.SpeedColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public string OverflyHdg {
+                get {
+                    try {
+                        return ((string)(this[this.tableNGSTAR.OverflyHdgColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'OverflyHdg\' in table \'NGSTAR\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableNGSTAR.OverflyHdgColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public string Sequence {
+                get {
+                    try {
+                        return ((string)(this[this.tableNGSTAR.SequenceColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'Sequence\' in table \'NGSTAR\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableNGSTAR.SequenceColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsFacilityIDNull() {
+                return this.IsNull(this.tableNGSTAR.FacilityIDColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetFacilityIDNull() {
+                this[this.tableNGSTAR.FacilityIDColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsSSDCodeNull() {
+                return this.IsNull(this.tableNGSTAR.SSDCodeColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetSSDCodeNull() {
+                this[this.tableNGSTAR.SSDCodeColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsSSDmodifierNull() {
+                return this.IsNull(this.tableNGSTAR.SSDmodifierColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetSSDmodifierNull() {
+                this[this.tableNGSTAR.SSDmodifierColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsFIXNull() {
+                return this.IsNull(this.tableNGSTAR.FIXColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetFIXNull() {
+                this[this.tableNGSTAR.FIXColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsAltAOANull() {
+                return this.IsNull(this.tableNGSTAR.AltAOAColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetAltAOANull() {
+                this[this.tableNGSTAR.AltAOAColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsAltAOBNull() {
+                return this.IsNull(this.tableNGSTAR.AltAOBColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetAltAOBNull() {
+                this[this.tableNGSTAR.AltAOBColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsAltATNull() {
+                return this.IsNull(this.tableNGSTAR.AltATColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetAltATNull() {
+                this[this.tableNGSTAR.AltATColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsSpeedNull() {
+                return this.IsNull(this.tableNGSTAR.SpeedColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetSpeedNull() {
+                this[this.tableNGSTAR.SpeedColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsOverflyHdgNull() {
+                return this.IsNull(this.tableNGSTAR.OverflyHdgColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetOverflyHdgNull() {
+                this[this.tableNGSTAR.OverflyHdgColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsSequenceNull() {
+                return this.IsNull(this.tableNGSTAR.SequenceColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetSequenceNull() {
+                this[this.tableNGSTAR.SequenceColumn] = global::System.Convert.DBNull;
             }
         }
         
@@ -17436,40 +18536,6 @@ namespace SCTBuilder {
         ///Row event argument class
         ///</summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-        public class NGSTARRowChangeEvent : global::System.EventArgs {
-            
-            private NGSTARRow eventRow;
-            
-            private global::System.Data.DataRowAction eventAction;
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public NGSTARRowChangeEvent(NGSTARRow row, global::System.Data.DataRowAction action) {
-                this.eventRow = row;
-                this.eventAction = action;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public NGSTARRow Row {
-                get {
-                    return this.eventRow;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public global::System.Data.DataRowAction Action {
-                get {
-                    return this.eventAction;
-                }
-            }
-        }
-        
-        /// <summary>
-        ///Row event argument class
-        ///</summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
         public class NGFixesRowChangeEvent : global::System.EventArgs {
             
             private NGFixesRow eventRow;
@@ -17588,6 +18654,74 @@ namespace SCTBuilder {
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public NGNavAIDRow Row {
+                get {
+                    return this.eventRow;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataRowAction Action {
+                get {
+                    return this.eventAction;
+                }
+            }
+        }
+        
+        /// <summary>
+        ///Row event argument class
+        ///</summary>
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+        public class POFdataRowChangeEvent : global::System.EventArgs {
+            
+            private POFdataRow eventRow;
+            
+            private global::System.Data.DataRowAction eventAction;
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public POFdataRowChangeEvent(POFdataRow row, global::System.Data.DataRowAction action) {
+                this.eventRow = row;
+                this.eventAction = action;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public POFdataRow Row {
+                get {
+                    return this.eventRow;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataRowAction Action {
+                get {
+                    return this.eventAction;
+                }
+            }
+        }
+        
+        /// <summary>
+        ///Row event argument class
+        ///</summary>
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+        public class NGSTARRowChangeEvent : global::System.EventArgs {
+            
+            private NGSTARRow eventRow;
+            
+            private global::System.Data.DataRowAction eventAction;
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public NGSTARRowChangeEvent(NGSTARRow row, global::System.Data.DataRowAction action) {
+                this.eventRow = row;
+                this.eventAction = action;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public NGSTARRow Row {
                 get {
                     return this.eventRow;
                 }

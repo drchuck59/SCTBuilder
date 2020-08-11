@@ -6,14 +6,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Media;
 using System.Globalization;
-using System.Diagnostics.Eventing.Reader;
-using MySqlX.XDevAPI.Common;
-using Mono.Cecil;
 using System.Diagnostics;
-using System.Collections.Specialized;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using MySqlX.XDevAPI.Relational;
-using System.Security.Permissions;
 
 namespace SCTBuilder
 {
@@ -28,6 +21,8 @@ namespace SCTBuilder
         static List<string> FixesUsed = new List<string>();
         static List<string> APTsUsed = new List<string>();
         private static string BigResult = string.Empty;
+        static string PartialPath = FolderMgt.OutputFolder + "\\" + InfoSection.SponsorARTCC + "_";
+
         public static void WriteSCT()
         {
             // DataTable LS = Form1.LocalSector;
@@ -35,51 +30,51 @@ namespace SCTBuilder
             string Message;
 
             Debug.WriteLine("Header...");
-            string path = CheckFile("Header");
+            string path = SCTcommon.CheckFile(PartialPath, "Header");
             WriteHeader(path);
             TextFiles.Add(path);
 
-            path = CheckFile("Colors");
+            path = SCTcommon.CheckFile(PartialPath, "Colors");
             Debug.WriteLine("ColorDefinitions");
             WriteColors(path);
             TextFiles.Add(path);
 
-            path = CheckFile("Info");
+            path = SCTcommon.CheckFile(PartialPath, "Info");
             Debug.WriteLine("INFO section...");
             WriteINFO(path);
             TextFiles.Add(path);
 
             if (SCTchecked.ChkVOR)
             {
-                path = CheckFile("VOR");
+                path = SCTcommon.CheckFile(PartialPath, "VOR");
                 Debug.WriteLine("VORs...");
                 WriteVOR(path);
                 TextFiles.Add(path);
             }
             if (SCTchecked.ChkNDB)
             {
-                path = CheckFile("NDB");
+                path = SCTcommon.CheckFile(PartialPath, "NDB");
                 Debug.WriteLine("NDBs...");
                 WriteNDB(path);
                 TextFiles.Add(path);
             }
             if (SCTchecked.ChkAPT)
             {
-                path = CheckFile("APT");
+                path = SCTcommon.CheckFile(PartialPath, "APT");
                 Debug.WriteLine("Airports...");
                 WriteAPT(path);
                 TextFiles.Add(path);
             }
             if (SCTchecked.ChkRWY)
             {
-                path = CheckFile("RWY");
+                path = SCTcommon.CheckFile(PartialPath, "RWY");
                 Debug.WriteLine("Airport Runways...");
                 WriteRWY(path);
                 TextFiles.Add(path);
             }
             if (SCTchecked.ChkFIX)
             {
-                path = CheckFile("FIX");
+                path = SCTcommon.CheckFile(PartialPath, "FIX");
                 Debug.WriteLine("Fixes...");
                 WriteFixes(path);
                 TextFiles.Add(path);
@@ -87,28 +82,24 @@ namespace SCTBuilder
             if (SCTchecked.ChkARB)
             {
                 Debug.WriteLine("ARTCC HIGH...");
-                path = CheckFile("ARTCC_HIGH");
+                path = SCTcommon.CheckFile(PartialPath, "ARTCC_HIGH");
                 WriteARB(path, true);
                 TextFiles.Add(path);
-            }
-            if (SCTchecked.ChkARB)
-            {
+
                 Debug.WriteLine("ARTCC LOW...");
-                path = CheckFile("ARTCC_LOW");
+                path = SCTcommon.CheckFile(PartialPath, "ARTCC_LOW");
                 WriteARB(path, false);
-                TextFiles.Add(path);
-            }
-            if (SCTchecked.ChkAWY)
-            {
-                path = CheckFile("AirwayLow");
-                Debug.WriteLine("Low AirWays...");
-                WriteAWY(path, IsLow: true);
                 TextFiles.Add(path);
             }
 
             if (SCTchecked.ChkAWY)
             {
-                path = CheckFile("AirwayHigh");
+                path = SCTcommon.CheckFile(PartialPath, "AirwayLow");
+                Debug.WriteLine("Low AirWays...");
+                WriteAWY(path, IsLow: true);
+                TextFiles.Add(path);
+
+                path = SCTcommon.CheckFile(PartialPath, "AirwayHigh");
                 Debug.WriteLine("High AirWays...");
                 WriteAWY(path, IsLow: false);
                 TextFiles.Add(path);
@@ -125,17 +116,21 @@ namespace SCTBuilder
                 WriteSIDSTAR(IsSID: false);
                 TextFiles.Add(path);
             }
-            path = CheckFile("SUA");
-            if (path != string.Empty)
+            if (SCTchecked.IncludeSUAfile)
             {
-                Debug.WriteLine("SUAs...");
-                WriteSUA();
-                TextFiles.Add(path);
+                path = SCTcommon.CheckFile(PartialPath, "SUA");
+                Debug.WriteLine(path);
+                if (path != string.Empty)
+                {
+                    Debug.WriteLine("SUAs...");
+                    WriteSUA();
+                    TextFiles.Add(path);
+                }
             }
 
-            if (SCTchecked.ChkALL)
+            if (SCTchecked.ChkOneFile)
             {
-                path = CheckFile(CycleInfo.AIRAC.ToString(), ".sct2");
+                path = SCTcommon.CheckFile(PartialPath, CycleInfo.AIRAC.ToString(), ".sct2");
                 using (var SCTfile = File.Create(path))
                 {
                     foreach (var file in TextFiles)
@@ -154,47 +149,9 @@ namespace SCTBuilder
                 Message = TextFiles.Count + " text file(s) written to " + FolderMgt.OutputFolder;
                 SCTcommon.SendMessage(Message, MessageBoxIcon.Information);
             }
-            Console.WriteLine("End writing output files");
+            Debug.WriteLine("End writing output files");
         }
 
-        public static string CheckFile(string file, string type = ".txt")
-        {
-            // Looks for the file in the PartialPath.  If found, optionally seeks confirm to overwrite.
-            // RETURNS the fully qualified path to the file unles overwite denied, then returns empty.
-            string caption = VersionInfo.Title;
-            string Message; MessageBoxIcon icon; MessageBoxButtons buttons;
-            DialogResult result;
-            string PartialPath = FolderMgt.OutputFolder + "\\" + InfoSection.SponsorARTCC + "_";
-            string path = PartialPath + file + type;
-            if (File.Exists(path))
-            {
-                if (SCTchecked.ChkConfirmOverwrite)
-                {
-                    Message = "OK to overwrite " + path + "?";
-                    icon = MessageBoxIcon.Question;
-                    buttons = MessageBoxButtons.YesNo;
-                    SystemSounds.Question.Play();
-                    result = MessageBox.Show(Message, caption, buttons, icon);
-                }
-                else result = DialogResult.Yes;
-                if (result == DialogResult.Yes)
-                {
-                    File.Delete(path);
-                    result = DialogResult.OK;
-                }
-                else
-                {
-                    result = DialogResult.Cancel;
-                }
-            }
-            else
-                result = DialogResult.OK;
-            if (result == DialogResult.OK)
-            {
-                return path;
-            }
-            else return string.Empty;
-        }
 
         private static void WriteHeader(string path)
         {
@@ -220,7 +177,7 @@ namespace SCTBuilder
                 "; Cycle: " + CycleInfo.CycleStart + " to " + CycleInfo.CycleEnd + cr +
                 "; ================================================================" + cr;
         }
-        private static void WriteColors(string path)
+        public static void WriteColors(string path)
         {
             DataTable dtColors = Form1.ColorDef;
             string Output = "; Color definition table" + cr;
@@ -232,7 +189,7 @@ namespace SCTBuilder
             using (StreamWriter sw = new StreamWriter(path))
                 sw.WriteLine(Output);
         }
-        private static void WriteINFO(string path)
+        public static void WriteINFO(string path)
         {
             using (StreamWriter sw = new StreamWriter(path))
             {
@@ -249,7 +206,7 @@ namespace SCTBuilder
                 sw.WriteLine(InfoSection.SectorScale);
             }
         }
-        private static void WriteVOR(string path)
+        public static void WriteVOR(string path)
         {
             string[] strOut = new string[6];
             DataView dataView = new DataView(Form1.VOR)
@@ -275,7 +232,7 @@ namespace SCTBuilder
                 dataView.Dispose();
             }
         }
-        private static void WriteNDB(string path)
+        public static void WriteNDB(string path)
         {
             string[] strOut = new string[5]; string LineOut;
             DataTable NDB = Form1.NDB;
@@ -303,7 +260,7 @@ namespace SCTBuilder
                 dataView.Dispose();
             }
         }
-        private static void WriteAPT(string path)
+        public static void WriteAPT(string path)
         {
             string[] strOut = new string[7]; string ATIStype = "ATIS";
             DataTable APT = Form1.APT;
@@ -357,7 +314,7 @@ namespace SCTBuilder
             }
             dvAPT.Dispose();
         }
-        private static void WriteFixes(string path)
+        public static void WriteFixes(string path)
         {
             string[] strOut = new string[5];
             DataTable FIX = Form1.FIX;
@@ -436,7 +393,7 @@ namespace SCTBuilder
             }
             dvRWY.Dispose();
         }
-        private static void WriteAWY(string path, bool IsLow)
+        public static void WriteAWY(string path, bool IsLow)
         {
             DataTable AWY = Form1.AWY;
             string Awy0 = string.Empty; string Awy1;
@@ -486,7 +443,7 @@ namespace SCTBuilder
             dvAWY.Dispose();
         }
 
-        private static void WriteSIDSTAR(bool IsSID)
+        public static void WriteSIDSTAR(bool IsSID)
         {
             // Calling routine for SID and STAR diagrams
             // SSD = Either SID or STAR, depending on flag
@@ -527,7 +484,7 @@ namespace SCTBuilder
                     if (dvSSD.Count != 0)
                         BuildSSD(dvSSD);
                     // Creating a file for each dvSSD...
-                    path = CheckFile(dvSSD[0]["SSDcode"].ToString());
+                    path = SCTcommon.CheckFile(PartialPath, dvSSD[0]["SSDcode"].ToString());
                     using (StreamWriter sw = new StreamWriter(path))
                     {
                         sw.WriteLine(CycleHeader);
@@ -556,7 +513,7 @@ namespace SCTBuilder
                         BuildSSD(dvSSD);
                 }
                 // Create ONE file for all the SSDs
-                path = CheckFile(Section);
+                path = SCTcommon.CheckFile(PartialPath, Section);
                 using (StreamWriter sw = new StreamWriter(path))
                 {
                     sw.WriteLine(CycleHeader);
@@ -801,7 +758,7 @@ namespace SCTBuilder
             return result;
         }
 
-        private static void WriteARB(string path, bool High)
+        public static void WriteARB(string path, bool High)
         {
             // This doesn't work as designed.  Need to search for affected ARTCCs,
             // then draw all the ARTCCs (filter ARTCC =) with ANY borders in the area.

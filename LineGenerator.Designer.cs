@@ -1046,6 +1046,7 @@
             this.Controls.Add(this.FixImportGroupBox);
             this.Controls.Add(this.EndPointGroupBo);
             this.Controls.Add(this.StartGroupBox);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
             this.MaximizeBox = false;
             this.Name = "LineGenerator";

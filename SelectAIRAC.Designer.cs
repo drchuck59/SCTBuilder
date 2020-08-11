@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SelectAIRAC));
             this.YearComboBox = new System.Windows.Forms.ComboBox();
             this.YearComboBox_Label = new System.Windows.Forms.Label();
             this.CycleComboBox = new System.Windows.Forms.ComboBox();
@@ -44,7 +45,7 @@
             this.YearComboBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.YearComboBox.FormattingEnabled = true;
             this.YearComboBox.Location = new System.Drawing.Point(27, 42);
-            this.YearComboBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.YearComboBox.Margin = new System.Windows.Forms.Padding(2);
             this.YearComboBox.Name = "YearComboBox";
             this.YearComboBox.Size = new System.Drawing.Size(82, 24);
             this.YearComboBox.TabIndex = 0;
@@ -66,7 +67,7 @@
             this.CycleComboBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.CycleComboBox.FormattingEnabled = true;
             this.CycleComboBox.Location = new System.Drawing.Point(123, 42);
-            this.CycleComboBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.CycleComboBox.Margin = new System.Windows.Forms.Padding(2);
             this.CycleComboBox.Name = "CycleComboBox";
             this.CycleComboBox.Size = new System.Drawing.Size(82, 24);
             this.CycleComboBox.TabIndex = 2;
@@ -98,7 +99,7 @@
             // 
             this.MyButtonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.MyButtonCancel.Location = new System.Drawing.Point(217, 148);
-            this.MyButtonCancel.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.MyButtonCancel.Margin = new System.Windows.Forms.Padding(2);
             this.MyButtonCancel.Name = "MyButtonCancel";
             this.MyButtonCancel.Size = new System.Drawing.Size(48, 22);
             this.MyButtonCancel.TabIndex = 5;
@@ -111,7 +112,7 @@
             this.OKButton.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.OKButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.OKButton.Location = new System.Drawing.Point(18, 142);
-            this.OKButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.OKButton.Margin = new System.Windows.Forms.Padding(2);
             this.OKButton.Name = "OKButton";
             this.OKButton.Size = new System.Drawing.Size(185, 29);
             this.OKButton.TabIndex = 6;
@@ -122,7 +123,7 @@
             // progressBar1
             // 
             this.progressBar1.Location = new System.Drawing.Point(18, 172);
-            this.progressBar1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.progressBar1.Margin = new System.Windows.Forms.Padding(2);
             this.progressBar1.Name = "progressBar1";
             this.progressBar1.Size = new System.Drawing.Size(185, 16);
             this.progressBar1.TabIndex = 7;
@@ -133,7 +134,7 @@
             this.ContinueButton.Enabled = false;
             this.ContinueButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ContinueButton.Location = new System.Drawing.Point(18, 141);
-            this.ContinueButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.ContinueButton.Margin = new System.Windows.Forms.Padding(2);
             this.ContinueButton.Name = "ContinueButton";
             this.ContinueButton.Size = new System.Drawing.Size(185, 27);
             this.ContinueButton.TabIndex = 8;
@@ -159,7 +160,8 @@
             this.Controls.Add(this.CycleComboBox);
             this.Controls.Add(this.YearComboBox_Label);
             this.Controls.Add(this.YearComboBox);
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "SelectAIRAC";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.ResumeLayout(false);

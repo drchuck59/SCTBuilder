@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DrawLabels));
             this.Label1Label = new System.Windows.Forms.Label();
             this.LabelTextBox = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
@@ -344,6 +345,7 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.LabelTextBox);
             this.Controls.Add(this.Label1Label);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "DrawLabels";
             this.Text = "Draw Labels";

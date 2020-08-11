@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Text.RegularExpressions;
 using System.Globalization;
+using System.Media;
 
 namespace SCTBuilder
 {
@@ -66,18 +67,54 @@ namespace SCTBuilder
             FolderBrowserDialog fBD = new FolderBrowserDialog();
             string result = string.Empty;
             // Set default folder to start
-            fBD.SelectedPath = selectedPath;
             fBD.Description = dialogTitle;
-            if (selectedPath.Length != 0) fBD.SelectedPath = selectedPath;
-            else fBD.SelectedPath = AppDomain.CurrentDomain.BaseDirectory;
-            //Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-            // Get user's desired folder
+            if (selectedPath.Trim().Length != 0)
+                fBD.SelectedPath = selectedPath;
+            else fBD.SelectedPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
 
             DialogResult dialogResult = fBD.ShowDialog();
             if (dialogResult == DialogResult.OK)
                 result = fBD.SelectedPath;
             fBD.Dispose();
             return result;
+        }
+
+        public static string CheckFile(string PartialPath, string file, string type = ".txt")
+        {
+            // Looks for the file in the PartialPath.  If found, optionally seeks confirm to overwrite.
+            // RETURNS the fully qualified path to the file unles overwite denied, then returns empty.
+            string caption = VersionInfo.Title;
+            string Message; MessageBoxIcon icon; MessageBoxButtons buttons;
+            DialogResult result;
+            string path = PartialPath + file + type;
+            if (File.Exists(path))
+            {
+                if (SCTchecked.ChkConfirmOverwrite)
+                {
+                    Message = "OK to overwrite " + path + "?";
+                    icon = MessageBoxIcon.Question;
+                    buttons = MessageBoxButtons.YesNo;
+                    SystemSounds.Question.Play();
+                    result = MessageBox.Show(Message, caption, buttons, icon);
+                }
+                else result = DialogResult.Yes;
+                if (result == DialogResult.Yes)
+                {
+                    File.Delete(path);
+                    result = DialogResult.OK;
+                }
+                else
+                {
+                    result = DialogResult.Cancel;
+                }
+            }
+            else
+                result = DialogResult.OK;
+            if (result == DialogResult.OK)
+            {
+                return path;
+            }
+            else return string.Empty;
         }
 
         public static string FAASubscriptionDirectory()
@@ -706,7 +743,7 @@ namespace SCTBuilder
             bool blnRetVal = false;
             try
             {
-                if (!char.IsControl(chr) && !char.IsDigit(chr))
+                if (char.IsControl(chr) || char.IsDigit(chr))
                 {
                     blnRetVal = true;
                 }
@@ -717,13 +754,13 @@ namespace SCTBuilder
             return blnRetVal;
         }
 
-        public static bool IsValidCoord(char chr, TextBox tb)
+        public static bool IsValidDecCoordKey(char chr, TextBox tb)
         {
             /** 
            Purpose    : to allow only numbers, decimal, and minus in first position
            Returns    : True - character is valid , False - Other than numbers 
            **/
-            bool result = false;
+            bool result = true;
             if (chr == '-')
             {
                 if (tb.TextLength > 0)
@@ -731,8 +768,25 @@ namespace SCTBuilder
             }
             else
             {
-                result = Extensions.CharIsDecimal(chr, ref tb, 4);
+                result = Extensions.CharIsDecimal(chr, ref tb, 5);
             }
+            return result;
+        }
+
+        public static bool IsValidSCTCoordKey(char chr, TextBox tb)
+        {
+            /** 
+            Purpose    : to allow only quadrant in first position or DD.MM.SS.sssss in others
+            Returns    : true - character is valid , false - Other than allowed 
+            **/
+            bool result = true;
+            if ((chr == 'N') || (chr == 'S') || (chr == 'E') || (chr == 'W'))
+            {
+                if (tb.TextLength > 0)
+                    result = false;
+            }
+            else
+                result = CharIsDigit(chr) || (chr == '.');
             return result;
         }
 
@@ -756,14 +810,14 @@ namespace SCTBuilder
            Purpose    : to allow only numbers and decimal with i# behind decimal
            Returns    : True - character is valid , False - Other than numbers 
            **/
-            bool chrRetVal = false;
+            bool chrRetVal = true;
             try
             {
                 string strSearch = string.Empty;
 
                 if (chrInput == '\b')
                 {
-                    return false;
+                    return true;
                 }
 
                 if (intNoOfDec == 0)
@@ -772,11 +826,11 @@ namespace SCTBuilder
                     int INDEX = (int)strSearch.IndexOf(chrInput.ToString());
                     if (strSearch.IndexOf(chrInput.ToString(), 0) == -1)
                     {
-                        return true;
+                        return false;
                     }
                     else
                     {
-                        return false;
+                        return true;
                     }
                 }
                 else
@@ -784,18 +838,18 @@ namespace SCTBuilder
                     strSearch = "0123456789.";
                     if (strSearch.IndexOf(chrInput, 0) == -1)
                     {
-                        return true;
+                        return false;
                     }
                 }
 
                 if ((txtBox.Text.Length - txtBox.SelectionStart) > (intNoOfDec) && chrInput == '.')
                 {
-                    return true;
+                    return false;
                 }
 
                 if (chrInput == '\b')
                 {
-                    chrRetVal = false;
+                    chrRetVal = true;
                 }
                 else
                 {
@@ -804,7 +858,7 @@ namespace SCTBuilder
                     {
                         if (strSearch.IndexOf('.', 0) > -1 && chrInput == '.')
                         {
-                            return true;
+                            return false;
                         }
                     }
                     int intPos;
@@ -819,10 +873,10 @@ namespace SCTBuilder
                         strSearch = "0123456789.";
                         if (strSearch.IndexOf(chrInput, 0) == -1)
                         {
-                            chrRetVal = true;
+                            chrRetVal = false;
                         }
                         else
-                            chrRetVal = false;
+                            chrRetVal = true;
                     }
                     else
                     {
@@ -831,13 +885,13 @@ namespace SCTBuilder
                             intAftDec = txtBox.Text.Length - txtBox.Text.IndexOf('.', 0);
                             if (intAftDec > intNoOfDec)
                             {
-                                chrRetVal = true;
+                                chrRetVal = false;
                             }
                             else
-                                chrRetVal = false;
+                                chrRetVal = true;
                         }
                         else
-                            chrRetVal = false;
+                            chrRetVal = true;
                     }
                 }
             }
@@ -852,7 +906,7 @@ namespace SCTBuilder
 
     public static class SCTstrings
     {
-
+        public static string cr = Environment.NewLine;
         public static string APTout(string[] strOut, string Apt = "", string Freq = "", 
             string Lat = "", string Lon = "", string Name = "", string Comment = "")
         {
@@ -898,11 +952,16 @@ namespace SCTBuilder
         public static string VORout(string[] strOut, string Fix = "", string Freq = "", string Lat = "",
             string Lon = "", string Name = "", string FixType = "")
         {
-            string result;
+            string result = string.Empty;
+            foreach (string str in strOut)
+            {
+                System.Diagnostics.Debug.WriteLine(str);
+            }
             if (strOut.Count() != 0)
             {
                 result = strOut[0].PadRight(5) + " " + strOut[1].PadRight(6) + " " + strOut[2] + " " + strOut[3] + " ; " + strOut[4];
-                if (strOut[5].ToString().Length != 0) result += " (" + strOut[5].ToString() + ")";
+                if(strOut.Length == 6)
+                    if (strOut[5].ToString().Length != 0) result += " (" + strOut[5].ToString() + ")";
             }
             else
             {
@@ -923,10 +982,20 @@ namespace SCTBuilder
             return result;
         }
 
-        public static string RWYout(string[] strOut)
+        public static string RWYout(string[] strOut, bool ESformat = false)
         {
-            string result = strOut[0] + " " + strOut[1] + " " + strOut[2] + " " + strOut[3] + " "
-                        + strOut[4] + " " + strOut[5] + " " + strOut[6] + " " + strOut[7] + "; " + strOut[8];
+            string result;
+            if (ESformat)
+            {
+                result = strOut[0] + " " + strOut[1] + " " + strOut[2] + " " + strOut[3] + " "
+                    + strOut[4] + " " + strOut[5] + " " + strOut[6] + " " + strOut[7] + " " + strOut[8] + cr;
+            }
+            else
+            {
+                // SCT format does NOT get a carriage return
+                result = strOut[0] + " " + strOut[1] + " " + strOut[2] + " " + strOut[3] + " "
+                    + strOut[4] + " " + strOut[5] + " " + strOut[6] + " " + strOut[7] + "; " + strOut[8];
+            }
             return result;
         }
         public static string AWYout(string Awy, string StartLat, 

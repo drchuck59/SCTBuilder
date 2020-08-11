@@ -3,16 +3,14 @@ using System.IO;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Threading.Tasks;
-using System.Net.WebSockets;
-using Org.BouncyCastle.Crypto.Digests;
+using System.Diagnostics;
 using System.Windows.Forms;
+using Google.Protobuf.WellKnownTypes;
 
 namespace SCTBuilder
 {
     class ReadNaviGraph
     {
-        static string Msg;
         static string Line = string.Empty;
         static string Airport = string.Empty;
         static readonly List<string> Words = new List<string>();
@@ -23,18 +21,19 @@ namespace SCTBuilder
         public static void NavAID()
         {
             string FullFilename = SCTcommon.GetFullPathname(FolderMgt.DataFolder, "wpNavAID.txt");
-            DataTable wpNavAid = Form1.NGNavAID;
-            DataRow dataRow;
+            DataTable NGNavAid = Form1.NGNavAID;
+            DataView dvNGNavAid = new DataView(NGNavAid);
+            DataRowView dataRow;
             if (FullFilename.IndexOf("Error") == -1)
             {
-                wpNavAid.Clear();
+                NGNavAid.Clear();
                 using (StreamReader sr = new StreamReader(FullFilename))
                 {
                     while ((Line = sr.ReadLine()) != null)
                     {
                         if (Line.Substring(0, 1) != ";")
                         {
-                            dataRow = wpNavAid.NewRow();
+                            dataRow = dvNGNavAid.AddNew();
                             dataRow["Name"] = Line.Substring(0, 14).Trim();
                             dataRow["FacilityID"] = Line.Substring(24, 5).Trim();
                             dataRow["Type"] = Line.Substring(29, 4).Trim();
@@ -45,15 +44,17 @@ namespace SCTBuilder
                         }
                     }
                 }
+                Debug.Print(NGNavAid.Rows.Count + " rows added to NGNavAid table.");
             }
+            dvNGNavAid.Dispose();
         }
 
         public static void NavFIX()
         {
-            DataRow datarow;
             string FullFilename = SCTcommon.GetFullPathname(FolderMgt.DataFolder, "wpNavFIX.txt");
             DataTable dtNGFIX = Form1.NGFixes;
-            dtNGFIX.Clear();
+            DataView dvNGFIX = new DataView(dtNGFIX);
+            DataRowView datarow;
             if (FullFilename.IndexOf("Error") == -1)
             {
                 using (StreamReader sr = new StreamReader(FullFilename))
@@ -62,13 +63,14 @@ namespace SCTBuilder
                     {
                         if (Line.Substring(0, 1) != ";")
                         {
-                            datarow = dtNGFIX.NewRow();
+                            datarow = dvNGFIX.AddNew();
                             datarow["FacilityID"] = Line.Substring(0, 5).Trim();
                             datarow[1] = Convert.ToDouble(Line.Substring(29, 10).Trim());
                             datarow[2] = Convert.ToDouble(Line.Substring(39, 11).Trim());
                             datarow.EndEdit();
                         }
                     }
+                    Debug.WriteLine(dtNGFIX.Rows.Count + " rows added to NTFixes");
                 }
             }
         }
@@ -78,7 +80,7 @@ namespace SCTBuilder
             // Add NaviGraph routes that are NOT in FAA table
             // That is - Ultra, Oceanic, and World routes
             string curID; string prevID = string.Empty;
-            bool IDexists = false; bool Adding = false;
+            bool IDexists = false; bool Adding;
             string FullFilename = SCTcommon.GetFullPathname(FolderMgt.DataFolder, "wpNavRTE.txt");
             DataView dvRTE = new DataView(Form1.NGRTE);
             if (FullFilename.IndexOf("Error") != -1)
@@ -98,7 +100,7 @@ namespace SCTBuilder
                             }
                             if (Adding || !IDexists)
                             {
-                                AddRTE(dvRTE, Line);
+                                AddRTE(dvRTE);
                             }
                             prevID = curID;
                         }
@@ -107,25 +109,26 @@ namespace SCTBuilder
             }
         }
 
-        private static void AddRTE(DataView dv, string Line)
+        private static void AddRTE(DataView dv)
         {
             string curID = Line.Substring(0, Line.IndexOf(" ")).Trim();
             string[] LowAirways = new string[6] {"V", "A", "B", "G", "R", "T"};
+            string temp = Line;
             DataRowView dvRTE = dv.AddNew();
             dvRTE["AWYID"] = curID;
-            Line = Line.Substring(Line.IndexOf(" ") + 1);
-            dvRTE["Sequence"] = Convert.ToInt32(Line.Substring(0, Line.IndexOf(" ")).Trim()) * 10;
-            Line = Line.Substring(Line.IndexOf(" ") + 1);
-            dvRTE["NavAid"] = Line.Substring(0, Line.IndexOf(" ")).Trim();
-            Line = Line.Substring(Line.IndexOf(" ") + 1);
-            dvRTE["Latitude"] = Convert.ToDouble(Line.Substring(0, Line.IndexOf(" ")).Trim());
-            Line = Line.Substring(Line.IndexOf(" ") + 1);
-            dvRTE["Longitude"] = Convert.ToDouble(Line.Substring(0, Line.IndexOf(" ")).Trim());
+            temp = temp.Substring(temp.IndexOf(" ") + 1);
+            dvRTE["Sequence"] = Convert.ToInt32(temp.Substring(0, temp.IndexOf(" ")).Trim()) * 10;
+            temp = temp.Substring(temp.IndexOf(" ") + 1);
+            dvRTE["NavAid"] = temp.Substring(0, temp.IndexOf(" ")).Trim();
+            temp = temp.Substring(Line.IndexOf(" ") + 1);
+            dvRTE["Latitude"] = Convert.ToDouble(temp.Substring(0, temp.IndexOf(" ")).Trim());
+            Line = Line.Substring(temp.IndexOf(" ") + 1);
+            dvRTE["Longitude"] = Convert.ToDouble(temp.Substring(0, temp.IndexOf(" ")).Trim());
             dvRTE["IsLow"] = LowAirways.Any(curID.Contains);
             dvRTE.EndEdit();
         }
 
-        public static bool SIDSTARS(string Apt)
+        public static bool SIDSTARS(string Apt, string FullFilename)
         {
             // The output strings will be
             // <SID/STAR>:<AIRPORT ICAO>:<RUNWAY>:<TRANSITIONxPROCEDURE>:<ROUTE>
@@ -133,78 +136,62 @@ namespace SCTBuilder
             // Therefore, read all the procedures for each runway and save transitions to reuse later
             Airport = Apt;
             bool result = false;
-            string Section = string.Empty;
-            string FullFilename = SCTcommon.GetFullPathname(FolderMgt.DataFolder, Airport + ".txt");
-            if (FullFilename.IndexOf("ERROR") == -1)
+            string Section = string.Empty; string Level; string Content; string Addenda;
+            using (StreamReader reader = new StreamReader(FullFilename))
             {
-                using (StreamReader reader = new StreamReader(FullFilename))
+                while ((Line = reader.ReadLine()) != null)
                 {
-                    Line = reader.ReadLine();
                     Words.Clear();                              // Start fresh
-                    Words.AddRange(ParseLine());                // A simple subroutine to break the line into words
-                    if (Words.Count != 0)
+                    if ((Line.IndexOf("//") == -1) && (Line.Length > 0))
                     {
-                        switch (Words[0])                       // Which "level" is the line
+                        Level = GetLevel();
+                        switch (Level)                       // Which "level" is the line
                         {
                             case "Title":                       // No leading whitespace
-                                switch (Words[1])               // Switch based upon the section we are working with
+                                Section = GetLineID();
+                                switch (Section)               // Switch based upon the section we are working with
                                 {
                                     case "FIXES":               // Indicates start of the FIXes data
-                                        Section = Words[1];
                                         break;
                                     case "FIX":                 // FiX data - don't need anything except the name but capture all
-                                        if (Section == "FIXES")  // This should never occur but it cant hurt to check
-                                            AddFixString();
-                                        else
-                                        {
-                                            Msg = "Error reading Title FIX";
-                                            SCTcommon.SendMessage(Msg);
-                                        }
+                                        AddFixString();
                                         break;
                                     case "ENDFIXES":        // Indicates end of the FIXES data
                                         Section = string.Empty;
                                         break;
                                     case "RNWS":            // Indicates start of the RNW data
-                                        Section = Words[1];
                                         break;
                                     case "RNW":             // As a title only identifies each RNW in the data
-                                        if (Section == "RNWS")
-                                            RNWS.Add(Words[2]);
-                                        else
-                                        {
-                                            // This should never occur
-                                            Msg = "Error reading Title RNW";
-                                            SCTcommon.SendMessage(Msg);
-                                        }
+                                        Words.AddRange(ParseLine());
+                                        RNWS.Add(Words[1]);
                                         break;
                                     case "ENDRNWS":         // Indicates end of the RNW data
-                                        // Don't need it now, but could commit the RNWS to a Datatable here
                                         Section = string.Empty;
                                         break;
                                     case "SIDS":            // Indicates start of the SIDs data
-                                        Section = Words[1];
                                         break;
                                     case "SID":
                                         // This begins the read of one SID
-                                        SSDcode = Words[3];     // This is always the SSDcode
-                                        // Usually these are multiline and we need the rest of the entry to load
-                                        // Check for a single-line SID - special handling
+                                        Words.AddRange(ParseLine());
+                                        SSDcode = Words[1];     // This is always the SSDcode
+                                                                // Usually these are multiline and we need the rest of the entry to load
+                                                                // Check for a single-line SID - special handling
                                         if (SCTcommon.CountListOccurrences(Words, "RNW") != 0)
                                             AddSID_OneLine();
                                         break;
                                     case "STARS":            // Indicates start of the STARs data
-                                        Section = Words[1];
                                         break;
                                     case "STAR":
                                         // This begins the read of one STAR
+                                        Words.AddRange(ParseLine());
                                         SSDcode = AddSTAR();
                                         break;
                                     case "APPROACHES":      // Indicates start of the APPROACHes data
-                                        Section = Words[1];
                                         break;
                                     case "APPROACH":
                                         // This begins the read of one APPROACH
                                         // **** ENTER APPROACH SUBROUTINE ****
+                                        Words.AddRange(ParseLine());
                                         SSDcode = Words[1];
                                         break;
                                     case "//":                  // Comment line
@@ -213,32 +200,42 @@ namespace SCTBuilder
                                 }
                                 break;
                             case "Content":                     // This line has one whitespace.  Again, each word is unique to SID or STAR
-                                switch (Words[1])
+                                Content = GetLineID();
+                                switch (Content)
                                 {
                                     case "RNW":                 // SID RNW information for the current SID (SSDcode)
+                                        Words.AddRange(ParseLine());
                                         AddSID();
                                         break;
-                                    case "TRANSITION":          // Always TRANSITION information for a STAR
-                                        STARTransition();
+                                    case "TRANSITION":          // TRANSITION information for a STAR or APPROACH
+                                        if (Section == "STAR")
+                                        {
+                                            Words.AddRange(ParseLine());
+                                            STARTransition();
+                                        }
                                         break;
                                 }
                                 break;
                             case "Addenda":                     // This line has two whitespaces.  Each word is unique to a SID or STAR
-                                switch (Words[1])
+                                Addenda = GetLineID();
+                                switch (Addenda)
                                 {
                                     case "RNW":                  //Only occurs in STARS
+                                        Words.AddRange(ParseLine());
                                         STAR_RNWS();
                                         break;
                                     case "TRANSITION":          // Only occurs in SIDs  SID transitions apply to all RNWs, so don't need a complex DataTable
+                                        Words.AddRange(ParseLine());
                                         SIDTransition();
                                         break;
                                 }
                                 break;
+                            case "":
+                                break;
                         }
                     }
-                    Line = string.Empty;
-                    Words.Clear();
                 }
+                result = true;
             }
             return result;
         }
@@ -246,25 +243,30 @@ namespace SCTBuilder
         private static void AddFixString()
         {
             // Parse the NaviGraph line for FIX in FIXES section
-            int LocSpace1 = Line.IndexOf(" ");
-            int LocSpace2 = Line.IndexOf(" ", LocSpace1 + 1);
-            int LocLat = Line.IndexOf(" N ");
-            if (LocLat == -1) Line.IndexOf(" S ");
-            int LocLon = Line.IndexOf("W");
-            if (LocLon == -1) LocLon = Line.IndexOf("E");
-            int LocFix = Line.IndexOf(" " + 1);
-
-            string FixName = Line.Substring(LocFix, LocSpace2 - LocSpace1).Trim();
-            string Latitude = Line.Substring(LocLat, LocLon - LocLat).Trim();
-            string Longitude = Line.Substring(LocLon, Line.Length - LocLon);
-            Console.WriteLine("Fix: " + FixName + ", Lat: " + Latitude + ", Lon: " + Longitude);
-
+            string temp = Line;
+            temp = temp.Substring(4);
+            int LocFix = temp.IndexOf(" ");
+            string FixName = temp.Substring(0, temp.IndexOf(" ")).Trim();
+            temp = temp.Substring(LocFix + 7).Trim();
+            string quadrant = temp.Substring(0, 1);
+            temp = temp.Substring(2).Trim();
+            float decLat = Convert.ToSingle(temp.Substring(0, 2));
+            temp = temp.Substring(3).Trim();
+            int LocLat = temp.IndexOf(" ");
+            decLat += Convert.ToSingle(temp.Substring(0, LocLat)) / 60;
+            temp = temp.Substring(LocLat).Trim();
+            if (quadrant == "S") decLat *= -1;
+            quadrant = temp.Substring(0, 1);
+            temp = temp.Substring(2).Trim();
+            int LocLon = temp.IndexOf(" ");
+            float decLon = Convert.ToSingle(temp.Substring(0, LocLon));
+            temp = temp.Substring(LocLon).Trim();
+            decLon += Convert.ToSingle(temp) / 60;
             DataView dvNGFix = new DataView(Form1.NGFixes);
             DataRowView newrow = dvNGFix.AddNew();
-            newrow["FacilityID"] = Airport;
-            newrow["FixName"] = FixName;
-            newrow["Latitude"] = Conversions.String2DecDeg(Latitude, Delim: " ");           // Subroutine can recognize this as NG string
-            newrow["Longitude"] = Conversions.String2DecDeg(Longitude, Delim: " ");
+            newrow["FacilityID"] = FixName;
+            newrow["Latitude"] = decLat;        
+            newrow["Longitude"] = decLon;
             newrow.EndEdit();
             dvNGFix.Dispose();
         }
@@ -300,10 +302,10 @@ namespace SCTBuilder
                                 newFIX["SSDcode"] = SSDcode;
                                 newFIX["RWY"] = runway;
                                 newFIX["Fix"] = fix;
-                                newFIX["AltAOA"] = AoARestrict(Line, fix);
-                                newFIX["AltAOB"] = AoBRestrict(Line, fix);
-                                newFIX["AltAt"] = AltAtRestrict(Line, fix);
-                                newFIX["Speed"] = SpeedRestrict(Line, fix);
+                                newFIX["AltAOA"] = AoARestrict(fix);
+                                newFIX["AltAOB"] = AoBRestrict(fix);
+                                newFIX["AltAt"] = AltAtRestrict(fix);
+                                newFIX["Speed"] = SpeedRestrict(fix);
                                 newFIX["Sequence"] = Sequence;
                                 newFIX.EndEdit();
                                 oldfix = fix;
@@ -325,9 +327,9 @@ namespace SCTBuilder
             string runway; int Sequence; string Radial;
             string fix = string.Empty; string oldfix = string.Empty;
             //Build a list of RNWs then a list of FIXes
-            for (int r = 2; r <= Words.Count; r++)          //  Start at 2d word (RNW)
+            runway = Words[2];
+            for (int r = 1; r < Words.Count; r++)          //  Start at 2d word (RNW)
             {
-                runway = Words[r + 1];
                 Sequence = 0;
                 // See if SID has RWY departure instructions
                 if (Line.IndexOf("HDG") != -1)
@@ -349,7 +351,7 @@ namespace SCTBuilder
                     newFIX["Sequence"] = Sequence;
                     newFIX.EndEdit();
                     // Find first occurence of Fix for above, and save the Loc (will need to skip this FIX in next section)
-                    for (int w = 1; w <= Words.Count; w++)
+                    for (int w = 1; w < Words.Count; w++)
                     {
                         if (Words[w] == "FIX")
                         {
@@ -357,7 +359,7 @@ namespace SCTBuilder
                             break;
                         }
                     }
-                    for (int w = WordStart; w <= Words.Count; w++)      // See what I did here?  I skipped the takeoff reference FIX
+                    for (int w = WordStart; w < Words.Count; w++)      // See what I did here?  I skipped the takeoff reference FIX
                     {
                         if (Words[w] == "FIX")
                         {
@@ -372,10 +374,10 @@ namespace SCTBuilder
                                 newFIX["FacilityID"] = Airport;
                                 newFIX["SSDcode"] = SSDcode;
                                 newFIX["RWY"] = runway;
-                                newFIX["AltAOA"] = AoARestrict(Line, fix);
-                                newFIX["AltAOB"] = AoBRestrict(Line, fix);
-                                newFIX["AltAt"] = AltAtRestrict(Line, fix);
-                                newFIX["Speed"] = SpeedRestrict(Line, fix);
+                                newFIX["AltAOA"] = AoARestrict(fix);
+                                newFIX["AltAOB"] = AoBRestrict(fix);
+                                newFIX["AltAt"] = AltAtRestrict(fix);
+                                newFIX["Speed"] = SpeedRestrict(fix);
                                 newFIX["Sequence"] = Sequence;
                                 newFIX.EndEdit();
                                 oldfix = fix;
@@ -386,7 +388,7 @@ namespace SCTBuilder
                 else
                 // SID did NOT have RWY departure instructions, so can go directly to loading the waypoints
                 {
-                    for (int w = 1; w <= Words.Count; w++)
+                    for (int w = 1; w < Words.Count; w++)
                     {
                         if (Words[w] == "FIX")
                         {
@@ -401,10 +403,13 @@ namespace SCTBuilder
                                 newFIX["FacilityID"] = Airport;
                                 newFIX["SSDcode"] = SSDcode;
                                 newFIX["RWY"] = runway;
-                                newFIX["AltAOA"] = AoARestrict(Line, fix);
-                                newFIX["AltAOB"] = AoBRestrict(Line, fix);
-                                newFIX["AltAt"] = AltAtRestrict(Line, fix);
-                                newFIX["Speed"] = SpeedRestrict(Line, fix);
+                                if (Line.Length > 0)
+                                {
+                                    newFIX["AltAOA"] = AoARestrict(fix);
+                                    newFIX["AltAOB"] = AoBRestrict(fix);
+                                    newFIX["AltAt"] = AltAtRestrict(fix);
+                                    newFIX["Speed"] = SpeedRestrict(fix);
+                                }
                                 newFIX["Sequence"] = Sequence;
                                 newFIX.EndEdit();
                                 oldfix = fix;
@@ -412,8 +417,8 @@ namespace SCTBuilder
                         }
                     }
                 }
-                dvNGSID.Dispose();
             }
+            dvNGSID.Dispose();
         }
 
         private static void SIDTransition()
@@ -422,7 +427,7 @@ namespace SCTBuilder
             DataView dvNGSIDTransition = new DataView(Form1.NGSIDTransition);
             DataRowView newrow; int Sequence = 0;
             string Transition = Words[2];
-            for (int t = 1; t <= Words.Count; t++)
+            for (int t = 1; t < Words.Count; t++)
             {
                 if (Words[t] == "FIX")
                 {
@@ -447,7 +452,7 @@ namespace SCTBuilder
                 SSDmod = Words[2].Substring(Words[2].IndexOf(".") + 1, 2);
             else SSDmod = string.Empty;
             // Load the STAR information (Runways and Transitions get added later)
-            for (int f = 1; f <= Words.Count; f++)
+            for (int f = 1; f < Words.Count; f++)
             {
                 SSDcode = Words[2];
                 if (Words[f] == "FIX")
@@ -459,10 +464,10 @@ namespace SCTBuilder
                     newFIX["SSDcode"] = SSDcode;
                     newFIX["SSDmodifier"] = SSDmod;
                     newFIX["Fix"] = fix;
-                    newFIX["AltAOA"] = AoARestrict(Line, fix);
-                    newFIX["AltAOB"] = AoBRestrict(Line, fix);
-                    newFIX["AltAt"] = AltAtRestrict(Line, fix);
-                    newFIX["Speed"] = SpeedRestrict(Line, fix);
+                    newFIX["AltAOA"] = AoARestrict(fix);
+                    newFIX["AltAOB"] = AoBRestrict(fix);
+                    newFIX["AltAt"] = AltAtRestrict(fix);
+                    newFIX["Speed"] = SpeedRestrict(fix);
                     newFIX["Sequence"] = Sequence;
                     newFIX.EndEdit();
                 }
@@ -474,7 +479,7 @@ namespace SCTBuilder
         {
             // Add the RNWs applicable to the SSDcode+SSDmode for the Airport
             DataTable dtNGSTAR = Form1.NGSTAR;
-            for (int r = 1; r <= Words.Count; r++)
+            for (int r = 1; r < Words.Count; r++)
             {
                 if (Words[r] == "RNW")
                 {
@@ -490,7 +495,7 @@ namespace SCTBuilder
             string fix; DataRowView newFIX; int Sequence = 0;
             DataView dvNGSTARTransition = new DataView(Form1.NGSTARTransition);
             {
-                for (int t = 1; t <= Words.Count; t++)
+                for (int t = 1; t < Words.Count; t++)
                 {
                     if (Words[t] == "FIX")
                     {
@@ -501,10 +506,10 @@ namespace SCTBuilder
                         newFIX["SSDmodifier"] = SSDmod;
                         newFIX["TransitionName"] = TransitionName;
                         newFIX["Fix"] = fix;
-                        newFIX["AltAOA"] = AoARestrict(Line, fix);
-                        newFIX["AltAOB"] = AoBRestrict(Line, fix);
-                        newFIX["AltAt"] = AltAtRestrict(Line, fix);
-                        newFIX["Speed"] = SpeedRestrict(Line, fix);
+                        newFIX["AltAOA"] = AoARestrict(fix);
+                        newFIX["AltAOB"] = AoBRestrict(fix);
+                        newFIX["AltAt"] = AltAtRestrict(fix);
+                        newFIX["Speed"] = SpeedRestrict(fix);
                         newFIX["Sequence"] = Sequence;
                         newFIX.EndEdit();
                     }
@@ -512,71 +517,93 @@ namespace SCTBuilder
             }
         }
 
-        private static string SpeedRestrict(string Line, string FIX)
+        private static string SpeedRestrict(string FIX)
         {
             string result = string.Empty;  int LocNextFix;
-            int LocFix = Line.IndexOf(FIX);
-            int LocSpeed = Line.IndexOf("SPEED", LocFix);
-            if (LocSpeed != -1)
+            int LocFix = Line.IndexOf(FIX.Trim());
+            if (LocFix != -1)
             {
-                LocNextFix = Line.IndexOf("FIX", LocFix);
-                if ( (LocNextFix > LocSpeed) || (LocNextFix == -1) )
+                int LocSpeed = Line.IndexOf("SPEED", LocFix);
+                if (LocSpeed != -1)
                 {
-                    result = Line.Substring(LocSpeed + 6, 3);
+                    LocNextFix = Line.IndexOf("FIX", LocFix);
+                    if ((LocNextFix > LocSpeed) || (LocNextFix == -1))
+                    {
+                        result = Line.Substring(LocSpeed + 6, 3);
+                    }
                 }
             }
             return result;
         }
 
-        private static string AltAtRestrict(string Line, string FIX)
-        {
-            // Returns an At or Above restriction, if it exists
-            string result = string.Empty;
-            int LocFix = Line.IndexOf(FIX);
-            result = Line.Substring(LocFix + FIX.Length, 6).Trim();
-            if (Line.All(char.IsDigit))
-                return result;
-            else
-                return string.Empty;
-        }
-
-        private static string AoARestrict (string Line, string FIX)
+        private static string AltAtRestrict(string FIX)
         {
             // Returns an At or Above restriction, if it exists
             string result = string.Empty; int LocNextFix;
-            int LocFix = Line.IndexOf(FIX);
-            int LocAOA = Line.IndexOf("AT OR ABOVE", LocFix);
-            if (LocAOA != -1)
+            int LocFix = Line.IndexOf(FIX.Trim());
+            if (LocFix != -1)
             {
-                LocNextFix = Line.IndexOf("FIX", LocFix);
-                if (LocNextFix == -1)
+                int LocAOA = Line.IndexOf("AT", LocFix);
+                if (LocAOA != -1)
                 {
-                    result = Line.Substring(LocAOA + 11, 7).Trim();
-                }
-                else if (LocNextFix > LocAOA)
-                {
-                    result = Line.Substring(LocAOA + 11, Line.IndexOf(" ", LocAOA + 11)).Trim();
+                    LocNextFix = Line.IndexOf("FIX", LocFix);
+                    if (LocNextFix == -1)
+                    {
+                        result = Line.Substring(LocAOA + 2, 7).Trim();
+                    }
+                    else if (LocNextFix > LocAOA)
+                    {
+                        result = Line.Substring(LocAOA + 2, Line.IndexOf(" ", LocAOA + 2)).Trim();
+                    }
+                    if (!result.All(char.IsDigit)) result = string.Empty;
                 }
             }
             return result;
         }
 
-        private static string AoBRestrict(string Line, string FIX)
+        private static string AoARestrict (string FIX)
         {
             // Returns an At or Above restriction, if it exists
             string result = string.Empty; int LocNextFix;
-            int LocFix = Line.IndexOf(FIX);
-            int LocAOB = Line.IndexOf("AT OR BELOW", LocFix);
-            if (LocAOB != -1)
+            int LocFix = Line.IndexOf(FIX.Trim());
+            if (LocFix != -1)
             {
-                LocNextFix = Line.IndexOf("FIX", LocFix);
-                if (LocNextFix == -1)
+                int LocAOA = Line.IndexOf("AT OR ABOVE", LocFix);
+                if (LocAOA != -1)
                 {
-                    result = Line.Substring(LocAOB + 11, 7).Trim();
+                    LocNextFix = Line.IndexOf("FIX", LocFix);
+                    if (LocNextFix == -1)
+                    {
+                        result = Line.Substring(LocAOA + 11, 7).Trim();
+                    }
+                    else if (LocNextFix > LocAOA)
+                    {
+                        result = Line.Substring(LocAOA + 11, Line.IndexOf(" ", LocAOA + 11)).Trim();
+                    }
                 }
-                else if (LocNextFix > LocAOB)
+            }
+            return result;
+        }
+
+        private static string AoBRestrict(string FIX)
+        {
+            // Returns an At or Above restriction, if it exists
+            string result = string.Empty; int LocNextFix;
+            int LocFix = Line.IndexOf(FIX.Trim());
+            if (LocFix != -1)
+            {
+                int LocAOB = Line.IndexOf("AT OR BELOW", LocFix);
+                if (LocAOB != -1)
                 {
-                    result = Line.Substring(LocAOB + 11, Line.IndexOf(" ", LocAOB + 11)).Trim();
+                    LocNextFix = Line.IndexOf("FIX", LocFix);
+                    if (LocNextFix == -1)
+                    {
+                        result = Line.Substring(LocAOB + 11, 7).Trim();
+                    }
+                    else if (LocNextFix > LocAOB)
+                    {
+                        result = Line.Substring(LocAOB + 11, Line.IndexOf(" ", LocAOB + 11)).Trim();
+                    }
                 }
             }
             return result;
@@ -587,9 +614,9 @@ namespace SCTBuilder
         {
             // Returns an At or Above restriction, if it exists
             string result = string.Empty;
-            if (Line.IndexOf(Keyword) != 0)
+            if (Line.IndexOf(Keyword) != -1)
             {
-                for (int h = 1; h <= Words.Count; h++)
+                for (int h = 1; h < Words.Count; h++)
                 {
                     if (Words[h] == Keyword)
                     {
@@ -601,43 +628,51 @@ namespace SCTBuilder
             return result;
         }
 
+        private static string GetLevel()
+        {
+            string result = string.Empty;
+            if ((Line.Length != 0) && (Line.Substring(0, 2) != "//"))    // Blank line or comment
+            {
+                if (Line.Substring(0, 1) == " ") result = "Content";
+                else if (Line.Substring(0, 1) == "  ") result = "Addenda";
+                else result = "Title";
+            }
+            return result;
+        }
+
+        private static string GetLineID()
+        {
+            string temp = Line.Trim();
+            int Loc1 = temp.IndexOf(" ");
+            if (Loc1 != -1)
+                return temp.Substring(0, temp.IndexOf(" "));
+            else
+                return temp;
+        }
+
         private static string[] ParseLine()
         {
             // Parse the line into individual words
             // First word indicates level: Title, Content, Addenda
+            // Blank and commens have already been skipped
             List<string> Words = new List<string>();
-            if ( (Line.Length != 0) && (Line.Substring(0, 2) != "//") )    // Blank line or comment
-            {
-                if (Line.Substring(0, 1) == " ") Words.Add("Content");
-                else if (Line.Substring(0, 1) == "  ") Words.Add("Addenda");
-                else Words.Add("Title");
-
-                Line = Line.Trim();                 // Remove the whitespace
-                // Single Word
-                int Loc1 = Line.IndexOf(" ");
-                if (Loc1 == -1)
+            string temp = Line;
+            int Loc1;
+            // Single Word
+                while (temp.Length != 0)
                 {
-                    Words.Add(Line);
-                }
-                else
-                // Multiple Words
-                {
-                    while (Line.Length != 0)
+                    Loc1 = temp.IndexOf(" ");
+                    if (Loc1 != -1)
                     {
-                        Loc1 = Line.IndexOf(" ");
-                        if (Loc1 != 0)
-                        {
-                            Words.Add(Line.Substring(0, Loc1).Trim());
-                            Line = Line.Substring(Loc1).Trim();
-                        }
-                        else
-                        {
-                            Words.Add(Line.Trim());
-                            Line = string.Empty;
-                        }
+                        Words.Add(temp.Substring(0, Loc1).Trim());
+                        temp = temp.Substring(Loc1).Trim();
+                    }
+                    else
+                    {
+                        Words.Add(temp.Trim());
+                        temp = string.Empty;
                     }
                 }
-            }
             return Words.ToArray();
         }
 

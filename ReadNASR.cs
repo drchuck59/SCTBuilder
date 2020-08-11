@@ -189,7 +189,7 @@ namespace SCTBuilder
                     }
                 }
             }
-            // Console.WriteLine("FIX rows read: " + FIXtable.Rows.Count.ToString());
+            Console.WriteLine("FIX rows read: " + FIXtable.Rows.Count.ToString());
         }
         public static void FillAPT()
         {
@@ -219,7 +219,6 @@ namespace SCTBuilder
                             //    Console.WriteLine("ReadNASR:FillAPT found VPA");
                             FacType = Extensions.Right(tempID, 1);
                             tempOpen = Line.Substring(840, 2).Trim() == "O";
-
                             if ((FacType.IndexOfAny(FacilityType) != -1) && (tempOpen))     // Only operational APTs of "A", "H" and "C"
                             {
                                 tempARTCC = Line.Substring(674, 4).Trim();
@@ -555,7 +554,7 @@ namespace SCTBuilder
             string FullFilename = SCTcommon.GetFullPathname(FolderMgt.DataFolder, "STARDP.txt");
             bool isSid; string Line; int Seqno = 0; double Lat1; double Lon1;
             string SSDcode; string TransCode; int Loc; string FixType; string NavAid;
-            string SSDname; string TransitionName; string SSDID;
+            string SSDname; string TransitionName; string SSDID; int Counter = 0;
             using (StreamReader reader = new StreamReader(FullFilename))
             {
                 while ((Line = reader.ReadLine()) != null)
@@ -565,12 +564,8 @@ namespace SCTBuilder
                     Seqno += 10;
                     SSDname = Line.Substring(51, 110).Trim();
                     NavAid = Line.Substring(30, 6).Trim();
-                    if (NavAid == "CWRLD")
-                        Debug.WriteLine("CWRLD");
                     Lat1 = Conversions.String2DecDeg(Line.Substring(13, 8).Trim());           // Latitude
-                    //Debug.WriteLine("Lat: " + Line.Substring(13, 8).Trim() + " Dec: " + Lat1.ToString());
                     Lon1 = Conversions.String2DecDeg(Line.Substring(21, 9).Trim());           // Longitude
-                    //Debug.WriteLine("Lon: " + Line.Substring(21, 9).Trim() + " Dec: " + Lon1.ToString());
                     FixType = Line.Substring(10, 2).Trim();
                     TransitionName = string.Empty;
                     // If present, this string identifies a new block or Transition
@@ -582,6 +577,7 @@ namespace SCTBuilder
                             TransitionName = SSDname;
                             SSDname = string.Empty;
                         }
+                        else Counter++;
                         // Get the corresponding SSDcode
                         SSDcode = Line.Substring(38, 13).Trim();
                         // Radar only SIDs don't get a computer code
@@ -625,7 +621,9 @@ namespace SCTBuilder
                         AddFixes(SSD, FixItems);
                 }
             }
+            Console.WriteLine("SSD rows read: " + Counter.ToString());
         }
+
         public static bool FillLocalSectors()
         {
             string Line; string Info; string SectorID = string.Empty; string SectorName = string.Empty;
@@ -827,10 +825,6 @@ namespace SCTBuilder
                     newrow.EndEdit();
                 }
             }
-            //DataTable dataTable = dvSUA.ToTable(true, "Category");
-            //foreach (DataRow dataRow in dataTable.Rows)
-            //    Console.WriteLine(dataRow[0]);
-            //dataTable.Dispose();
         }
     }
 }

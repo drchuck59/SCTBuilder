@@ -7,9 +7,6 @@ using System.Windows.Forms;
 using System.ComponentModel;
 using System.Media;
 using System.Drawing;
-using System.Threading.Tasks;
-using Microsoft.CodeAnalysis.CSharp;
-using System.Data.Common;
 
 namespace SCTBuilder
 {
@@ -36,6 +33,7 @@ namespace SCTBuilder
         static public DataTable NGFixes = new SCTdata.NGFixesDataTable();
         static public DataTable NGRTE = new SCTdata.NGRTEDataTable();
         static public DataTable NGNavAID = new SCTdata.NGNavAIDDataTable();
+        static public DataTable POFdata = new SCTdata.POFdataDataTable();
         static public DataSet SCT = new SCTdata();
         static public bool ExitClicked = false;
         static public bool NGexists = false;
@@ -73,6 +71,7 @@ namespace SCTBuilder
             {
                 // GOOD FILE - Does the DATA match the last used AIRAC?
                 int dataAIRAC = ReadNASR.AIRAC();
+                Console.WriteLine("Done reading NASR AIRAC " + dataAIRAC);
                 if (dataAIRAC != iniAIRAC)
                 {
                     MismatchedXMLmessage();
@@ -201,7 +200,6 @@ namespace SCTBuilder
         {
             Debug.WriteLine("Setting Form1 Defaults...");
             UpdateFolderMgt(toFolderMgt: false);
-            LoadMenuPreferences();
             if (LoadARTCCComboBox() != 0)           // Populates the combobox
             {
                 UpdateARTCCComboBox();              // Sets the combobox to the last Sponsor ARTCC
@@ -226,17 +224,6 @@ namespace SCTBuilder
                 CenterLatTextBox.Text = InfoSection.CenterLatitude_SCT;
             if (InfoSection.CenterLongitude_Dec != 0)
                 CenterLonTextBox.Text = InfoSection.CenterLongitude_SCT;
-        }
-
-        private void LoadMenuPreferences()
-        {
-            drawFixSymbolsStripMenuItem.Checked = InfoSection.DrawFixSymbolsOnDiagrams;
-            drawFIXLabelsOnDiagramsToolStripMenuItem.Checked = InfoSection.DrawFixLabelsOnDiagrams;
-            includeSidStarReferencesToolStripMenuItem.Checked = InfoSection.IncludeSidStarReferences;
-            oneFilePerSIDSTARToolStripMenuItem.Checked = InfoSection.OneFilePerSidStar;
-            useFixesAsCoordinatesToolStripMenuItem.Checked = InfoSection.UseFixesAsCoords;
-            drawAltitudeRestrictionsOnDiagramsToolStripMenuItem.Checked = InfoSection.DrawAltRestrictsOnDiagrams;
-            drawSpeedRestrictionsOnDiagramsToolStripMenuItem.Checked = InfoSection.DrawSpeedRestrictsOnDiagrams;
         }
 
         private int LoadARTCCComboBox()
@@ -343,7 +330,7 @@ namespace SCTBuilder
             {
                 if (InfoSection.DefaultAirport.Length != 0)
                 {
-                    Debug.WriteLine("Looking for " + InfoSection.DefaultAirport + " in CboAirport");
+                    // Debug.WriteLine("Looking for " + InfoSection.DefaultAirport + " in CboAirport");
                     FoundItem = AirportComboBox.FindStringExact(InfoSection.DefaultAirport);
                 }
                 if (FoundItem != -1) AirportComboBox.SelectedIndex = FoundItem;
@@ -485,7 +472,7 @@ namespace SCTBuilder
                 SelectedTabControl.SelectedTab = SelectedTabControl.TabPages[lastTab];
                 UpdateLabel("");
                 Refresh();
-                SCTtoolStripButton.Enabled = true;
+                SCTtoolStripButton.Enabled = ESEToolStripButton.Enabled = true;
             }
             else
             {
@@ -1165,7 +1152,7 @@ namespace SCTBuilder
                 SCTtoolStripButton.ToolTipText = "Items missing in [Info] section?";
             }
             result = InfoPopulated & CheckedItemsHaveSelections;
-            SCTtoolStripButton.Enabled = result;
+            SCTtoolStripButton.Enabled = ESEToolStripButton.Enabled = result;
             return result;
         }
 
@@ -1314,8 +1301,8 @@ namespace SCTBuilder
             SCTchecked.ChkSUA_Danger = SUA_DangerCheckBox.Checked;
             SCTchecked.ChkSUA_Prohibited = SUA_ProhibitedCheckBox.Checked;
             SCTchecked.ChkSUA_Restricted = SUA_RestrictedCheckBox.Checked;
-            InfoSection.UseFixesAsCoords = useFixesAsCoordinatesToolStripMenuItem.Checked;
-            InfoSection.UseNaviGraph = includeNaviGraphDataToolStripMenuItem.Checked;
+            SCTchecked.ChkES_SCTfile = ESdataCheckBox.Checked;
+            SCTchecked.ChkES_SSDfile = ESSSDCheckBox.Checked;
         }
         private void GetChecked()
         {
@@ -1336,8 +1323,8 @@ namespace SCTBuilder
             SUA_DangerCheckBox.Checked = SCTchecked.ChkSUA_Danger;
             SUA_ProhibitedCheckBox.Checked = SCTchecked.ChkSUA_Prohibited;
             SUA_RestrictedCheckBox.Checked = SCTchecked.ChkSUA_Restricted;
-            useFixesAsCoordinatesToolStripMenuItem.Checked = InfoSection.UseFixesAsCoords;
-            includeNaviGraphDataToolStripMenuItem.Checked = InfoSection.UseNaviGraph;
+            ESSSDCheckBox.Checked = SCTchecked.ChkES_SSDfile;
+            ESdataCheckBox.Checked = SCTchecked.ChkES_SCTfile;
         }
 
         private void SetSquareAndOffset()
@@ -1412,11 +1399,6 @@ namespace SCTBuilder
             Form form = new LineGenerator();
             form.ShowDialog(this);
             form.Dispose();
-        }
-
-        private void ConfirmOverwriteOfFilesToolStripMenuItem_CheckedChanged(object sender, EventArgs e)
-        {
-            SCTchecked.ChkConfirmOverwrite = ConfirmOverwriteOfFilesToolStripMenuItem.Checked;
         }
 
         private void IdentifierTextBox_TextChanged(object sender, EventArgs e)
@@ -1495,6 +1477,7 @@ namespace SCTBuilder
                     SouthLimitTextBox.Text = Conversions.DecDeg2SCT(SLat, true);
                 }
             }
+            SetSquareAndOffset();
             CheckARTCCAsCenterButton();
         }
 
@@ -1524,6 +1507,7 @@ namespace SCTBuilder
                     NorthLimitTextBox.Text = Conversions.DecDeg2SCT(NLat, true);
                 }
             }
+            SetSquareAndOffset();
             CheckARTCCAsCenterButton();
         }
 
@@ -1553,6 +1537,7 @@ namespace SCTBuilder
                     WestLimitTextBox.Text = Conversions.DecDeg2SCT(WLon, false);
                 }
             }
+            SetSquareAndOffset();
             CheckARTCCAsCenterButton();
         }
 
@@ -1582,6 +1567,7 @@ namespace SCTBuilder
                     EastLimitTextBox.Text = Conversions.DecDeg2SCT(ELon, false);
                 }
             }
+            SetSquareAndOffset();
             CheckARTCCAsCenterButton();
         }
 
@@ -1665,12 +1651,16 @@ namespace SCTBuilder
 
         private void CenterSquareButton_Click(object sender, EventArgs e)
         {
-            if ((NorthLimitTextBox.TextLength != 0) && (SouthLimitTextBox.TextLength != 0) &&
-                (EastLimitTextBox.TextLength != 0) && (WestLimitTextBox.TextLength != 0))
+            SetSquareAndOffset();
+            if ((Math.Abs(InfoSection.NorthSquare) >= 0) && (Math.Abs(InfoSection.NorthSquare) <= 90) &&
+                (Math.Abs(InfoSection.SouthSquare) >= 0) && (Math.Abs(InfoSection.SouthSquare) <= 90) &&
+                (Math.Abs(InfoSection.EastSquare) >= 0) && (Math.Abs(InfoSection.EastSquare) <= 180) &&
+                (Math.Abs(InfoSection.WestSquare) >= 0) && (Math.Abs(InfoSection.WestSquare) <= 180))
                 CenterSquare();
             else
             {
-                Msg = "Must have value in all Square textboxes to find center.";
+                Msg = "Must have value in all Square textboxes to find center." + 
+                    "(Latitude -90 to 90, Longitude -180 to 180)";
                 SCTcommon.SendMessage(Msg);
             }
         }
@@ -1788,11 +1778,6 @@ namespace SCTBuilder
             ConvertDMS.Show();
         }
 
-        private void IncludeNaviGraphDataToolStripMenuItem_CheckedChanged(object sender, EventArgs e)
-        {
-            InfoSection.UseNaviGraph = includeNaviGraphDataToolStripMenuItem.Checked;
-        }
-
         private void ARTCCComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             CenterARTCCButton.Enabled = (ARTCCComboBox.SelectedIndex != -1);
@@ -1890,6 +1875,13 @@ namespace SCTBuilder
         {
             // ESE files require use of Navigraph data
             SendMessage("Stay tuned for coming attractions!");
+
+            ESEToolStripButton.ToolTipText = "Please wait for the completion message."; Refresh();
+            UpdateLabel("Writing files. Please wait for completion message.");
+            UseWaitCursor = true;
+            ESEoutput.WriteESE();
+            UpdateLabel("");
+            UseWaitCursor = false;
         }
 
         private void DgvSID_CellContentClick(object sender, DataGridViewCellEventArgs e)
@@ -1910,21 +1902,6 @@ namespace SCTBuilder
                 rowIndex = dgvSTAR.CurrentCell.RowIndex;
                 SSDIDvalue = dgvSTAR.Rows[rowIndex].Cells[3].Value.ToString();
             }
-        }
-
-        private void useFixesForCoordinatesToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            InfoSection.UseFixesAsCoords = useFixesAsCoordinatesToolStripMenuItem.Checked;
-        }
-
-        private void drawAltitudeRestrictionsOnDiagramsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            InfoSection.DrawAltRestrictsOnDiagrams = drawAltitudeRestrictionsOnDiagramsToolStripMenuItem.Checked;
-        }
-
-        private void drawSpeedRestrictionsOnDiagramsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            InfoSection.DrawSpeedRestrictsOnDiagrams = drawSpeedRestrictionsOnDiagramsToolStripMenuItem.Checked;
         }
 
         private void dgvSTAR_CellValueChanged(object sender, DataGridViewCellEventArgs e)
@@ -1966,11 +1943,6 @@ namespace SCTBuilder
             SendMessage("SCT Builder preferences saved.");
         }
 
-        private void oneFilePerSIDSTARToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            InfoSection.OneFilePerSidStar = oneFilePerSIDSTARToolStripMenuItem.Checked;
-        }
-
         private void exitProgramToolStripMenuItem_Click(object sender, EventArgs e)
         {
             SetChecked();
@@ -1983,21 +1955,6 @@ namespace SCTBuilder
         private void OceanicCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             SCTchecked.ChkOceanic = OceanicCheckBox.Checked;
-        }
-
-        private void drawFIXLabelsOnDiagramsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            InfoSection.DrawFixLabelsOnDiagrams = drawFIXLabelsOnDiagramsToolStripMenuItem.Checked;
-        }
-
-        private void drawFixSymbolsStripMenuItem_Click(object sender, EventArgs e)
-        {
-            InfoSection.DrawFixSymbolsOnDiagrams = drawFixSymbolsStripMenuItem.Checked;
-        }
-
-        private void includeSidStarReferencesToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            InfoSection.IncludeSidStarReferences = includeSidStarReferencesToolStripMenuItem.Checked;
         }
 
         private void SSDGeneratorToolStripMenuItem_Click(object sender, EventArgs e)
@@ -2025,6 +1982,52 @@ namespace SCTBuilder
         private void ClassOtherCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             LoadAirportComboBox();
+        }
+
+        private void preferencesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Form form = new Preferences();
+            form.ShowDialog(this);
+            form.Dispose();
+        }
+
+        private void arcGeneratorToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Form form = new ArcGenerator();
+            form.ShowDialog(this);
+            form.Dispose();
+        }
+
+        private void pOFManagerToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Form form = new POFmanager();
+            form.ShowDialog(this);
+            form.Dispose();
+        }
+
+        private void ESdataCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            SCTchecked.ChkES_SCTfile = ESdataCheckBox.Checked;
+            if (SCTchecked.ChkES_SSDfile)
+            {
+                APTsCheckBox.Checked = true;
+                RWYsCheckBox.Checked = true;
+                VORsCheckBox.Checked = true;
+                NDBsCheckBox.Checked = true;
+                FIXesCheckBox.Checked = true;
+            }
+            SetChecked();
+        }
+
+        private void ESSSDCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            SCTchecked.ChkES_SSDfile = ESSSDCheckBox.Checked;
+            if (SCTchecked.ChkES_SSDfile)
+            {
+                APTsCheckBox.Checked = true;
+                LimitAPT2ARTCCCheckBox.Checked = true;
+            }
+            SetChecked();
         }
     }
 }

@@ -34,7 +34,8 @@ namespace SCTBuilder
             WriteXmlElement(xml, "DefaultAirport", InfoSection.DefaultAirport.ToString());
             WriteXmlElement(xml, "FacilityEngineer", InfoSection.FacilityEngineer.ToString());
             WriteXmlElement(xml, "AsstFacilityEngineer", InfoSection.AsstFacilityEngineer.ToString());
-            WriteXmlElement(xml, "ChkAll", SCTchecked.ChkALL.ToString());
+            WriteXmlElement(xml, "ChkConfirmOverwrite", SCTchecked.ChkConfirmOverwrite.ToString());
+            WriteXmlElement(xml, "ChkAll", SCTchecked.ChkOneFile.ToString());
             WriteXmlElement(xml, "ChkAPT", SCTchecked.ChkAPT.ToString());
             WriteXmlElement(xml, "ChkLimitAPT2ARTCC", SCTchecked.LimitAPT2ARTC.ToString());
             WriteXmlElement(xml, "ChkARB", SCTchecked.ChkARB.ToString());
@@ -53,6 +54,8 @@ namespace SCTBuilder
             WriteXmlElement(xml, "ChkSUA_Prohibited", SCTchecked.ChkSUA_Prohibited.ToString());
             WriteXmlElement(xml, "ChkSUA_Restricted", SCTchecked.ChkSUA_Restricted.ToString());
             WriteXmlElement(xml, "ChkVOR", SCTchecked.ChkVOR.ToString());
+            WriteXmlElement(xml, "ChkES_SCTfile", SCTchecked.ChkES_SCTfile.ToString());
+            WriteXmlElement(xml, "ChkES_SSDfile", SCTchecked.ChkES_SSDfile.ToString());
             WriteXmlElement(xml, "ChkOceanic", SCTchecked.ChkOceanic.ToString());
             WriteXmlElement(xml, "UseFixesAsCoords", InfoSection.UseFixesAsCoords.ToString());
             WriteXmlElement(xml, "UseNaviGraphData", InfoSection.UseNaviGraph.ToString());
@@ -142,7 +145,10 @@ namespace SCTBuilder
                                 else InfoSection.AsstFacilityEngineer = string.Empty;
                                 break;
                             case "ChkALL":
-                                SCTchecked.ChkALL = Convert.ToBoolean(value);
+                                SCTchecked.ChkOneFile = Convert.ToBoolean(value);
+                                break;
+                            case "ChkConfirmOverwrite":
+                                SCTchecked.ChkConfirmOverwrite = Convert.ToBoolean(value);
                                 break;
                             case "ChkAPT":
                                 SCTchecked.ChkAPT = Convert.ToBoolean(value);
@@ -194,6 +200,12 @@ namespace SCTBuilder
                                 break;
                             case "ChkSUA_Restricted":
                                 SCTchecked.ChkSUA_Restricted = Convert.ToBoolean(value);
+                                break;
+                            case "ChkES_SCTfile":
+                                SCTchecked.ChkES_SCTfile = Convert.ToBoolean(value);
+                                break;
+                            case "ChkES_SSDfile":
+                                SCTchecked.ChkES_SSDfile = Convert.ToBoolean(value);
                                 break;
                             case "ChkVOR":
                                 SCTchecked.ChkVOR = Convert.ToBoolean(value);

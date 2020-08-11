@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SSDGenerator));
             this.FixImportGroupBox = new System.Windows.Forms.GroupBox();
             this.label1 = new System.Windows.Forms.Label();
             this.FixListDataGridView = new System.Windows.Forms.DataGridView();
@@ -260,6 +261,7 @@
             this.Controls.Add(this.DrawFixSymbolsOnDiagramsCheckBox);
             this.Controls.Add(this.IncludeSidStarReferencesCheckBox);
             this.Controls.Add(this.FixImportGroupBox);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "SSDGenerator";
             this.Text = "SID/STAR Generator";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.SSDGenerator_FormClosing);

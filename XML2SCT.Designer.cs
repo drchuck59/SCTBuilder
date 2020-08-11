@@ -56,9 +56,10 @@
             // 
             this.XML2SCTLabel.AutoSize = true;
             this.XML2SCTLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.XML2SCTLabel.Location = new System.Drawing.Point(12, 9);
+            this.XML2SCTLabel.Location = new System.Drawing.Point(8, 6);
+            this.XML2SCTLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.XML2SCTLabel.Name = "XML2SCTLabel";
-            this.XML2SCTLabel.Size = new System.Drawing.Size(272, 29);
+            this.XML2SCTLabel.Size = new System.Drawing.Size(178, 20);
             this.XML2SCTLabel.TabIndex = 0;
             this.XML2SCTLabel.Text = "XML to SCT Conversion\r\n";
             // 
@@ -66,18 +67,20 @@
             // 
             this.XML2SCTInstructionLabel.AutoSize = true;
             this.XML2SCTInstructionLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.XML2SCTInstructionLabel.Location = new System.Drawing.Point(36, 61);
+            this.XML2SCTInstructionLabel.Location = new System.Drawing.Point(24, 40);
+            this.XML2SCTInstructionLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.XML2SCTInstructionLabel.Name = "XML2SCTInstructionLabel";
-            this.XML2SCTInstructionLabel.Size = new System.Drawing.Size(711, 104);
+            this.XML2SCTInstructionLabel.Size = new System.Drawing.Size(480, 72);
             this.XML2SCTInstructionLabel.TabIndex = 1;
             this.XML2SCTInstructionLabel.Text = resources.GetString("XML2SCTInstructionLabel.Text");
             // 
             // XMLOpenFileDialogButton
             // 
             this.XMLOpenFileDialogButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.XMLOpenFileDialogButton.Location = new System.Drawing.Point(564, 186);
+            this.XMLOpenFileDialogButton.Location = new System.Drawing.Point(376, 121);
+            this.XMLOpenFileDialogButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.XMLOpenFileDialogButton.Name = "XMLOpenFileDialogButton";
-            this.XMLOpenFileDialogButton.Size = new System.Drawing.Size(55, 34);
+            this.XMLOpenFileDialogButton.Size = new System.Drawing.Size(37, 22);
             this.XMLOpenFileDialogButton.TabIndex = 12;
             this.XMLOpenFileDialogButton.Text = "...";
             this.XMLOpenFileDialogButton.UseVisualStyleBackColor = true;
@@ -86,9 +89,10 @@
             // SCTFileTextBox
             // 
             this.SCTFileTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.SCTFileTextBox.Location = new System.Drawing.Point(194, 223);
+            this.SCTFileTextBox.Location = new System.Drawing.Point(129, 145);
+            this.SCTFileTextBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.SCTFileTextBox.Name = "SCTFileTextBox";
-            this.SCTFileTextBox.Size = new System.Drawing.Size(425, 31);
+            this.SCTFileTextBox.Size = new System.Drawing.Size(285, 23);
             this.SCTFileTextBox.TabIndex = 11;
             this.toolTip1.SetToolTip(this.SCTFileTextBox, "If no output file is entered, a new file will be created with the same location a" +
         "nd name of the XML file adding the extension \"SCT\"");
@@ -97,18 +101,20 @@
             // 
             this.txtOutputFolder_label.AutoSize = true;
             this.txtOutputFolder_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtOutputFolder_label.Location = new System.Drawing.Point(43, 226);
+            this.txtOutputFolder_label.Location = new System.Drawing.Point(29, 147);
+            this.txtOutputFolder_label.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.txtOutputFolder_label.Name = "txtOutputFolder_label";
-            this.txtOutputFolder_label.Size = new System.Drawing.Size(154, 25);
+            this.txtOutputFolder_label.Size = new System.Drawing.Size(100, 17);
             this.txtOutputFolder_label.TabIndex = 10;
             this.txtOutputFolder_label.Text = "SCT Filename:";
             // 
             // SourceFileTextBox
             // 
             this.SourceFileTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.SourceFileTextBox.Location = new System.Drawing.Point(195, 185);
+            this.SourceFileTextBox.Location = new System.Drawing.Point(130, 120);
+            this.SourceFileTextBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.SourceFileTextBox.Name = "SourceFileTextBox";
-            this.SourceFileTextBox.Size = new System.Drawing.Size(361, 31);
+            this.SourceFileTextBox.Size = new System.Drawing.Size(242, 23);
             this.SourceFileTextBox.TabIndex = 9;
             this.SourceFileTextBox.DoubleClick += new System.EventHandler(this.XMLOpenFileDialogButton_Click);
             // 
@@ -116,18 +122,20 @@
             // 
             this.txtDataFolder_label.AutoSize = true;
             this.txtDataFolder_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtDataFolder_label.Location = new System.Drawing.Point(40, 191);
+            this.txtDataFolder_label.Location = new System.Drawing.Point(27, 124);
+            this.txtDataFolder_label.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.txtDataFolder_label.Name = "txtDataFolder_label";
-            this.txtDataFolder_label.Size = new System.Drawing.Size(156, 25);
+            this.txtDataFolder_label.Size = new System.Drawing.Size(101, 17);
             this.txtDataFolder_label.TabIndex = 8;
             this.txtDataFolder_label.Text = "XML Filename:";
             // 
             // ConvertXML2SCTButton
             // 
             this.ConvertXML2SCTButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ConvertXML2SCTButton.Location = new System.Drawing.Point(625, 185);
+            this.ConvertXML2SCTButton.Location = new System.Drawing.Point(417, 120);
+            this.ConvertXML2SCTButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.ConvertXML2SCTButton.Name = "ConvertXML2SCTButton";
-            this.ConvertXML2SCTButton.Size = new System.Drawing.Size(132, 69);
+            this.ConvertXML2SCTButton.Size = new System.Drawing.Size(88, 45);
             this.ConvertXML2SCTButton.TabIndex = 14;
             this.ConvertXML2SCTButton.Text = "Convert file";
             this.ConvertXML2SCTButton.UseVisualStyleBackColor = true;
@@ -135,9 +143,10 @@
             // 
             // resultTextBox
             // 
-            this.resultTextBox.Location = new System.Drawing.Point(47, 356);
+            this.resultTextBox.Location = new System.Drawing.Point(31, 231);
+            this.resultTextBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.resultTextBox.Name = "resultTextBox";
-            this.resultTextBox.Size = new System.Drawing.Size(710, 26);
+            this.resultTextBox.Size = new System.Drawing.Size(475, 20);
             this.resultTextBox.TabIndex = 15;
             this.resultTextBox.Visible = false;
             // 
@@ -151,9 +160,11 @@
             this.groupBox1.Controls.Add(this.RunwayRadioButton);
             this.groupBox1.Controls.Add(this.AirportRadioButton);
             this.groupBox1.Controls.Add(this.FIXRadioButton);
-            this.groupBox1.Location = new System.Drawing.Point(48, 260);
+            this.groupBox1.Location = new System.Drawing.Point(32, 169);
+            this.groupBox1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(704, 90);
+            this.groupBox1.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.groupBox1.Size = new System.Drawing.Size(469, 58);
             this.groupBox1.TabIndex = 16;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Desired SCT format";
@@ -161,9 +172,10 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(15, 56);
+            this.label1.Location = new System.Drawing.Point(10, 36);
+            this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(507, 20);
+            this.label1.Size = new System.Drawing.Size(341, 13);
             this.label1.TabIndex = 8;
             this.label1.Text = "<======== Labels are automatically added if applicable. ==========>";
             // 
@@ -171,9 +183,10 @@
             // 
             this.SSDLabelsCheckBox.AutoSize = true;
             this.SSDLabelsCheckBox.Enabled = false;
-            this.SSDLabelsCheckBox.Location = new System.Drawing.Point(567, 52);
+            this.SSDLabelsCheckBox.Location = new System.Drawing.Point(378, 34);
+            this.SSDLabelsCheckBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.SSDLabelsCheckBox.Name = "SSDLabelsCheckBox";
-            this.SSDLabelsCheckBox.Size = new System.Drawing.Size(123, 24);
+            this.SSDLabelsCheckBox.Size = new System.Drawing.Size(85, 17);
             this.SSDLabelsCheckBox.TabIndex = 7;
             this.SSDLabelsCheckBox.Text = "Draw Labels";
             this.toolTip1.SetToolTip(this.SSDLabelsCheckBox, "Lebals are onto the diagrams. For many labels this can take a very long time.");
@@ -182,9 +195,10 @@
             // SSDRadioButton
             // 
             this.SSDRadioButton.AutoSize = true;
-            this.SSDRadioButton.Location = new System.Drawing.Point(567, 22);
+            this.SSDRadioButton.Location = new System.Drawing.Point(378, 14);
+            this.SSDRadioButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.SSDRadioButton.Name = "SSDRadioButton";
-            this.SSDRadioButton.Size = new System.Drawing.Size(110, 24);
+            this.SSDRadioButton.Size = new System.Drawing.Size(74, 17);
             this.SSDRadioButton.TabIndex = 5;
             this.SSDRadioButton.TabStop = true;
             this.SSDRadioButton.Text = "SID|STAR";
@@ -194,9 +208,10 @@
             // ARTCCRadioButton
             // 
             this.ARTCCRadioButton.AutoSize = true;
-            this.ARTCCRadioButton.Location = new System.Drawing.Point(434, 22);
+            this.ARTCCRadioButton.Location = new System.Drawing.Point(289, 14);
+            this.ARTCCRadioButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.ARTCCRadioButton.Name = "ARTCCRadioButton";
-            this.ARTCCRadioButton.Size = new System.Drawing.Size(127, 24);
+            this.ARTCCRadioButton.Size = new System.Drawing.Size(85, 17);
             this.ARTCCRadioButton.TabIndex = 4;
             this.ARTCCRadioButton.TabStop = true;
             this.ARTCCRadioButton.Text = "ARTCC|SUA";
@@ -205,9 +220,10 @@
             // AirwayRadioButton
             // 
             this.AirwayRadioButton.AutoSize = true;
-            this.AirwayRadioButton.Location = new System.Drawing.Point(348, 22);
+            this.AirwayRadioButton.Location = new System.Drawing.Point(232, 14);
+            this.AirwayRadioButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.AirwayRadioButton.Name = "AirwayRadioButton";
-            this.AirwayRadioButton.Size = new System.Drawing.Size(80, 24);
+            this.AirwayRadioButton.Size = new System.Drawing.Size(56, 17);
             this.AirwayRadioButton.TabIndex = 3;
             this.AirwayRadioButton.TabStop = true;
             this.AirwayRadioButton.Text = "Airway";
@@ -216,9 +232,10 @@
             // RunwayRadioButton
             // 
             this.RunwayRadioButton.AutoSize = true;
-            this.RunwayRadioButton.Location = new System.Drawing.Point(251, 22);
+            this.RunwayRadioButton.Location = new System.Drawing.Point(167, 14);
+            this.RunwayRadioButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.RunwayRadioButton.Name = "RunwayRadioButton";
-            this.RunwayRadioButton.Size = new System.Drawing.Size(91, 24);
+            this.RunwayRadioButton.Size = new System.Drawing.Size(64, 17);
             this.RunwayRadioButton.TabIndex = 2;
             this.RunwayRadioButton.TabStop = true;
             this.RunwayRadioButton.Text = "Runway";
@@ -227,9 +244,10 @@
             // AirportRadioButton
             // 
             this.AirportRadioButton.AutoSize = true;
-            this.AirportRadioButton.Location = new System.Drawing.Point(164, 22);
+            this.AirportRadioButton.Location = new System.Drawing.Point(109, 14);
+            this.AirportRadioButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.AirportRadioButton.Name = "AirportRadioButton";
-            this.AirportRadioButton.Size = new System.Drawing.Size(81, 24);
+            this.AirportRadioButton.Size = new System.Drawing.Size(55, 17);
             this.AirportRadioButton.TabIndex = 1;
             this.AirportRadioButton.TabStop = true;
             this.AirportRadioButton.Text = "Airport";
@@ -239,9 +257,10 @@
             // 
             this.FIXRadioButton.AutoSize = true;
             this.FIXRadioButton.Checked = true;
-            this.FIXRadioButton.Location = new System.Drawing.Point(19, 22);
+            this.FIXRadioButton.Location = new System.Drawing.Point(13, 14);
+            this.FIXRadioButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.FIXRadioButton.Name = "FIXRadioButton";
-            this.FIXRadioButton.Size = new System.Drawing.Size(139, 24);
+            this.FIXRadioButton.Size = new System.Drawing.Size(91, 17);
             this.FIXRadioButton.TabIndex = 0;
             this.FIXRadioButton.TabStop = true;
             this.FIXRadioButton.Text = "VOR|NDB|FIX";
@@ -252,10 +271,10 @@
             // XML2SCT
             // 
             this.AcceptButton = this.ConvertXML2SCTButton;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(533, 292);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.resultTextBox);
             this.Controls.Add(this.ConvertXML2SCTButton);
@@ -266,6 +285,8 @@
             this.Controls.Add(this.txtDataFolder_label);
             this.Controls.Add(this.XML2SCTInstructionLabel);
             this.Controls.Add(this.XML2SCTLabel);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.MaximizeBox = false;
             this.Name = "XML2SCT";
             this.Text = "FEBU -> XML 2 SCT Conversion";

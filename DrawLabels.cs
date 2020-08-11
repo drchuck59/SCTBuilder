@@ -242,7 +242,7 @@ namespace SCTBuilder
 
         private void LatTextBox_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if (Extensions.IsValidCoord(e.KeyChar, LatTextBox))
+            if (Extensions.IsValidDecCoordKey(e.KeyChar, LatTextBox))
                 e.Handled = false;
             else
                 e.Handled = true;

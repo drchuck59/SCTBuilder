@@ -420,7 +420,7 @@ namespace SCTBuilder
             set { outputFolder = value; }
         }
 
-        public static readonly string INIxml = Path.Combine(Path.GetTempPath(), "SCTbuilder.xml");
+        public static readonly string INIxml = Path.GetTempPath() + "SCTbuilder.xml";
 
     }
 
@@ -665,7 +665,7 @@ namespace SCTBuilder
         public static bool ChkRWY { get; set; }
         public static bool ChkSID { get; set; }
         public static bool ChkSTAR { get; set; }
-        public static bool ChkALL { get; set; }
+        public static bool ChkOneFile { get; set; }
         public static bool ChkSSDname { get; set; }
         public static bool ChkSUA { get; set; }
         public static bool ChkSUA_ClassB { get; set; }
@@ -675,6 +675,9 @@ namespace SCTBuilder
         public static bool ChkSUA_Prohibited { get; set; }
         public static bool ChkSUA_Restricted { get; set; }
         public static bool ChkConfirmOverwrite { get; set; }
+        public static bool IncludeSUAfile { get; set;  }
+        public static bool ChkES_SCTfile { get; set; }
+        public static bool ChkES_SSDfile { get; set; }
     }
 
     public static class CrossForm
