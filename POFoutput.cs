@@ -14,7 +14,7 @@ namespace SCTBuilder
 
         private void WritePOF(bool AsESE = false)
         {
-            string line = string.Empty;
+            string line = string.Empty; 
             int maxCol = 11; if (AsESE) maxCol += 8;
             // Open and write the lines
             string filename = FolderMgt.OutputFolder + CycleInfo.AIRAC + ".pof";
@@ -26,7 +26,7 @@ namespace SCTBuilder
                     // Loop the columns
                     for (int i = 0; i < maxCol; i++)
                     {
-                        line += POFentry[i].ToString() + ":";
+                        line += POFentry[i] + ":";
                     }
                     // Remove the last colon
                     line = line.Substring(0, line.Length - 1);

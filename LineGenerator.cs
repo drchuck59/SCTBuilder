@@ -609,7 +609,6 @@ namespace SCTBuilder
                 double[][] Lines = DashedLine(DashedLineRadioButton.Checked);
                 if (SSDRadioButton.Checked)
                 {
-                    System.Diagnostics.Debug.WriteLine(Lines.Length);
                     foreach (double[] Line in Lines)
                     {
                         if (Line[0] == -1)

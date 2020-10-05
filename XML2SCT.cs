@@ -46,19 +46,5 @@ namespace SCTBuilder
                 }
             }
         }
-
-        private void PrintValues(DataTable table, string label)
-        {
-            // Display the contents of the supplied DataTable:
-            Console.WriteLine(label);
-            foreach (DataRow row in table.Rows)
-            {
-                foreach (DataColumn column in table.Columns)
-                {
-                    Console.Write("\t{0}", row[column]);
-                }
-                Console.WriteLine();
-            }
-        }
     }
 }

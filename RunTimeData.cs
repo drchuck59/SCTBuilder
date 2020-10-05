@@ -554,6 +554,11 @@ namespace SCTBuilder
 
         public static double MagneticVariation       // Varies by location
         {
+            // East declination is positive; west is negative
+            // 'Heading' == True or Map, 'Bearing' == Magnetic
+            // True (map) Heading = Mag Bearing + Declination
+            // Magnetic Bearing = True Heading - Declination
+            // E deviations are positive, W deviations are negative
             get
             {
                 if (DefaultAirport.Length != 0)
@@ -665,7 +670,8 @@ namespace SCTBuilder
         public static bool ChkRWY { get; set; }
         public static bool ChkSID { get; set; }
         public static bool ChkSTAR { get; set; }
-        public static bool ChkOneFile { get; set; }
+        public static bool ChkOneVRCFile { get; set; }
+        public static bool ChkOneESFile { get; set; }
         public static bool ChkSSDname { get; set; }
         public static bool ChkSUA { get; set; }
         public static bool ChkSUA_ClassB { get; set; }

@@ -35,7 +35,8 @@ namespace SCTBuilder
             WriteXmlElement(xml, "FacilityEngineer", InfoSection.FacilityEngineer.ToString());
             WriteXmlElement(xml, "AsstFacilityEngineer", InfoSection.AsstFacilityEngineer.ToString());
             WriteXmlElement(xml, "ChkConfirmOverwrite", SCTchecked.ChkConfirmOverwrite.ToString());
-            WriteXmlElement(xml, "ChkAll", SCTchecked.ChkOneFile.ToString());
+            WriteXmlElement(xml, "ChkAll", SCTchecked.ChkOneVRCFile.ToString());
+            WriteXmlElement(xml, "ChkAll", SCTchecked.ChkOneESFile.ToString());
             WriteXmlElement(xml, "ChkAPT", SCTchecked.ChkAPT.ToString());
             WriteXmlElement(xml, "ChkLimitAPT2ARTCC", SCTchecked.LimitAPT2ARTC.ToString());
             WriteXmlElement(xml, "ChkARB", SCTchecked.ChkARB.ToString());
@@ -144,8 +145,11 @@ namespace SCTBuilder
                                     InfoSection.AsstFacilityEngineer = value;
                                 else InfoSection.AsstFacilityEngineer = string.Empty;
                                 break;
-                            case "ChkALL":
-                                SCTchecked.ChkOneFile = Convert.ToBoolean(value);
+                            case "ChkOneSCTFile":
+                                SCTchecked.ChkOneVRCFile = Convert.ToBoolean(value);
+                                break;
+                            case "ChkOneESFile":
+                                SCTchecked.ChkOneESFile = Convert.ToBoolean(value);
                                 break;
                             case "ChkConfirmOverwrite":
                                 SCTchecked.ChkConfirmOverwrite = Convert.ToBoolean(value);
@@ -301,7 +305,6 @@ namespace SCTBuilder
             // Must know if future or past AIRAC
             while (WorkingDate.AddDays(CycleInterval) <= Cycledate)
             {
-                //Console.WriteLine("AIRAC: " + CalcAIRAC(Convert.ToInt32(Convert.ToString(CycleYear).Substring(2, 2)), iCounter) + " Cycle: " + WorkingDate.ToShortDateString());
                 WorkingDate = WorkingDate.AddDays(CycleInterval);
                 if (CycleYear != WorkingDate.Year)
                 {
@@ -343,7 +346,6 @@ namespace SCTBuilder
                     iCounter += 1;
                     WorkingAIRAC = CalcAIRAC(WorkingDate.Year, iCounter);
                 }
-                // Console.WriteLine("AIRAC: " + WorkingAIRAC + " Cycle: " + WorkingDate.ToShortDateString());
             }
             result = WorkingDate;
             // OPTIONAL opportunity to save the data in the CycleInfo class

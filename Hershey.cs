@@ -161,7 +161,6 @@ namespace SCTBuilder
                 nextChar = LatLongCalc.RotatePoint(nextChar, origin, angle);
                 origin = nextChar;
             }
-            //Console.WriteLine(space + "; " + Message + Environment.NewLine + Result);
             return space + "; Label " + Message + cr + Result;
         }
 
@@ -200,7 +199,6 @@ namespace SCTBuilder
                     }
                 start = end;                            // No matter what happened, move End to Start
             }
-            // Console.WriteLine(Result);
             return result;                                      // Lat Long string to draw ONE character!  (Sheesh)
         }
     }

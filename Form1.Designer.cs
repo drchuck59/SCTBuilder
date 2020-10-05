@@ -73,6 +73,10 @@
             this.QuickSearchLabel = new System.Windows.Forms.Label();
             this.QuickSearchTextBox = new System.Windows.Forms.TextBox();
             this.OceanicCheckBox = new System.Windows.Forms.CheckBox();
+            this.label11 = new System.Windows.Forms.Label();
+            this.label12 = new System.Windows.Forms.Label();
+            this.ESSSDCheckBox = new System.Windows.Forms.CheckBox();
+            this.ESdataCheckBox = new System.Windows.Forms.CheckBox();
             this.ARTCCLabel = new System.Windows.Forms.Label();
             this.AirportLabel = new System.Windows.Forms.Label();
             this.AsstFacilityEngineerLabel = new System.Windows.Forms.Label();
@@ -170,11 +174,7 @@
             this.UpdateAIRACbutton = new System.Windows.Forms.Button();
             this.UpdatingLabel = new System.Windows.Forms.Label();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.label11 = new System.Windows.Forms.Label();
-            this.label12 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.ESdataCheckBox = new System.Windows.Forms.CheckBox();
-            this.ESSSDCheckBox = new System.Windows.Forms.CheckBox();
             this.panelSUAs.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.AllMarginsNumericUpDown)).BeginInit();
             this.FilterGroupBox.SuspendLayout();
@@ -705,6 +705,49 @@
             this.toolTip1.SetToolTip(this.OceanicCheckBox, "VORs, NDB, and FIXes must be enabled to select airways");
             this.OceanicCheckBox.UseVisualStyleBackColor = true;
             this.OceanicCheckBox.CheckedChanged += new System.EventHandler(this.OceanicCheckBox_CheckedChanged);
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(10, 148);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(122, 13);
+            this.label11.TabIndex = 33;
+            this.label11.Text = "Dep/Arr Diagrams (slow)";
+            this.toolTip1.SetToolTip(this.label11, "Euroscope data does NOT require this selection");
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(10, 182);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(142, 13);
+            this.label12.TabIndex = 34;
+            this.label12.Text = "Hint: Use Tool for single item";
+            this.toolTip1.SetToolTip(this.label12, "Euroscope data does NOT require this selection");
+            // 
+            // ESSSDCheckBox
+            // 
+            this.ESSSDCheckBox.AutoSize = true;
+            this.ESSSDCheckBox.Location = new System.Drawing.Point(85, 20);
+            this.ESSSDCheckBox.Name = "ESSSDCheckBox";
+            this.ESSSDCheckBox.Size = new System.Drawing.Size(79, 17);
+            this.ESSSDCheckBox.TabIndex = 1;
+            this.ESSSDCheckBox.Text = "[SIDSTAR]";
+            this.toolTip1.SetToolTip(this.ESSSDCheckBox, "Will generate all SIDSTARS for selection in APT gridview");
+            this.ESSSDCheckBox.UseVisualStyleBackColor = true;
+            this.ESSSDCheckBox.CheckedChanged += new System.EventHandler(this.ESSSDCheckBox_CheckedChanged);
+            // 
+            // ESdataCheckBox
+            // 
+            this.ESdataCheckBox.AutoSize = true;
+            this.ESdataCheckBox.Location = new System.Drawing.Point(7, 20);
+            this.ESdataCheckBox.Name = "ESdataCheckBox";
+            this.ESdataCheckBox.Size = new System.Drawing.Size(71, 17);
+            this.ESdataCheckBox.TabIndex = 0;
+            this.ESdataCheckBox.Text = "SCT data";
+            this.ESdataCheckBox.UseVisualStyleBackColor = true;
+            this.ESdataCheckBox.CheckedChanged += new System.EventHandler(this.ESdataCheckBox_CheckedChanged);
             // 
             // ARTCCLabel
             // 
@@ -1626,8 +1669,8 @@
             this.ESEToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("ESEToolStripButton.Image")));
             this.ESEToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.ESEToolStripButton.Name = "ESEToolStripButton";
-            this.ESEToolStripButton.Size = new System.Drawing.Size(127, 28);
-            this.ESEToolStripButton.Text = "Generate ESE files";
+            this.ESEToolStripButton.Size = new System.Drawing.Size(121, 28);
+            this.ESEToolStripButton.Text = "Generate ES files";
             this.ESEToolStripButton.ToolTipText = "Files will be compatible with ESE format";
             this.ESEToolStripButton.Click += new System.EventHandler(this.ESEToolStripButton_Click);
             // 
@@ -1639,6 +1682,7 @@
             this.gridViewToolStripButton.Name = "gridViewToolStripButton";
             this.gridViewToolStripButton.Size = new System.Drawing.Size(132, 28);
             this.gridViewToolStripButton.Text = "Preview Selections";
+            this.gridViewToolStripButton.Click += new System.EventHandler(this.PreviewButton_Click);
             // 
             // toolStripButton1
             // 
@@ -1878,26 +1922,6 @@
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.CmdExit_Click);
             // 
-            // label11
-            // 
-            this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(10, 148);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(99, 13);
-            this.label11.TabIndex = 33;
-            this.label11.Text = "Diagram Generaton";
-            this.toolTip1.SetToolTip(this.label11, "Euroscope data does NOT require this selection");
-            // 
-            // label12
-            // 
-            this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(10, 182);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(142, 13);
-            this.label12.TabIndex = 34;
-            this.label12.Text = "Hint: Use Tool for single item";
-            this.toolTip1.SetToolTip(this.label12, "Euroscope data does NOT require this selection");
-            // 
             // groupBox2
             // 
             this.groupBox2.Controls.Add(this.ESSSDCheckBox);
@@ -1908,28 +1932,6 @@
             this.groupBox2.TabIndex = 62;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Euroscope only";
-            // 
-            // ESdataCheckBox
-            // 
-            this.ESdataCheckBox.AutoSize = true;
-            this.ESdataCheckBox.Location = new System.Drawing.Point(7, 20);
-            this.ESdataCheckBox.Name = "ESdataCheckBox";
-            this.ESdataCheckBox.Size = new System.Drawing.Size(71, 17);
-            this.ESdataCheckBox.TabIndex = 0;
-            this.ESdataCheckBox.Text = "SCT data";
-            this.ESdataCheckBox.UseVisualStyleBackColor = true;
-            this.ESdataCheckBox.CheckedChanged += new System.EventHandler(this.ESdataCheckBox_CheckedChanged);
-            // 
-            // ESSSDCheckBox
-            // 
-            this.ESSSDCheckBox.AutoSize = true;
-            this.ESSSDCheckBox.Location = new System.Drawing.Point(85, 20);
-            this.ESSSDCheckBox.Name = "ESSSDCheckBox";
-            this.ESSSDCheckBox.Size = new System.Drawing.Size(79, 17);
-            this.ESSSDCheckBox.TabIndex = 1;
-            this.ESSSDCheckBox.Text = "[SIDSTAR]";
-            this.ESSSDCheckBox.UseVisualStyleBackColor = true;
-            this.ESSSDCheckBox.CheckedChanged += new System.EventHandler(this.ESSSDCheckBox_CheckedChanged);
             // 
             // Form1
             // 

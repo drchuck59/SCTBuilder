@@ -116,9 +116,9 @@ namespace SCTBuilder
                             ARTCC = Line.Substring(337, 4).Trim();                              // ARTCC
                             Frequency = Line.Substring(533, 6).Trim();                          // Frequency
                             State = Line.Substring(142, 2).Trim();                              // State
-                            Lat = Convert.ToSingle(Line.Substring(385, 10).Trim()) / 3600;      // Latitude
+                            Lat = Convert.ToDouble(Line.Substring(385, 10).Trim()) / 3600f;      // Latitude
                             if (Line.Substring(398, 1) == "S") Lat *= -1;
-                            Lon = Convert.ToSingle(Line.Substring(410, 10).Trim()) / 3600;      // Longitude
+                            Lon = Convert.ToDouble(Line.Substring(410, 10).Trim()) / 3600f;      // Longitude
                             if (Line.Substring(420, 1) == "W") Lon *= -1;
                             if (Line.Substring(479, 4).Trim().Length != 0)
                                 MagVar = Conversions.MagVar2DecMag(Line.Substring(479, 5).Trim()); //Mag Var
@@ -200,10 +200,12 @@ namespace SCTBuilder
             string FullFilename = SCTcommon.GetFullPathname(FolderMgt.DataFolder, "APT.txt");
             char[] FacilityType = { 'A', 'C', 'H' };     // Only interested in Airport, Seaplane, and Heliports
             string FacType = string.Empty; string tempID = string.Empty; string tempBID = string.Empty;
-            string tempRID = string.Empty; double tempLatB = 0f; double tempLongB = 0f; string tempFacID = string.Empty;
-            double tempLatR = 0f; double tempLongR = 0f; double tempLength = 0f; bool tempOpen = false; string temp;
-            double tempWidth = 0f; double tempHdgB = -1f; double tempHdgR = -1f; string tempRwyID; string tempRwyName = string.Empty;
-            double tempElevB = 0f; double tempElevR = 0f; string tempARTCC = string.Empty; string tempFacilityName = string.Empty;
+            string tempRID = string.Empty; double tempLatB = 0.0; double tempLongB = 0.0; 
+            string tempFacID = string.Empty; double tempLatR = 0.0; double tempLongR = 0.0; 
+            double tempLength = 0.0; bool tempOpen = false; string temp; string tempICAO = string.Empty;
+            double tempWidth = 0.0; double tempHdgB = -1f; double tempHdgR = -1f; string tempRwyID; 
+            string tempRwyName = string.Empty; double tempElevB = 0.0; double tempElevR = 0.0; double tempMagVar;
+            string tempARTCC = string.Empty; string tempFacilityName = string.Empty;
             using (StreamReader reader = new StreamReader(FullFilename))
             {
                 string Line = string.Empty;
@@ -216,7 +218,6 @@ namespace SCTBuilder
                             // Get the facility type
                             tempID = Line.Substring(3, 11).Trim();
                             //if (tempID == "03534.*A")
-                            //    Console.WriteLine("ReadNASR:FillAPT found VPA");
                             FacType = Extensions.Right(tempID, 1);
                             tempOpen = Line.Substring(840, 2).Trim() == "O";
                             if ((FacType.IndexOfAny(FacilityType) != -1) && (tempOpen))     // Only operational APTs of "A", "H" and "C"
@@ -224,18 +225,25 @@ namespace SCTBuilder
                                 tempARTCC = Line.Substring(674, 4).Trim();
                                 tempFacID = Line.Substring(27, 4).Trim();
                                 tempFacilityName = Line.Substring(133, 50).Trim();
+                                tempICAO = string.Empty;
+                                if (Line.Substring(1210, 7).Trim().Length != 0)
+                                    tempICAO = Line.Substring(1210, 7).Trim();
+                                tempMagVar = 0;
+                                if (Line.Substring(586, 3).Length != 0)
+                                    tempMagVar = Conversions.MagVar2DecMag(Line.Substring(586, 3));
                                 var AptInfo = new List<object>
                                 {
-                                tempID,                                        // ID (Landing Facility Site Number)
-                                tempFacID                   ,                  // Facility ID (ICOA)
+                                tempID,                                         // ID (Landing Facility Site Number)
+                                tempFacID,                                      // Facility ID (FAA)
+                                tempICAO,                                       // Facility ID (ICAO)
                                 tempFacilityName,                               // Facility Name
                                 Conversions.Seconds2DecDeg(Line.Substring(538, 12)),    // Latitude
                                 Conversions.Seconds2DecDeg(Line.Substring(565, 12)),    // Longitude
-                                tempARTCC,                                     // Responsible ARTCC
-                                Line.Substring(50, 20).Trim(),                 // State
-                                Conversions.MagVar2DecMag(Line.Substring(586, 3)),    // Magnetic Variation
-                                Line.Substring(183, 2),                        // Owner Type
-                                Line.Substring(185, 2) == "PU"                 // True if public
+                                tempARTCC,                                      // Responsible ARTCC
+                                Line.Substring(50, 20).Trim(),                  // State
+                                tempMagVar,                                     // Magnetic Variation
+                                Line.Substring(183, 2),                         // Owner Type
+                                Line.Substring(185, 2) == "PU"                  // True if public
                                 };
                                 AddFixes(APTtable, AptInfo);
                                 tempRwyName = string.Empty;
@@ -436,7 +444,7 @@ namespace SCTBuilder
                     }
                 }
             }
-            // Console.WriteLine("TWR rows read: " + TWR.Rows.Count);
+            Console.WriteLine("TWR rows read: " + TWR.Rows.Count);
         }
 
         private static string TWR3Freq(string Line, string Usage)

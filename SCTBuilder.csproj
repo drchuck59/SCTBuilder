@@ -53,7 +53,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>A0C03BF39AA3031CCCBC59032D270455B741C0A3</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>1C86694C1BC6AC5886A07EA9C194361458394F50</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestKeyFile>SCTBuilder_TemporaryKey.pfx</ManifestKeyFile>
@@ -222,6 +222,7 @@
     <Compile Include="LatLongHelp.Designer.cs">
       <DependentUpon>LatLongHelp.cs</DependentUpon>
     </Compile>
+    <Compile Include="LatLonParser.cs" />
     <Compile Include="LineGenerator.cs">
       <SubType>Form</SubType>
     </Compile>

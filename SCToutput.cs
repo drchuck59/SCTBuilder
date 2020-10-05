@@ -29,64 +29,64 @@ namespace SCTBuilder
             var TextFiles = new List<string>();
             string Message;
 
-            Debug.WriteLine("Header...");
+            Console.WriteLine("Header...");
             string path = SCTcommon.CheckFile(PartialPath, "Header");
             WriteHeader(path);
             TextFiles.Add(path);
 
             path = SCTcommon.CheckFile(PartialPath, "Colors");
-            Debug.WriteLine("ColorDefinitions");
+            Console.WriteLine("ColorDefinitions");
             WriteColors(path);
             TextFiles.Add(path);
 
             path = SCTcommon.CheckFile(PartialPath, "Info");
-            Debug.WriteLine("INFO section...");
+            Console.WriteLine("INFO section...");
             WriteINFO(path);
             TextFiles.Add(path);
 
             if (SCTchecked.ChkVOR)
             {
                 path = SCTcommon.CheckFile(PartialPath, "VOR");
-                Debug.WriteLine("VORs...");
+                Console.WriteLine("VORs...");
                 WriteVOR(path);
                 TextFiles.Add(path);
             }
             if (SCTchecked.ChkNDB)
             {
                 path = SCTcommon.CheckFile(PartialPath, "NDB");
-                Debug.WriteLine("NDBs...");
+                Console.WriteLine("NDBs...");
                 WriteNDB(path);
                 TextFiles.Add(path);
             }
             if (SCTchecked.ChkAPT)
             {
                 path = SCTcommon.CheckFile(PartialPath, "APT");
-                Debug.WriteLine("Airports...");
+                Console.WriteLine("Airports...");
                 WriteAPT(path);
                 TextFiles.Add(path);
             }
             if (SCTchecked.ChkRWY)
             {
                 path = SCTcommon.CheckFile(PartialPath, "RWY");
-                Debug.WriteLine("Airport Runways...");
+                Console.WriteLine("Airport Runways...");
                 WriteRWY(path);
                 TextFiles.Add(path);
             }
             if (SCTchecked.ChkFIX)
             {
                 path = SCTcommon.CheckFile(PartialPath, "FIX");
-                Debug.WriteLine("Fixes...");
+                Console.WriteLine("Fixes...");
                 WriteFixes(path);
                 TextFiles.Add(path);
             }
             if (SCTchecked.ChkARB)
             {
-                Debug.WriteLine("ARTCC HIGH...");
+                Console.WriteLine("ARTCC HIGH...");
                 path = SCTcommon.CheckFile(PartialPath, "ARTCC_HIGH");
                 WriteARB(path, true);
                 TextFiles.Add(path);
 
-                Debug.WriteLine("ARTCC LOW...");
+                Console.WriteLine("ARTCC LOW...");
                 path = SCTcommon.CheckFile(PartialPath, "ARTCC_LOW");
                 WriteARB(path, false);
                 TextFiles.Add(path);
@@ -95,40 +95,40 @@ namespace SCTBuilder
             if (SCTchecked.ChkAWY)
             {
                 path = SCTcommon.CheckFile(PartialPath, "AirwayLow");
-                Debug.WriteLine("Low AirWays...");
+                Console.WriteLine("Low AirWays...");
                 WriteAWY(path, IsLow: true);
                 TextFiles.Add(path);
 
                 path = SCTcommon.CheckFile(PartialPath, "AirwayHigh");
-                Debug.WriteLine("High AirWays...");
+                Console.WriteLine("High AirWays...");
                 WriteAWY(path, IsLow: false);
                 TextFiles.Add(path);
             }
             if (SCTchecked.ChkSID)
             {
-                Debug.WriteLine("SIDS...");
+                Console.WriteLine("SIDS...");
                 WriteSIDSTAR(IsSID: true);
                 TextFiles.Add(path);
             }
             if (SCTchecked.ChkSTAR)
             {
-                Debug.WriteLine("STARS...");
+                Console.WriteLine("STARS...");
                 WriteSIDSTAR(IsSID: false);
                 TextFiles.Add(path);
             }
             if (SCTchecked.IncludeSUAfile)
             {
                 path = SCTcommon.CheckFile(PartialPath, "SUA");
-                Debug.WriteLine(path);
+                Console.WriteLine(path);
                 if (path != string.Empty)
                 {
-                    Debug.WriteLine("SUAs...");
+                    Console.WriteLine("SUAs...");
                     WriteSUA();
                     TextFiles.Add(path);
                 }
             }
 
-            if (SCTchecked.ChkOneFile)
+            if (SCTchecked.ChkOneVRCFile)
             {
                 path = SCTcommon.CheckFile(PartialPath, CycleInfo.AIRAC.ToString(), ".sct2");
                 using (var SCTfile = File.Create(path))
@@ -149,7 +149,7 @@ namespace SCTBuilder
                 Message = TextFiles.Count + " text file(s) written to " + FolderMgt.OutputFolder;
                 SCTcommon.SendMessage(Message, MessageBoxIcon.Information);
             }
-            Debug.WriteLine("End writing output files");
+            Console.WriteLine("End writing output files in SCToutput");
         }
 
 
@@ -181,7 +181,6 @@ namespace SCTBuilder
         {
             DataTable dtColors = Form1.ColorDef;
             string Output = "; Color definition table" + cr;
-            Debug.WriteLine(dtColors.Rows.Count + " colors in color table");
             foreach (DataRow row in dtColors.Rows)
             {
                 Output += "#define " + row[0] + " " + row[1] + cr;
@@ -202,7 +201,7 @@ namespace SCTBuilder
                 sw.WriteLine(InfoSection.CenterLongitude_SCT);
                 sw.WriteLine(InfoSection.NMperDegreeLatitude);
                 sw.WriteLine(InfoSection.NMperDegreeLongitude.ToString("F1", CultureInfo.InvariantCulture));
-                sw.WriteLine(InfoSection.MagneticVariation);
+                sw.WriteLine(InfoSection.MagneticVariation * -1d);   // Subtract the MagVar (converts True-Map to Mag)
                 sw.WriteLine(InfoSection.SectorScale);
             }
         }
@@ -272,7 +271,7 @@ namespace SCTBuilder
                 Sort = "FacilityID"
             };
             // Output only what we need
-            DataTable dataTable = dvAPT.ToTable(true, "ID", "FacilityID", "Latitude", "Longitude", "Name", "Public");
+            DataTable dataTable = dvAPT.ToTable(true, "ID", "FacilityID", "ICAO", "Latitude", "Longitude", "Name", "Public");
             DataRow foundRow; string LCL; string ATIS;
             using (StreamWriter sw = new StreamWriter(path))
             {
@@ -366,16 +365,17 @@ namespace SCTBuilder
                         FacID = row["FacilityID"].ToString();
                         FacFullName = FacID + '-' + row["FacilityName"].ToString();
                     }
-                    // FAA bearings are in "True" format and must be converted to "Magnetic"
+                    // FAA RWY bearings are in "True" format and must be converted to "Magnetic"
+                    // Brg = True - Declination, where W is negative.
                     strOut[0] = row["BaseIdentifier"].ToString().Trim().PadRight(3);
                     strOut[1] = row["EndIdentifier"].ToString().Trim().PadRight(3);
-                    MagBHdg = Convert.ToDouble(row["BaseHeading"]) + InfoSection.MagneticVariation;
+                    MagBHdg = Convert.ToDouble(row["BaseHeading"]) - InfoSection.MagneticVariation;
                     if (MagBHdg > 360) MagBHdg %= 360;
                     else if (MagBHdg < 0)
                         MagBHdg = (MagBHdg + 360) % 360;
                     if (MagBHdg == 0) MagBHdg = 360;
                     strOut[2] = Convert.ToString(MagBHdg).PadRight(3);
-                    MagEHdg = Convert.ToDouble(row["EndHeading"]) + InfoSection.MagneticVariation;
+                    MagEHdg = Convert.ToDouble(row["EndHeading"]) - InfoSection.MagneticVariation;
                     if (MagEHdg > 360) MagEHdg %= 360;
                     else if (MagBHdg < 0) MagEHdg = (MagEHdg + 360) % 360;
                     if (MagBHdg == 0) MagBHdg = 360;
@@ -409,7 +409,6 @@ namespace SCTBuilder
                 RowFilter = filter,
                 Sort = "AWYID, Sequence",
             };
-            Debug.WriteLine("Found " + dvAWY.Count + " rows");
             // Rotate output as in other output loops
             using (StreamWriter sw = new StreamWriter(path))
             {
@@ -599,7 +598,6 @@ namespace SCTBuilder
                     // Finally get the line between waypoints
                     if ((lastFix.Length != 0) && (curFix.Length != 0) && (lastFix != curFix))
                     {
-                        // Debug.WriteLine(SCTstrings.SSDout(Lat0, Lon0, Lat1, Lon1, lastFix, curFix, InfoSection.UseFixesAsCoords));
                         SSDlines.Add(SCTstrings.SSDout(Lat0, Lon0, Lat1, Lon1, lastFix, curFix, InfoSection.UseFixesAsCoords));
                         // Draw the fix names.  Angle and Scale not used for SSDs
                     }

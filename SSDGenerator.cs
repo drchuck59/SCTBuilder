@@ -267,7 +267,6 @@ namespace SCTBuilder
                     // Finally get the line between waypoints
                     if ((lastFix.Length != 0) && (curFix.Length != 0) && (lastFix != curFix))
                     {
-                        // Debug.WriteLine(SCTstrings.SSDout(Lat0, Lon0, Lat1, Lon1, lastFix, curFix, InfoSection.UseFixesAsCoords));
                         SSDlines.Add(SCTstrings.SSDout(Lat0, Lon0, Lat1, Lon1, lastFix, curFix, InfoSection.UseFixesAsCoords));
                         // Draw the fix names.  Angle and Scale not used for SSDs
                     }
@@ -427,7 +426,6 @@ namespace SCTBuilder
         {
             IdentifierTextBox.Text = FixListDataGridView.CurrentCell.Value.ToString();
             SSDID = FixListDataGridView.CurrentRow.Cells[1].Value.ToString();
-            Debug.WriteLine("SSDID saved: " + SSDID);
         }
 
         private void DrawFixSymbolsOnDiagramsCheckBox_CheckedChanged(object sender, EventArgs e)

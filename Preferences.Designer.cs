@@ -32,7 +32,6 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Preferences));
             this.ConfirmOverwriteCheckBox = new System.Windows.Forms.CheckBox();
             this.UseNaviGraphCheckBox = new System.Windows.Forms.CheckBox();
-            this.label1 = new System.Windows.Forms.Label();
             this.UseFixesAsCoordinatesCheckBox = new System.Windows.Forms.CheckBox();
             this.IncludeSIDSTARReferencesCheckBox = new System.Windows.Forms.CheckBox();
             this.DrawSymbolsCheckBox = new System.Windows.Forms.CheckBox();
@@ -44,16 +43,28 @@
             this.LeaveWOchanges = new System.Windows.Forms.Button();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.RestoreButton = new System.Windows.Forms.Button();
-            this.CombineCheckBox = new System.Windows.Forms.CheckBox();
+            this.VRCCombineCheckBox = new System.Windows.Forms.CheckBox();
             this.IncludeSUACheckBox = new System.Windows.Forms.CheckBox();
+            this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.GeneralPrefTabPage = new System.Windows.Forms.TabPage();
+            this.VRCprefTabPage = new System.Windows.Forms.TabPage();
+            this.EuroScopePrefTabPage = new System.Windows.Forms.TabPage();
+            this.SSDprefTabPage = new System.Windows.Forms.TabPage();
+            this.ESCombineCheckBox = new System.Windows.Forms.CheckBox();
+            this.tabControl1.SuspendLayout();
+            this.GeneralPrefTabPage.SuspendLayout();
+            this.VRCprefTabPage.SuspendLayout();
+            this.EuroScopePrefTabPage.SuspendLayout();
+            this.SSDprefTabPage.SuspendLayout();
             this.SuspendLayout();
             // 
             // ConfirmOverwriteCheckBox
             // 
             this.ConfirmOverwriteCheckBox.AutoSize = true;
-            this.ConfirmOverwriteCheckBox.Location = new System.Drawing.Point(24, 39);
+            this.ConfirmOverwriteCheckBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ConfirmOverwriteCheckBox.Location = new System.Drawing.Point(6, 16);
             this.ConfirmOverwriteCheckBox.Name = "ConfirmOverwriteCheckBox";
-            this.ConfirmOverwriteCheckBox.Size = new System.Drawing.Size(172, 17);
+            this.ConfirmOverwriteCheckBox.Size = new System.Drawing.Size(192, 19);
             this.ConfirmOverwriteCheckBox.TabIndex = 0;
             this.ConfirmOverwriteCheckBox.Text = "Ask before overwriting text files";
             this.ConfirmOverwriteCheckBox.UseVisualStyleBackColor = true;
@@ -63,29 +74,21 @@
             this.UseNaviGraphCheckBox.AutoSize = true;
             this.UseNaviGraphCheckBox.Checked = true;
             this.UseNaviGraphCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.UseNaviGraphCheckBox.Location = new System.Drawing.Point(24, 63);
+            this.UseNaviGraphCheckBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.UseNaviGraphCheckBox.Location = new System.Drawing.Point(6, 40);
             this.UseNaviGraphCheckBox.Name = "UseNaviGraphCheckBox";
-            this.UseNaviGraphCheckBox.Size = new System.Drawing.Size(169, 17);
+            this.UseNaviGraphCheckBox.Size = new System.Drawing.Size(189, 19);
             this.UseNaviGraphCheckBox.TabIndex = 1;
             this.UseNaviGraphCheckBox.Text = "Use NaviGraph data if present";
             this.UseNaviGraphCheckBox.UseVisualStyleBackColor = true;
             // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(267, 21);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(181, 15);
-            this.label1.TabIndex = 2;
-            this.label1.Text = "SID STAR diagram preferences ";
-            // 
             // UseFixesAsCoordinatesCheckBox
             // 
             this.UseFixesAsCoordinatesCheckBox.AutoSize = true;
-            this.UseFixesAsCoordinatesCheckBox.Location = new System.Drawing.Point(270, 98);
+            this.UseFixesAsCoordinatesCheckBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.UseFixesAsCoordinatesCheckBox.Location = new System.Drawing.Point(6, 71);
             this.UseFixesAsCoordinatesCheckBox.Name = "UseFixesAsCoordinatesCheckBox";
-            this.UseFixesAsCoordinatesCheckBox.Size = new System.Drawing.Size(232, 30);
+            this.UseFixesAsCoordinatesCheckBox.Size = new System.Drawing.Size(261, 34);
             this.UseFixesAsCoordinatesCheckBox.TabIndex = 3;
             this.UseFixesAsCoordinatesCheckBox.Text = "Use FIX labels as coordinates\r\n(Requires output of references be checked)";
             this.UseFixesAsCoordinatesCheckBox.UseVisualStyleBackColor = true;
@@ -96,9 +99,10 @@
             this.IncludeSIDSTARReferencesCheckBox.AutoSize = true;
             this.IncludeSIDSTARReferencesCheckBox.Checked = true;
             this.IncludeSIDSTARReferencesCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.IncludeSIDSTARReferencesCheckBox.Location = new System.Drawing.Point(270, 62);
+            this.IncludeSIDSTARReferencesCheckBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.IncludeSIDSTARReferencesCheckBox.Location = new System.Drawing.Point(6, 35);
             this.IncludeSIDSTARReferencesCheckBox.Name = "IncludeSIDSTARReferencesCheckBox";
-            this.IncludeSIDSTARReferencesCheckBox.Size = new System.Drawing.Size(243, 30);
+            this.IncludeSIDSTARReferencesCheckBox.Size = new System.Drawing.Size(266, 34);
             this.IncludeSIDSTARReferencesCheckBox.TabIndex = 4;
             this.IncludeSIDSTARReferencesCheckBox.Text = "Include references ([AIRPORTS], [VOR], etc.)\r\nin the SID or STAR output file";
             this.IncludeSIDSTARReferencesCheckBox.UseVisualStyleBackColor = true;
@@ -108,9 +112,10 @@
             this.DrawSymbolsCheckBox.AutoSize = true;
             this.DrawSymbolsCheckBox.Checked = true;
             this.DrawSymbolsCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.DrawSymbolsCheckBox.Location = new System.Drawing.Point(270, 134);
+            this.DrawSymbolsCheckBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.DrawSymbolsCheckBox.Location = new System.Drawing.Point(6, 107);
             this.DrawSymbolsCheckBox.Name = "DrawSymbolsCheckBox";
-            this.DrawSymbolsCheckBox.Size = new System.Drawing.Size(147, 17);
+            this.DrawSymbolsCheckBox.Size = new System.Drawing.Size(165, 19);
             this.DrawSymbolsCheckBox.TabIndex = 5;
             this.DrawSymbolsCheckBox.Text = "Draw Symbols over FIXes";
             this.DrawSymbolsCheckBox.UseVisualStyleBackColor = true;
@@ -120,9 +125,10 @@
             this.DrawLabelsCheckBox.AutoSize = true;
             this.DrawLabelsCheckBox.Checked = true;
             this.DrawLabelsCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.DrawLabelsCheckBox.Location = new System.Drawing.Point(270, 157);
+            this.DrawLabelsCheckBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.DrawLabelsCheckBox.Location = new System.Drawing.Point(6, 130);
             this.DrawLabelsCheckBox.Name = "DrawLabelsCheckBox";
-            this.DrawLabelsCheckBox.Size = new System.Drawing.Size(150, 17);
+            this.DrawLabelsCheckBox.Size = new System.Drawing.Size(168, 19);
             this.DrawLabelsCheckBox.TabIndex = 6;
             this.DrawLabelsCheckBox.Text = "Draw Labels next to FIXes";
             this.DrawLabelsCheckBox.UseVisualStyleBackColor = true;
@@ -132,9 +138,10 @@
             this.OneFilePerSIDSTARCheckBox.AutoSize = true;
             this.OneFilePerSIDSTARCheckBox.Checked = true;
             this.OneFilePerSIDSTARCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.OneFilePerSIDSTARCheckBox.Location = new System.Drawing.Point(270, 39);
+            this.OneFilePerSIDSTARCheckBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.OneFilePerSIDSTARCheckBox.Location = new System.Drawing.Point(6, 12);
             this.OneFilePerSIDSTARCheckBox.Name = "OneFilePerSIDSTARCheckBox";
-            this.OneFilePerSIDSTARCheckBox.Size = new System.Drawing.Size(194, 17);
+            this.OneFilePerSIDSTARCheckBox.Size = new System.Drawing.Size(213, 19);
             this.OneFilePerSIDSTARCheckBox.TabIndex = 7;
             this.OneFilePerSIDSTARCheckBox.Text = "Save each SID STAR in its own file";
             this.OneFilePerSIDSTARCheckBox.UseVisualStyleBackColor = true;
@@ -143,9 +150,10 @@
             // 
             this.DrawAltitudeRestrictionsOnDiagramsCheckBox.AutoSize = true;
             this.DrawAltitudeRestrictionsOnDiagramsCheckBox.Enabled = false;
-            this.DrawAltitudeRestrictionsOnDiagramsCheckBox.Location = new System.Drawing.Point(291, 181);
+            this.DrawAltitudeRestrictionsOnDiagramsCheckBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.DrawAltitudeRestrictionsOnDiagramsCheckBox.Location = new System.Drawing.Point(27, 154);
             this.DrawAltitudeRestrictionsOnDiagramsCheckBox.Name = "DrawAltitudeRestrictionsOnDiagramsCheckBox";
-            this.DrawAltitudeRestrictionsOnDiagramsCheckBox.Size = new System.Drawing.Size(216, 17);
+            this.DrawAltitudeRestrictionsOnDiagramsCheckBox.Size = new System.Drawing.Size(244, 19);
             this.DrawAltitudeRestrictionsOnDiagramsCheckBox.TabIndex = 8;
             this.DrawAltitudeRestrictionsOnDiagramsCheckBox.Text = "Draw Altitude Restrictions next to Labels";
             this.DrawAltitudeRestrictionsOnDiagramsCheckBox.UseVisualStyleBackColor = true;
@@ -154,9 +162,10 @@
             // 
             this.DrawSpeedRestrictionsCheckBox.AutoSize = true;
             this.DrawSpeedRestrictionsCheckBox.Enabled = false;
-            this.DrawSpeedRestrictionsCheckBox.Location = new System.Drawing.Point(291, 205);
+            this.DrawSpeedRestrictionsCheckBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.DrawSpeedRestrictionsCheckBox.Location = new System.Drawing.Point(27, 178);
             this.DrawSpeedRestrictionsCheckBox.Name = "DrawSpeedRestrictionsCheckBox";
-            this.DrawSpeedRestrictionsCheckBox.Size = new System.Drawing.Size(212, 17);
+            this.DrawSpeedRestrictionsCheckBox.Size = new System.Drawing.Size(240, 19);
             this.DrawSpeedRestrictionsCheckBox.TabIndex = 9;
             this.DrawSpeedRestrictionsCheckBox.Text = "Draw Speed Restrictions next to Labels";
             this.DrawSpeedRestrictionsCheckBox.UseVisualStyleBackColor = true;
@@ -164,7 +173,7 @@
             // OKButton
             // 
             this.OKButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.OKButton.Location = new System.Drawing.Point(390, 244);
+            this.OKButton.Location = new System.Drawing.Point(241, 277);
             this.OKButton.Name = "OKButton";
             this.OKButton.Size = new System.Drawing.Size(123, 46);
             this.OKButton.TabIndex = 10;
@@ -175,7 +184,7 @@
             // LeaveWOchanges
             // 
             this.LeaveWOchanges.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.LeaveWOchanges.Location = new System.Drawing.Point(281, 244);
+            this.LeaveWOchanges.Location = new System.Drawing.Point(132, 277);
             this.LeaveWOchanges.Name = "LeaveWOchanges";
             this.LeaveWOchanges.Size = new System.Drawing.Size(103, 46);
             this.LeaveWOchanges.TabIndex = 11;
@@ -185,7 +194,7 @@
             // 
             // RestoreButton
             // 
-            this.RestoreButton.Location = new System.Drawing.Point(200, 244);
+            this.RestoreButton.Location = new System.Drawing.Point(51, 277);
             this.RestoreButton.Name = "RestoreButton";
             this.RestoreButton.Size = new System.Drawing.Size(75, 46);
             this.RestoreButton.TabIndex = 13;
@@ -194,26 +203,103 @@
             this.RestoreButton.UseVisualStyleBackColor = true;
             this.RestoreButton.Click += new System.EventHandler(this.RestoreButton_Click);
             // 
-            // CombineCheckBox
+            // VRCCombineCheckBox
             // 
-            this.CombineCheckBox.AutoSize = true;
-            this.CombineCheckBox.Location = new System.Drawing.Point(24, 86);
-            this.CombineCheckBox.Name = "CombineCheckBox";
-            this.CombineCheckBox.Size = new System.Drawing.Size(135, 30);
-            this.CombineCheckBox.TabIndex = 14;
-            this.CombineCheckBox.Text = "Combine individual files\r\ninto one SCT2 file";
-            this.CombineCheckBox.UseVisualStyleBackColor = true;
+            this.VRCCombineCheckBox.AutoSize = true;
+            this.VRCCombineCheckBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.VRCCombineCheckBox.Location = new System.Drawing.Point(6, 17);
+            this.VRCCombineCheckBox.Name = "VRCCombineCheckBox";
+            this.VRCCombineCheckBox.Size = new System.Drawing.Size(282, 19);
+            this.VRCCombineCheckBox.TabIndex = 14;
+            this.VRCCombineCheckBox.Text = "Combine individual files into one VRC SCT2 file";
+            this.VRCCombineCheckBox.UseVisualStyleBackColor = true;
             // 
             // IncludeSUACheckBox
             // 
             this.IncludeSUACheckBox.AutoSize = true;
             this.IncludeSUACheckBox.Enabled = false;
-            this.IncludeSUACheckBox.Location = new System.Drawing.Point(24, 134);
+            this.IncludeSUACheckBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.IncludeSUACheckBox.Location = new System.Drawing.Point(6, 65);
             this.IncludeSUACheckBox.Name = "IncludeSUACheckBox";
-            this.IncludeSUACheckBox.Size = new System.Drawing.Size(124, 30);
+            this.IncludeSUACheckBox.Size = new System.Drawing.Size(230, 19);
             this.IncludeSUACheckBox.TabIndex = 15;
-            this.IncludeSUACheckBox.Text = "Include SUA file\r\n(See documentation)";
+            this.IncludeSUACheckBox.Text = "Include SUA file (See documentation)";
             this.IncludeSUACheckBox.UseVisualStyleBackColor = true;
+            // 
+            // tabControl1
+            // 
+            this.tabControl1.Controls.Add(this.GeneralPrefTabPage);
+            this.tabControl1.Controls.Add(this.VRCprefTabPage);
+            this.tabControl1.Controls.Add(this.EuroScopePrefTabPage);
+            this.tabControl1.Controls.Add(this.SSDprefTabPage);
+            this.tabControl1.Location = new System.Drawing.Point(12, 12);
+            this.tabControl1.Name = "tabControl1";
+            this.tabControl1.SelectedIndex = 0;
+            this.tabControl1.Size = new System.Drawing.Size(356, 259);
+            this.tabControl1.TabIndex = 16;
+            // 
+            // GeneralPrefTabPage
+            // 
+            this.GeneralPrefTabPage.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.GeneralPrefTabPage.Controls.Add(this.UseNaviGraphCheckBox);
+            this.GeneralPrefTabPage.Controls.Add(this.IncludeSUACheckBox);
+            this.GeneralPrefTabPage.Controls.Add(this.ConfirmOverwriteCheckBox);
+            this.GeneralPrefTabPage.Location = new System.Drawing.Point(4, 22);
+            this.GeneralPrefTabPage.Name = "GeneralPrefTabPage";
+            this.GeneralPrefTabPage.Padding = new System.Windows.Forms.Padding(3);
+            this.GeneralPrefTabPage.Size = new System.Drawing.Size(348, 233);
+            this.GeneralPrefTabPage.TabIndex = 0;
+            this.GeneralPrefTabPage.Text = "General";
+            // 
+            // VRCprefTabPage
+            // 
+            this.VRCprefTabPage.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.VRCprefTabPage.Controls.Add(this.VRCCombineCheckBox);
+            this.VRCprefTabPage.Location = new System.Drawing.Point(4, 22);
+            this.VRCprefTabPage.Name = "VRCprefTabPage";
+            this.VRCprefTabPage.Padding = new System.Windows.Forms.Padding(3);
+            this.VRCprefTabPage.Size = new System.Drawing.Size(348, 233);
+            this.VRCprefTabPage.TabIndex = 1;
+            this.VRCprefTabPage.Text = "VRC files";
+            // 
+            // EuroScopePrefTabPage
+            // 
+            this.EuroScopePrefTabPage.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.EuroScopePrefTabPage.Controls.Add(this.ESCombineCheckBox);
+            this.EuroScopePrefTabPage.Location = new System.Drawing.Point(4, 22);
+            this.EuroScopePrefTabPage.Name = "EuroScopePrefTabPage";
+            this.EuroScopePrefTabPage.Padding = new System.Windows.Forms.Padding(3);
+            this.EuroScopePrefTabPage.Size = new System.Drawing.Size(348, 233);
+            this.EuroScopePrefTabPage.TabIndex = 2;
+            this.EuroScopePrefTabPage.Text = "Euroscope files";
+            // 
+            // SSDprefTabPage
+            // 
+            this.SSDprefTabPage.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.SSDprefTabPage.Controls.Add(this.DrawSymbolsCheckBox);
+            this.SSDprefTabPage.Controls.Add(this.UseFixesAsCoordinatesCheckBox);
+            this.SSDprefTabPage.Controls.Add(this.IncludeSIDSTARReferencesCheckBox);
+            this.SSDprefTabPage.Controls.Add(this.DrawLabelsCheckBox);
+            this.SSDprefTabPage.Controls.Add(this.OneFilePerSIDSTARCheckBox);
+            this.SSDprefTabPage.Controls.Add(this.DrawSpeedRestrictionsCheckBox);
+            this.SSDprefTabPage.Controls.Add(this.DrawAltitudeRestrictionsOnDiagramsCheckBox);
+            this.SSDprefTabPage.Location = new System.Drawing.Point(4, 22);
+            this.SSDprefTabPage.Name = "SSDprefTabPage";
+            this.SSDprefTabPage.Padding = new System.Windows.Forms.Padding(3);
+            this.SSDprefTabPage.Size = new System.Drawing.Size(348, 233);
+            this.SSDprefTabPage.TabIndex = 3;
+            this.SSDprefTabPage.Text = "SID/STAR Diagrams";
+            // 
+            // ESCombineCheckBox
+            // 
+            this.ESCombineCheckBox.AutoSize = true;
+            this.ESCombineCheckBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ESCombineCheckBox.Location = new System.Drawing.Point(6, 15);
+            this.ESCombineCheckBox.Name = "ESCombineCheckBox";
+            this.ESCombineCheckBox.Size = new System.Drawing.Size(274, 19);
+            this.ESCombineCheckBox.TabIndex = 15;
+            this.ESCombineCheckBox.Text = "Combine individual files into one ES SCT2 file";
+            this.ESCombineCheckBox.UseVisualStyleBackColor = true;
             // 
             // Preferences
             // 
@@ -222,30 +308,27 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.CancelButton = this.LeaveWOchanges;
-            this.ClientSize = new System.Drawing.Size(535, 302);
-            this.Controls.Add(this.IncludeSUACheckBox);
-            this.Controls.Add(this.CombineCheckBox);
+            this.ClientSize = new System.Drawing.Size(406, 333);
+            this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.RestoreButton);
             this.Controls.Add(this.LeaveWOchanges);
             this.Controls.Add(this.OKButton);
-            this.Controls.Add(this.DrawSpeedRestrictionsCheckBox);
-            this.Controls.Add(this.DrawAltitudeRestrictionsOnDiagramsCheckBox);
-            this.Controls.Add(this.OneFilePerSIDSTARCheckBox);
-            this.Controls.Add(this.DrawLabelsCheckBox);
-            this.Controls.Add(this.DrawSymbolsCheckBox);
-            this.Controls.Add(this.IncludeSIDSTARReferencesCheckBox);
-            this.Controls.Add(this.UseFixesAsCoordinatesCheckBox);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.UseNaviGraphCheckBox);
-            this.Controls.Add(this.ConfirmOverwriteCheckBox);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "Preferences";
             this.Text = "Preferences";
             this.Load += new System.EventHandler(this.Preferences_Load);
+            this.tabControl1.ResumeLayout(false);
+            this.GeneralPrefTabPage.ResumeLayout(false);
+            this.GeneralPrefTabPage.PerformLayout();
+            this.VRCprefTabPage.ResumeLayout(false);
+            this.VRCprefTabPage.PerformLayout();
+            this.EuroScopePrefTabPage.ResumeLayout(false);
+            this.EuroScopePrefTabPage.PerformLayout();
+            this.SSDprefTabPage.ResumeLayout(false);
+            this.SSDprefTabPage.PerformLayout();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -253,7 +336,6 @@
 
         private System.Windows.Forms.CheckBox ConfirmOverwriteCheckBox;
         private System.Windows.Forms.CheckBox UseNaviGraphCheckBox;
-        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.CheckBox UseFixesAsCoordinatesCheckBox;
         private System.Windows.Forms.CheckBox IncludeSIDSTARReferencesCheckBox;
         private System.Windows.Forms.CheckBox DrawSymbolsCheckBox;
@@ -265,7 +347,13 @@
         private System.Windows.Forms.Button LeaveWOchanges;
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.Button RestoreButton;
-        private System.Windows.Forms.CheckBox CombineCheckBox;
+        private System.Windows.Forms.CheckBox VRCCombineCheckBox;
         private System.Windows.Forms.CheckBox IncludeSUACheckBox;
+        private System.Windows.Forms.TabControl tabControl1;
+        private System.Windows.Forms.TabPage GeneralPrefTabPage;
+        private System.Windows.Forms.TabPage VRCprefTabPage;
+        private System.Windows.Forms.TabPage EuroScopePrefTabPage;
+        private System.Windows.Forms.TabPage SSDprefTabPage;
+        private System.Windows.Forms.CheckBox ESCombineCheckBox;
     }
 }

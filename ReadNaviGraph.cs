@@ -4,8 +4,6 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Diagnostics;
-using System.Windows.Forms;
-using Google.Protobuf.WellKnownTypes;
 
 namespace SCTBuilder
 {
@@ -17,16 +15,24 @@ namespace SCTBuilder
         static string SSDcode = string.Empty;
         static string SSDmod = string.Empty;
         private static readonly List<string> RNWS = new List<string>();
+        static public DataTable NGSID = new SCTdata.NGSIDDataTable();
+        static public DataTable NGSIDTransition = new SCTdata.NGSIDTransitionDataTable();
+        static public DataTable NGSTAR = new SCTdata.NGSTARDataTable();
+        static public DataTable NGSTARTransition = new SCTdata.NGSTARTransitionDataTable();
+        static public DataTable NGSTARRNW = new SCTdata.NGSTARRNWDataTable();
+        static public DataTable NGFixes = new SCTdata.NGFixesDataTable();
+        static public DataTable NGRWYS = new SCTdata.NGRWYsDataTable();
+        static public DataTable NGRTE = new SCTdata.NGRTEDataTable();
+        static public DataTable NGNavAID = new SCTdata.NGNavAIDDataTable();
 
         public static void NavAID()
         {
             string FullFilename = SCTcommon.GetFullPathname(FolderMgt.DataFolder, "wpNavAID.txt");
-            DataTable NGNavAid = Form1.NGNavAID;
-            DataView dvNGNavAid = new DataView(NGNavAid);
+            DataView dvNGNavAid = new DataView(NGNavAID);
             DataRowView dataRow;
             if (FullFilename.IndexOf("Error") == -1)
             {
-                NGNavAid.Clear();
+                NGNavAID.Clear();
                 using (StreamReader sr = new StreamReader(FullFilename))
                 {
                     while ((Line = sr.ReadLine()) != null)
@@ -44,7 +50,7 @@ namespace SCTBuilder
                         }
                     }
                 }
-                Debug.Print(NGNavAid.Rows.Count + " rows added to NGNavAid table.");
+                Debug.Print(NGNavAID.Rows.Count + " rows added to NGNavAid table.");
             }
             dvNGNavAid.Dispose();
         }
@@ -52,8 +58,7 @@ namespace SCTBuilder
         public static void NavFIX()
         {
             string FullFilename = SCTcommon.GetFullPathname(FolderMgt.DataFolder, "wpNavFIX.txt");
-            DataTable dtNGFIX = Form1.NGFixes;
-            DataView dvNGFIX = new DataView(dtNGFIX);
+            DataView dvNGFIX = new DataView(NGFixes);
             DataRowView datarow;
             if (FullFilename.IndexOf("Error") == -1)
             {
@@ -70,9 +75,10 @@ namespace SCTBuilder
                             datarow.EndEdit();
                         }
                     }
-                    Debug.WriteLine(dtNGFIX.Rows.Count + " rows added to NTFixes");
+                    Debug.WriteLine(NGFixes.Rows.Count + " rows added to NGFixes");
                 }
             }
+            dvNGFIX.Dispose();
         }
 
         public static void NavRTE()
@@ -82,7 +88,7 @@ namespace SCTBuilder
             string curID; string prevID = string.Empty;
             bool IDexists = false; bool Adding;
             string FullFilename = SCTcommon.GetFullPathname(FolderMgt.DataFolder, "wpNavRTE.txt");
-            DataView dvRTE = new DataView(Form1.NGRTE);
+            DataView dvRTE = new DataView(NGRTE);
             if (FullFilename.IndexOf("Error") != -1)
             {
                 using (StreamReader sr = new StreamReader(FullFilename))
@@ -176,7 +182,7 @@ namespace SCTBuilder
                                         SSDcode = Words[1];     // This is always the SSDcode
                                                                 // Usually these are multiline and we need the rest of the entry to load
                                                                 // Check for a single-line SID - special handling
-                                        if (SCTcommon.CountListOccurrences(Words, "RNW") != 0)
+                                        if (SCTcommon.GetListItemCount(Words, "RNW") != 0)
                                             AddSID_OneLine();
                                         break;
                                     case "STARS":            // Indicates start of the STARs data
@@ -235,9 +241,24 @@ namespace SCTBuilder
                         }
                     }
                 }
+                SaveRwys();
                 result = true;
             }
             return result;
+        }
+
+        private static void SaveRwys()
+        {
+            DataView dvRWYS = new DataView(NGRWYS);
+            DataRowView drvRWYS;
+            foreach (string r in RNWS)
+            {
+                drvRWYS = dvRWYS.AddNew();
+                drvRWYS["FacilityID"] = Airport;
+                drvRWYS["Rwy"] = r;
+                drvRWYS.EndEdit();
+            }
+            dvRWYS.Dispose();
         }
 
         private static void AddFixString()
@@ -262,7 +283,7 @@ namespace SCTBuilder
             float decLon = Convert.ToSingle(temp.Substring(0, LocLon));
             temp = temp.Substring(LocLon).Trim();
             decLon += Convert.ToSingle(temp) / 60;
-            DataView dvNGFix = new DataView(Form1.NGFixes);
+            DataView dvNGFix = new DataView(NGFixes);
             DataRowView newrow = dvNGFix.AddNew();
             newrow["FacilityID"] = FixName;
             newrow["Latitude"] = decLat;        
@@ -275,18 +296,18 @@ namespace SCTBuilder
         {
             // Read a SID line which has everything in one line
             // These have no transitions, so can directly enter into table
-            DataView dvNGSID = new DataView(Form1.NGSID);
+            DataView dvNGSID = new DataView(NGSID);
             DataRowView newFIX;
             string runway = string.Empty; int Sequence;
             string fix = string.Empty; string oldfix = string.Empty;
             //Build a list of RNWs then a list of FIXes
-            for (int r = 3; r <= Words.Count; r++)          //  Start at 3d word
+            for (int r = 3; r < Words.Count; r++)          //  Start at 3d word
             {
                 if (Words[r] == "RNW") runway = Words[r + 1];
                 {
                     // Loop the RNWs and add the FIXes
                     Sequence = 0;
-                    for (int w = 1; w <= Words.Count; w++)
+                    for (int w = 1; w < Words.Count; w++)
                     {
                         if (Words[w] == "FIX")
                         {
@@ -313,8 +334,8 @@ namespace SCTBuilder
                         }
                     }
                 }
-                dvNGSID.Dispose();
             }
+            dvNGSID.Dispose();
         }
 
 
@@ -322,7 +343,7 @@ namespace SCTBuilder
         {
             // These are multiline SIDs with one or more RNWs and a series of instructions
             // Can load each RNW as part of the SID
-            DataView dvNGSID = new DataView(Form1.NGSID);
+            DataView dvNGSID = new DataView(NGSID);
             DataRowView newFIX;
             string runway; int Sequence; string Radial;
             string fix = string.Empty; string oldfix = string.Empty;
@@ -424,7 +445,7 @@ namespace SCTBuilder
         private static void SIDTransition()
         {
             // SID Transition FIXes do not have restrictions
-            DataView dvNGSIDTransition = new DataView(Form1.NGSIDTransition);
+            DataView dvNGSIDTransition = new DataView(NGSIDTransition);
             DataRowView newrow; int Sequence = 0;
             string Transition = Words[2];
             for (int t = 1; t < Words.Count; t++)
@@ -445,7 +466,7 @@ namespace SCTBuilder
         private static string AddSTAR()
         {
             // Add the STAR information.  We'll add the RNWs later.
-            DataView dvNGStar = new DataView(Form1.NGSTAR);
+            DataView dvNGStar = new DataView(NGSTAR);
             DataRowView newFIX; int Sequence = 0; string fix;
             // This next line captures the modifier in the STAR Name
             if (Words[2].IndexOf(".") != -1)
@@ -472,20 +493,28 @@ namespace SCTBuilder
                     newFIX.EndEdit();
                 }
             }
+            dvNGStar.Dispose();
             return SSDcode;
         }
 
         private static void STAR_RNWS()
         {
             // Add the RNWs applicable to the SSDcode+SSDmode for the Airport
-            DataTable dtNGSTAR = Form1.NGSTAR;
+            DataView dvNGSTAR = new DataView(NGSTAR);
+            DataRowView drvNGSTAR;
             for (int r = 1; r < Words.Count; r++)
             {
                 if (Words[r] == "RNW")
                 {
-                    dtNGSTAR.Rows.Add(Airport, SSDcode, SSDmod, Words[r + 1]);
+                    drvNGSTAR = dvNGSTAR.AddNew();
+                    drvNGSTAR["FacilityID"] = Airport;
+                    drvNGSTAR["SSDcode"] = SSDcode;
+                    drvNGSTAR["SSDmodifier"] = SSDmod;
+                    drvNGSTAR["Fix"] = Words[r + 1];
+                    drvNGSTAR.EndEdit();
                 }
             }
+            dvNGSTAR.Dispose();
         }
 
         private static void STARTransition()
@@ -493,7 +522,7 @@ namespace SCTBuilder
             // Transitions apply to each SSDcode+SSDmod (if present, usually is)
             string TransitionName = Words[2];
             string fix; DataRowView newFIX; int Sequence = 0;
-            DataView dvNGSTARTransition = new DataView(Form1.NGSTARTransition);
+            DataView dvNGSTARTransition = new DataView(NGSTARTransition);
             {
                 for (int t = 1; t < Words.Count; t++)
                 {
@@ -515,6 +544,7 @@ namespace SCTBuilder
                     }
                 }
             }
+            dvNGSTARTransition.Dispose();
         }
 
         private static string SpeedRestrict(string FIX)
@@ -533,6 +563,7 @@ namespace SCTBuilder
                     }
                 }
             }
+            if (result.Length > 0) Debug.Print("SPEED result: " + result + " for " + FIX);
             return result;
         }
 
@@ -540,24 +571,30 @@ namespace SCTBuilder
         {
             // Returns an At or Above restriction, if it exists
             string result = string.Empty; int LocNextFix;
+            int EndAT; int EndAlt;
+            int ATlength = "AT".Length;
             int LocFix = Line.IndexOf(FIX.Trim());
             if (LocFix != -1)
             {
-                int LocAOA = Line.IndexOf("AT", LocFix);
-                if (LocAOA != -1)
+                // Need a do-until here to find AT that is NOT AOA or AOB!!
+                int LocAT = Line.IndexOf("AT", LocFix);
+                if ((LocAT != -1) && (Line.IndexOf("OR", LocAT) == -1))
                 {
                     LocNextFix = Line.IndexOf("FIX", LocFix);
                     if (LocNextFix == -1)
                     {
-                        result = Line.Substring(LocAOA + 2, 7).Trim();
+                        result = Line.Substring(LocAT + ATlength).Trim();
                     }
-                    else if (LocNextFix > LocAOA)
+                    else if (LocNextFix > LocAT)
                     {
-                        result = Line.Substring(LocAOA + 2, Line.IndexOf(" ", LocAOA + 2)).Trim();
+                        EndAT = Line.IndexOf(" ", LocAT + ATlength);
+                        EndAlt = Line.IndexOf(" ", EndAT + 1);
+                        result = Line.Substring(EndAT, EndAlt - EndAT).Trim();
                     }
                     if (!result.All(char.IsDigit)) result = string.Empty;
                 }
             }
+            if (result.Length > 0) Debug.Print("AT result: " + result + " for " + FIX);
             return result;
         }
 
@@ -565,6 +602,8 @@ namespace SCTBuilder
         {
             // Returns an At or Above restriction, if it exists
             string result = string.Empty; int LocNextFix;
+            int EndAOA; int EndAlt;
+            int AOAlength = "AT OR ABOVE".Length;
             int LocFix = Line.IndexOf(FIX.Trim());
             if (LocFix != -1)
             {
@@ -574,14 +613,17 @@ namespace SCTBuilder
                     LocNextFix = Line.IndexOf("FIX", LocFix);
                     if (LocNextFix == -1)
                     {
-                        result = Line.Substring(LocAOA + 11, 7).Trim();
+                        result = Line.Substring(LocAOA + AOAlength).Trim();
                     }
                     else if (LocNextFix > LocAOA)
                     {
-                        result = Line.Substring(LocAOA + 11, Line.IndexOf(" ", LocAOA + 11)).Trim();
+                        EndAOA = Line.IndexOf(" ", LocAOA + AOAlength);
+                        EndAlt = Line.IndexOf(" ", EndAOA + 1);
+                        result = Line.Substring(EndAOA, EndAlt - EndAOA).Trim();
                     }
                 }
             }
+            if (result.Length > 0) Debug.Print("AOA result: " + result + " for " + FIX);
             return result;
         }
 
@@ -590,6 +632,8 @@ namespace SCTBuilder
             // Returns an At or Above restriction, if it exists
             string result = string.Empty; int LocNextFix;
             int LocFix = Line.IndexOf(FIX.Trim());
+            int EndAOB; int EndAlt;
+            int AOBlength = "AT OR BELOW".Length;
             if (LocFix != -1)
             {
                 int LocAOB = Line.IndexOf("AT OR BELOW", LocFix);
@@ -598,14 +642,17 @@ namespace SCTBuilder
                     LocNextFix = Line.IndexOf("FIX", LocFix);
                     if (LocNextFix == -1)
                     {
-                        result = Line.Substring(LocAOB + 11, 7).Trim();
+                        result = Line.Substring(LocAOB + AOBlength).Trim();
                     }
                     else if (LocNextFix > LocAOB)
                     {
-                        result = Line.Substring(LocAOB + 11, Line.IndexOf(" ", LocAOB + 11)).Trim();
+                        EndAOB = Line.IndexOf(" ", LocAOB + AOBlength);
+                        EndAlt = Line.IndexOf(" ", EndAOB + 1);
+                        result = Line.Substring(EndAOB, EndAlt - EndAOB).Trim();
                     }
                 }
             }
+            if (result.Length > 0) Debug.Print("AOB result: " + result + " for " + FIX);
             return result;
         }
 

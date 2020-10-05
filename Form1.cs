@@ -25,14 +25,6 @@ namespace SCTBuilder
         static public DataTable Polygon = new SCTdata.SUA_PolygonDataTable();
         static public DataTable ColorDef = new SCTdata.ColorDefsDataTable();
         static public DataTable LocalSector = new SCTdata.LocalSectorsDataTable();
-        static public DataTable NGSID = new SCTdata.NGSIDDataTable();
-        static public DataTable NGSIDTransition = new SCTdata.NGSIDTransitionDataTable();
-        static public DataTable NGSTAR = new SCTdata.NGSTARDataTable();
-        static public DataTable NGSTARTransition = new SCTdata.NGSTARTransitionDataTable();
-        static public DataTable NGSTARRNW = new SCTdata.NGSTARRNWDataTable();
-        static public DataTable NGFixes = new SCTdata.NGFixesDataTable();
-        static public DataTable NGRTE = new SCTdata.NGRTEDataTable();
-        static public DataTable NGNavAID = new SCTdata.NGNavAIDDataTable();
         static public DataTable POFdata = new SCTdata.POFdataDataTable();
         static public DataSet SCT = new SCTdata();
         static public bool ExitClicked = false;
@@ -58,13 +50,13 @@ namespace SCTBuilder
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            Debug.WriteLine("--------Form1 loaded-------");
+            Console.WriteLine("--------Form1 loaded-------");
             LoadForm1();
         }
 
         private void LoadForm1()
         {
-            Debug.WriteLine("Load Form subroutine...");
+            Console.WriteLine("Load Form subroutine...");
             int iniAIRAC = CycleInfo.ReadINIxml();
             // Three things could result: No file (-1), Corrupted file (0) or OK (Last AIRAC)
             if (iniAIRAC > 0)
@@ -198,7 +190,7 @@ namespace SCTBuilder
         // Calls a load of all data and repopulates the form
         // Called by Load, DataFolder validated, and DatafolderButton
         {
-            Debug.WriteLine("Setting Form1 Defaults...");
+            Console.WriteLine("Setting Form1 Defaults...");
             UpdateFolderMgt(toFolderMgt: false);
             if (LoadARTCCComboBox() != 0)           // Populates the combobox
             {
@@ -299,7 +291,6 @@ namespace SCTBuilder
                     APTtable.Rows.Add(dataRow.Row["ID"], dataRow.Row["FacilityID"], string.Empty);
                 }
             }
-            Debug.WriteLine("APTcombobox Rows found: " + APTtable.Rows.Count);
             // Create the dataview, filtering by the selected class
             DataView dvAPTcombo = new DataView(APTtable)
             {
@@ -330,7 +321,6 @@ namespace SCTBuilder
             {
                 if (InfoSection.DefaultAirport.Length != 0)
                 {
-                    // Debug.WriteLine("Looking for " + InfoSection.DefaultAirport + " in CboAirport");
                     FoundItem = AirportComboBox.FindStringExact(InfoSection.DefaultAirport);
                 }
                 if (FoundItem != -1) AirportComboBox.SelectedIndex = FoundItem;
@@ -496,7 +486,6 @@ namespace SCTBuilder
             dataView.RowFilter = filter;
             int result = dataView.Count;
             SetSelected(dataView, true);
-            Debug.WriteLine("Selected " + result + " rows from " + table);
             dataView.Dispose();
             return result;
         }
@@ -589,7 +578,7 @@ namespace SCTBuilder
             FilterBy.Method = "Square";
             string filter = SetFilter();
             // Clear prior selected
-            DataView dvRTE = new DataView(NGRTE);
+            DataView dvRTE = new DataView(ReadNaviGraph.NGRTE);
             ClearSelected(dvRTE);
             // Apply the square filter
             dvRTE.RowFilter = filter;
@@ -637,7 +626,7 @@ namespace SCTBuilder
         private string LoadAPTDataGridView()
         {
             DataView dvAPT = new DataView(APT);
-            DataTable dtAPT = dvAPT.ToTable(true, "Selected", Conversions.ICOA("FacilityID"), "Name", "ID", "ARTCC");
+            DataTable dtAPT = dvAPT.ToTable(true, "Selected", "FacilityID", "Name", "ID", "ARTCC");
             dgvAPT.DataSource = dtAPT;
             (dgvAPT.DataSource as DataTable).DefaultView.RowFilter = "[Selected]";
             dgvAPT.Columns[1].HeaderText = "Apt";
@@ -759,7 +748,6 @@ namespace SCTBuilder
                 dvSSD.RowFilter = AAfilter + FacIDfilter;
                 if (dvSSD.Count > 0)
                 {
-                    //Debug.WriteLine("Found: " + dvSSD.Count + " using ([NavAid] = '" + dtAptRow["FacilityID"].ToString() + "')");
                     DataTable IDdata = dvSSD.ToTable(true, "ID");
                     if (IDdata.Rows.Count != 0)
                     {
@@ -825,7 +813,7 @@ namespace SCTBuilder
 
         private string LoadOceanicDataGridView()
         {
-            DataView dvOceanic = new DataView(NGRTE);
+            DataView dvOceanic = new DataView(ReadNaviGraph.NGRTE);
             DataTable dtOceanic = dvOceanic.ToTable(true, "Selected", "AWYID", "NAVAID");
             dgvOceanic.DataSource = dtOceanic;
             (dgvOceanic.DataSource as DataTable).DefaultView.RowFilter = "[Selected]";
@@ -934,7 +922,7 @@ namespace SCTBuilder
                     txtGridViewCount.Text = dgvSTAR.Rows.Count.ToString() + " / " + SSD.Rows.Count.ToString();
                     break;
                 case "Oceanic":
-                    txtGridViewCount.Text = dgvOceanic.Rows.Count.ToString() + " / " + NGRTE.Rows.Count.ToString();
+                    txtGridViewCount.Text = dgvOceanic.Rows.Count.ToString() + " / " + ReadNaviGraph.NGRTE.Rows.Count.ToString();
                     break;
                 default:
                     txtGridViewCount.Text = "Tab not found)";
@@ -1037,8 +1025,9 @@ namespace SCTBuilder
                 }
                 catch
                 {
-                    Debug.WriteLine(dataRow[0] + "  " + dataRow[1] + "  " + dataRow[2] + "  " + dataRow[3]);
-                    Debug.WriteLine(LatNorth + "  " + LongWest + "  " + LatSouth + "  " + LongEast);
+                    Console.WriteLine("Try FAILED: Form1.SquareByARTCC");
+                    Console.WriteLine(dataRow[0] + "  " + dataRow[1] + "  " + dataRow[2] + "  " + dataRow[3]);
+                    Console.WriteLine(LatNorth + "  " + LongWest + "  " + LatSouth + "  " + LongEast);
                 }
             }
             InfoSection.NorthSquare = LatNorth;
@@ -1179,7 +1168,6 @@ namespace SCTBuilder
         {
             if (chkbxShowAll.Checked) (dgv.DataSource as DataTable).DefaultView.RowFilter = null;
             else (dgv.DataSource as DataTable).DefaultView.RowFilter = "[Selected]";
-            Debug.WriteLine("Now showing " + dgv.Rows.Count + " rows in " + dgv.Name);
         }
 
         private void TxtDataFolder_Validated(object sender, EventArgs e)
@@ -1213,7 +1201,6 @@ namespace SCTBuilder
 
         private void TxtDataFolder_Validating(object sender, CancelEventArgs e)
         {
-            Debug.WriteLine("TxtDataFolder_Validating...");
             if (FAADataFolderTextBox.TextLength > 0)
             {
                 if (Directory.Exists(FAADataFolderTextBox.Text))
@@ -1269,7 +1256,6 @@ namespace SCTBuilder
 
         private void LocalSectors_Click(object sender, EventArgs e)
         {
-            Debug.WriteLine("LocalSectors_Click...");
             if (ReadNASR.FillLocalSectors())
                 SCToutput.WriteLS_SID(LocalSector);
         }
@@ -1622,7 +1608,6 @@ namespace SCTBuilder
                 DialogResult dialogResult = getAIRAC.ShowDialog();
                 while (dialogResult == DialogResult.None)
                 { Application.DoEvents(); }
-                Debug.WriteLine("SelectAIRAC returned " + dialogResult.ToString());
                 if (dialogResult == DialogResult.OK)
                 {
                     if (LoadFAATextData() != -1)
@@ -1873,9 +1858,6 @@ namespace SCTBuilder
 
         private void ESEToolStripButton_Click(object sender, EventArgs e)
         {
-            // ESE files require use of Navigraph data
-            SendMessage("Stay tuned for coming attractions!");
-
             ESEToolStripButton.ToolTipText = "Please wait for the completion message."; Refresh();
             UpdateLabel("Writing files. Please wait for completion message.");
             UseWaitCursor = true;
@@ -2008,7 +1990,7 @@ namespace SCTBuilder
         private void ESdataCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             SCTchecked.ChkES_SCTfile = ESdataCheckBox.Checked;
-            if (SCTchecked.ChkES_SSDfile)
+            if (SCTchecked.ChkES_SCTfile)
             {
                 APTsCheckBox.Checked = true;
                 RWYsCheckBox.Checked = true;
@@ -2025,7 +2007,6 @@ namespace SCTBuilder
             if (SCTchecked.ChkES_SSDfile)
             {
                 APTsCheckBox.Checked = true;
-                LimitAPT2ARTCCCheckBox.Checked = true;
             }
             SetChecked();
         }

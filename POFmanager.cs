@@ -231,7 +231,6 @@ namespace SCTBuilder
                 if (e.Value != null)
                 {
                     string value = POFDataGridView[6, e.RowIndex].Value.ToString();
-                    Debug.WriteLine(value);
                     switch (value)
                     {
                         case "CTR":

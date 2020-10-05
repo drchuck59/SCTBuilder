@@ -40,8 +40,6 @@ namespace SCTBuilder
             DateTime currentCycleDate = CycleInfo.CycleDateFromAIRAC(CycleInfo.CurrentAIRAC).Date;
             DateTime nextCycleDate = currentCycleDate.AddDays(28).Date;
             if (nextCycleDate.Year > DateTime.Now.Year) YearComboBox.Items.Add(nextCycleDate.Year.ToString());
-            Console.WriteLine(YearComboBox.Items.Count);
-            foreach (var item in YearComboBox.Items) Console.WriteLine(item.ToString());
             YearComboBox.SelectedItem = currentCycleDate.Year;
         }
 
@@ -80,7 +78,6 @@ namespace SCTBuilder
         private void InitializeConfirmationLabel()
         {
             int tempAIRAC = Convert.ToInt32(YearComboBox.Text.Substring(2, 2) + Convert.ToInt32(CycleComboBox.Text).ToString("D2"));
-            Console.WriteLine("Temp AIRAC: " + tempAIRAC);
             DateTime tempStart = CycleInfo.CycleDateFromAIRAC(tempAIRAC).Date;
             DateTime tempEnd = CycleInfo.CycleDateFromAIRAC(tempAIRAC).AddDays(28).Date;
             string cr = Environment.NewLine;
@@ -123,7 +120,6 @@ namespace SCTBuilder
             string URL = "https://nfdc.faa.gov/webContent/28DaySub/28DaySubscription_Effective_" + newCycleDate + ".zip";
             downloadsPath = "28DaySubscription_Effective_" + newCycleDate + ".zip";
             downloadsPath = Path.GetTempPath() + downloadsPath;
-            Debug.WriteLine(downloadsPath);
             // If the zipfile is already downloaded, delete it (safer as it may be corrupted)
             if (File.Exists(downloadsPath)) File.Delete(downloadsPath);
             OKButton.Text = "Downloading FAA files";
@@ -272,13 +268,13 @@ namespace SCTBuilder
 
         private void ContinueButton_Click(object sender, EventArgs e)
         {
-            Debug.WriteLine("SelectAIRAC closing with " + DialogResult);
+            Console.WriteLine("SelectAIRAC closing with " + DialogResult);
             Close();
         }
 
         private void MyButtonCancel_Click(object sender, EventArgs e)
         {
-            Debug.WriteLine("SelectAIRAC closing with " + DialogResult);
+            Console.WriteLine("SelectAIRAC closing with " + DialogResult);
             Close();
         }
     }

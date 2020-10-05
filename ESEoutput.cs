@@ -6,6 +6,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Media;
 using System.Diagnostics;
+using System.Linq.Expressions;
 
 namespace SCTBuilder
 {
@@ -20,59 +21,71 @@ namespace SCTBuilder
             // DataTable LS = Form1.LocalSector;
             var TextFiles = new List<string>();
             string Message; string path;
+            bool CombineIntoOneFile = SCTchecked.ChkOneESFile;
             if (SCTchecked.ChkES_SCTfile)
             {
                 path = SCTcommon.CheckFile(PartialPath, "Header");
                 Console.WriteLine("Header...");
                 WriteHeader(path);
-                TextFiles.Add(path);
+                if (CombineIntoOneFile) TextFiles.Add(path);
 
                 path = SCTcommon.CheckFile(PartialPath, "Colors");
                 Console.WriteLine("ColorDefinitions");
                 SCToutput.WriteColors(path);
-                TextFiles.Add(path);
+                if (CombineIntoOneFile) TextFiles.Add(path);
 
                 path = SCTcommon.CheckFile(PartialPath, "Info");
                 Console.WriteLine("INFO section...");
                 SCToutput.WriteINFO(path);
-                TextFiles.Add(path);
+                if (CombineIntoOneFile) TextFiles.Add(path);
 
-                path = SCTcommon.CheckFile(PartialPath, "VOR");
-                Console.WriteLine("VORs...");
-                SCToutput.WriteVOR(path);
-                TextFiles.Add(path);
-
-                path = SCTcommon.CheckFile(PartialPath, "NDB");
-                Console.WriteLine("VORs...");
-                SCToutput.WriteNDB(path);
-                TextFiles.Add(path);
-
-                path = SCTcommon.CheckFile(PartialPath, "APT");
-                Console.WriteLine("Airports...");
-                SCToutput.WriteAPT(path);
-                TextFiles.Add(path);
-
-                path = SCTcommon.CheckFile(PartialPath, "RWY");
-                Console.WriteLine("Airport Runways...");
-                WriteRWY(path);
-                TextFiles.Add(path);
-
-                path = SCTcommon.CheckFile(PartialPath, "FIX");
-                Console.WriteLine("Fixes...");
-                SCToutput.WriteFixes(path);
-                TextFiles.Add(path);
+                if (SCTchecked.ChkVOR)
+                {
+                    path = SCTcommon.CheckFile(PartialPath, "VOR");
+                    Console.WriteLine("VORs...");
+                    SCToutput.WriteVOR(path);
+                    if (CombineIntoOneFile) TextFiles.Add(path);
+                }
+                if (SCTchecked.ChkNDB)
+                {
+                    path = SCTcommon.CheckFile(PartialPath, "NDB");
+                    Console.WriteLine("NDBs...");
+                    SCToutput.WriteNDB(path);
+                    if (CombineIntoOneFile) TextFiles.Add(path);
+                }
+                if (SCTchecked.ChkFIX)
+                {
+                    path = SCTcommon.CheckFile(PartialPath, "FIX");
+                    Console.WriteLine("Fixes...");
+                    SCToutput.WriteFixes(path);
+                    if (CombineIntoOneFile) TextFiles.Add(path);
+                }
+                if (SCTchecked.ChkAPT)
+                {
+                    path = SCTcommon.CheckFile(PartialPath, "APT");
+                    Console.WriteLine("Airports...");
+                    WriteAPT(path);
+                    if (CombineIntoOneFile) TextFiles.Add(path);
+                }
+                if (SCTchecked.ChkRWY)
+                {
+                    path = SCTcommon.CheckFile(PartialPath, "RWY");
+                    Console.WriteLine("Airport Runways...");
+                    WriteRWY(path);
+                    if (CombineIntoOneFile) TextFiles.Add(path);
+                }
 
                 if (SCTchecked.ChkARB)
                 {
                     path = SCTcommon.CheckFile(PartialPath, "ARTCC_HIGH");
                     Console.WriteLine("ARTCC HIGH...");
                     SCToutput.WriteARB(path, true);
-                    TextFiles.Add(path);
+                    if (CombineIntoOneFile) TextFiles.Add(path);
 
                     path = SCTcommon.CheckFile(PartialPath, "ARTCC_LOW");
                     Console.WriteLine("ARTCC LOW...");
                     SCToutput.WriteARB(path, false);
-                    TextFiles.Add(path);
+                    if (CombineIntoOneFile) TextFiles.Add(path);
                 }
 
                 if (SCTchecked.ChkAWY)
@@ -80,26 +93,26 @@ namespace SCTBuilder
                     Console.WriteLine("Low AirWays...");
                     path = SCTcommon.CheckFile(PartialPath, "AirwayLow");
                     SCToutput.WriteAWY(path, IsLow: true);
-                    TextFiles.Add(path);
+                    if (CombineIntoOneFile) TextFiles.Add(path);
 
                     path = SCTcommon.CheckFile(PartialPath, "AirwayHigh");
                     Console.WriteLine("High AirWays...");
                     SCToutput.WriteAWY(path, IsLow: false);
-                    TextFiles.Add(path);
+                    if (CombineIntoOneFile) TextFiles.Add(path);
                 }
 
                 if (SCTchecked.ChkSID)
                 {
-                    Debug.WriteLine("SIDS...");
+                    Console.WriteLine("SIDS...");
                     SCToutput.WriteSIDSTAR(IsSID: true);
-                    TextFiles.Add(path);
+                    if (CombineIntoOneFile) TextFiles.Add(path);
                 }
 
                 if (SCTchecked.ChkSTAR)
                 {
-                    Debug.WriteLine("STARS...");
+                    Console.WriteLine("STARS...");
                     SCToutput.WriteSIDSTAR(IsSID: false);
-                    TextFiles.Add(path);
+                    if (CombineIntoOneFile) TextFiles.Add(path);
                 }
             }
             Message = TextFiles.Count.ToString() + " text file(s) written to " + PartialPath + cr;
@@ -116,11 +129,12 @@ namespace SCTBuilder
                 }
                 Message += "Sector file written to " + path + cr;
             }
+            // ---------------------------  ESE SIDSTAR STARTS HERE
             path = SCTcommon.CheckFile(PartialPath, "SIDSTAR", ".ese");
             if (SCTchecked.ChkES_SSDfile && path != string.Empty)
             {
                 Console.WriteLine("SIDS & STARS...");
-                WriteSSD(path);
+                WriteSIDSTAR(path);
                 Message += "SIDSTARS file written to " + path + cr;
             }
             SCTcommon.SendMessage(Message);
@@ -133,6 +147,8 @@ namespace SCTBuilder
             {
                 string Message =
                 ";              ** Not for real world navigation **" + cr +
+                ";" + cr +
+                "; FOR EUROSCOPE - may not work for VRC" +
                 "; File may be distributed only as freeware." + cr +
                 "; Provided 'as is' - use at your own risk." + cr + cr +
                 "; Software-generated sector file using " + VersionInfo.Title + cr +
@@ -151,6 +167,50 @@ namespace SCTBuilder
                 "; Cycle: " + CycleInfo.CycleStart + " to " + CycleInfo.CycleEnd + cr +
                 ";       *** EUROSCOPE FILE FORMAT ***" + cr +
                 "; ================================================================" + cr;
+        }
+
+        public static void WriteAPT(string path)
+        {
+            // Output looks like:
+            // icao freq lat long class
+            string strOut;
+            string FacID;
+            string Lat; string Lon;
+            DataTable APT = Form1.APT;
+            DataTable TWR = Form1.TWR;
+            DataView dvTWR = new DataView(TWR);
+            DataView dvAPT = new DataView(APT)
+            {
+                RowFilter = "[Selected]",
+                Sort = "FacilityID"
+            };
+            // Output only what we need
+            DataTable dataTable = dvAPT.ToTable(true, "ID", "FacilityID", "ICAO", "Latitude", "Longitude", "Name", "Public");
+            DataRow foundRow; string LCL; string Class;
+            using (StreamWriter sw = new StreamWriter(path))
+            {
+                sw.WriteLine(CycleHeader);
+                sw.WriteLine("[AIRPORT]");
+                foreach (DataRow row in dataTable.AsEnumerable())
+                {
+                    FacID = row["FacilityID"].ToString(); 
+                    if (row["ICAO"].ToString().Length > 0) FacID = row["ICAO"].ToString();
+                    LCL = "122.800";
+                    Class = "G";
+                    dvTWR.Sort = "ID";
+                    foundRow = TWR.Rows.Find(row["ID"]);
+                    if (foundRow != null)
+                    {
+                        LCL = foundRow["LCLfreq"].ToString();
+                        Class = foundRow["Class"].ToString();
+                    }
+                    Lat = Conversions.DecDeg2SCT(Convert.ToSingle(row["Latitude"]), true);
+                    Lon = Conversions.DecDeg2SCT(Convert.ToSingle(row["Longitude"]), false);
+                    strOut = FacID.PadRight(4) + " " + LCL.PadRight(7) + " " + Lat + " " + Lon + " " + Class;
+                    sw.WriteLine(strOut);
+                }
+            }
+            dvAPT.Dispose();
         }
 
         private static void WriteRWY(string path)
@@ -192,12 +252,11 @@ namespace SCTBuilder
                     DRAW.Rows.Add(new object[] { strOut[0].ToString(), strOut[4].ToString(), strOut[5].ToString(), strOut[8].ToString() });
                     DRAW.Rows.Add(new object[] { strOut[1].ToString(), strOut[6].ToString(), strOut[7].ToString(), strOut[8].ToString() });
                 }
-                WriteRWYLabels(DRAW, sw);
             }
             dvRWY.Dispose();
         }
   
-        private static void WriteSSD(string path)
+        private static void WriteSIDSTAR(string path)
         {
             // ESE's SIDSTAR format is VERY different than VRCs
             // <SID/STAR>:<AIRPORT ICAO>:<RUNWAY>:<TRANSITIONxPROCEDURE>:<ROUTE>
@@ -206,70 +265,117 @@ namespace SCTBuilder
             // STAR:PHNL:08L:APACKxMAGGI3:APACK TOADS SOPIW MAGGI BAMBO GRITL CKH
             // Calling routine for SID and STAR diagrams
             // SSD = Either SID or STAR, depending on flag
-            string SIDmain; string ICOAapt;
-            List<string> Rwys = new List<string>();
-            List<string> SIDout = new List<string>();
-            List<string> STARout = new List<string>();
+            string ICOAapt;
+            List<string> SSDcodes = new List<string>();
+            string SIDout = string.Empty; string STARout = string.Empty;
             DataTable APT = Form1.APT;
-            DataTable NGSID = Form1.NGSID;
-            DataView dvNGSID = new DataView(NGSID);
-            DataTable NGSIDTransition = Form1.NGSIDTransition;
-            DataView dvNGSIDTransition = new DataView(NGSIDTransition);
+            DataView dvNGSID = new DataView(ReadNaviGraph.NGSID);
+            DataView dvNGSIDTransition = new DataView(ReadNaviGraph.NGSIDTransition);
+            DataView dvNGSTAR = new DataView(ReadNaviGraph.NGSTAR);
+            DataView dvNGSTARTransition = new DataView(ReadNaviGraph.NGSTARTransition);
+            DataView dvNGRWYS = new DataView(ReadNaviGraph.NGRWYS);
             // Using the SELECTED airports, select the SIDS from NG
             // Get the list of Selected Airports
             DataView dvAPT = new DataView(APT)
             {
-                RowFilter = "[Selected]",
-                Sort = "FacilityID",
+                RowFilter = "[Selected] AND (LEN([ICOA]) > 0)",
+                Sort = "SSDcode, Sequence",
             };
             // Read each NG file as needed to build the ESE text
             using (StreamWriter sw = new StreamWriter(path))
             {
                 foreach (DataRowView drvAPT in dvAPT)
                 {
-                    ICOAapt = Conversions.ICOA(drvAPT["FacilityID"].ToString());
+                    ICOAapt = drvAPT["ICAO"].ToString();
                     string FullFilename = SCTcommon.GetFullPathname(FolderMgt.DataFolder, ICOAapt + ".txt");
                     if (FullFilename.IndexOf("ERROR") == -1)
                     {
                         if (ReadNaviGraph.SIDSTARS(ICOAapt, FullFilename))
                         {
+                            // Now we have ONE airport of SIDS and STARS in their respective tables
                             if (dvNGSID.Count > 0)
                             {
-                                SIDout.Clear();
+                                // Loop the SIDs
                                 foreach (DataRowView dvrNGSID in dvNGSID)
                                 {
-                                    Rwys = AddUniqueToList(Rwys, dvrNGSID["Rwy"].ToString());
+                                    SSDcodes = AddUniqueToList(SSDcodes, dvrNGSID["SSDcode"].ToString());
                                 }
-                                foreach (string Rwy in Rwys)
+                                foreach (string SSDcode in SSDcodes)
                                 {
-                                    // SID output
-                                    dvNGSID.RowFilter = "[FacilityID] = '" + drvAPT["FacilityID"] + "' AND [RWY] = '" + Rwy + "'";
-                                    dvNGSIDTransition.RowFilter = "[SSDCode] = '" + dvNGSID[0]["SSDcode"].ToString() + "'";
-                                    SIDmain = "SID:" + drvAPT["FacilityID"].ToString() + ":" + Rwy + ":";
-                                    SIDmain += dvNGSID[0]["SSDcode"].ToString() + "x" + dvNGSIDTransition[0]["Transition"].ToString() + ":";
-                                    SIDout.Add(SIDmain + " " + TransposeFixes(dvNGSID));
-                                    SIDmain += " " + TransposeFixes(dvNGSIDTransition) + " " + TransposeFixes(dvNGSID);
-                                    SIDout.Add(SIDmain);
+                                    Debug.WriteLine("ESEoutput-WriteSSD: Processing " + SSDcode + " in " + ICOAapt);
+                                    dvNGSID.RowFilter = "[SSDCode] = '" + SSDcode + "'";
+                                    dvNGSIDTransition.RowFilter = "[SSDCode] = '" + SSDcode + "'";
+                                    SIDout += OutputSID(ICOAapt, dvNGSID, dvNGSIDTransition, dvNGRWYS);
                                 }
-                                // TEST
-                                if (SIDout.Count > 0)
-                                    foreach (string test in SIDout)
-                                        Debug.WriteLine(test);
+                            }
+                            if (dvNGSTAR.Count > 0)
+                            {
+                                // Loop the STARS
+                                SSDcodes.Clear();
+                                foreach (DataRowView dvrNGSTAR in dvNGSTAR)
+                                {
+                                    SSDcodes = AddUniqueToList(SSDcodes, dvrNGSTAR["SSDcode"].ToString());
+                                }
+                                foreach (string SSDcode in SSDcodes)
+                                {
+                                    Debug.WriteLine("ESEoutput-WriteSSD: Processing " + SSDcode + " in " + ICOAapt);
+                                    dvNGSTAR.RowFilter = "[SSDCode] = '" + SSDcode + "'";
+                                    dvNGSTARTransition.RowFilter = "[SSDCode] = '" + SSDcode + "'";
+                                    // STARout += OutputSTAR(ICOAapt, dvNGSTAR, dvNGSTARTransition, dvNGRWYS);
+                                }
                             }
                         }
                     }
-                    else Debug.WriteLine("Skipped " + ICOAapt);
+                    else Debug.WriteLine("Skipped " + drvAPT["FacilityID"]);
                 }
             }
         }
 
+        private static string OutputSID(string ICAO, DataView SID, DataView SIDTransition, DataView RWYS)
+        {
+            // Expects dataviews for a specific Airport and one SID
+            string AptPrefix = "SID:" + ICAO + ":";
+            string prefix; string Transition; 
+            string SIDfixes = string.Empty; 
+            string TransFixes = string.Empty;
+            string OrigSIDFilter = SID.RowFilter;
+            DataView tempTransition = SIDTransition;
+            string result = string.Empty;
+            if (SIDTransition.Count > 0)
+            {
+                // Loop each runway as there's no guarantee every rwy will have this SID
+                foreach (DataRowView Rwy in RWYS)
+                {
+                    prefix = AptPrefix + Rwy.ToString() + ":" + SID[0]["SSDcode"].ToString();
+                    SID.RowFilter = OrigSIDFilter + " AND [Rwy] = '" + RWYS + "'";
+                    SIDfixes = TransposeFixes(SID);
+                    result += prefix + SIDfixes + cr;
+                    foreach (DataRowView dvrTransition in SIDTransition)
+                    {
+                        Transition = dvrTransition["Transition"].ToString();
+                        tempTransition.RowFilter = SIDTransition.RowFilter + "[Transition] = '" + Transition + "'";
+                        if (tempTransition.Count > 0) TransFixes = TransposeFixes(tempTransition);
+                        else TransFixes = string.Empty;
+                    }
+                    if (TransFixes.Length > 0) result += prefix + TransFixes + SIDfixes + cr;
+                }
+            }
+            else
+            {
+                // NO transition - just the main fixes
+            }
+            return result;
+        }
+
         private static string TransposeFixes (DataView dataView)
         {
-            string result = string.Empty;
-            foreach (DataRowView dataRowView in dataView)
+            string result = string.Empty; List<string> FixList = new List<string>();
+            DataTable temp = dataView.ToTable(true, "FIX");
+            foreach (DataRow dataRow in temp.Rows)
             {
-                if (dataRowView["Fix"].ToString().Length != 0) result += dataRowView["Fix"].ToString() + " ";
+                AddUniqueToList(FixList, dataRow["FIX"].ToString());
             }
+            foreach (string item in FixList) result += item + " ";
             return result.Trim();
         }
 
@@ -289,6 +395,7 @@ namespace SCTBuilder
             string strText; string Lat; string Long; string Facility; string Comment;
             string Output;
             // string colorValue = dtColors.Rows[0]["ColorValue"].ToString();
+            Debug.WriteLine("WriteRWYLabels...");
             sw.WriteLine("[LABELS]");
             sw.WriteLine("; Runway labels");
             foreach (DataRow row in dtSTL.AsEnumerable())

@@ -44,7 +44,8 @@ namespace SCTBuilder
             InfoSection.DrawFixSymbolsOnDiagrams = DrawSymbolsCheckBox.Checked;
             InfoSection.DrawAltRestrictsOnDiagrams = DrawAltitudeRestrictionsOnDiagramsCheckBox.Checked;
             InfoSection.DrawSpeedRestrictsOnDiagrams = DrawSpeedRestrictionsCheckBox.Checked;
-            SCTchecked.ChkOneFile = CombineCheckBox.Checked;
+            SCTchecked.ChkOneVRCFile = VRCCombineCheckBox.Checked;
+            SCTchecked.ChkOneESFile = ESCombineCheckBox.Checked;
             SCTchecked.IncludeSUAfile = IncludeSIDSTARReferencesCheckBox.Checked;
             Close();
         }
@@ -59,7 +60,8 @@ namespace SCTBuilder
             DrawSymbolsCheckBox.Checked = InfoSection.DrawFixSymbolsOnDiagrams;
             DrawAltitudeRestrictionsOnDiagramsCheckBox.Checked = InfoSection.DrawAltRestrictsOnDiagrams;
             DrawSpeedRestrictionsCheckBox.Checked = InfoSection.DrawSpeedRestrictsOnDiagrams;
-            CombineCheckBox.Checked = SCTchecked.ChkOneFile;
+            VRCCombineCheckBox.Checked = SCTchecked.ChkOneVRCFile;
+            ESCombineCheckBox.Checked = SCTchecked.ChkOneESFile;
             IncludeSUACheckBox.Checked = SCTchecked.IncludeSUAfile;
         }
     }

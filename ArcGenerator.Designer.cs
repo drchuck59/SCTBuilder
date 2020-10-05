@@ -28,9 +28,14 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ArcGenerator));
             this.label11 = new System.Windows.Forms.Label();
             this.FixImportGroupBox = new System.Windows.Forms.GroupBox();
+            this.FixBrgNUD = new System.Windows.Forms.NumericUpDown();
+            this.label15 = new System.Windows.Forms.Label();
+            this.label14 = new System.Windows.Forms.Label();
+            this.FixDistTextBox = new System.Windows.Forms.TextBox();
             this.FixListDataGridView = new System.Windows.Forms.DataGridView();
             this.IdentifierLabel = new System.Windows.Forms.Label();
             this.IdentifierTextBox = new System.Windows.Forms.TextBox();
@@ -58,20 +63,13 @@
             this.EndLatitudeTextBox = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
             this.FixToEndButton = new System.Windows.Forms.Button();
-            this.CenterRadiusLabel = new System.Windows.Forms.Label();
-            this.label8 = new System.Windows.Forms.Label();
-            this.CalcDistanceTextBox = new System.Windows.Forms.TextBox();
-            this.label9 = new System.Windows.Forms.Label();
-            this.label10 = new System.Windows.Forms.Label();
-            this.label12 = new System.Windows.Forms.Label();
-            this.StartBrgTextBox = new System.Windows.Forms.TextBox();
-            this.EndBrgTestBox = new System.Windows.Forms.TextBox();
             this.SCTFormatGroupBox = new System.Windows.Forms.GroupBox();
-            this.UseFIXNamesCheckBox = new System.Windows.Forms.CheckBox();
-            this.GEORadioButton = new System.Windows.Forms.RadioButton();
-            this.SSDRadioButton = new System.Windows.Forms.RadioButton();
-            this.ARTCCRadioButton = new System.Windows.Forms.RadioButton();
-            this.AirwayRadioButton = new System.Windows.Forms.RadioButton();
+            this.label17 = new System.Windows.Forms.Label();
+            this.DashedNUD = new System.Windows.Forms.NumericUpDown();
+            this.ColorComboBox = new System.Windows.Forms.ComboBox();
+            this.colorDefsBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.sCTdata = new SCTBuilder.SCTdata();
+            this.SectionComboBox = new System.Windows.Forms.ComboBox();
             this.Copy2ClipboardButton = new System.Windows.Forms.Button();
             this.ClearOutputButton = new System.Windows.Forms.Button();
             this.label13 = new System.Windows.Forms.Label();
@@ -81,15 +79,49 @@
             this.PrefixTextBox = new System.Windows.Forms.TextBox();
             this.SuffixLabel = new System.Windows.Forms.Label();
             this.PrefixLabel = new System.Windows.Forms.Label();
-            this.AddArcByRadialsButton = new System.Windows.Forms.Button();
-            this.AddArcByCoordsButton = new System.Windows.Forms.Button();
-            this.MagOffsetLabel = new System.Windows.Forms.Label();
+            this.AddArc = new System.Windows.Forms.Button();
+            this.label9 = new System.Windows.Forms.Label();
+            this.CalcDistanceTextBox = new System.Windows.Forms.TextBox();
+            this.label10 = new System.Windows.Forms.Label();
+            this.label12 = new System.Windows.Forms.Label();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.MagBrgCheckBox = new System.Windows.Forms.CheckBox();
+            this.InsertCoordsButton = new System.Windows.Forms.Button();
+            this.CircleCheckBox = new System.Windows.Forms.CheckBox();
+            this.EndRadialNUD = new System.Windows.Forms.NumericUpDown();
+            this.StartRadialNUD = new System.Windows.Forms.NumericUpDown();
+            this.MagVarTextBox = new System.Windows.Forms.TextBox();
+            this.label16 = new System.Windows.Forms.Label();
+            this.label18 = new System.Windows.Forms.Label();
+            this.label19 = new System.Windows.Forms.Label();
+            this.label20 = new System.Windows.Forms.Label();
+            this.StartDistTextBox = new System.Windows.Forms.TextBox();
+            this.StartBrgTextBox = new System.Windows.Forms.TextBox();
+            this.StartStatsGroupBox = new System.Windows.Forms.GroupBox();
+            this.EndBrgTextBox = new System.Windows.Forms.TextBox();
+            this.label22 = new System.Windows.Forms.Label();
+            this.TradeStartEndButton = new System.Windows.Forms.Button();
+            this.label8 = new System.Windows.Forms.Label();
+            this.PasteToTextBox = new System.Windows.Forms.TextBox();
+            this.PasteToCenterButton = new System.Windows.Forms.Button();
+            this.PasteToStartButton = new System.Windows.Forms.Button();
+            this.PasteToEndButton = new System.Windows.Forms.Button();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.FixImportGroupBox.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.FixBrgNUD)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.FixListDataGridView)).BeginInit();
             this.CenterGroupBox.SuspendLayout();
             this.StartGroupBox.SuspendLayout();
             this.EndGroupBox.SuspendLayout();
             this.SCTFormatGroupBox.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.DashedNUD)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.colorDefsBindingSource)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.sCTdata)).BeginInit();
+            this.groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.EndRadialNUD)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.StartRadialNUD)).BeginInit();
+            this.StartStatsGroupBox.SuspendLayout();
+            this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
             // label11
@@ -105,18 +137,75 @@
             // 
             // FixImportGroupBox
             // 
+            this.FixImportGroupBox.Controls.Add(this.FixBrgNUD);
+            this.FixImportGroupBox.Controls.Add(this.label15);
+            this.FixImportGroupBox.Controls.Add(this.label14);
+            this.FixImportGroupBox.Controls.Add(this.FixDistTextBox);
             this.FixImportGroupBox.Controls.Add(this.FixListDataGridView);
             this.FixImportGroupBox.Controls.Add(this.IdentifierLabel);
             this.FixImportGroupBox.Controls.Add(this.IdentifierTextBox);
             this.FixImportGroupBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.FixImportGroupBox.Location = new System.Drawing.Point(252, 87);
+            this.FixImportGroupBox.Location = new System.Drawing.Point(16, 49);
             this.FixImportGroupBox.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
             this.FixImportGroupBox.Name = "FixImportGroupBox";
             this.FixImportGroupBox.Padding = new System.Windows.Forms.Padding(2, 1, 2, 1);
-            this.FixImportGroupBox.Size = new System.Drawing.Size(228, 230);
+            this.FixImportGroupBox.Size = new System.Drawing.Size(232, 261);
             this.FixImportGroupBox.TabIndex = 39;
             this.FixImportGroupBox.TabStop = false;
             this.FixImportGroupBox.Text = "Import From Fix";
+            // 
+            // FixBrgNUD
+            // 
+            this.FixBrgNUD.Location = new System.Drawing.Point(76, 230);
+            this.FixBrgNUD.Maximum = new decimal(new int[] {
+            360,
+            0,
+            0,
+            0});
+            this.FixBrgNUD.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.FixBrgNUD.Name = "FixBrgNUD";
+            this.FixBrgNUD.Size = new System.Drawing.Size(47, 23);
+            this.FixBrgNUD.TabIndex = 71;
+            this.FixBrgNUD.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label15.Location = new System.Drawing.Point(129, 233);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(35, 15);
+            this.label15.TabIndex = 70;
+            this.label15.Text = "DME";
+            this.label15.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label14.Location = new System.Drawing.Point(11, 233);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(67, 15);
+            this.label14.TabIndex = 68;
+            this.label14.Text = "Brg (*mag)";
+            // 
+            // FixDistTextBox
+            // 
+            this.FixDistTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.FixDistTextBox.Location = new System.Drawing.Point(165, 230);
+            this.FixDistTextBox.Name = "FixDistTextBox";
+            this.FixDistTextBox.Size = new System.Drawing.Size(40, 21);
+            this.FixDistTextBox.TabIndex = 69;
+            this.FixDistTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.FixDistTextBox_KeyPress);
+            this.FixDistTextBox.Validating += new System.ComponentModel.CancelEventHandler(this.FixDistTextBox_Validating);
             // 
             // FixListDataGridView
             // 
@@ -152,12 +241,12 @@
             // 
             // IdentifierTextBox
             // 
-            this.IdentifierTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.IdentifierTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.IdentifierTextBox.Location = new System.Drawing.Point(71, 18);
             this.IdentifierTextBox.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
             this.IdentifierTextBox.MaxLength = 6;
             this.IdentifierTextBox.Name = "IdentifierTextBox";
-            this.IdentifierTextBox.Size = new System.Drawing.Size(68, 23);
+            this.IdentifierTextBox.Size = new System.Drawing.Size(68, 21);
             this.IdentifierTextBox.TabIndex = 0;
             this.IdentifierTextBox.TabStop = false;
             this.IdentifierTextBox.TextChanged += new System.EventHandler(this.IdentifierTextBox_TextChanged);
@@ -171,11 +260,11 @@
             this.CenterGroupBox.Controls.Add(this.CenterLatitudeTextBox);
             this.CenterGroupBox.Controls.Add(this.startPointLatitudeLabel);
             this.CenterGroupBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CenterGroupBox.Location = new System.Drawing.Point(16, 87);
+            this.CenterGroupBox.Location = new System.Drawing.Point(308, 27);
             this.CenterGroupBox.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
             this.CenterGroupBox.Name = "CenterGroupBox";
             this.CenterGroupBox.Padding = new System.Windows.Forms.Padding(2, 1, 2, 1);
-            this.CenterGroupBox.Size = new System.Drawing.Size(189, 103);
+            this.CenterGroupBox.Size = new System.Drawing.Size(215, 105);
             this.CenterGroupBox.TabIndex = 40;
             this.CenterGroupBox.TabStop = false;
             this.CenterGroupBox.Text = "Center coordinates";
@@ -184,66 +273,65 @@
             // 
             this.CenterFixTextBox.Enabled = false;
             this.CenterFixTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CenterFixTextBox.Location = new System.Drawing.Point(73, 74);
+            this.CenterFixTextBox.Location = new System.Drawing.Point(78, 74);
             this.CenterFixTextBox.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
             this.CenterFixTextBox.MaxLength = 6;
             this.CenterFixTextBox.Name = "CenterFixTextBox";
-            this.CenterFixTextBox.Size = new System.Drawing.Size(108, 21);
+            this.CenterFixTextBox.Size = new System.Drawing.Size(133, 21);
             this.CenterFixTextBox.TabIndex = 4;
             // 
             // StartFixLabel
             // 
             this.StartFixLabel.AutoSize = true;
-            this.StartFixLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.StartFixLabel.Location = new System.Drawing.Point(11, 74);
+            this.StartFixLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.StartFixLabel.Location = new System.Drawing.Point(51, 77);
             this.StartFixLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.StartFixLabel.Name = "StartFixLabel";
-            this.StartFixLabel.Size = new System.Drawing.Size(25, 17);
+            this.StartFixLabel.Size = new System.Drawing.Size(23, 15);
             this.StartFixLabel.TabIndex = 3;
             this.StartFixLabel.Text = "Fix";
             // 
             // CenterLongitudeTextBox
             // 
             this.CenterLongitudeTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CenterLongitudeTextBox.Location = new System.Drawing.Point(73, 51);
+            this.CenterLongitudeTextBox.Location = new System.Drawing.Point(78, 51);
             this.CenterLongitudeTextBox.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
-            this.CenterLongitudeTextBox.MaxLength = 13;
+            this.CenterLongitudeTextBox.MaxLength = 15;
             this.CenterLongitudeTextBox.Name = "CenterLongitudeTextBox";
-            this.CenterLongitudeTextBox.Size = new System.Drawing.Size(108, 21);
+            this.CenterLongitudeTextBox.Size = new System.Drawing.Size(133, 21);
             this.CenterLongitudeTextBox.TabIndex = 2;
-            this.CenterLongitudeTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.CenterLongitudeTextBox_KeyPress);
+            this.CenterLongitudeTextBox.Validated += new System.EventHandler(this.CenterLongitudeTextBox_Validated);
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(4, 53);
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(12, 54);
             this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(71, 17);
+            this.label1.Size = new System.Drawing.Size(62, 15);
             this.label1.TabIndex = 2;
             this.label1.Text = "Longitude";
             // 
             // CenterLatitudeTextBox
             // 
             this.CenterLatitudeTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CenterLatitudeTextBox.Location = new System.Drawing.Point(73, 27);
+            this.CenterLatitudeTextBox.Location = new System.Drawing.Point(78, 27);
             this.CenterLatitudeTextBox.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
-            this.CenterLatitudeTextBox.MaxLength = 12;
+            this.CenterLatitudeTextBox.MaxLength = 15;
             this.CenterLatitudeTextBox.Name = "CenterLatitudeTextBox";
-            this.CenterLatitudeTextBox.Size = new System.Drawing.Size(108, 21);
+            this.CenterLatitudeTextBox.Size = new System.Drawing.Size(133, 21);
             this.CenterLatitudeTextBox.TabIndex = 1;
-            this.CenterLatitudeTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.CenterLatitudeTextBox_KeyPress);
             this.CenterLatitudeTextBox.Validated += new System.EventHandler(this.CenterLatitudeTextBox_Validated);
             // 
             // startPointLatitudeLabel
             // 
             this.startPointLatitudeLabel.AutoSize = true;
-            this.startPointLatitudeLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.startPointLatitudeLabel.Location = new System.Drawing.Point(4, 29);
+            this.startPointLatitudeLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.startPointLatitudeLabel.Location = new System.Drawing.Point(23, 30);
             this.startPointLatitudeLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.startPointLatitudeLabel.Name = "startPointLatitudeLabel";
-            this.startPointLatitudeLabel.Size = new System.Drawing.Size(59, 17);
+            this.startPointLatitudeLabel.Size = new System.Drawing.Size(51, 15);
             this.startPointLatitudeLabel.TabIndex = 0;
             this.startPointLatitudeLabel.Text = "Latitude";
             // 
@@ -253,7 +341,7 @@
             this.Fix2CenterButton.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("Fix2CenterButton.BackgroundImage")));
             this.Fix2CenterButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.Fix2CenterButton.Enabled = false;
-            this.Fix2CenterButton.Location = new System.Drawing.Point(209, 114);
+            this.Fix2CenterButton.Location = new System.Drawing.Point(265, 61);
             this.Fix2CenterButton.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
             this.Fix2CenterButton.Name = "Fix2CenterButton";
             this.Fix2CenterButton.Size = new System.Drawing.Size(39, 38);
@@ -262,7 +350,7 @@
             this.Fix2CenterButton.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             this.Fix2CenterButton.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.Fix2CenterButton.UseVisualStyleBackColor = false;
-            this.Fix2CenterButton.Click += new System.EventHandler(this.ImportFix2CenterButton_Click);
+            this.Fix2CenterButton.Click += new System.EventHandler(this.Fix2CenterButton_Click);
             // 
             // StartGroupBox
             // 
@@ -273,78 +361,78 @@
             this.StartGroupBox.Controls.Add(this.StartLatitudeTextBox);
             this.StartGroupBox.Controls.Add(this.label4);
             this.StartGroupBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.StartGroupBox.Location = new System.Drawing.Point(527, 87);
+            this.StartGroupBox.Location = new System.Drawing.Point(308, 134);
             this.StartGroupBox.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
             this.StartGroupBox.Name = "StartGroupBox";
             this.StartGroupBox.Padding = new System.Windows.Forms.Padding(2, 1, 2, 1);
-            this.StartGroupBox.Size = new System.Drawing.Size(189, 103);
+            this.StartGroupBox.Size = new System.Drawing.Size(215, 104);
             this.StartGroupBox.TabIndex = 42;
             this.StartGroupBox.TabStop = false;
-            this.StartGroupBox.Text = "Start point coordinates";
+            this.StartGroupBox.Text = "Arc start coordinates";
             // 
             // StartFixTextBox
             // 
             this.StartFixTextBox.Enabled = false;
             this.StartFixTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.StartFixTextBox.Location = new System.Drawing.Point(73, 74);
+            this.StartFixTextBox.Location = new System.Drawing.Point(77, 74);
             this.StartFixTextBox.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
             this.StartFixTextBox.MaxLength = 6;
             this.StartFixTextBox.Name = "StartFixTextBox";
-            this.StartFixTextBox.Size = new System.Drawing.Size(108, 21);
+            this.StartFixTextBox.Size = new System.Drawing.Size(134, 21);
             this.StartFixTextBox.TabIndex = 4;
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(11, 74);
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Location = new System.Drawing.Point(49, 74);
             this.label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(25, 17);
+            this.label2.Size = new System.Drawing.Size(23, 15);
             this.label2.TabIndex = 3;
             this.label2.Text = "Fix";
             // 
             // StartLongitudeTextBox
             // 
             this.StartLongitudeTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.StartLongitudeTextBox.Location = new System.Drawing.Point(73, 51);
+            this.StartLongitudeTextBox.Location = new System.Drawing.Point(77, 51);
             this.StartLongitudeTextBox.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
-            this.StartLongitudeTextBox.MaxLength = 13;
+            this.StartLongitudeTextBox.MaxLength = 15;
             this.StartLongitudeTextBox.Name = "StartLongitudeTextBox";
-            this.StartLongitudeTextBox.Size = new System.Drawing.Size(108, 21);
+            this.StartLongitudeTextBox.Size = new System.Drawing.Size(134, 21);
             this.StartLongitudeTextBox.TabIndex = 2;
-            this.StartLongitudeTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.StartLongitudeTextBox_KeyPress);
+            this.StartLongitudeTextBox.Validated += new System.EventHandler(this.StartLongitudeTextBox_Validated);
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(4, 53);
+            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.Location = new System.Drawing.Point(10, 53);
             this.label3.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(71, 17);
+            this.label3.Size = new System.Drawing.Size(62, 15);
             this.label3.TabIndex = 2;
             this.label3.Text = "Longitude";
             // 
             // StartLatitudeTextBox
             // 
             this.StartLatitudeTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.StartLatitudeTextBox.Location = new System.Drawing.Point(73, 27);
+            this.StartLatitudeTextBox.Location = new System.Drawing.Point(77, 27);
             this.StartLatitudeTextBox.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
-            this.StartLatitudeTextBox.MaxLength = 12;
+            this.StartLatitudeTextBox.MaxLength = 15;
             this.StartLatitudeTextBox.Name = "StartLatitudeTextBox";
-            this.StartLatitudeTextBox.Size = new System.Drawing.Size(108, 21);
+            this.StartLatitudeTextBox.Size = new System.Drawing.Size(134, 21);
             this.StartLatitudeTextBox.TabIndex = 1;
-            this.StartLatitudeTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.StartLatitudeTextBox_KeyPress);
+            this.StartLatitudeTextBox.Validated += new System.EventHandler(this.StartLatitudeTextBox_Validated);
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(4, 29);
+            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label4.Location = new System.Drawing.Point(21, 29);
             this.label4.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(59, 17);
+            this.label4.Size = new System.Drawing.Size(51, 15);
             this.label4.TabIndex = 0;
             this.label4.Text = "Latitude";
             // 
@@ -353,8 +441,7 @@
             this.FixToSTartButton.BackColor = System.Drawing.Color.White;
             this.FixToSTartButton.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("FixToSTartButton.BackgroundImage")));
             this.FixToSTartButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.FixToSTartButton.Enabled = false;
-            this.FixToSTartButton.Location = new System.Drawing.Point(484, 115);
+            this.FixToSTartButton.Location = new System.Drawing.Point(265, 168);
             this.FixToSTartButton.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
             this.FixToSTartButton.Name = "FixToSTartButton";
             this.FixToSTartButton.Size = new System.Drawing.Size(39, 38);
@@ -373,14 +460,14 @@
             this.EndGroupBox.Controls.Add(this.EndLatitudeTextBox);
             this.EndGroupBox.Controls.Add(this.label7);
             this.EndGroupBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.EndGroupBox.Location = new System.Drawing.Point(527, 192);
+            this.EndGroupBox.Location = new System.Drawing.Point(308, 274);
             this.EndGroupBox.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
             this.EndGroupBox.Name = "EndGroupBox";
             this.EndGroupBox.Padding = new System.Windows.Forms.Padding(2, 1, 2, 1);
-            this.EndGroupBox.Size = new System.Drawing.Size(189, 103);
+            this.EndGroupBox.Size = new System.Drawing.Size(215, 103);
             this.EndGroupBox.TabIndex = 44;
             this.EndGroupBox.TabStop = false;
-            this.EndGroupBox.Text = "End point coordinates";
+            this.EndGroupBox.Text = "Arc end coordinates";
             // 
             // EndFixTextBox
             // 
@@ -390,17 +477,17 @@
             this.EndFixTextBox.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
             this.EndFixTextBox.MaxLength = 6;
             this.EndFixTextBox.Name = "EndFixTextBox";
-            this.EndFixTextBox.Size = new System.Drawing.Size(108, 21);
+            this.EndFixTextBox.Size = new System.Drawing.Size(138, 21);
             this.EndFixTextBox.TabIndex = 4;
             // 
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(11, 74);
+            this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label5.Location = new System.Drawing.Point(46, 77);
             this.label5.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(25, 17);
+            this.label5.Size = new System.Drawing.Size(23, 15);
             this.label5.TabIndex = 3;
             this.label5.Text = "Fix";
             // 
@@ -409,20 +496,20 @@
             this.EndLongitudeTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.EndLongitudeTextBox.Location = new System.Drawing.Point(73, 51);
             this.EndLongitudeTextBox.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
-            this.EndLongitudeTextBox.MaxLength = 13;
+            this.EndLongitudeTextBox.MaxLength = 15;
             this.EndLongitudeTextBox.Name = "EndLongitudeTextBox";
-            this.EndLongitudeTextBox.Size = new System.Drawing.Size(108, 21);
+            this.EndLongitudeTextBox.Size = new System.Drawing.Size(138, 21);
             this.EndLongitudeTextBox.TabIndex = 2;
-            this.EndLongitudeTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.EndLongitudeTextBox_KeyPress);
+            this.EndLongitudeTextBox.Validated += new System.EventHandler(this.EndLongitudeTextBox_Validated);
             // 
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(4, 53);
+            this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label6.Location = new System.Drawing.Point(7, 54);
             this.label6.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(71, 17);
+            this.label6.Size = new System.Drawing.Size(62, 15);
             this.label6.TabIndex = 2;
             this.label6.Text = "Longitude";
             // 
@@ -431,20 +518,20 @@
             this.EndLatitudeTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.EndLatitudeTextBox.Location = new System.Drawing.Point(73, 27);
             this.EndLatitudeTextBox.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
-            this.EndLatitudeTextBox.MaxLength = 12;
+            this.EndLatitudeTextBox.MaxLength = 15;
             this.EndLatitudeTextBox.Name = "EndLatitudeTextBox";
-            this.EndLatitudeTextBox.Size = new System.Drawing.Size(108, 21);
+            this.EndLatitudeTextBox.Size = new System.Drawing.Size(138, 21);
             this.EndLatitudeTextBox.TabIndex = 1;
-            this.EndLatitudeTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.EndLatitudeTextBox_KeyPress);
+            this.EndLatitudeTextBox.Validated += new System.EventHandler(this.EndLatitudeTextBox_Validated);
             // 
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label7.Location = new System.Drawing.Point(4, 29);
+            this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label7.Location = new System.Drawing.Point(18, 30);
             this.label7.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(59, 17);
+            this.label7.Size = new System.Drawing.Size(51, 15);
             this.label7.TabIndex = 0;
             this.label7.Text = "Latitude";
             // 
@@ -453,8 +540,7 @@
             this.FixToEndButton.BackColor = System.Drawing.Color.White;
             this.FixToEndButton.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("FixToEndButton.BackgroundImage")));
             this.FixToEndButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.FixToEndButton.Enabled = false;
-            this.FixToEndButton.Location = new System.Drawing.Point(484, 226);
+            this.FixToEndButton.Location = new System.Drawing.Point(265, 274);
             this.FixToEndButton.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
             this.FixToEndButton.Name = "FixToEndButton";
             this.FixToEndButton.Size = new System.Drawing.Size(39, 38);
@@ -465,169 +551,89 @@
             this.FixToEndButton.UseVisualStyleBackColor = false;
             this.FixToEndButton.Click += new System.EventHandler(this.FixToEndButton_Click);
             // 
-            // CenterRadiusLabel
-            // 
-            this.CenterRadiusLabel.AutoSize = true;
-            this.CenterRadiusLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CenterRadiusLabel.Location = new System.Drawing.Point(15, 65);
-            this.CenterRadiusLabel.Name = "CenterRadiusLabel";
-            this.CenterRadiusLabel.Size = new System.Drawing.Size(222, 16);
-            this.CenterRadiusLabel.TabIndex = 46;
-            this.CenterRadiusLabel.Text = "Arc from center, radius and bearings";
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label8.Location = new System.Drawing.Point(524, 49);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(211, 32);
-            this.label8.TabIndex = 47;
-            this.label8.Text = "Arc from start and end coordinates\r\n(Distance determines diameter)";
-            // 
-            // CalcDistanceTextBox
-            // 
-            this.CalcDistanceTextBox.Location = new System.Drawing.Point(111, 192);
-            this.CalcDistanceTextBox.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
-            this.CalcDistanceTextBox.MaxLength = 3;
-            this.CalcDistanceTextBox.Name = "CalcDistanceTextBox";
-            this.CalcDistanceTextBox.Size = new System.Drawing.Size(68, 20);
-            this.CalcDistanceTextBox.TabIndex = 48;
-            this.CalcDistanceTextBox.TextChanged += new System.EventHandler(this.CalcDistanceTextBox_TextChanged);
-            this.CalcDistanceTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.CalcDistanceTextBox_KeyPress);
-            // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label9.Location = new System.Drawing.Point(24, 196);
-            this.label9.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(83, 16);
-            this.label9.TabIndex = 49;
-            this.label9.Text = "Radius (NM)";
-            // 
-            // label10
-            // 
-            this.label10.AutoSize = true;
-            this.label10.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label10.Location = new System.Drawing.Point(15, 218);
-            this.label10.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(92, 16);
-            this.label10.TabIndex = 50;
-            this.label10.Text = "Start Brg (true)";
-            // 
-            // label12
-            // 
-            this.label12.AutoSize = true;
-            this.label12.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label12.Location = new System.Drawing.Point(18, 237);
-            this.label12.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(89, 16);
-            this.label12.TabIndex = 51;
-            this.label12.Text = "End Brg (true)";
-            // 
-            // StartBrgTextBox
-            // 
-            this.StartBrgTextBox.Location = new System.Drawing.Point(111, 214);
-            this.StartBrgTextBox.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
-            this.StartBrgTextBox.MaxLength = 3;
-            this.StartBrgTextBox.Name = "StartBrgTextBox";
-            this.StartBrgTextBox.Size = new System.Drawing.Size(68, 20);
-            this.StartBrgTextBox.TabIndex = 52;
-            this.StartBrgTextBox.TextChanged += new System.EventHandler(this.StartBrgTextBox_TextChanged);
-            this.StartBrgTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.StartBrgTextBox_KeyPress);
-            // 
-            // EndBrgTestBox
-            // 
-            this.EndBrgTestBox.Location = new System.Drawing.Point(111, 237);
-            this.EndBrgTestBox.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
-            this.EndBrgTestBox.MaxLength = 3;
-            this.EndBrgTestBox.Name = "EndBrgTestBox";
-            this.EndBrgTestBox.Size = new System.Drawing.Size(68, 20);
-            this.EndBrgTestBox.TabIndex = 53;
-            this.EndBrgTestBox.TextChanged += new System.EventHandler(this.EndBrgTestBox_TextChanged);
-            this.EndBrgTestBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.EndBrgTestBox_KeyPress);
-            // 
             // SCTFormatGroupBox
             // 
-            this.SCTFormatGroupBox.Controls.Add(this.UseFIXNamesCheckBox);
-            this.SCTFormatGroupBox.Controls.Add(this.GEORadioButton);
-            this.SCTFormatGroupBox.Controls.Add(this.SSDRadioButton);
-            this.SCTFormatGroupBox.Controls.Add(this.ARTCCRadioButton);
-            this.SCTFormatGroupBox.Controls.Add(this.AirwayRadioButton);
-            this.SCTFormatGroupBox.Location = new System.Drawing.Point(5, 399);
+            this.SCTFormatGroupBox.Controls.Add(this.label17);
+            this.SCTFormatGroupBox.Controls.Add(this.DashedNUD);
+            this.SCTFormatGroupBox.Controls.Add(this.ColorComboBox);
+            this.SCTFormatGroupBox.Controls.Add(this.SectionComboBox);
+            this.SCTFormatGroupBox.Location = new System.Drawing.Point(19, 317);
             this.SCTFormatGroupBox.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
             this.SCTFormatGroupBox.Name = "SCTFormatGroupBox";
             this.SCTFormatGroupBox.Padding = new System.Windows.Forms.Padding(2, 1, 2, 1);
-            this.SCTFormatGroupBox.Size = new System.Drawing.Size(233, 64);
+            this.SCTFormatGroupBox.Size = new System.Drawing.Size(152, 99);
             this.SCTFormatGroupBox.TabIndex = 54;
             this.SCTFormatGroupBox.TabStop = false;
             this.SCTFormatGroupBox.Text = "Desired SCT2 format";
             // 
-            // UseFIXNamesCheckBox
+            // label17
             // 
-            this.UseFIXNamesCheckBox.AutoSize = true;
-            this.UseFIXNamesCheckBox.Location = new System.Drawing.Point(111, 38);
-            this.UseFIXNamesCheckBox.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
-            this.UseFIXNamesCheckBox.Name = "UseFIXNamesCheckBox";
-            this.UseFIXNamesCheckBox.Size = new System.Drawing.Size(98, 17);
-            this.UseFIXNamesCheckBox.TabIndex = 5;
-            this.UseFIXNamesCheckBox.Text = "Use FIX names";
-            this.UseFIXNamesCheckBox.UseVisualStyleBackColor = true;
+            this.label17.AutoSize = true;
+            this.label17.Location = new System.Drawing.Point(13, 74);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(70, 13);
+            this.label17.TabIndex = 3;
+            this.label17.Text = "Dashed (NM)";
             // 
-            // GEORadioButton
+            // DashedNUD
             // 
-            this.GEORadioButton.AutoSize = true;
-            this.GEORadioButton.Location = new System.Drawing.Point(89, 17);
-            this.GEORadioButton.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
-            this.GEORadioButton.Name = "GEORadioButton";
-            this.GEORadioButton.Size = new System.Drawing.Size(48, 17);
-            this.GEORadioButton.TabIndex = 1;
-            this.GEORadioButton.Text = "GEO";
-            this.GEORadioButton.UseVisualStyleBackColor = true;
+            this.DashedNUD.DecimalPlaces = 2;
+            this.DashedNUD.Increment = new decimal(new int[] {
+            5,
+            0,
+            0,
+            131072});
+            this.DashedNUD.Location = new System.Drawing.Point(90, 72);
+            this.DashedNUD.Maximum = new decimal(new int[] {
+            2,
+            0,
+            0,
+            0});
+            this.DashedNUD.Name = "DashedNUD";
+            this.DashedNUD.Size = new System.Drawing.Size(42, 20);
+            this.DashedNUD.TabIndex = 2;
             // 
-            // SSDRadioButton
+            // ColorComboBox
             // 
-            this.SSDRadioButton.AutoSize = true;
-            this.SSDRadioButton.Checked = true;
-            this.SSDRadioButton.Location = new System.Drawing.Point(11, 18);
-            this.SSDRadioButton.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
-            this.SSDRadioButton.Name = "SSDRadioButton";
-            this.SSDRadioButton.Size = new System.Drawing.Size(74, 17);
-            this.SSDRadioButton.TabIndex = 0;
-            this.SSDRadioButton.TabStop = true;
-            this.SSDRadioButton.Text = "SID|STAR";
-            this.SSDRadioButton.UseVisualStyleBackColor = true;
+            this.ColorComboBox.DataSource = this.colorDefsBindingSource;
+            this.ColorComboBox.DisplayMember = "Name";
+            this.ColorComboBox.Enabled = false;
+            this.ColorComboBox.FormattingEnabled = true;
+            this.ColorComboBox.Location = new System.Drawing.Point(11, 45);
+            this.ColorComboBox.Name = "ColorComboBox";
+            this.ColorComboBox.Size = new System.Drawing.Size(121, 21);
+            this.ColorComboBox.TabIndex = 1;
+            this.ColorComboBox.ValueMember = "ColorValue";
             // 
-            // ARTCCRadioButton
+            // colorDefsBindingSource
             // 
-            this.ARTCCRadioButton.AutoSize = true;
-            this.ARTCCRadioButton.Location = new System.Drawing.Point(11, 38);
-            this.ARTCCRadioButton.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
-            this.ARTCCRadioButton.Name = "ARTCCRadioButton";
-            this.ARTCCRadioButton.Size = new System.Drawing.Size(85, 17);
-            this.ARTCCRadioButton.TabIndex = 3;
-            this.ARTCCRadioButton.Text = "ARTCC|SUA";
-            this.ARTCCRadioButton.UseVisualStyleBackColor = true;
+            this.colorDefsBindingSource.DataMember = "ColorDefs";
+            this.colorDefsBindingSource.DataSource = this.sCTdata;
             // 
-            // AirwayRadioButton
+            // sCTdata
             // 
-            this.AirwayRadioButton.AutoSize = true;
-            this.AirwayRadioButton.Location = new System.Drawing.Point(139, 17);
-            this.AirwayRadioButton.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
-            this.AirwayRadioButton.Name = "AirwayRadioButton";
-            this.AirwayRadioButton.Size = new System.Drawing.Size(56, 17);
-            this.AirwayRadioButton.TabIndex = 4;
-            this.AirwayRadioButton.Text = "Airway";
-            this.AirwayRadioButton.UseVisualStyleBackColor = true;
+            this.sCTdata.DataSetName = "SCTdata";
+            this.sCTdata.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
+            // 
+            // SectionComboBox
+            // 
+            this.SectionComboBox.FormattingEnabled = true;
+            this.SectionComboBox.Items.AddRange(new object[] {
+            "Diagram (SID/STAR)",
+            "ARTCC",
+            "ARTCC (L/H)",
+            "Airways (L/H)",
+            "GEO"});
+            this.SectionComboBox.Location = new System.Drawing.Point(11, 18);
+            this.SectionComboBox.Name = "SectionComboBox";
+            this.SectionComboBox.Size = new System.Drawing.Size(121, 21);
+            this.SectionComboBox.TabIndex = 0;
+            this.SectionComboBox.SelectedIndexChanged += new System.EventHandler(this.SectionComboBox_SelectedIndexChanged);
             // 
             // Copy2ClipboardButton
             // 
             this.Copy2ClipboardButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Copy2ClipboardButton.Location = new System.Drawing.Point(492, 497);
+            this.Copy2ClipboardButton.Location = new System.Drawing.Point(548, 621);
             this.Copy2ClipboardButton.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
             this.Copy2ClipboardButton.Name = "Copy2ClipboardButton";
             this.Copy2ClipboardButton.Size = new System.Drawing.Size(79, 52);
@@ -640,7 +646,7 @@
             // 
             this.ClearOutputButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(128)))));
             this.ClearOutputButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ClearOutputButton.Location = new System.Drawing.Point(642, 497);
+            this.ClearOutputButton.Location = new System.Drawing.Point(698, 621);
             this.ClearOutputButton.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
             this.ClearOutputButton.Name = "ClearOutputButton";
             this.ClearOutputButton.Size = new System.Drawing.Size(78, 52);
@@ -652,7 +658,7 @@
             // label13
             // 
             this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(255, 382);
+            this.label13.Location = new System.Drawing.Point(16, 471);
             this.label13.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(86, 13);
@@ -661,19 +667,19 @@
             // 
             // OutputTextBox
             // 
-            this.OutputTextBox.Location = new System.Drawing.Point(254, 399);
+            this.OutputTextBox.Location = new System.Drawing.Point(15, 488);
             this.OutputTextBox.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
             this.OutputTextBox.Multiline = true;
             this.OutputTextBox.Name = "OutputTextBox";
             this.OutputTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.OutputTextBox.Size = new System.Drawing.Size(465, 94);
+            this.OutputTextBox.Size = new System.Drawing.Size(522, 185);
             this.OutputTextBox.TabIndex = 60;
             this.OutputTextBox.WordWrap = false;
             // 
             // SaveOutput2FileButton
             // 
             this.SaveOutput2FileButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.SaveOutput2FileButton.Location = new System.Drawing.Point(566, 497);
+            this.SaveOutput2FileButton.Location = new System.Drawing.Point(622, 621);
             this.SaveOutput2FileButton.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
             this.SaveOutput2FileButton.Name = "SaveOutput2FileButton";
             this.SaveOutput2FileButton.Size = new System.Drawing.Size(81, 52);
@@ -684,26 +690,26 @@
             // 
             // SuffixTextBox
             // 
-            this.SuffixTextBox.Location = new System.Drawing.Point(307, 349);
+            this.SuffixTextBox.Location = new System.Drawing.Point(253, 448);
             this.SuffixTextBox.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
             this.SuffixTextBox.MaxLength = 255;
             this.SuffixTextBox.Name = "SuffixTextBox";
-            this.SuffixTextBox.Size = new System.Drawing.Size(173, 20);
+            this.SuffixTextBox.Size = new System.Drawing.Size(284, 20);
             this.SuffixTextBox.TabIndex = 56;
             // 
             // PrefixTextBox
             // 
-            this.PrefixTextBox.Location = new System.Drawing.Point(307, 327);
+            this.PrefixTextBox.Location = new System.Drawing.Point(15, 448);
             this.PrefixTextBox.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
             this.PrefixTextBox.MaxLength = 26;
             this.PrefixTextBox.Name = "PrefixTextBox";
-            this.PrefixTextBox.Size = new System.Drawing.Size(173, 20);
+            this.PrefixTextBox.Size = new System.Drawing.Size(194, 20);
             this.PrefixTextBox.TabIndex = 55;
             // 
             // SuffixLabel
             // 
             this.SuffixLabel.AutoSize = true;
-            this.SuffixLabel.Location = new System.Drawing.Point(251, 350);
+            this.SuffixLabel.Location = new System.Drawing.Point(253, 434);
             this.SuffixLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.SuffixLabel.Name = "SuffixLabel";
             this.SuffixLabel.Size = new System.Drawing.Size(51, 13);
@@ -713,71 +719,364 @@
             // PrefixLabel
             // 
             this.PrefixLabel.AutoSize = true;
-            this.PrefixLabel.Location = new System.Drawing.Point(251, 329);
+            this.PrefixLabel.Location = new System.Drawing.Point(12, 434);
             this.PrefixLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.PrefixLabel.Name = "PrefixLabel";
-            this.PrefixLabel.Size = new System.Drawing.Size(33, 13);
+            this.PrefixLabel.Size = new System.Drawing.Size(100, 13);
             this.PrefixLabel.TabIndex = 61;
-            this.PrefixLabel.Text = "Prefix";
+            this.PrefixLabel.Text = "Prefix (max 26 char)";
             // 
-            // AddArcByRadialsButton
+            // AddArc
             // 
-            this.AddArcByRadialsButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AddArcByRadialsButton.Location = new System.Drawing.Point(252, 497);
-            this.AddArcByRadialsButton.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
-            this.AddArcByRadialsButton.Name = "AddArcByRadialsButton";
-            this.AddArcByRadialsButton.Size = new System.Drawing.Size(99, 46);
-            this.AddArcByRadialsButton.TabIndex = 64;
-            this.AddArcByRadialsButton.Text = "Generate Arc";
-            this.AddArcByRadialsButton.UseVisualStyleBackColor = true;
+            this.AddArc.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AddArc.Location = new System.Drawing.Point(549, 488);
+            this.AddArc.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
+            this.AddArc.Name = "AddArc";
+            this.AddArc.Size = new System.Drawing.Size(99, 46);
+            this.AddArc.TabIndex = 64;
+            this.AddArc.Text = "Generate Arc";
+            this.AddArc.UseVisualStyleBackColor = true;
+            this.AddArc.Click += new System.EventHandler(this.AddArc_Click);
             // 
-            // AddArcByCoordsButton
+            // label9
             // 
-            this.AddArcByCoordsButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AddArcByCoordsButton.Location = new System.Drawing.Point(635, 297);
-            this.AddArcByCoordsButton.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
-            this.AddArcByCoordsButton.Name = "AddArcByCoordsButton";
-            this.AddArcByCoordsButton.Size = new System.Drawing.Size(81, 45);
-            this.AddArcByCoordsButton.TabIndex = 65;
-            this.AddArcByCoordsButton.Text = "Calculate Arc";
-            this.AddArcByCoordsButton.UseVisualStyleBackColor = true;
+            this.label9.AutoSize = true;
+            this.label9.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label9.Location = new System.Drawing.Point(27, 92);
+            this.label9.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(77, 15);
+            this.label9.TabIndex = 49;
+            this.label9.Text = "Radius (NM)";
             // 
-            // MagOffsetLabel
+            // CalcDistanceTextBox
             // 
-            this.MagOffsetLabel.AutoSize = true;
-            this.MagOffsetLabel.Location = new System.Drawing.Point(11, 261);
-            this.MagOffsetLabel.Name = "MagOffsetLabel";
-            this.MagOffsetLabel.Size = new System.Drawing.Size(233, 13);
-            this.MagOffsetLabel.TabIndex = 66;
-            this.MagOffsetLabel.Text = "*For magnetic heading SUBTRACT  00 degrees";
+            this.CalcDistanceTextBox.Location = new System.Drawing.Point(108, 91);
+            this.CalcDistanceTextBox.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
+            this.CalcDistanceTextBox.MaxLength = 3;
+            this.CalcDistanceTextBox.Name = "CalcDistanceTextBox";
+            this.CalcDistanceTextBox.Size = new System.Drawing.Size(47, 20);
+            this.CalcDistanceTextBox.TabIndex = 48;
+            this.CalcDistanceTextBox.TextChanged += new System.EventHandler(this.CalcDistanceTextBox_TextChanged);
+            this.CalcDistanceTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.CalcDistanceTextBox_KeyPress);
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label10.Location = new System.Drawing.Point(4, 26);
+            this.label10.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(54, 15);
+            this.label10.TabIndex = 50;
+            this.label10.Text = "Start Brg";
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label12.Location = new System.Drawing.Point(8, 47);
+            this.label12.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(51, 15);
+            this.label12.TabIndex = 51;
+            this.label12.Text = "End Brg";
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.MagBrgCheckBox);
+            this.groupBox1.Controls.Add(this.InsertCoordsButton);
+            this.groupBox1.Controls.Add(this.CircleCheckBox);
+            this.groupBox1.Controls.Add(this.EndRadialNUD);
+            this.groupBox1.Controls.Add(this.StartRadialNUD);
+            this.groupBox1.Controls.Add(this.label10);
+            this.groupBox1.Controls.Add(this.label12);
+            this.groupBox1.Controls.Add(this.label9);
+            this.groupBox1.Controls.Add(this.CalcDistanceTextBox);
+            this.groupBox1.Location = new System.Drawing.Point(549, 27);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(200, 141);
+            this.groupBox1.TabIndex = 66;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Arc from radials";
+            // 
+            // MagBrgCheckBox
+            // 
+            this.MagBrgCheckBox.AutoSize = true;
+            this.MagBrgCheckBox.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.MagBrgCheckBox.Location = new System.Drawing.Point(9, 70);
+            this.MagBrgCheckBox.Name = "MagBrgCheckBox";
+            this.MagBrgCheckBox.Size = new System.Drawing.Size(142, 17);
+            this.MagBrgCheckBox.TabIndex = 75;
+            this.MagBrgCheckBox.Text = "Magnetic Brg if checked";
+            this.MagBrgCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // InsertCoordsButton
+            // 
+            this.InsertCoordsButton.Location = new System.Drawing.Point(11, 112);
+            this.InsertCoordsButton.Name = "InsertCoordsButton";
+            this.InsertCoordsButton.Size = new System.Drawing.Size(179, 23);
+            this.InsertCoordsButton.TabIndex = 74;
+            this.InsertCoordsButton.Text = "Insert Start && End Coordinates";
+            this.InsertCoordsButton.UseVisualStyleBackColor = true;
+            this.InsertCoordsButton.Click += new System.EventHandler(this.InsertCoordsButton_Click);
+            // 
+            // CircleCheckBox
+            // 
+            this.CircleCheckBox.AutoSize = true;
+            this.CircleCheckBox.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.CircleCheckBox.Location = new System.Drawing.Point(117, 24);
+            this.CircleCheckBox.Name = "CircleCheckBox";
+            this.CircleCheckBox.Size = new System.Drawing.Size(52, 30);
+            this.CircleCheckBox.TabIndex = 68;
+            this.CircleCheckBox.Text = "Draw\r\nCircle";
+            this.CircleCheckBox.UseVisualStyleBackColor = true;
+            this.CircleCheckBox.CheckedChanged += new System.EventHandler(this.CircleCheckBox_CheckedChanged);
+            // 
+            // EndRadialNUD
+            // 
+            this.EndRadialNUD.Location = new System.Drawing.Point(64, 47);
+            this.EndRadialNUD.Maximum = new decimal(new int[] {
+            360,
+            0,
+            0,
+            0});
+            this.EndRadialNUD.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.EndRadialNUD.Name = "EndRadialNUD";
+            this.EndRadialNUD.Size = new System.Drawing.Size(47, 20);
+            this.EndRadialNUD.TabIndex = 73;
+            this.EndRadialNUD.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
+            // StartRadialNUD
+            // 
+            this.StartRadialNUD.Location = new System.Drawing.Point(64, 22);
+            this.StartRadialNUD.Maximum = new decimal(new int[] {
+            360,
+            0,
+            0,
+            0});
+            this.StartRadialNUD.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.StartRadialNUD.Name = "StartRadialNUD";
+            this.StartRadialNUD.Size = new System.Drawing.Size(47, 20);
+            this.StartRadialNUD.TabIndex = 72;
+            this.StartRadialNUD.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
+            // MagVarTextBox
+            // 
+            this.MagVarTextBox.Location = new System.Drawing.Point(235, 323);
+            this.MagVarTextBox.Name = "MagVarTextBox";
+            this.MagVarTextBox.Size = new System.Drawing.Size(33, 20);
+            this.MagVarTextBox.TabIndex = 68;
+            this.MagVarTextBox.Text = "0";
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Location = new System.Drawing.Point(182, 326);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(47, 13);
+            this.label16.TabIndex = 69;
+            this.label16.Text = "Mag Var";
+            // 
+            // label18
+            // 
+            this.label18.AutoSize = true;
+            this.label18.Location = new System.Drawing.Point(6, 17);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(102, 13);
+            this.label18.TabIndex = 0;
+            this.label18.Text = "Dist (NM, from Start)";
+            // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.Location = new System.Drawing.Point(7, 42);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(124, 13);
+            this.label19.TabIndex = 1;
+            this.label19.Text = "Bearing (Mag, from Start)";
+            // 
+            // label20
+            // 
+            this.label20.AutoSize = true;
+            this.label20.Location = new System.Drawing.Point(6, 90);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(184, 13);
+            this.label20.TabIndex = 2;
+            this.label20.Text = "*Up to 3% error is possible using DME";
+            // 
+            // StartDistTextBox
+            // 
+            this.StartDistTextBox.BackColor = System.Drawing.SystemColors.InactiveCaption;
+            this.StartDistTextBox.Enabled = false;
+            this.StartDistTextBox.Location = new System.Drawing.Point(137, 14);
+            this.StartDistTextBox.Name = "StartDistTextBox";
+            this.StartDistTextBox.Size = new System.Drawing.Size(53, 20);
+            this.StartDistTextBox.TabIndex = 3;
+            // 
+            // StartBrgTextBox
+            // 
+            this.StartBrgTextBox.BackColor = System.Drawing.SystemColors.InactiveCaption;
+            this.StartBrgTextBox.Enabled = false;
+            this.StartBrgTextBox.Location = new System.Drawing.Point(137, 39);
+            this.StartBrgTextBox.Name = "StartBrgTextBox";
+            this.StartBrgTextBox.Size = new System.Drawing.Size(53, 20);
+            this.StartBrgTextBox.TabIndex = 70;
+            // 
+            // StartStatsGroupBox
+            // 
+            this.StartStatsGroupBox.Controls.Add(this.EndBrgTextBox);
+            this.StartStatsGroupBox.Controls.Add(this.StartBrgTextBox);
+            this.StartStatsGroupBox.Controls.Add(this.label22);
+            this.StartStatsGroupBox.Controls.Add(this.StartDistTextBox);
+            this.StartStatsGroupBox.Controls.Add(this.label20);
+            this.StartStatsGroupBox.Controls.Add(this.label19);
+            this.StartStatsGroupBox.Controls.Add(this.label18);
+            this.StartStatsGroupBox.Location = new System.Drawing.Point(548, 271);
+            this.StartStatsGroupBox.Name = "StartStatsGroupBox";
+            this.StartStatsGroupBox.Size = new System.Drawing.Size(197, 106);
+            this.StartStatsGroupBox.TabIndex = 68;
+            this.StartStatsGroupBox.TabStop = false;
+            this.StartStatsGroupBox.Text = "Start Coordinate Statistics";
+            // 
+            // EndBrgTextBox
+            // 
+            this.EndBrgTextBox.BackColor = System.Drawing.SystemColors.InactiveCaption;
+            this.EndBrgTextBox.Enabled = false;
+            this.EndBrgTextBox.Location = new System.Drawing.Point(137, 65);
+            this.EndBrgTextBox.Name = "EndBrgTextBox";
+            this.EndBrgTextBox.Size = new System.Drawing.Size(53, 20);
+            this.EndBrgTextBox.TabIndex = 70;
+            // 
+            // label22
+            // 
+            this.label22.AutoSize = true;
+            this.label22.Location = new System.Drawing.Point(7, 68);
+            this.label22.Name = "label22";
+            this.label22.Size = new System.Drawing.Size(121, 13);
+            this.label22.TabIndex = 1;
+            this.label22.Text = "Bearing (Mag, from End)";
+            // 
+            // TradeStartEndButton
+            // 
+            this.TradeStartEndButton.BackColor = System.Drawing.Color.White;
+            this.TradeStartEndButton.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("TradeStartEndButton.BackgroundImage")));
+            this.TradeStartEndButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.TradeStartEndButton.Location = new System.Drawing.Point(415, 240);
+            this.TradeStartEndButton.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
+            this.TradeStartEndButton.Name = "TradeStartEndButton";
+            this.TradeStartEndButton.Size = new System.Drawing.Size(39, 38);
+            this.TradeStartEndButton.TabIndex = 70;
+            this.TradeStartEndButton.TabStop = false;
+            this.TradeStartEndButton.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.TradeStartEndButton.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.TradeStartEndButton.UseVisualStyleBackColor = false;
+            this.TradeStartEndButton.Click += new System.EventHandler(this.TradeStartEndButton_Click);
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(308, 382);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(229, 26);
+            this.label8.TabIndex = 71;
+            this.label8.Text = "Note: Arcs are always drawn clockwise.\r\nReverse the Start-End Coords for the othe" +
+    "r arc.";
+            // 
+            // PasteToTextBox
+            // 
+            this.PasteToTextBox.Location = new System.Drawing.Point(6, 19);
+            this.PasteToTextBox.Name = "PasteToTextBox";
+            this.PasteToTextBox.Size = new System.Drawing.Size(190, 20);
+            this.PasteToTextBox.TabIndex = 72;
+            this.PasteToTextBox.Validated += new System.EventHandler(this.PasteToTextBox_Validated);
+            // 
+            // PasteToCenterButton
+            // 
+            this.PasteToCenterButton.Enabled = false;
+            this.PasteToCenterButton.Location = new System.Drawing.Point(6, 45);
+            this.PasteToCenterButton.Name = "PasteToCenterButton";
+            this.PasteToCenterButton.Size = new System.Drawing.Size(65, 23);
+            this.PasteToCenterButton.TabIndex = 74;
+            this.PasteToCenterButton.Text = "To Center";
+            this.PasteToCenterButton.UseVisualStyleBackColor = true;
+            this.PasteToCenterButton.Click += new System.EventHandler(this.PasteToCenterButton_Click);
+            // 
+            // PasteToStartButton
+            // 
+            this.PasteToStartButton.Enabled = false;
+            this.PasteToStartButton.Location = new System.Drawing.Point(73, 45);
+            this.PasteToStartButton.Name = "PasteToStartButton";
+            this.PasteToStartButton.Size = new System.Drawing.Size(56, 23);
+            this.PasteToStartButton.TabIndex = 75;
+            this.PasteToStartButton.Text = "To Start";
+            this.PasteToStartButton.UseVisualStyleBackColor = true;
+            this.PasteToStartButton.Click += new System.EventHandler(this.PasteToStartButton_Click);
+            // 
+            // PasteToEndButton
+            // 
+            this.PasteToEndButton.Enabled = false;
+            this.PasteToEndButton.Location = new System.Drawing.Point(135, 45);
+            this.PasteToEndButton.Name = "PasteToEndButton";
+            this.PasteToEndButton.Size = new System.Drawing.Size(59, 23);
+            this.PasteToEndButton.TabIndex = 76;
+            this.PasteToEndButton.Text = "To End";
+            this.PasteToEndButton.UseVisualStyleBackColor = true;
+            this.PasteToEndButton.Click += new System.EventHandler(this.PasteToEndButton_Click);
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.PasteToTextBox);
+            this.groupBox2.Controls.Add(this.PasteToEndButton);
+            this.groupBox2.Controls.Add(this.PasteToStartButton);
+            this.groupBox2.Controls.Add(this.PasteToCenterButton);
+            this.groupBox2.Location = new System.Drawing.Point(550, 174);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(199, 77);
+            this.groupBox2.TabIndex = 77;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Paste Coords Here";
             // 
             // ArcGenerator
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
-            this.ClientSize = new System.Drawing.Size(756, 558);
-            this.Controls.Add(this.MagOffsetLabel);
-            this.Controls.Add(this.AddArcByCoordsButton);
-            this.Controls.Add(this.AddArcByRadialsButton);
+            this.ClientSize = new System.Drawing.Size(792, 683);
+            this.Controls.Add(this.groupBox2);
+            this.Controls.Add(this.label8);
+            this.Controls.Add(this.TradeStartEndButton);
+            this.Controls.Add(this.MagVarTextBox);
+            this.Controls.Add(this.label16);
+            this.Controls.Add(this.StartStatsGroupBox);
+            this.Controls.Add(this.groupBox1);
+            this.Controls.Add(this.AddArc);
             this.Controls.Add(this.Copy2ClipboardButton);
             this.Controls.Add(this.ClearOutputButton);
-            this.Controls.Add(this.label13);
-            this.Controls.Add(this.OutputTextBox);
-            this.Controls.Add(this.SaveOutput2FileButton);
-            this.Controls.Add(this.SuffixTextBox);
-            this.Controls.Add(this.PrefixTextBox);
             this.Controls.Add(this.SuffixLabel);
             this.Controls.Add(this.PrefixLabel);
+            this.Controls.Add(this.SuffixTextBox);
+            this.Controls.Add(this.label13);
+            this.Controls.Add(this.PrefixTextBox);
+            this.Controls.Add(this.OutputTextBox);
+            this.Controls.Add(this.SaveOutput2FileButton);
             this.Controls.Add(this.SCTFormatGroupBox);
-            this.Controls.Add(this.EndBrgTestBox);
-            this.Controls.Add(this.StartBrgTextBox);
-            this.Controls.Add(this.label12);
-            this.Controls.Add(this.label10);
-            this.Controls.Add(this.CalcDistanceTextBox);
-            this.Controls.Add(this.label9);
-            this.Controls.Add(this.label8);
-            this.Controls.Add(this.CenterRadiusLabel);
             this.Controls.Add(this.FixToEndButton);
             this.Controls.Add(this.EndGroupBox);
             this.Controls.Add(this.FixToSTartButton);
@@ -792,6 +1091,7 @@
             this.Load += new System.EventHandler(this.ArcGenerator_Load);
             this.FixImportGroupBox.ResumeLayout(false);
             this.FixImportGroupBox.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.FixBrgNUD)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.FixListDataGridView)).EndInit();
             this.CenterGroupBox.ResumeLayout(false);
             this.CenterGroupBox.PerformLayout();
@@ -801,6 +1101,17 @@
             this.EndGroupBox.PerformLayout();
             this.SCTFormatGroupBox.ResumeLayout(false);
             this.SCTFormatGroupBox.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.DashedNUD)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.colorDefsBindingSource)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.sCTdata)).EndInit();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.EndRadialNUD)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.StartRadialNUD)).EndInit();
+            this.StartStatsGroupBox.ResumeLayout(false);
+            this.StartStatsGroupBox.PerformLayout();
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -837,20 +1148,7 @@
         private System.Windows.Forms.TextBox EndLatitudeTextBox;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Button FixToEndButton;
-        private System.Windows.Forms.Label CenterRadiusLabel;
-        private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.TextBox CalcDistanceTextBox;
-        private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.Label label10;
-        private System.Windows.Forms.Label label12;
-        private System.Windows.Forms.TextBox StartBrgTextBox;
-        private System.Windows.Forms.TextBox EndBrgTestBox;
         private System.Windows.Forms.GroupBox SCTFormatGroupBox;
-        private System.Windows.Forms.CheckBox UseFIXNamesCheckBox;
-        private System.Windows.Forms.RadioButton GEORadioButton;
-        private System.Windows.Forms.RadioButton SSDRadioButton;
-        private System.Windows.Forms.RadioButton ARTCCRadioButton;
-        private System.Windows.Forms.RadioButton AirwayRadioButton;
         private System.Windows.Forms.Button Copy2ClipboardButton;
         private System.Windows.Forms.Button ClearOutputButton;
         private System.Windows.Forms.Label label13;
@@ -860,8 +1158,43 @@
         private System.Windows.Forms.TextBox PrefixTextBox;
         private System.Windows.Forms.Label SuffixLabel;
         private System.Windows.Forms.Label PrefixLabel;
-        private System.Windows.Forms.Button AddArcByRadialsButton;
-        private System.Windows.Forms.Button AddArcByCoordsButton;
-        private System.Windows.Forms.Label MagOffsetLabel;
+        private System.Windows.Forms.Button AddArc;
+        private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.TextBox FixDistTextBox;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.TextBox CalcDistanceTextBox;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.TextBox MagVarTextBox;
+        private System.Windows.Forms.Label label16;
+        private System.Windows.Forms.ComboBox SectionComboBox;
+        private System.Windows.Forms.ComboBox ColorComboBox;
+        private System.Windows.Forms.BindingSource colorDefsBindingSource;
+        private SCTdata sCTdata;
+        private System.Windows.Forms.Label label17;
+        private System.Windows.Forms.NumericUpDown DashedNUD;
+        private System.Windows.Forms.NumericUpDown FixBrgNUD;
+        private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.CheckBox CircleCheckBox;
+        private System.Windows.Forms.NumericUpDown EndRadialNUD;
+        private System.Windows.Forms.NumericUpDown StartRadialNUD;
+        private System.Windows.Forms.Label label18;
+        private System.Windows.Forms.Label label19;
+        private System.Windows.Forms.Label label20;
+        private System.Windows.Forms.TextBox StartDistTextBox;
+        private System.Windows.Forms.TextBox StartBrgTextBox;
+        private System.Windows.Forms.GroupBox StartStatsGroupBox;
+        private System.Windows.Forms.TextBox EndBrgTextBox;
+        private System.Windows.Forms.Label label22;
+        private System.Windows.Forms.CheckBox MagBrgCheckBox;
+        private System.Windows.Forms.Button InsertCoordsButton;
+        private System.Windows.Forms.Button TradeStartEndButton;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.TextBox PasteToTextBox;
+        private System.Windows.Forms.Button PasteToCenterButton;
+        private System.Windows.Forms.Button PasteToStartButton;
+        private System.Windows.Forms.Button PasteToEndButton;
+        private System.Windows.Forms.GroupBox groupBox2;
     }
 }

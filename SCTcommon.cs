@@ -9,6 +9,7 @@ using System.Drawing;
 using System.Text.RegularExpressions;
 using System.Globalization;
 using System.Media;
+using SCTBuilder;
 
 namespace SCTBuilder
 {
@@ -286,9 +287,9 @@ namespace SCTBuilder
             APTView.Dispose();
             return result;
         }
-        public static int CountStringOccurrences(string text, string pattern)
+        public static int GetStringCount(string text, string pattern)
         {
-            // Loop through all instances of the string 'text'.
+            // Returns the number of occurences of pattern in text string
             int count = 0;
             int i = 0;
             while ((i = text.IndexOf(pattern, i)) != -1)
@@ -299,15 +300,29 @@ namespace SCTBuilder
             return count;
         }
 
-        public static int CountListOccurrences(List<string> Words, string pattern)
+        public static int GetWordCount(string text)
         {
-            // Loop through all instances of the string 'text'.
+            // Returns the number of words in a text string
+            char[] delimiters = new char[] { ' ', '\r', '\n', '_' };
+            return text.Split(delimiters, StringSplitOptions.RemoveEmptyEntries).Length;
+        }
+
+        public static int GetListItemCount(List<string> Words, string pattern)
+        {
+            // Returns the number of occurrences of pattern in List<string>
             int count = 0;
             foreach (string word in Words)
             {
                 if (word == pattern) count++;
             }
             return count;
+        }
+
+        public static string[] StringToWords(string Text)
+        {
+            // Returns a List<string> array of the words in string Text
+            string[] words = Text.Trim().Split();
+            return words;
         }
 
         public static int GetMinDataView(DataView dv, string Column)
@@ -382,19 +397,29 @@ namespace SCTBuilder
 
         public static string ICOA(string Arpt)
         {
-            string result;
-            if ((Arpt.Length == 3) && !Arpt.Any(char.IsDigit))
-                result = "K" + Arpt;
-            else result = Arpt;
+            // Returns ICAO, if one exists, otherwise returns FAA facility id
+            string result = Arpt;
+            DataView drvAPT = new DataView(Form1.APT)
+            {
+                RowFilter = "[FacilityID] = '" + Arpt + "'"
+            };
+            if (drvAPT.Count > 0) 
+                result = drvAPT[0]["ICAO"].ToString();
+            drvAPT.Dispose();
             return result;
         }
 
-        public static string RevICOA(string Arpt)
+        public static string RevICOA(string ICAO)
         {
-            string result;
-            if ((Arpt.Length == 4) && !Arpt.Any(char.IsDigit))
-                result = Arpt.Substring(1, Arpt.Length - 1);
-            else result = Arpt;
+            // Returns non-ICOA apt code
+            string result = string.Empty;
+            DataView drvAPT = new DataView(Form1.APT)
+            {
+                RowFilter = "[ICAO] = '" + ICAO + "'"
+            };
+            if (drvAPT.Count > 0)
+                result = drvAPT[0]["FacilityID"].ToString();
+            drvAPT.Dispose();
             return result;
         }
 
@@ -597,14 +622,17 @@ namespace SCTBuilder
             }
             catch { return -1f; }
         }
-        public static float MagVar2DecMag(string Mag)
+        public static double MagVar2DecMag(string Mag)
         {
-            // For THIS program, W deviations are positive, E deviations are negative
-            float result;
+            // East declination is positive; west is negative
+            // True (map) Heading = Mag Bearing + Declination
+            // Mag Bearing = True Hdg - Declination
+            // E deviations are positive, W deviations are negative
+            double result;
             if (Mag.Trim().Length > 0)
             {
                 result = Convert.ToSingle(Mag.Substring(0, Mag.Length - 1).Trim());
-                if (Mag.Right(1) == "E") result *= -1;
+                if (Mag.Right(1) == "W") result *= -1f;
                 return result;
             }
             else return 0f;
@@ -627,7 +655,6 @@ namespace SCTBuilder
                     Latitude = Convert.ToSingle(Lat1);
                     Longitude = Convert.ToSingle(Long1);
                     tempPoly = tempPoly.Substring(loc1 + 2);
-                    // Console.WriteLine(ID + " " + Latitude + " " + Longitude);
                 }
                 else
                 {
@@ -637,7 +664,6 @@ namespace SCTBuilder
                     Latitude = Convert.ToSingle(Lat1);
                     Longitude = Convert.ToSingle(Long1);
                     tempPoly = string.Empty;
-                    // Console.WriteLine(ID + " " + Latitude + " " + Longitude);
                 }
                 DataRowView newrow = dvPoly.AddNew();
                 newrow["SUA_FK"] = ID;
@@ -646,7 +672,6 @@ namespace SCTBuilder
                 newrow["Longitude"] = Longitude;
                 newrow.EndEdit();
             }
-            // Console.WriteLine("Added " + Counter + " rows to table (now has " + dtPoly.Rows.Count + " rows).");
         }
 
         public static void BorderCoord(string Polygon, out double North, out double South, out double East, out double West)
@@ -666,7 +691,6 @@ namespace SCTBuilder
                     Latitude = Convert.ToSingle(Lat1);
                     Longitude = Convert.ToSingle(Long1);
                     tempPoly = tempPoly.Substring(loc1 + 2);
-                    // Console.WriteLine(ID + " " + Latitude + " " + Longitude);
                 }
                 else
                 {
@@ -676,7 +700,6 @@ namespace SCTBuilder
                     Latitude = Convert.ToSingle(Lat1);
                     Longitude = Convert.ToSingle(Long1);
                     tempPoly = string.Empty;
-                    // Console.WriteLine(ID + " " + Latitude + " " + Longitude);
                 }
                 North = Math.Max(North, Latitude);
                 South = Math.Min(South, Latitude);
@@ -739,6 +762,7 @@ namespace SCTBuilder
             /** 
            Purpose    : to allow only numbers 
            Returns    : True - character is number , False - Other than numbers 
+            Example: e.Handled = Extensions.CharIsDigit(e.KeyChar);  
            **/
             bool blnRetVal = false;
             try
@@ -760,17 +784,10 @@ namespace SCTBuilder
            Purpose    : to allow only numbers, decimal, and minus in first position
            Returns    : True - character is valid , False - Other than numbers 
            **/
-            bool result = true;
-            if (chr == '-')
-            {
-                if (tb.TextLength > 0)
-                    result = false;
-            }
+            if ((chr == '-') && (tb.SelectionStart == 0))
+                return true;
             else
-            {
-                result = Extensions.CharIsDecimal(chr, ref tb, 5);
-            }
-            return result;
+                return Extensions.CharIsDecimal(chr, ref tb, 5);
         }
 
         public static bool IsValidSCTCoordKey(char chr, TextBox tb)
@@ -779,15 +796,11 @@ namespace SCTBuilder
             Purpose    : to allow only quadrant in first position or DD.MM.SS.sssss in others
             Returns    : true - character is valid , false - Other than allowed 
             **/
-            bool result = true;
-            if ((chr == 'N') || (chr == 'S') || (chr == 'E') || (chr == 'W'))
-            {
-                if (tb.TextLength > 0)
-                    result = false;
-            }
+            if (((chr == 'N') || (chr == 'S') || (chr == 'E') || (chr == 'W')) &&
+                    (tb.SelectionStart == 0))
+                    return true;
             else
-                result = CharIsDigit(chr) || (chr == '.');
-            return result;
+                return CharIsDigit(chr) || (chr == '.');
         }
 
         public static bool IsASCII (char chr)
@@ -795,6 +808,7 @@ namespace SCTBuilder
             /** 
            Purpose    : to allow only ASCII character set
            Returns    : True - character is valid , False - Other than ASCII 
+            e.Handled = Extensions.IsASCII(e.KeyChar)
            **/
             bool IsASCII;
             int ASCII = chr;
@@ -804,11 +818,12 @@ namespace SCTBuilder
             return IsASCII;
         }
 
-        public static bool CharIsDecimal(char chrInput, ref TextBox txtBox, int intNoOfDec)
+        public static bool CharIsDecimal(char chrInput, ref TextBox txtBox, int intNoOfDec = 0)
         {
             /** 
            Purpose    : to allow only numbers and decimal with i# behind decimal
            Returns    : True - character is valid , False - Other than numbers 
+            Example: e.Handled = Extensions.CharIsDecimal(e.KeyChar, ref MyTextBox, 2);  
            **/
             bool chrRetVal = true;
             try
@@ -817,34 +832,37 @@ namespace SCTBuilder
 
                 if (chrInput == '\b')
                 {
-                    return true;
+                    return false;
                 }
 
                 if (intNoOfDec == 0)
                 {
+                    // No need to test for decimal
                     strSearch = "0123456789";
                     int INDEX = (int)strSearch.IndexOf(chrInput.ToString());
                     if (strSearch.IndexOf(chrInput.ToString(), 0) == -1)
                     {
-                        return false;
+                        return true;
                     }
                     else
                     {
-                        return true;
+                        return false;
                     }
                 }
                 else
                 {
+                    // If not one of the chars, return false
                     strSearch = "0123456789.";
                     if (strSearch.IndexOf(chrInput, 0) == -1)
                     {
-                        return false;
+                        return true;
                     }
                 }
-
+                // We know that the string contains 0123456789.
+                // SelectionStart is the zero-based position of the cursor
                 if ((txtBox.Text.Length - txtBox.SelectionStart) > (intNoOfDec) && chrInput == '.')
                 {
-                    return false;
+                    return true;
                 }
 
                 if (chrInput == '\b')
@@ -853,12 +871,13 @@ namespace SCTBuilder
                 }
                 else
                 {
+                    // Look for 2d decimal point in string
                     strSearch = txtBox.Text;
                     if (strSearch != string.Empty)
                     {
                         if (strSearch.IndexOf('.', 0) > -1 && chrInput == '.')
                         {
-                            return false;
+                            return true;
                         }
                     }
                     int intPos;
@@ -873,10 +892,10 @@ namespace SCTBuilder
                         strSearch = "0123456789.";
                         if (strSearch.IndexOf(chrInput, 0) == -1)
                         {
-                            chrRetVal = false;
+                            chrRetVal = true;
                         }
                         else
-                            chrRetVal = true;
+                            chrRetVal = false;
                     }
                     else
                     {
@@ -885,13 +904,13 @@ namespace SCTBuilder
                             intAftDec = txtBox.Text.Length - txtBox.Text.IndexOf('.', 0);
                             if (intAftDec > intNoOfDec)
                             {
-                                chrRetVal = false;
+                                chrRetVal = true;
                             }
                             else
-                                chrRetVal = true;
+                                chrRetVal = false;
                         }
                         else
-                            chrRetVal = true;
+                            chrRetVal = false;
                     }
                 }
             }
@@ -952,11 +971,7 @@ namespace SCTBuilder
         public static string VORout(string[] strOut, string Fix = "", string Freq = "", string Lat = "",
             string Lon = "", string Name = "", string FixType = "")
         {
-            string result = string.Empty;
-            foreach (string str in strOut)
-            {
-                System.Diagnostics.Debug.WriteLine(str);
-            }
+            string result;
             if (strOut.Count() != 0)
             {
                 result = strOut[0].PadRight(5) + " " + strOut[1].PadRight(6) + " " + strOut[2] + " " + strOut[3] + " ; " + strOut[4];
@@ -1089,20 +1104,20 @@ namespace SCTBuilder
             return result;
         }
 
-        public static string SSDout(bool IsSID, string Airport, string RWY, string Transition, 
+        public static string SIDout(string Airport, string RWY, string Transition, 
             string SSDname, List<string>Fix)
         {
-            string SSD;
-            if (IsSID) SSD = "SID"; else SSD = "STAR"; 
+            // Returns a string with Transition:SID and SID alone
             string result;
             string Fixes = string.Empty;
             foreach (string f in Fix) Fixes += f + " ";
-            result = SSD + ":" + Airport + ":" + RWY + ":" + Transition + "x" + SSDname + ":" + Fixes;
+            result = "SID:" + Airport + ":" + RWY + ":" + Transition + "x" + SSDname + ":" + Fixes;
             return result;
         }
     }
+}
 
-    public static class SCTcolors
+public static class SCTcolors
     {
         public static int RGB2Decimal(int R, int G, int B)
         {
@@ -1296,4 +1311,3 @@ namespace SCTBuilder
         SavedSearches,
         Videos
     }
-}

@@ -3,6 +3,8 @@ using System.Linq;
 using System.Data;
 using System.Drawing;
 using System.Windows.Forms.VisualStyles;
+using Renci.SshNet.Security.Cryptography;
+using System.Collections.Generic;
 
 namespace SCTBuilder
 {
@@ -20,8 +22,99 @@ namespace SCTBuilder
         W = 270,
         NW = 315,
     }
+
+    class ArcCalculator
+    {
+        public struct Point2D
+        {
+            public double X { get; }
+            public double Y { get; }
+            public Point2D(double x, double y)
+            {
+                X = x;
+                Y = y;
+            }
+            public override string ToString() => $"{X:N3}; {Y:N3}";
+        }
+        public struct Segment2D
+        {
+            public Point2D Start { get; }
+            public Point2D End { get; }
+            public double Argument => Math.Atan2(End.Y - Start.Y, End.X - Start.X);
+
+            public Segment2D(Point2D start, Point2D end)
+            {
+                Start = start;
+                End = end;
+            }
+        }
+        public struct Circle2D
+        {
+            private const double FullCircleAngle = 2 * Math.PI;
+            public Point2D Center { get; }
+            public double Radius { get; }
+
+            public Circle2D(Point2D center, double radius)
+            {
+                if (radius <= 0)
+                    throw new ArgumentOutOfRangeException(nameof(radius));
+
+                Center = center;
+                Radius = radius;
+            }
+
+            public IEnumerable<Point2D> GetPointsOfArch(int numberOfPoints, double startAngle, double endAngle)
+            {
+                double normalizedEndAngle;
+
+                if (startAngle < endAngle)
+                {
+                    normalizedEndAngle = endAngle;
+                }
+                else
+                {
+                    normalizedEndAngle = endAngle + FullCircleAngle;
+                }
+
+                var angleRange = normalizedEndAngle - startAngle;
+                angleRange = angleRange > FullCircleAngle ? FullCircleAngle : angleRange;
+                var step = angleRange / numberOfPoints;
+                var currentAngle = startAngle;
+
+                while (currentAngle <= normalizedEndAngle)
+                {
+                    var x = Center.X + Radius * Math.Cos(currentAngle);
+                    var y = Center.Y + Radius * Math.Sin(currentAngle);
+                    yield return new Point2D(x, y);
+                    currentAngle += step;
+                }
+            }
+
+            public IEnumerable<Point2D> GetPoints(int numberOfPoints)
+                => GetPointsOfArch(numberOfPoints, 0, FullCircleAngle);
+        }
+    }
+
     class LatLongCalc
     {
+
+        public static double[] PolarToCartesian(double angle, double radius)
+        {
+            double[] Coords = new double[2];
+            double angleRad = Deg2Rad(angle);
+            Coords[0] = radius * Math.Cos(angleRad);
+            Coords[1] = radius * Math.Sin(angleRad);
+            return Coords;
+        }
+
+        public static double[] CartesianToPolar(double x, double y)
+        {
+            double[] Polar = new double[2];
+            Polar[0] = Math.Sqrt((x * x) + (y * y));
+            Polar[1] = Math.Atan2(y, x);
+            return Polar;
+        }
+
         public static double NMperLongDegree()
         {
             // Assumes all Lat/Longs are in Decimal degrees
@@ -110,7 +203,7 @@ namespace SCTBuilder
 
         public static PointF RotatePoint(PointF pointToRotate, PointF centerPoint, double angleInDegrees)
         {
-
+            // Given a center point and point to rotate (aka a line), rotate the line X degrees
             double radians = LatLongCalc.Deg2Rad(angleInDegrees);
             double sin = Math.Sin(radians);
             double cos = Math.Cos(radians);
@@ -185,9 +278,15 @@ namespace SCTBuilder
             }
         }
 
+        public static double RadiusOfArc(double Height, double Width)
+        {
+            return (Height / 2.0) + Math.Pow(Width, 2.0) / (8 * Height);
+        }
+
         public static double[] Destination(double Latitude, double Longitude, double Dist, double Brg, char Type)
         {
-            // Destination given distance and bearing from starting point
+            // Destination coordinates given distance and bearing from starting point
+            // Calculates using Haversine formula (spherical earth) - up to 3% error
             // Reference: https://www.movable-type.co.uk/scripts/latlong.html
 
             double R = EarthRadius(Type);           // Radius of earth to match distance vector
@@ -208,6 +307,14 @@ namespace SCTBuilder
                 finalLon
             };
             return Endpoint;
+        }
+
+        public static void VincentyDestination(double Latitude, double Longitude, double Dist, double Brg, char Type)
+        {
+            // Destination coordinates given distance and bearing from starting point
+            // Calculates using Haversine formula (spherical earth) - theoretically 0.5 millimeter error
+            // Reference: https://www.movable-type.co.uk/scripts/latlong-vincenty.html
+            // ** for another time **
         }
 
         public static double[] Intersection
@@ -304,7 +411,7 @@ namespace SCTBuilder
             float[] result = new float[2];
             float lastX = 0; float lastY = 0;
             int numPoints = 0;
-            for (int i=0; i < Coords.Length; i++)
+            for (int i = 0; i < Coords.Length; i++)
             {
                 if (Coords[i].X == -1)
                 {
@@ -361,4 +468,5 @@ namespace SCTBuilder
         }
     }
 }
+
 

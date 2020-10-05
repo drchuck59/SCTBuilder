@@ -42,7 +42,7 @@ namespace SCTBuilder
             }
             result = Form1.POFdata.Rows.Count;
             if (result > 0) AddCoordsToPOF();
-            Debug.WriteLine("ReadPOF.ReadPOFfile added " + result + " rows to POFdata table.");
+            Console.WriteLine("ReadPOF.ReadPOFfile added " + result + " rows to POFdata table.");
             return result;
         }
 
