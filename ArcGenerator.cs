@@ -22,6 +22,7 @@ namespace SCTBuilder
         private static double ArcRadius = -1;
         private static double PasteLat = -1;
         private static double PasteLon = -1;
+        private static readonly string cr = Environment.NewLine;
 
         public ArcGenerator()
         {
@@ -211,7 +212,7 @@ namespace SCTBuilder
                     double Dist = Convert.ToDouble(FixDistTextBox.Text);
                     double Brg = Convert.ToDouble(FixBrgNUD.Value);
                     //if (FixListDataGridView.SelectedRows[0].Cells[3].Value != null)
-                        //MagVar = Convert.ToDouble(FixListDataGridView.SelectedRows[0].Cells[3].Value);
+                    //MagVar = Convert.ToDouble(FixListDataGridView.SelectedRows[0].Cells[3].Value);
                     Coords = LatLongCalc.Destination(Lat, Lon, Dist, Brg, 'N');
                     Lat = Coords[0]; Lon = Coords[1];
                     FixText = String.Format("{0:000}", FixBrgNUD.Value) +
@@ -230,6 +231,22 @@ namespace SCTBuilder
         private void ArcGenerator_Load(object sender, EventArgs e)
         {
             MagVarTextBox.Text = InfoSection.MagneticVariation.ToString();
+            LoadSectionComboBox();
+        }
+
+        private void LoadSectionComboBox()
+        {
+            DataTable dtSections = new DataTable();
+            dtSections.Columns.Add("ID", typeof(int));
+            dtSections.Columns.Add("Section", typeof(string));
+            dtSections.Rows.Add(0, "SID/STAR");
+            dtSections.Rows.Add(1, "ARTCC");
+            dtSections.Rows.Add(2, "Airways");
+            dtSections.Rows.Add(3, "GEO");
+            SectionComboBox.DataSource = dtSections;
+            SectionComboBox.DisplayMember = "Section";
+            SectionComboBox.ValueMember = "ID";
+            SectionComboBox.SelectedIndex = 0;
         }
 
         private void CalcDistanceTextBox_KeyPress(object sender, KeyPressEventArgs e)
@@ -258,20 +275,10 @@ namespace SCTBuilder
 
         private void CheckArcButton()
         {
-            AddArc.Enabled = (StartBrg != -1) && (EndBrg != -1) && 
+            AddArc.Enabled = (StartBrg != -1) && (EndBrg != -1) &&
                 (CenterLat != -1) && (CenterLon != -1) && (ArcRadius != -1);
         }
 
-
-        private void AddArcByRadialsButton_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void SectionComboBox_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            ColorComboBox.Enabled = (SectionComboBox.Text == "GEO");
-        }
 
         private void FixDistTextBox_KeyPress(object sender, KeyPressEventArgs e)
         {
@@ -290,14 +297,13 @@ namespace SCTBuilder
             {
                 EndRadialNUD.Value = StartRadialNUD.Value = 360;
                 MagBrgCheckBox.Enabled = EndRadialNUD.Enabled = StartRadialNUD.Enabled = false;
+                EndGroupBox.Enabled = false;
             }
             else
+            {
                 MagBrgCheckBox.Enabled = EndRadialNUD.Enabled = StartRadialNUD.Enabled = true;
-
-        }
-
-        private void AddArc_Click(object sender, EventArgs e)
-        {
+                EndGroupBox.Enabled = true;
+            }
 
         }
 
@@ -360,7 +366,7 @@ namespace SCTBuilder
                 }
                 UpdateStats();
             }
-                    
+
         }
 
         private void TradeStartEndButton_Click(object sender, EventArgs e)
@@ -406,7 +412,7 @@ namespace SCTBuilder
                 if (LatLonParser.TryParseAny(tb))
                 {
                     switch (method)
-                    { 
+                    {
                         case 0:
                             PasteLat = ParsedResult = LatLonParser.ParsedLatitude;
                             PasteLon = LatLonParser.ParsedLongitude;
@@ -467,7 +473,7 @@ namespace SCTBuilder
                 StartLon = result;
                 UpdateStats();
             }
-            }
+        }
 
         private void EndLatitudeTextBox_Validated(object sender, EventArgs e)
         {
@@ -477,7 +483,7 @@ namespace SCTBuilder
                 EndLat = result;
                 UpdateStats();
             }
-            }
+        }
 
         private void EndLongitudeTextBox_Validated(object sender, EventArgs e)
         {
@@ -487,13 +493,13 @@ namespace SCTBuilder
                 EndLon = result;
                 UpdateStats();
             }
-            }
+        }
 
         private void PasteToTextBox_Validated(object sender, EventArgs e)
         {
             double result = TestTextBox(PasteToTextBox);
             if (result != -199)
-            PasteToCenterButton.Enabled = PasteToEndButton.Enabled = PasteToStartButton.Enabled = (result != -199);
+                PasteToCenterButton.Enabled = PasteToEndButton.Enabled = PasteToStartButton.Enabled = (result != -199);
         }
 
         private void PasteToCenterButton_Click(object sender, EventArgs e)
@@ -525,46 +531,124 @@ namespace SCTBuilder
 
         private void UpdateStats()
         {
-            bool setRadius = false;
             if ((CenterLat != -1) && (CenterLon != -1))
             {
                 if ((StartLat != -1) && (StartLon != -1))
                 {
                     StartBrg = LatLongCalc.Bearing(CenterLat, CenterLon, StartLat, StartLon);
-                    StartBrgTextBox.Text = StartBrg.ToString("000");
+                    if (StartBrg == 0) StartBrg = 360;
+                    StartRadialNUD.Value = Convert.ToInt32(StartBrg);
                     ArcRadius = LatLongCalc.Distance(CenterLat, CenterLon, StartLat, StartLon);
-                    StartDistTextBox.Text = ArcRadius.ToString("0.000");
-                    setRadius = true;
+                    CalcDistanceTextBox.Text = ArcRadius.ToString("0.000");
                 }
                 else
                 {
+                    ArcRadius = -1;
                     StartBrg = -1;
-                    StartBrgTextBox.Text = string.Empty;
-                    StartDistTextBox.Text = string.Empty;
+                    StartRadialNUD.Value = 1;
+                    CalcDistanceTextBox.Text = string.Empty;
                 }
                 if ((EndLat != -1) && (EndLon != -1))
                 {
                     EndBrg = LatLongCalc.Bearing(CenterLat, CenterLon, EndLat, EndLon);
-                    EndBrgTextBox.Text = EndBrg.ToString("000");
-                    ArcRadius = LatLongCalc.Distance(CenterLat, CenterLon, EndLat, EndLon);
-                    StartDistTextBox.Text = ArcRadius.ToString("0.000");
-                    setRadius = true;
+                    if (EndBrg == 0) EndBrg = 360;
+                    EndRadialNUD.Value = Convert.ToInt32(EndBrg);
+                    EndDistTextBox.Text = LatLongCalc.Distance(CenterLat, CenterLon, EndLat, EndLon).ToString();
+
                 }
                 else
                 {
                     EndBrg = -1;
-                    EndBrgTextBox.Text = string.Empty;
+                    EndRadialNUD.Value = 1;
+                    EndDistTextBox.Text = string.Empty;
                 }
             }
             else
             {
-                ArcRadius = EndBrg = StartBrg -1;
+                ArcRadius = EndBrg = StartBrg - 1;
             }
-            if (!setRadius)
+            CheckArcButton();
+        }
+
+        private void AddArc_Click(object sender, EventArgs e)
+        {
+            OutputTextBox.Text = BuildArcString();
+        }
+
+        private string BuildArcString()
+        {
+            string Lat0 = string.Empty; string Lon0 = string.Empty; string Lat1; string Lon1;
+            string output = string.Empty;
+            double[] Coords;
+            for (double i = StartBrg; i < EndBrg; i++)
             {
-                ArcRadius = -1;
-                StartDistTextBox.Text = string.Empty;
+                Coords = LatLongCalc.Destination(CenterLat, CenterLon, ArcRadius, i, 'N');
+                Lat1 = Conversions.DecDeg2SCT(Coords[0], true);
+                Lon1 = Conversions.DecDeg2SCT(Coords[1], false);
+                if ((Lat0.Length > 0) && (Lon0.Length > 0) && (Lat1.Length > 0) && (Lon1.Length > 0))
+                    switch (SectionComboBox.SelectedIndex)
+                    {
+                        case 0:         // SIDSTAR
+                            output += SCTstrings.SSDout(Lat0, Lon0, Lat1, Lon1) + cr;
+                            break;
+                        case 1:         // ARTCC
+                            output += SCTstrings.BoundaryOut(PrefixTextBox.Text, Lat0, Lon0, Lat1, Lon1) + cr;
+                            break;
+                        case 2:         // Airway (prefix textbox req'd)
+                            output += SCTstrings.AWYout(PrefixTextBox.Text, Lat0, Lon0, Lat1, Lon1,"" , "") + cr;
+                            break;
+                        case 3:         // GEO format
+                            output += SCTstrings.GeoOut(Lat0, Lon0, Lat1, Lon1, ColorValueTextBox.Text) + cr;
+                            break;
+                    }
+                Lat0 = Lat1; Lon0 = Lon1;
+            }
+            return output;
+        }
+
+        private void ColorValueTextBox_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            if (colorDialog1.ShowDialog() == DialogResult.OK)
+            {
+                Color c = colorDialog1.Color;
+                ColorNameTextBox.Text = c.ToString();
+                ColorValueTextBox.Text = "#" + c.R.ToString("X2") + c.G.ToString("X2") + c.B.ToString("X2");
+            }
+        }
+
+        private void FixEndCoordButton_Click(object sender, EventArgs e)
+        {
+            double[] coords =
+            LatLongCalc.Destination(CenterLat, CenterLon, ArcRadius, Convert.ToDouble(EndRadialNUD.Value), 'N');
+            EndLat = coords[0];
+            EndLon = coords[1];
+            EndLatitudeTextBox.Text = Conversions.DecDeg2SCT(EndLat, true);
+            EndLongitudeTextBox.Text = Conversions.DecDeg2SCT(EndLon, false);
+            UpdateStats();
+        }
+
+        private void StartRadialNUD_ValueChanged(object sender, EventArgs e)
+        {
+            StartBrg = Convert.ToDouble(StartRadialNUD.Value);
+        }
+
+        private void EndRadialNUD_ValueChanged(object sender, EventArgs e)
+        {
+            EndBrg = Convert.ToDouble(EndRadialNUD.Value);
+        }
+
+        private void RadBrgStartButton_Click(object sender, EventArgs e)
+        {
+            double[] coords = new double[2];
+            if ((CenterLat != -1) && (CenterLon != -1))
+            {
+                coords = LatLongCalc.Destination(CenterLat, CenterLon, ArcRadius, Convert.ToDouble(StartRadialNUD.Value), 'N');
+                StartLat = coords[0];
+                StartLon = coords[1];
+                StartLatitudeTextBox.Text = Conversions.DecDeg2SCT(StartLat, true);
+                StartLongitudeTextBox.Text = Conversions.DecDeg2SCT(StartLon, false);
             }
         }
     }
 }
+

@@ -340,8 +340,9 @@ namespace SCTBuilder
 
         private static void WriteRWY(string path)
         {
+            // Need to develop color entries
             string[] strOut = new string[9]; string FacID = string.Empty;
-            string RWYtextColor = TextColors.RWYTextColor; double MagBHdg; double MagEHdg;
+            double MagBHdg; double MagEHdg;
             bool FirstLine = true; string FacFullName = string.Empty;
             DataTable DRAW = new SCTdata.DrawLabelDataTable();
             DataTable RWY = Form1.RWY;
@@ -386,8 +387,8 @@ namespace SCTBuilder
                     strOut[7] = Conversions.DecDeg2SCT(Convert.ToSingle(row["EndLongitude"]), false);
                     strOut[8] = FacFullName;
                     sw.WriteLine(SCTstrings.RWYout(strOut));
-                    DRAW.Rows.Add(new object[] { strOut[0].ToString(), strOut[4].ToString(), strOut[5].ToString(), RWYtextColor, FacFullName });
-                    DRAW.Rows.Add(new object[] { strOut[1].ToString(), strOut[6].ToString(), strOut[7].ToString(), RWYtextColor, FacFullName });
+                    DRAW.Rows.Add(new object[] { strOut[0].ToString(), strOut[4].ToString(), strOut[5].ToString(), "", FacFullName });
+                    DRAW.Rows.Add(new object[] { strOut[1].ToString(), strOut[6].ToString(), strOut[7].ToString(), "", FacFullName });
                 }
                 WriteLabels(DRAW, sw);
             }

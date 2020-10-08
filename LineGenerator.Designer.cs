@@ -105,6 +105,10 @@
             this.groupBox5 = new System.Windows.Forms.GroupBox();
             this.LineDistLabel = new System.Windows.Forms.Label();
             this.LineBrgLabel = new System.Windows.Forms.Label();
+            this.groupBox6 = new System.Windows.Forms.GroupBox();
+            this.PasteToTextBox = new System.Windows.Forms.TextBox();
+            this.PasteToEndButton = new System.Windows.Forms.Button();
+            this.PasteToStartButton = new System.Windows.Forms.Button();
             this.StartGroupBox.SuspendLayout();
             this.EndPointGroupBo.SuspendLayout();
             this.FixImportGroupBox.SuspendLayout();
@@ -115,6 +119,7 @@
             this.groupBox4.SuspendLayout();
             this.ColorGroupBox.SuspendLayout();
             this.groupBox5.SuspendLayout();
+            this.groupBox6.SuspendLayout();
             this.SuspendLayout();
             // 
             // StartGroupBox
@@ -138,7 +143,7 @@
             // StartFixTextBox
             // 
             this.StartFixTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.StartFixTextBox.Location = new System.Drawing.Point(74, 72);
+            this.StartFixTextBox.Location = new System.Drawing.Point(73, 75);
             this.StartFixTextBox.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
             this.StartFixTextBox.Name = "StartFixTextBox";
             this.StartFixTextBox.Size = new System.Drawing.Size(108, 21);
@@ -148,7 +153,7 @@
             // 
             this.StartFixLabel.AutoSize = true;
             this.StartFixLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.StartFixLabel.Location = new System.Drawing.Point(11, 74);
+            this.StartFixLabel.Location = new System.Drawing.Point(11, 77);
             this.StartFixLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.StartFixLabel.Name = "StartFixLabel";
             this.StartFixLabel.Size = new System.Drawing.Size(25, 17);
@@ -218,7 +223,7 @@
             // EndFixTextBox
             // 
             this.EndFixTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.EndFixTextBox.Location = new System.Drawing.Point(73, 71);
+            this.EndFixTextBox.Location = new System.Drawing.Point(73, 73);
             this.EndFixTextBox.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
             this.EndFixTextBox.Name = "EndFixTextBox";
             this.EndFixTextBox.Size = new System.Drawing.Size(108, 21);
@@ -228,7 +233,7 @@
             // 
             this.EndFixTextBoxLabel.AutoSize = true;
             this.EndFixTextBoxLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.EndFixTextBoxLabel.Location = new System.Drawing.Point(7, 71);
+            this.EndFixTextBoxLabel.Location = new System.Drawing.Point(7, 73);
             this.EndFixTextBoxLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.EndFixTextBoxLabel.Name = "EndFixTextBoxLabel";
             this.EndFixTextBoxLabel.Size = new System.Drawing.Size(25, 17);
@@ -238,7 +243,7 @@
             // EndLongitudeTextBox
             // 
             this.EndLongitudeTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.EndLongitudeTextBox.Location = new System.Drawing.Point(74, 49);
+            this.EndLongitudeTextBox.Location = new System.Drawing.Point(73, 49);
             this.EndLongitudeTextBox.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
             this.EndLongitudeTextBox.Name = "EndLongitudeTextBox";
             this.EndLongitudeTextBox.Size = new System.Drawing.Size(108, 21);
@@ -259,7 +264,7 @@
             // EndLatitudeTextBox
             // 
             this.EndLatitudeTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.EndLatitudeTextBox.Location = new System.Drawing.Point(73, 27);
+            this.EndLatitudeTextBox.Location = new System.Drawing.Point(73, 25);
             this.EndLatitudeTextBox.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
             this.EndLatitudeTextBox.Name = "EndLatitudeTextBox";
             this.EndLatitudeTextBox.Size = new System.Drawing.Size(108, 21);
@@ -270,7 +275,7 @@
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(4, 29);
+            this.label3.Location = new System.Drawing.Point(4, 27);
             this.label3.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(59, 17);
@@ -287,7 +292,7 @@
             this.FixImportGroupBox.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
             this.FixImportGroupBox.Name = "FixImportGroupBox";
             this.FixImportGroupBox.Padding = new System.Windows.Forms.Padding(2, 1, 2, 1);
-            this.FixImportGroupBox.Size = new System.Drawing.Size(228, 230);
+            this.FixImportGroupBox.Size = new System.Drawing.Size(228, 170);
             this.FixImportGroupBox.TabIndex = 8;
             this.FixImportGroupBox.TabStop = false;
             this.FixImportGroupBox.Text = "Import From Fix";
@@ -309,7 +314,7 @@
             this.FixListDataGridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.AutoSizeToAllHeaders;
             this.FixListDataGridView.RowTemplate.Height = 28;
             this.FixListDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.FixListDataGridView.Size = new System.Drawing.Size(203, 181);
+            this.FixListDataGridView.Size = new System.Drawing.Size(203, 118);
             this.FixListDataGridView.TabIndex = 2;
             this.FixListDataGridView.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.FixListDataGridView_CellContentClick);
             // 
@@ -358,7 +363,7 @@
             this.ImportFix2EndButton.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("ImportFix2EndButton.BackgroundImage")));
             this.ImportFix2EndButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ImportFix2EndButton.Enabled = false;
-            this.ImportFix2EndButton.Location = new System.Drawing.Point(214, 229);
+            this.ImportFix2EndButton.Location = new System.Drawing.Point(214, 189);
             this.ImportFix2EndButton.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
             this.ImportFix2EndButton.Name = "ImportFix2EndButton";
             this.ImportFix2EndButton.Size = new System.Drawing.Size(39, 38);
@@ -394,12 +399,12 @@
             this.groupBox1.Controls.Add(this.label5);
             this.groupBox1.Controls.Add(this.CalcBearingTextBox);
             this.groupBox1.Controls.Add(this.label4);
-            this.groupBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox1.Location = new System.Drawing.Point(257, 289);
+            this.groupBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.groupBox1.Location = new System.Drawing.Point(259, 317);
             this.groupBox1.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Padding = new System.Windows.Forms.Padding(2, 1, 2, 1);
-            this.groupBox1.Size = new System.Drawing.Size(228, 162);
+            this.groupBox1.Size = new System.Drawing.Size(228, 139);
             this.groupBox1.TabIndex = 9;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Calculate End Point";
@@ -407,10 +412,10 @@
             // MagBrgCheckBox
             // 
             this.MagBrgCheckBox.AutoSize = true;
-            this.MagBrgCheckBox.Location = new System.Drawing.Point(121, 27);
+            this.MagBrgCheckBox.Location = new System.Drawing.Point(128, 24);
             this.MagBrgCheckBox.Margin = new System.Windows.Forms.Padding(2);
             this.MagBrgCheckBox.Name = "MagBrgCheckBox";
-            this.MagBrgCheckBox.Size = new System.Drawing.Size(84, 21);
+            this.MagBrgCheckBox.Size = new System.Drawing.Size(77, 19);
             this.MagBrgCheckBox.TabIndex = 5;
             this.MagBrgCheckBox.Text = "Magnetic";
             this.MagBrgCheckBox.UseVisualStyleBackColor = true;
@@ -422,11 +427,11 @@
             this.groupBox2.Controls.Add(this.CalcDistMeterRadioButton);
             this.groupBox2.Controls.Add(this.CalcDistSMRadioButton);
             this.groupBox2.Controls.Add(this.CalcDistNMRadioButton);
-            this.groupBox2.Location = new System.Drawing.Point(26, 103);
+            this.groupBox2.Location = new System.Drawing.Point(17, 96);
             this.groupBox2.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Padding = new System.Windows.Forms.Padding(2, 1, 2, 1);
-            this.groupBox2.Size = new System.Drawing.Size(191, 45);
+            this.groupBox2.Size = new System.Drawing.Size(188, 37);
             this.groupBox2.TabIndex = 3;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Measured as";
@@ -434,10 +439,10 @@
             // CalcDistFeetRadioButton
             // 
             this.CalcDistFeetRadioButton.AutoSize = true;
-            this.CalcDistFeetRadioButton.Location = new System.Drawing.Point(56, 18);
+            this.CalcDistFeetRadioButton.Location = new System.Drawing.Point(56, 14);
             this.CalcDistFeetRadioButton.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
             this.CalcDistFeetRadioButton.Name = "CalcDistFeetRadioButton";
-            this.CalcDistFeetRadioButton.Size = new System.Drawing.Size(34, 21);
+            this.CalcDistFeetRadioButton.Size = new System.Drawing.Size(31, 19);
             this.CalcDistFeetRadioButton.TabIndex = 2;
             this.CalcDistFeetRadioButton.Text = "ft";
             this.CalcDistFeetRadioButton.UseVisualStyleBackColor = true;
@@ -446,10 +451,10 @@
             // CalcDistMeterRadioButton
             // 
             this.CalcDistMeterRadioButton.AutoSize = true;
-            this.CalcDistMeterRadioButton.Location = new System.Drawing.Point(145, 18);
+            this.CalcDistMeterRadioButton.Location = new System.Drawing.Point(145, 14);
             this.CalcDistMeterRadioButton.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
             this.CalcDistMeterRadioButton.Name = "CalcDistMeterRadioButton";
-            this.CalcDistMeterRadioButton.Size = new System.Drawing.Size(37, 21);
+            this.CalcDistMeterRadioButton.Size = new System.Drawing.Size(36, 19);
             this.CalcDistMeterRadioButton.TabIndex = 4;
             this.CalcDistMeterRadioButton.Text = "m";
             this.CalcDistMeterRadioButton.UseVisualStyleBackColor = true;
@@ -458,10 +463,10 @@
             // CalcDistSMRadioButton
             // 
             this.CalcDistSMRadioButton.AutoSize = true;
-            this.CalcDistSMRadioButton.Location = new System.Drawing.Point(7, 18);
+            this.CalcDistSMRadioButton.Location = new System.Drawing.Point(7, 14);
             this.CalcDistSMRadioButton.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
             this.CalcDistSMRadioButton.Name = "CalcDistSMRadioButton";
-            this.CalcDistSMRadioButton.Size = new System.Drawing.Size(46, 21);
+            this.CalcDistSMRadioButton.Size = new System.Drawing.Size(44, 19);
             this.CalcDistSMRadioButton.TabIndex = 1;
             this.CalcDistSMRadioButton.Text = "SM";
             this.CalcDistSMRadioButton.UseVisualStyleBackColor = true;
@@ -471,10 +476,10 @@
             // 
             this.CalcDistNMRadioButton.AutoSize = true;
             this.CalcDistNMRadioButton.Checked = true;
-            this.CalcDistNMRadioButton.Location = new System.Drawing.Point(96, 18);
+            this.CalcDistNMRadioButton.Location = new System.Drawing.Point(96, 14);
             this.CalcDistNMRadioButton.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
             this.CalcDistNMRadioButton.Name = "CalcDistNMRadioButton";
-            this.CalcDistNMRadioButton.Size = new System.Drawing.Size(47, 21);
+            this.CalcDistNMRadioButton.Size = new System.Drawing.Size(45, 19);
             this.CalcDistNMRadioButton.TabIndex = 3;
             this.CalcDistNMRadioButton.TabStop = true;
             this.CalcDistNMRadioButton.Text = "NM";
@@ -483,10 +488,10 @@
             // 
             // CalcDistanceTextBox
             // 
-            this.CalcDistanceTextBox.Location = new System.Drawing.Point(71, 78);
+            this.CalcDistanceTextBox.Location = new System.Drawing.Point(73, 73);
             this.CalcDistanceTextBox.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
             this.CalcDistanceTextBox.Name = "CalcDistanceTextBox";
-            this.CalcDistanceTextBox.Size = new System.Drawing.Size(68, 23);
+            this.CalcDistanceTextBox.Size = new System.Drawing.Size(68, 21);
             this.CalcDistanceTextBox.TabIndex = 2;
             this.CalcDistanceTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.CalcDistanceTextBox_KeyPress);
             this.CalcDistanceTextBox.Validated += new System.EventHandler(this.CalcDistanceTextBox_Validated);
@@ -494,19 +499,19 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(7, 80);
+            this.label6.Location = new System.Drawing.Point(14, 78);
             this.label6.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(63, 17);
+            this.label6.Size = new System.Drawing.Size(55, 15);
             this.label6.TabIndex = 4;
             this.label6.Text = "Distance";
             // 
             // CalcMagVarTextBox
             // 
-            this.CalcMagVarTextBox.Location = new System.Drawing.Point(159, 51);
+            this.CalcMagVarTextBox.Location = new System.Drawing.Point(131, 49);
             this.CalcMagVarTextBox.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
             this.CalcMagVarTextBox.Name = "CalcMagVarTextBox";
-            this.CalcMagVarTextBox.Size = new System.Drawing.Size(46, 23);
+            this.CalcMagVarTextBox.Size = new System.Drawing.Size(46, 21);
             this.CalcMagVarTextBox.TabIndex = 1;
             this.toolTip1.SetToolTip(this.CalcMagVarTextBox, "Also called declination; retrieved from the main program info");
             this.CalcMagVarTextBox.TextChanged += new System.EventHandler(this.CalcMagVarTextBox_TextChanged);
@@ -515,19 +520,19 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(38, 54);
+            this.label5.Location = new System.Drawing.Point(18, 52);
             this.label5.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(125, 17);
+            this.label5.Size = new System.Drawing.Size(109, 15);
             this.label5.TabIndex = 2;
             this.label5.Text = "Magnetic Variation";
             // 
             // CalcBearingTextBox
             // 
-            this.CalcBearingTextBox.Location = new System.Drawing.Point(71, 25);
+            this.CalcBearingTextBox.Location = new System.Drawing.Point(78, 22);
             this.CalcBearingTextBox.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
             this.CalcBearingTextBox.Name = "CalcBearingTextBox";
-            this.CalcBearingTextBox.Size = new System.Drawing.Size(46, 23);
+            this.CalcBearingTextBox.Size = new System.Drawing.Size(46, 21);
             this.CalcBearingTextBox.TabIndex = 0;
             this.toolTip1.SetToolTip(this.CalcBearingTextBox, "Enter initial desired bearing");
             this.CalcBearingTextBox.TextChanged += new System.EventHandler(this.CalcBearingTextBox_TextChanged);
@@ -536,10 +541,10 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(14, 25);
+            this.label4.Location = new System.Drawing.Point(24, 25);
             this.label4.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(57, 17);
+            this.label4.Size = new System.Drawing.Size(50, 15);
             this.label4.TabIndex = 0;
             this.label4.Text = "Bearing";
             // 
@@ -791,6 +796,7 @@
             this.AddNextButton.TabIndex = 2;
             this.AddNextButton.Text = "Add and Next";
             this.AddNextButton.UseVisualStyleBackColor = true;
+            this.AddNextButton.Click += new System.EventHandler(this.AddNextButton_Click);
             // 
             // AddLineButton
             // 
@@ -942,7 +948,7 @@
             this.ColorGroupBox.Size = new System.Drawing.Size(228, 42);
             this.ColorGroupBox.TabIndex = 38;
             this.ColorGroupBox.TabStop = false;
-            this.ColorGroupBox.Text = "Line Color (optional))";
+            this.ColorGroupBox.Text = "Line Color (optional)";
             // 
             // ColorValueLabel
             // 
@@ -961,6 +967,8 @@
             this.ColorNameTextBox.Name = "ColorNameTextBox";
             this.ColorNameTextBox.Size = new System.Drawing.Size(68, 20);
             this.ColorNameTextBox.TabIndex = 1;
+            this.toolTip1.SetToolTip(this.ColorNameTextBox, "Double-click to create #define string");
+            this.ColorNameTextBox.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.ColorNameTextBox_MouseDoubleClick);
             // 
             // ColorNameLabel
             // 
@@ -1012,12 +1020,55 @@
             this.LineBrgLabel.TabIndex = 0;
             this.LineBrgLabel.Text = "Brg";
             // 
+            // groupBox6
+            // 
+            this.groupBox6.Controls.Add(this.PasteToTextBox);
+            this.groupBox6.Controls.Add(this.PasteToEndButton);
+            this.groupBox6.Controls.Add(this.PasteToStartButton);
+            this.groupBox6.Location = new System.Drawing.Point(260, 232);
+            this.groupBox6.Name = "groupBox6";
+            this.groupBox6.Size = new System.Drawing.Size(215, 77);
+            this.groupBox6.TabIndex = 78;
+            this.groupBox6.TabStop = false;
+            this.groupBox6.Text = "Paste Coords Here";
+            // 
+            // PasteToTextBox
+            // 
+            this.PasteToTextBox.Location = new System.Drawing.Point(6, 19);
+            this.PasteToTextBox.Name = "PasteToTextBox";
+            this.PasteToTextBox.Size = new System.Drawing.Size(190, 20);
+            this.PasteToTextBox.TabIndex = 72;
+            this.PasteToTextBox.Validated += new System.EventHandler(this.PasteToTextBox_Validated);
+            // 
+            // PasteToEndButton
+            // 
+            this.PasteToEndButton.Enabled = false;
+            this.PasteToEndButton.Location = new System.Drawing.Point(135, 45);
+            this.PasteToEndButton.Name = "PasteToEndButton";
+            this.PasteToEndButton.Size = new System.Drawing.Size(59, 23);
+            this.PasteToEndButton.TabIndex = 76;
+            this.PasteToEndButton.Text = "To End";
+            this.PasteToEndButton.UseVisualStyleBackColor = true;
+            this.PasteToEndButton.Click += new System.EventHandler(this.PasteToEndButton_Click);
+            // 
+            // PasteToStartButton
+            // 
+            this.PasteToStartButton.Enabled = false;
+            this.PasteToStartButton.Location = new System.Drawing.Point(73, 45);
+            this.PasteToStartButton.Name = "PasteToStartButton";
+            this.PasteToStartButton.Size = new System.Drawing.Size(56, 23);
+            this.PasteToStartButton.TabIndex = 75;
+            this.PasteToStartButton.Text = "To Start";
+            this.PasteToStartButton.UseVisualStyleBackColor = true;
+            this.PasteToStartButton.Click += new System.EventHandler(this.PasteToStartButton_Click);
+            // 
             // LineGenerator
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
-            this.ClientSize = new System.Drawing.Size(511, 669);
+            this.ClientSize = new System.Drawing.Size(512, 669);
+            this.Controls.Add(this.groupBox6);
             this.Controls.Add(this.groupBox5);
             this.Controls.Add(this.ColorGroupBox);
             this.Controls.Add(this.label11);
@@ -1071,6 +1122,8 @@
             this.ColorGroupBox.PerformLayout();
             this.groupBox5.ResumeLayout(false);
             this.groupBox5.PerformLayout();
+            this.groupBox6.ResumeLayout(false);
+            this.groupBox6.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1153,5 +1206,9 @@
         private System.Windows.Forms.CheckBox MagBrgCheckBox;
         private System.Windows.Forms.TextBox DashesLengthNMTextBox;
         private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.GroupBox groupBox6;
+        private System.Windows.Forms.TextBox PasteToTextBox;
+        private System.Windows.Forms.Button PasteToEndButton;
+        private System.Windows.Forms.Button PasteToStartButton;
     }
 }

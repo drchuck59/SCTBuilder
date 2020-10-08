@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Drawing.Text;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -391,11 +393,59 @@ namespace SCTBuilder
             { 5, 30, 1,15, 15,30, 30,15, 15,1, 1,15 };
     }
 
-    public class TextColors
+    public class PatternData
     {
-        public static string RWYTextColor { get; set; }
-        public static string SSDTextColor { get; set; }
+        private const double dist6000 = 3.333;      // Leg length (NM) at or below 6000 feet
+        private const double speed6000 = 200.0;
+        private const double dist14000 = 3.8333;    // Leg length (NM) 6001-14000 feet
+        private const double speed14000 = 230.0;
+        private const double dist14001 = 6.625;     // Leg length (NM) over 14000
+        private const double speed14001 = 265.0;
+        private const double distUSAF = 5.1666;     // Leg length (NM) for USAF
+        private const double speedUSAF = 310.0;
+        private const double distNavy = 3.8333;     // Leg length (NM) for USN
+        private const double speedNavy = 230.0;
+        private const double distCopter = 1.5;      // Helo hold length (rarely used)
+        private const double speedCopter = 90.0;
+        private static string[] patternAlt = new string[]
+            {"6000", "14000", "14001", "USAF", "Navy", "Copter"};
+        private static double[] legLengthAlt = new double[]
+            {dist6000, dist14000, dist14001, distUSAF, distNavy, distCopter };
+        private static double[] MaxSpeed = new double[]
+            {speed6000, speed14000, speed14001, speedUSAF, speedNavy, speedCopter};
+
+        public static double ArcRadius (int altitudeClass, double degrees)
+        {
+            double speed = MaxSpeed[altitudeClass];
+            return speed * degrees * Math.PI / 600.0;
+        }
+
+        public static double LegLength (int altitudeClass)
+        {
+            return legLengthAlt[altitudeClass];
+        }
+
+        public static int AltitudeClass (string altitude)
+        {
+            int j = 0;
+            if (Extensions.IsNumeric(altitude))
+            {
+                for (int i = 0; i < 3; i++)
+                {
+                    if (Convert.ToInt32(altitude) <= Convert.ToInt32(patternAlt[i])) return i;
+                }
+                return 2;
+            }
+            else
+                foreach (string name in patternAlt)
+                {
+                    j++;
+                    if (name == altitude) return j;
+                }
+            return j;
+        }
     }
+
     public class APTView
     {
         public string ID { get; set; }

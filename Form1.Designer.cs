@@ -142,7 +142,6 @@
             this.labelGeneratorforDiagramsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.SSDGeneratorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.racetrackholdToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.runwayMarksToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.iLSGeneratorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.xML2SCTToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dMSDecDegToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -1510,7 +1509,6 @@
             this.labelGeneratorforDiagramsToolStripMenuItem,
             this.SSDGeneratorToolStripMenuItem,
             this.racetrackholdToolStripMenuItem,
-            this.runwayMarksToolStripMenuItem,
             this.iLSGeneratorToolStripMenuItem,
             this.xML2SCTToolStripMenuItem,
             this.dMSDecDegToolStripMenuItem,
@@ -1551,17 +1549,10 @@
             // 
             // racetrackholdToolStripMenuItem
             // 
-            this.racetrackholdToolStripMenuItem.Enabled = false;
             this.racetrackholdToolStripMenuItem.Name = "racetrackholdToolStripMenuItem";
             this.racetrackholdToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.racetrackholdToolStripMenuItem.Text = "Racetrack (hold)";
-            // 
-            // runwayMarksToolStripMenuItem
-            // 
-            this.runwayMarksToolStripMenuItem.Enabled = false;
-            this.runwayMarksToolStripMenuItem.Name = "runwayMarksToolStripMenuItem";
-            this.runwayMarksToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.runwayMarksToolStripMenuItem.Text = "Runway Marks";
+            this.racetrackholdToolStripMenuItem.Click += new System.EventHandler(this.racetrackholdToolStripMenuItem_Click);
             // 
             // iLSGeneratorToolStripMenuItem
             // 
@@ -2102,7 +2093,6 @@
         private System.Windows.Forms.ToolStripMenuItem arcGeneratorToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem SSDGeneratorToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem racetrackholdToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem runwayMarksToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem labelGeneratorforDiagramsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem iLSGeneratorToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openDataFolderToolStripMenuItem;

@@ -4,9 +4,8 @@ using System.Data;
 using System.Windows.Forms;
 using System.Drawing;
 using System.Linq;
-using Org.BouncyCastle.Crypto.Generators;
+using System.Globalization;
 using System.Collections.Generic;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace SCTBuilder
 {
@@ -17,6 +16,8 @@ namespace SCTBuilder
         private static double EndLat;
         private static double EndLon;
         private static double Distance;
+        private static double PasteLat;
+        private static double PasteLon;
         private static double DashLength = 0.25;        // This is in NM. Convert to use
         private static double TrueBrg;     // From the Lat-Long coordinates
         private static double CalcDist;
@@ -217,9 +218,9 @@ namespace SCTBuilder
             if (CalcBearingTextBox.TextLength != 0)
             {
                 double test = Convert.ToDouble(CalcBearingTextBox.Text);
-                if ((test > 360) | (test < 0))
+                if ((test > 360) | (test < 1))
                 {
-                    Msg = "Value must be 0 to 360.";
+                    Msg = "Value must be 1 to 360.";
                 }
                 else
                 {
@@ -380,7 +381,7 @@ namespace SCTBuilder
             ///     Magnetic bearing + variation = true bearing
             /// To calculate compass bearing from true bearing(and known deviation and variation):
             ///     True bearing -variation = Magnetic bearing
-            ///     Magnetic bearing - deviation = Compass bearing
+            /// West Variations are negative
             /// In the US, the agonic line is roughly along the Mississippi river
             /// In aviation, maps, GPS and runways use true bearings
             double CalcTrueBrg = CalcBrg;
@@ -423,167 +424,118 @@ namespace SCTBuilder
         {
             if (colorDialog1.ShowDialog() == DialogResult.OK)
             {
+                string colorARGB; string colorName;
                 Color c = colorDialog1.Color;
-                ColorNameTextBox.Text = c.ToString();
-                ColorValueTextBox.Text = "#" + c.R.ToString("X2") + c.G.ToString("X2") + c.B.ToString("X2");
+                colorName = c.ToString();
+                colorARGB = c.R.ToString("X2") + c.G.ToString("X2") + c.B.ToString("X2");
+                if (Extensions.IsAColor(colorName)) 
+                    ColorNameTextBox.Text = colorName;
+                else
+                    ColorNameTextBox.Text = "#" + colorARGB;
+                colorARGB = c.R.ToString("X2") + c.G.ToString("X2") + c.B.ToString("X2");
+                ColorValueTextBox.Text = int.Parse(colorARGB, System.Globalization.NumberStyles.HexNumber).ToString();
             }
+        }
+
+        private void ColorNameTextBox_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            string colorName = ColorNameTextBox.Text;
+            string colorValue = Extensions.Right(ColorValueTextBox.Text, ColorValueTextBox.TextLength - 1);
+            const string label = "#define";
+            if (colorName.Length == 0)
+                SCTcommon.SendMessage("Need a name to copy to #define.", MessageBoxIcon.Error);
+            else
+            {
+                if (colorName.Substring(0, 1) == "#")
+                    SCTcommon.SendMessage("Name cannot begin with '#' - enter a new name", MessageBoxIcon.Error);
+                else
+                {
+                    if (!Extensions.IsNumeric(colorValue))
+                        SCTcommon.SendMessage("colorValue must be numeric.", MessageBoxIcon.Error);
+                    else
+                        Clipboard.SetText(label + " " + colorName + " " + colorValue);
+                }
+            }
+        }
+
+        private double TestTextBox(TextBox tb)
+        {
+            double ParsedResult = -199;
+            int method = 0;
+            if (tb.Name.IndexOf("Lat") != -1) method = 1;
+            if (tb.Name.IndexOf("Lon") != -1) method = 2;
+            if ((tb.Modified) && tb.TextLength != 0)
+            {
+                if (LatLonParser.TryParseAny(tb))
+                {
+                    switch (method)
+                    {
+                        case 0:
+                            PasteLat = ParsedResult = LatLonParser.ParsedLatitude;
+                            PasteLon = LatLonParser.ParsedLongitude;
+                            tb.Text = Conversions.DecDeg2SCT(PasteLat, true) + " " +
+                                Conversions.DecDeg2SCT(PasteLon, false);
+                            break;
+                        case 1:
+                            PasteLat = ParsedResult = LatLonParser.ParsedLatitude;
+                            PasteLon = -199;
+                            tb.Text = Conversions.DecDeg2SCT(ParsedResult, true);
+                            break;
+                        case 2:
+                            PasteLon = ParsedResult = LatLonParser.ParsedLongitude;
+                            PasteLat = -199;
+                            tb.Text = Conversions.DecDeg2SCT(ParsedResult, false);
+                            break;
+                    }
+                    tb.BackColor = Color.White; 
+                }
+                else tb.BackColor = Color.Yellow;
+            }
+            return ParsedResult;
         }
 
         private void StartLatitudeTextBox_Validated(object sender, EventArgs e)
         {
-            if (StartLatitudeTextBox.TextLength != 0)
+            double result = TestTextBox(StartLatitudeTextBox);
+            if (result != -199)
             {
-                double testvalue;
-                string cr = Environment.NewLine; string Msg = string.Empty;
-                if (Extensions.IsNumeric(StartLatitudeTextBox.Text))
-                {
-                    testvalue = Convert.ToSingle(StartLatitudeTextBox.Text);
-                    if (Math.Abs(testvalue) > 90)
-                    {
-                        Msg = "Latitude value must fall between -90 and 90.";
-                    }
-                }
-                else
-                {
-                    testvalue = Conversions.String2DecDeg(StartLatitudeTextBox.Text);
-                    if (testvalue == -1)
-                    {
-                        Msg = "You used an invalid format or "
-                            + cr + "your latitude is out of range (-90 to 90)."
-                            + cr + "Click the question mark for help on formats.";
-                    }
-                    else
-                    {
-                        StartLatitudeTextBox.Text = Conversions.DecDeg2SCT(testvalue, true);
-                        StartLat = Conversions.String2DecDeg(StartLatitudeTextBox.Text);
-                    }
-                }
-
-                if (Msg.Length != 0)
-                {
-                    SCTcommon.SendMessage(Msg);
-                    StartLatitudeTextBox.Text = string.Empty;
-                    StartLat = 0;
-                }
+                StartLat = PasteLat;
+                if (PasteLon != -199) StartLon = PasteLon;
+                UpdateCopyButtons();
             }
-            UpdateCopyButtons();
         }
 
         private void StartLongitudeTextBox_Validated(object sender, EventArgs e)
         {
-            if (StartLongitudeTextBox.TextLength != 0)
+            double result = TestTextBox(StartLongitudeTextBox);
+            if (result != -199)
             {
-                double testvalue;
-                string cr = Environment.NewLine; string Msg = string.Empty;
-                if (Extensions.IsNumeric(StartLongitudeTextBox.Text))
-                {
-                    testvalue = Convert.ToSingle(StartLongitudeTextBox.Text);
-                    if (Math.Abs(testvalue) > 180)
-                    {
-                        Msg = "Longitude value must fall between -180 and 180.";
-                    }
-                }
-                else
-                {
-                    testvalue = Conversions.String2DecDeg(StartLongitudeTextBox.Text);
-                    if (testvalue == -1)
-                    {
-                        Msg = "You used an invalid format or "
-                            + cr + "your longitude is out of range (-180 to 180)."
-                            + cr + "Click the question mark for help on formats.";
-                    }
-                    else
-                    {
-                        StartLongitudeTextBox.Text = Conversions.DecDeg2SCT(testvalue, false);
-                        StartLon = Conversions.String2DecDeg(StartLongitudeTextBox.Text);
-                    }
-                }
-                if (Msg.Length != 0)
-                {
-                    SCTcommon.SendMessage(Msg);
-                    StartLongitudeTextBox.Text = string.Empty;
-                    StartLon = 0;
-                }
+                StartLon = PasteLon;
+                if (PasteLat != -199) StartLat = PasteLat;
+                UpdateCopyButtons();
             }
-            UpdateCopyButtons();
         }
 
         private void EndLatitudeTextBox_Validated(object sender, EventArgs e)
         {
-            if (EndLatitudeTextBox.TextLength != 0)
+            double result = TestTextBox(EndLatitudeTextBox);
+            if (result != -199)
             {
-                double testvalue;
-                string cr = Environment.NewLine; string Msg = string.Empty;
-                if (Extensions.IsNumeric(EndLatitudeTextBox.Text))
-                {
-                    testvalue = Convert.ToSingle(EndLatitudeTextBox.Text);
-                    if (Math.Abs(testvalue) > 90)
-                    {
-                        Msg = "Latitude value must fall between -90 and 90.";
-                    }
-                    else
-                    {
-                        EndLatitudeTextBox.Text = Conversions.DecDeg2SCT(testvalue, false);
-                        EndLat = Conversions.String2DecDeg(EndLatitudeTextBox.Text);
-                    }
-                }
-                else
-                {
-                    testvalue = Conversions.String2DecDeg(EndLatitudeTextBox.Text);
-                    if (testvalue == -1)
-                    {
-                        Msg = "You used an invalid format or "
-                            + cr + "your latitude is out of range (-90 to 90)."
-                            + cr + "Click the question mark for help on formats.";
-                    }
-                }
-                if (Msg.Length != 0)
-                {
-                    SCTcommon.SendMessage(Msg);
-                    EndLatitudeTextBox.Text = string.Empty;
-                    EndLat = 0;
-                }
+                EndLat = PasteLat;
+                if (PasteLon != -199) EndLon = PasteLon;
+                UpdateCopyButtons();
             }
-            UpdateCopyButtons();
         }
 
         private void EndLongitudeTextBox_Validated(object sender, EventArgs e)
         {
-            if (EndLongitudeTextBox.TextLength != 0)
+            double result = TestTextBox(EndLongitudeTextBox);
+            if (result != -199)
             {
-                double testvalue;
-                string cr = Environment.NewLine; string Msg = string.Empty;
-                if (Extensions.IsNumeric(EndLongitudeTextBox.Text))
-                {
-                    testvalue = Convert.ToSingle(EndLongitudeTextBox.Text);
-                    if (Math.Abs(testvalue) > 180)
-                    {
-                        Msg = "Longitude value must fall between -180 and 180.";
-                    }
-                }
-                else
-                {
-                    testvalue = Conversions.String2DecDeg(EndLongitudeTextBox.Text);
-                    if (testvalue == -1)
-                    {
-                        Msg = "You used an invalid format or "
-                            + cr + "your longitude is out of range (-180 to 180)."
-                            + cr + "Click the question mark for help on formats.";
-                    }
-                    else
-                    {
-                        EndLongitudeTextBox.Text = Conversions.DecDeg2SCT(testvalue, false);
-                        EndLon = Conversions.String2DecDeg(EndLongitudeTextBox.Text);
-                    }
-                }
-                if (Msg.Length != 0)
-                {
-                    SCTcommon.SendMessage(Msg);
-                    EndLongitudeTextBox.Text = string.Empty;
-                    EndLon = 0;
-                }
+                EndLon = PasteLon;
+                if (PasteLat != -199) EndLat = PasteLat;
+                UpdateCopyButtons();
             }
-            UpdateCopyButtons();
         }
 
         private void AddLineButton_Click(object sender, EventArgs e)
@@ -597,71 +549,64 @@ namespace SCTBuilder
             // RETURNS - Nothing; writes a string to the Output Textbox
             string cr = Environment.NewLine;
             string Msg;
-            if (StartLon > EndLon)
-            {
-                SCTcommon.SendMessage("Start point must be west of end point.  (Try reversing the two points.)");
-            }
-            else
-            {
                 // Create the list of points for the line (if not dashed, returns original points)
                 string[] strOut = new string[4];
                 strOut[0] = strOut[1] = strOut[2] = strOut[3] = string.Empty;
                 double[][] Lines = DashedLine(DashedLineRadioButton.Checked);
-                if (SSDRadioButton.Checked)
+            if (SSDRadioButton.Checked)
+            {
+                foreach (double[] Line in Lines)
                 {
-                    foreach (double[] Line in Lines)
+                    if (Line[0] == -1)
                     {
-                        if (Line[0] == -1)
-                        {
-                            strOut[2] = string.Empty; strOut[3] = string.Empty;
-                        }
-                        else
-                        {
-                            strOut[2] = Conversions.DecDeg2SCT(Line[0], true);
-                            strOut[3] = Conversions.DecDeg2SCT(Line[1], false);
-                        }
-                        if ((strOut[0].Length != 0) && (strOut[2].Length != 0))
-                        {
-                            switch (OutputType)
-                            {
-                                case "SSD":
-                                    OutputTextBox.Text += SCTstrings.SSDout(strOut[0], strOut[1],
-                                        strOut[2], strOut[3]) + cr;
-                                    break;
-                                case "AWY":
-                                    if (PrefixTextBox.TextLength != 0)
-                                        OutputTextBox.Text += SCTstrings.AWYout(PrefixTextBox.Text, strOut[0], strOut[1],
-                                        strOut[2], strOut[3], StartFixTextBox.Text, EndFixTextBox.Text) + cr;
-                                    else
-                                    {
-                                        Msg = "The Airway identifier is required for this format." + cr + "(Place in the prefix text box.)";
-                                        SCTcommon.SendMessage(Msg);
-                                        PrefixTextBox.Focus();
-                                    }
-                                    break;
-                                case "ARTCC":
-                                    if (PrefixTextBox.TextLength != 0)
-                                    {
-                                        OutputTextBox.Text += SCTstrings.BoundaryOut(PrefixTextBox.Text, strOut[0], strOut[1],
-                                          strOut[2], strOut[3]);
-                                        if (SuffixTextBox.TextLength != 0) OutputTextBox.Text += SuffixTextBox.Text;
-                                        OutputTextBox.Text += cr;
-                                    }
-                                    else
-                                    {
-                                        Msg = "The ARTCC identifier is required for this format." + cr + "(Place in the prefix text box.)";
-                                        SCTcommon.SendMessage(Msg);
-                                        PrefixTextBox.Focus();
-                                    }
-                                    break;
-                                case "GEO":
-                                    OutputTextBox.Text += SCTstrings.GeoOut(strOut[0], strOut[1],
-                                        strOut[2], strOut[3], SuffixTextBox.Text) + cr;
-                                    break;
-                            }
-                        }
-                        strOut[0] = strOut[2]; strOut[1] = strOut[3];
+                        strOut[2] = string.Empty; strOut[3] = string.Empty;
                     }
+                    else
+                    {
+                        strOut[2] = Conversions.DecDeg2SCT(Line[0], true);
+                        strOut[3] = Conversions.DecDeg2SCT(Line[1], false);
+                    }
+                    if ((strOut[0].Length != 0) && (strOut[2].Length != 0))
+                    {
+                        switch (OutputType)
+                        {
+                            case "SSD":
+                                OutputTextBox.Text += SCTstrings.SSDout(strOut[0], strOut[1],
+                                    strOut[2], strOut[3]) + cr;
+                                break;
+                            case "AWY":
+                                if (PrefixTextBox.TextLength != 0)
+                                    OutputTextBox.Text += SCTstrings.AWYout(PrefixTextBox.Text, strOut[0], strOut[1],
+                                    strOut[2], strOut[3], StartFixTextBox.Text, EndFixTextBox.Text) + cr;
+                                else
+                                {
+                                    Msg = "The Airway identifier is required for this format." + cr + "(Place in the prefix text box.)";
+                                    SCTcommon.SendMessage(Msg);
+                                    PrefixTextBox.Focus();
+                                }
+                                break;
+                            case "ARTCC":
+                                if (PrefixTextBox.TextLength != 0)
+                                {
+                                    OutputTextBox.Text += SCTstrings.BoundaryOut(PrefixTextBox.Text, strOut[0], strOut[1],
+                                      strOut[2], strOut[3]);
+                                    if (SuffixTextBox.TextLength != 0) OutputTextBox.Text += SuffixTextBox.Text;
+                                    OutputTextBox.Text += cr;
+                                }
+                                else
+                                {
+                                    Msg = "The ARTCC identifier is required for this format." + cr + "(Place in the prefix text box.)";
+                                    SCTcommon.SendMessage(Msg);
+                                    PrefixTextBox.Focus();
+                                }
+                                break;
+                            case "GEO":
+                                OutputTextBox.Text += SCTstrings.GeoOut(strOut[0], strOut[1],
+                                    strOut[2], strOut[3], SuffixTextBox.Text) + cr;
+                                break;
+                        }
+                    }
+                    strOut[0] = strOut[2]; strOut[1] = strOut[3];
                 }
             }
         }
@@ -769,12 +714,8 @@ namespace SCTBuilder
         {
             if (GEORadioButton.Checked)
             {
-                SuffixLabel.Text = "Color (req)";
-                SuffixTextBox.Enabled = GEORadioButton.Checked;
-                toolTip1.SetToolTip(SuffixTextBox, "Enter SCT color name or double click to pick");
-                if (SuffixTextBox.TextLength == 0) SuffixTextBox.BackColor = Color.Yellow;
-                else SuffixTextBox.BackColor = Color.White;
                 OutputType = "GEO";
+                ColorNameTextBox.Enabled = ColorValueTextBox.Enabled = true;
             }
         }
 
@@ -853,5 +794,43 @@ namespace SCTBuilder
             // Dashlength in degrees
             DashLength = Convert.ToDouble(DashesLengthNMTextBox.Text);
         }
+
+        private void AddNextButton_Click(object sender, EventArgs e)
+        {
+            AddLine();
+            StartLatitudeTextBox.Text = EndLatitudeTextBox.Text;
+            StartLat = EndLat;
+            StartLongitudeTextBox.Text = EndLongitudeTextBox.Text;
+            StartLon = EndLon;
+            StartFixTextBox.Text = EndFixTextBox.Text;
+            EndLatitudeTextBox.Text = EndLongitudeTextBox.Text = EndFixTextBox.Text = string.Empty;
+            UpdateCopyButtons();
+        }
+
+        private void PasteToTextBox_Validated(object sender, EventArgs e)
+        {
+            double result = TestTextBox(PasteToTextBox);
+            if (result != -199)
+                PasteToEndButton.Enabled = PasteToStartButton.Enabled = (result != -199);
+        }
+
+        private void PasteToStartButton_Click(object sender, EventArgs e)
+        {
+            StartLatitudeTextBox.Text = Conversions.DecDeg2SCT(PasteLat, true);
+            StartLongitudeTextBox.Text = Conversions.DecDeg2SCT(PasteLon, false);
+            StartLat = PasteLat;
+            StartLon = PasteLon;
+            UpdateCopyButtons();
+        }
+
+        private void PasteToEndButton_Click(object sender, EventArgs e)
+        {
+            EndLatitudeTextBox.Text = Conversions.DecDeg2SCT(PasteLat, true);
+            EndLongitudeTextBox.Text = Conversions.DecDeg2SCT(PasteLon, false);
+            EndLat = PasteLat;
+            EndLon = PasteLon;
+            UpdateCopyButtons();
+        }
+
     }
 }

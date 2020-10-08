@@ -187,14 +187,14 @@ namespace SCTBuilder
         public static double Deg2Rad(double degrees)
         // Convert  degrees into radians
         {
-            double radians = (Math.PI / 180) * degrees;
+            double radians = (Math.PI / 180.0) * degrees;
             return radians;
         }
 
         public static double Rad2Deg(double radians)
         // Convert  radians into degrees
         {
-            double degrees = (180f / Math.PI) * radians;
+            double degrees = (180.0 / Math.PI) * radians;
             // Atan returns +/- 180; convert to 0->360
             return degrees;
         }
@@ -257,7 +257,7 @@ namespace SCTBuilder
             double x = Math.Cos(rLat1) * Math.Sin(rLat2) -
                 Math.Sin(rLat1) * Math.Cos(rLat2) * Math.Cos(rLon2 - rLon1);
             double Brg = Math.Atan2(y, x);
-            Brg = NormalizedBrg(Brg);
+            Brg = (Rad2Deg(Brg) + 360) % 360;
             return Brg;
         }
 
@@ -276,11 +276,6 @@ namespace SCTBuilder
                 default:
                     return 3440.1;
             }
-        }
-
-        public static double RadiusOfArc(double Height, double Width)
-        {
-            return (Height / 2.0) + Math.Pow(Width, 2.0) / (8 * Height);
         }
 
         public static double[] Destination(double Latitude, double Longitude, double Dist, double Brg, char Type)
@@ -433,16 +428,6 @@ namespace SCTBuilder
             result[0] = result[0] / numPoints;
             result[1] = result[1] / numPoints;
             return new PointF(result[0], result[1]);
-        }
-
-        public static double[] Arc_Radius(double Lat1, double Lon1, double Segment, double Radius)
-        {
-            double[] result = new double[2];
-            // Return the the coordinates from a point ArcDegrees (always positive) given the radius
-            // As the segments are expected to be small, can use trigonometry
-            //double rLat1 = Deg2Rad(Lat1); double rLon1 = Deg2Rad(Lon1); double rDeg = Deg2Rad(Deg); double rArc = Deg2Rad(Radius);
-            // I konw both legs are equal and one angle, so each angle is (180-angle)/2
-            return result;
         }
 
         private static double NormalizedLon(double radLon)

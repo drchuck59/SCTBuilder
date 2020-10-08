@@ -2010,5 +2010,12 @@ namespace SCTBuilder
             }
             SetChecked();
         }
+
+        private void racetrackholdToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Form form = new HoldingPattern();
+            form.ShowDialog(this);
+            form.Dispose();
+        }
     }
 }

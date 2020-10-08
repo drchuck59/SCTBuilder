@@ -722,9 +722,15 @@ namespace SCTBuilder
         }
         public static bool IsNumeric(this string text)
         {
-#pragma warning disable IDE0059 // Unnecessary assignment of a value
-            return double.TryParse(text, out double test);
-#pragma warning restore IDE0059 // Unnecessary assignment of a value
+            return double.TryParse(text, out double _);
+        }
+
+        public static bool IsAColor(string colorName)
+        {
+            Color c = Color.FromName(colorName);
+            if (c.IsKnownColor)
+                return true;
+            return false;
         }
 
         public static string Left(this string value, int maxLength)
@@ -1075,21 +1081,21 @@ namespace SCTBuilder
 
         public static string GeoOut(string StartLat,
             string StartLong, string EndLat, string EndLong,
-            string suffix)
+            string color = "")
         {
             string result = StartLat + " " + StartLong + " " +
-                            EndLat + " " + EndLong + " " + suffix;
+                            EndLat + " " + EndLong + " " + color;
             return result;
         }
 
-        public static string LabelOut(string label, string Lat, string Long, string Color, string Comment = "")
+        public static string LabelOut(string label, string Lat, string Long, string color, string Comment = "")
         {
             string result;
             string strText = "\"" + label.Trim() + "\"";
             if (Comment.Length != 0)
-                result = strText + " " + Lat + " " + Long + " " + Color + "; " + Comment;
+                result = strText + " " + Lat + " " + Long + " " + color + "; " + Comment;
             else
-                result = strText + " " + Lat + " " + Long + " " + Color;
+                result = strText + " " + Lat + " " + Long + " " + color;
             return result;
         }
     }
