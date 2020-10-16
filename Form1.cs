@@ -2013,9 +2013,9 @@ namespace SCTBuilder
 
         private void racetrackholdToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Form form = new HoldingPattern();
-            form.ShowDialog(this);
-            form.Dispose();
+            Form frm = new Racetrack();
+            frm.ShowDialog();
+            frm.Dispose();
         }
     }
 }

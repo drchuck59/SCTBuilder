@@ -10,35 +10,11 @@ using System.Windows.Forms;
 
 namespace SCTBuilder
 {
-    public partial class HoldingPattern : Form
+    public partial class Racetrack : Form
     {
-
-        private double FixLat = -1;
-        private double FixLon = -1;
-        private double LegLength = -1;
-        private double BrgOutbound = -1;
-        private double PatternAlt = -1;
-
-        private void HoldingPattern_Load(object sender, EventArgs e)
+        public Racetrack()
         {
             InitializeComponent();
-        }
-
-        private void LoadAltTypeComboBox()
-        {
-            DataTable dT = new DataTable();
-            dT.Columns.Add("AltTypeValue", typeof(int));
-            dT.Columns.Add("AltTypeName", typeof(string));
-            dT.Rows.Add(0, "AOB 6000 ft");
-            dT.Rows.Add(1, "AOB 14000 ft");
-            dT.Rows.Add(2, "Above 14000 ft");
-            dT.Rows.Add(3, "USAF airfield");
-            dT.Rows.Add(4, "USN airfield");
-            dT.Rows.Add(5, "Rotary below 1000 ft");
-            AltitudeTypeComboBox.DataSource = dT;
-            AltitudeTypeComboBox.DisplayMember = "AltTypeName";
-            AltitudeTypeComboBox.ValueMember = "AltTypeValue";
-            AltitudeTypeComboBox.SelectedIndex = 2;
         }
 
         private void IdentifierTextBox_TextChanged(object sender, EventArgs e)
@@ -82,6 +58,23 @@ namespace SCTBuilder
             {
                 FixListDataGridView.DataSource = null;
             }
+        }
+
+        private void LoadAltTypeComboBox()
+        {
+            DataTable dT = new DataTable();
+            dT.Columns.Add("AltTypeValue", typeof(int));
+            dT.Columns.Add("AltTypeName", typeof(string));
+            dT.Rows.Add(0, "AOB 6000 ft");
+            dT.Rows.Add(1, "AOB 14000 ft");
+            dT.Rows.Add(2, "Above 14000 ft");
+            dT.Rows.Add(3, "USAF airfield");
+            dT.Rows.Add(4, "USN airfield");
+            dT.Rows.Add(5, "Rotary below 1000 ft");
+            AltitudeTypeComboBox.DataSource = dT;
+            AltitudeTypeComboBox.DisplayMember = "AltTypeName";
+            AltitudeTypeComboBox.ValueMember = "AltTypeValue";
+            AltitudeTypeComboBox.SelectedIndex = 2;
         }
     }
 }
