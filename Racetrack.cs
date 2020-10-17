@@ -12,9 +12,30 @@ namespace SCTBuilder
 {
     public partial class Racetrack : Form
     {
+        private static double PasteLat = -1;
+        private static double PasteLon = -1;
+        private static readonly string cr = Environment.NewLine;
+        private static double HoldLat = -1;
+        private static double HoldLon = -1;
+        private static string HoldFix = string.Empty;
+        private static double MagVar = 0;
+        private static int OutbndTrk = 0;
+        private static double LegLnth = 0;
+        private static double ArcRadius = 0;
+        private static bool TurnRight = true;
+        private static bool DrawTurnArrow = false;
+        private static bool DrawFixLabel = false;
+        private static bool DrawFixSymbol = false;
+
         public Racetrack()
         {
             InitializeComponent();
+        }
+
+        private void Racetrack_Load(object sender, EventArgs e)
+        {
+            MagVar = InfoSection.MagneticVariation;
+            MagVarTextBox.Text = MagVar.ToString();
         }
 
         private void IdentifierTextBox_TextChanged(object sender, EventArgs e)
@@ -75,6 +96,71 @@ namespace SCTBuilder
             AltitudeTypeComboBox.DisplayMember = "AltTypeName";
             AltitudeTypeComboBox.ValueMember = "AltTypeValue";
             AltitudeTypeComboBox.SelectedIndex = 2;
+        }
+
+        private void PasteToTextBox_Validated(object sender, EventArgs e)
+        {
+            CopyToHoldButton.Enabled = TestTextBox(PasteToTextBox);
+        }
+
+        private void PasteToTextBox_TextChanged(object sender, EventArgs e)
+        {
+            CopyToHoldButton.Enabled = TestTextBox(PasteToTextBox);
+        }
+
+        private bool TestTextBox(TextBox tb, int method = 0)
+        {
+            bool ParsedResult = false;
+            if (tb.Name.IndexOf("Lat") != -1) method = 1;
+            if (tb.Name.IndexOf("Lon") != -1) method = 2;
+            if (method == 0)
+            {
+                if ((tb.Text.IndexOf("N") > -1) || (tb.Text.IndexOf("S") > -1)) method = 1;
+                if (method == 0)
+                    if ((tb.Text.IndexOf("W") > -1) || (tb.Text.IndexOf("w") > -1)) method = 2;
+                    else method = 0;
+            }
+            if ((tb.Modified) && tb.TextLength != 0)
+            {
+                if (LatLonParser.TryParseAny(tb))
+                {
+                    switch (method)
+                    {
+                        case 0:
+                            PasteLat = LatLonParser.ParsedLatitude;
+                            PasteLon = LatLonParser.ParsedLongitude;
+                            ParsedResult = true;
+                            tb.Text = Conversions.DecDeg2SCT(PasteLat, true) + " " +
+                                Conversions.DecDeg2SCT(PasteLon, false);
+                            break;
+                        case 1:
+                            PasteLat = LatLonParser.ParsedLatitude;
+                            PasteLon = -1;
+                            tb.Text = Conversions.DecDeg2SCT(PasteLat, true);
+                            ParsedResult = true;
+                            break;
+                        case 2:
+                            PasteLon = LatLonParser.ParsedLongitude;
+                            PasteLat = -1;
+                            tb.Text = Conversions.DecDeg2SCT(PasteLon, false);
+                            ParsedResult = true;
+                            break;
+                    }
+                    tb.BackColor = Color.White;
+                }
+                else tb.BackColor = Color.Yellow;
+            }
+            return ParsedResult;
+        }
+
+        private void RightTurnRadioButton_CheckedChanged(object sender, EventArgs e)
+        {
+            TurnRight = RightTurnRadioButton.Checked;
+        }
+
+        private void LeftTurnRadioButton_CheckedChanged(object sender, EventArgs e)
+        {
+            TurnRight = !RightTurnRadioButton.Checked;
         }
     }
 }

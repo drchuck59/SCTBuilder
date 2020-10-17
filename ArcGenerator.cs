@@ -401,9 +401,9 @@ namespace SCTBuilder
             UpdateStats();
         }
 
-        private double TestTextBox(TextBox tb)
+        private bool TestTextBox(TextBox tb)
         {
-            double ParsedResult = -199;
+            bool ParsedResult = false;
             int method = 0;
             if (tb.Name.IndexOf("Lat") != -1) method = 1;
             if (tb.Name.IndexOf("Lon") != -1) method = 2;
@@ -414,18 +414,21 @@ namespace SCTBuilder
                     switch (method)
                     {
                         case 0:
-                            PasteLat = ParsedResult = LatLonParser.ParsedLatitude;
+                            PasteLat = LatLonParser.ParsedLatitude;
                             PasteLon = LatLonParser.ParsedLongitude;
+                            ParsedResult = true;
                             tb.Text = Conversions.DecDeg2SCT(PasteLat, true) + " " +
                                 Conversions.DecDeg2SCT(PasteLon, false);
                             break;
                         case 1:
-                            ParsedResult = LatLonParser.ParsedLatitude;
-                            tb.Text = Conversions.DecDeg2SCT(ParsedResult, true);
+                            PasteLat = LatLonParser.ParsedLatitude;
+                            tb.Text = Conversions.DecDeg2SCT(PasteLat, true);
+                            ParsedResult = true;
                             break;
                         case 2:
-                            ParsedResult = LatLonParser.ParsedLongitude;
-                            tb.Text = Conversions.DecDeg2SCT(ParsedResult, false);
+                            PasteLon = LatLonParser.ParsedLongitude;
+                            tb.Text = Conversions.DecDeg2SCT(PasteLon, false);
+                            ParsedResult = true;
                             break;
                     }
                     tb.BackColor = Color.White;
@@ -437,69 +440,61 @@ namespace SCTBuilder
 
         private void CenterLatitudeTextBox_Validated(object sender, EventArgs e)
         {
-            double result = TestTextBox(CenterLatitudeTextBox);
-            if (result != -199)
+            if (TestTextBox(CenterLatitudeTextBox))
             {
-                CenterLat = result;
+                CenterLat = PasteLat;
                 UpdateStats();
             }
         }
 
         private void CenterLongitudeTextBox_Validated(object sender, EventArgs e)
         {
-            double result = TestTextBox(CenterLongitudeTextBox);
-            if (result != -199)
+            if (TestTextBox(CenterLongitudeTextBox))
             {
-                CenterLon = result;
+                CenterLon = PasteLon;
                 UpdateStats();
             }
         }
 
         private void StartLatitudeTextBox_Validated(object sender, EventArgs e)
         {
-            double result = TestTextBox(StartLatitudeTextBox);
-            if (result != -199)
+            if (TestTextBox(StartLatitudeTextBox))
             {
-                StartLat = result;
+                StartLat = PasteLat;
                 UpdateStats();
             }
         }
 
         private void StartLongitudeTextBox_Validated(object sender, EventArgs e)
         {
-            double result = TestTextBox(StartLongitudeTextBox);
-            if (result != -199)
+            if (TestTextBox(StartLongitudeTextBox))
             {
-                StartLon = result;
+                StartLon = PasteLon;
                 UpdateStats();
             }
         }
 
         private void EndLatitudeTextBox_Validated(object sender, EventArgs e)
         {
-            double result = TestTextBox(EndLatitudeTextBox);
-            if (result != -199)
+            if (TestTextBox(EndLatitudeTextBox))
             {
-                EndLat = result;
+                EndLat = PasteLat;
                 UpdateStats();
             }
         }
 
         private void EndLongitudeTextBox_Validated(object sender, EventArgs e)
         {
-            double result = TestTextBox(EndLongitudeTextBox);
-            if (result != -199)
+            if (TestTextBox(EndLongitudeTextBox))
             {
-                EndLon = result;
+                EndLon = PasteLon;
                 UpdateStats();
             }
         }
 
         private void PasteToTextBox_Validated(object sender, EventArgs e)
         {
-            double result = TestTextBox(PasteToTextBox);
-            if (result != -199)
-                PasteToCenterButton.Enabled = PasteToEndButton.Enabled = PasteToStartButton.Enabled = (result != -199);
+            PasteToCenterButton.Enabled = PasteToEndButton.Enabled = PasteToStartButton.Enabled = TestTextBox(PasteToTextBox);
         }
 
         private void PasteToCenterButton_Click(object sender, EventArgs e)

@@ -46,33 +46,32 @@
             this.startPointLatitudeLabel = new System.Windows.Forms.Label();
             this.ImportFix2StartButton = new System.Windows.Forms.Button();
             this.HoldParamsGroupBox = new System.Windows.Forms.GroupBox();
+            this.AddFixSymbolCheckBox = new System.Windows.Forms.CheckBox();
+            this.AddFixLabelCheckBox = new System.Windows.Forms.CheckBox();
+            this.AddTurnArrowCheckBox = new System.Windows.Forms.CheckBox();
+            this.LeftTurnRadioButton = new System.Windows.Forms.RadioButton();
+            this.RightTurnRadioButton = new System.Windows.Forms.RadioButton();
+            this.label6 = new System.Windows.Forms.Label();
+            this.TurnRadiusTextBox = new System.Windows.Forms.TextBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.LegLengthTextBox = new System.Windows.Forms.TextBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.MagVarTextBox = new System.Windows.Forms.TextBox();
             this.OutbndTrkTextBox = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
-            this.MagVarTextBox = new System.Windows.Forms.TextBox();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.textBox2 = new System.Windows.Forms.TextBox();
-            this.label5 = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
-            this.radioButton1 = new System.Windows.Forms.RadioButton();
-            this.radioButton2 = new System.Windows.Forms.RadioButton();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.HoldCalculatorGroupBox = new System.Windows.Forms.GroupBox();
-            this.AltitudeTypeComboBox = new System.Windows.Forms.ComboBox();
-            this.label7 = new System.Windows.Forms.Label();
-            this.textBox3 = new System.Windows.Forms.TextBox();
-            this.label8 = new System.Windows.Forms.Label();
+            this.label10 = new System.Windows.Forms.Label();
+            this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
             this.label9 = new System.Windows.Forms.Label();
             this.textBox4 = new System.Windows.Forms.TextBox();
-            this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
-            this.label10 = new System.Windows.Forms.Label();
+            this.label8 = new System.Windows.Forms.Label();
+            this.textBox3 = new System.Windows.Forms.TextBox();
+            this.label7 = new System.Windows.Forms.Label();
+            this.AltitudeTypeComboBox = new System.Windows.Forms.ComboBox();
             this.button1 = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.PasteToTextBox = new System.Windows.Forms.TextBox();
-            this.PasteToEndButton = new System.Windows.Forms.Button();
-            this.PasteToStartButton = new System.Windows.Forms.Button();
-            this.PasteToCenterButton = new System.Windows.Forms.Button();
             this.AddArc = new System.Windows.Forms.Button();
             this.Copy2ClipboardButton = new System.Windows.Forms.Button();
             this.ClearOutputButton = new System.Windows.Forms.Button();
@@ -91,9 +90,7 @@
             this.DashedNUD = new System.Windows.Forms.NumericUpDown();
             this.ColorValueLabel = new System.Windows.Forms.Label();
             this.SectionComboBox = new System.Windows.Forms.ComboBox();
-            this.button2 = new System.Windows.Forms.Button();
-            this.checkBox2 = new System.Windows.Forms.CheckBox();
-            this.checkBox3 = new System.Windows.Forms.CheckBox();
+            this.CopyToHoldButton = new System.Windows.Forms.Button();
             this.SuffixLabel = new System.Windows.Forms.Label();
             this.PrefixLabel = new System.Windows.Forms.Label();
             this.label13 = new System.Windows.Forms.Label();
@@ -317,15 +314,15 @@
             // 
             // HoldParamsGroupBox
             // 
-            this.HoldParamsGroupBox.Controls.Add(this.checkBox3);
-            this.HoldParamsGroupBox.Controls.Add(this.checkBox2);
-            this.HoldParamsGroupBox.Controls.Add(this.checkBox1);
-            this.HoldParamsGroupBox.Controls.Add(this.radioButton2);
-            this.HoldParamsGroupBox.Controls.Add(this.radioButton1);
+            this.HoldParamsGroupBox.Controls.Add(this.AddFixSymbolCheckBox);
+            this.HoldParamsGroupBox.Controls.Add(this.AddFixLabelCheckBox);
+            this.HoldParamsGroupBox.Controls.Add(this.AddTurnArrowCheckBox);
+            this.HoldParamsGroupBox.Controls.Add(this.LeftTurnRadioButton);
+            this.HoldParamsGroupBox.Controls.Add(this.RightTurnRadioButton);
             this.HoldParamsGroupBox.Controls.Add(this.label6);
-            this.HoldParamsGroupBox.Controls.Add(this.textBox2);
+            this.HoldParamsGroupBox.Controls.Add(this.TurnRadiusTextBox);
             this.HoldParamsGroupBox.Controls.Add(this.label5);
-            this.HoldParamsGroupBox.Controls.Add(this.textBox1);
+            this.HoldParamsGroupBox.Controls.Add(this.LegLengthTextBox);
             this.HoldParamsGroupBox.Controls.Add(this.label4);
             this.HoldParamsGroupBox.Controls.Add(this.label3);
             this.HoldParamsGroupBox.Controls.Add(this.MagVarTextBox);
@@ -338,6 +335,133 @@
             this.HoldParamsGroupBox.TabIndex = 44;
             this.HoldParamsGroupBox.TabStop = false;
             this.HoldParamsGroupBox.Text = "Hold Parameters";
+            // 
+            // AddFixSymbolCheckBox
+            // 
+            this.AddFixSymbolCheckBox.AutoSize = true;
+            this.AddFixSymbolCheckBox.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.AddFixSymbolCheckBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AddFixSymbolCheckBox.Location = new System.Drawing.Point(53, 170);
+            this.AddFixSymbolCheckBox.Name = "AddFixSymbolCheckBox";
+            this.AddFixSymbolCheckBox.Size = new System.Drawing.Size(76, 17);
+            this.AddFixSymbolCheckBox.TabIndex = 88;
+            this.AddFixSymbolCheckBox.Text = "Fix Symbol";
+            this.AddFixSymbolCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // AddFixLabelCheckBox
+            // 
+            this.AddFixLabelCheckBox.AutoSize = true;
+            this.AddFixLabelCheckBox.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.AddFixLabelCheckBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AddFixLabelCheckBox.Location = new System.Drawing.Point(61, 151);
+            this.AddFixLabelCheckBox.Name = "AddFixLabelCheckBox";
+            this.AddFixLabelCheckBox.Size = new System.Drawing.Size(68, 17);
+            this.AddFixLabelCheckBox.TabIndex = 47;
+            this.AddFixLabelCheckBox.Text = "Fix Label";
+            this.AddFixLabelCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // AddTurnArrowCheckBox
+            // 
+            this.AddTurnArrowCheckBox.AutoSize = true;
+            this.AddTurnArrowCheckBox.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.AddTurnArrowCheckBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.AddTurnArrowCheckBox.Location = new System.Drawing.Point(6, 134);
+            this.AddTurnArrowCheckBox.Name = "AddTurnArrowCheckBox";
+            this.AddTurnArrowCheckBox.Size = new System.Drawing.Size(123, 17);
+            this.AddTurnArrowCheckBox.TabIndex = 46;
+            this.AddTurnArrowCheckBox.Text = "Turn Direction Arrow";
+            this.AddTurnArrowCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // LeftTurnRadioButton
+            // 
+            this.LeftTurnRadioButton.AutoSize = true;
+            this.LeftTurnRadioButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
+            this.LeftTurnRadioButton.Location = new System.Drawing.Point(133, 112);
+            this.LeftTurnRadioButton.Name = "LeftTurnRadioButton";
+            this.LeftTurnRadioButton.Size = new System.Drawing.Size(32, 19);
+            this.LeftTurnRadioButton.TabIndex = 45;
+            this.LeftTurnRadioButton.Text = "L";
+            this.LeftTurnRadioButton.UseVisualStyleBackColor = true;
+            this.LeftTurnRadioButton.CheckedChanged += new System.EventHandler(this.LeftTurnRadioButton_CheckedChanged);
+            // 
+            // RightTurnRadioButton
+            // 
+            this.RightTurnRadioButton.AutoSize = true;
+            this.RightTurnRadioButton.Checked = true;
+            this.RightTurnRadioButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
+            this.RightTurnRadioButton.Location = new System.Drawing.Point(95, 112);
+            this.RightTurnRadioButton.Name = "RightTurnRadioButton";
+            this.RightTurnRadioButton.Size = new System.Drawing.Size(34, 19);
+            this.RightTurnRadioButton.TabIndex = 11;
+            this.RightTurnRadioButton.TabStop = true;
+            this.RightTurnRadioButton.Text = "R";
+            this.RightTurnRadioButton.UseVisualStyleBackColor = true;
+            this.RightTurnRadioButton.CheckedChanged += new System.EventHandler(this.RightTurnRadioButton_CheckedChanged);
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.label6.Location = new System.Drawing.Point(6, 113);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(74, 13);
+            this.label6.TabIndex = 10;
+            this.label6.Text = "Turn Direction";
+            // 
+            // TurnRadiusTextBox
+            // 
+            this.TurnRadiusTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.TurnRadiusTextBox.Location = new System.Drawing.Point(114, 88);
+            this.TurnRadiusTextBox.Name = "TurnRadiusTextBox";
+            this.TurnRadiusTextBox.Size = new System.Drawing.Size(60, 20);
+            this.TurnRadiusTextBox.TabIndex = 9;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.label5.Location = new System.Drawing.Point(6, 91);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(88, 13);
+            this.label5.TabIndex = 8;
+            this.label5.Text = "Turn Radius (nm)";
+            // 
+            // LegLengthTextBox
+            // 
+            this.LegLengthTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.LegLengthTextBox.Location = new System.Drawing.Point(114, 64);
+            this.LegLengthTextBox.Name = "LegLengthTextBox";
+            this.LegLengthTextBox.Size = new System.Drawing.Size(60, 20);
+            this.LegLengthTextBox.TabIndex = 7;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
+            this.label4.Location = new System.Drawing.Point(6, 67);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(57, 15);
+            this.label4.TabIndex = 6;
+            this.label4.Text = "Dist (nm)";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.label3.Location = new System.Drawing.Point(6, 43);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(47, 13);
+            this.label3.TabIndex = 5;
+            this.label3.Text = "Mag Var";
+            // 
+            // MagVarTextBox
+            // 
+            this.MagVarTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.MagVarTextBox.Location = new System.Drawing.Point(114, 40);
+            this.MagVarTextBox.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
+            this.MagVarTextBox.Name = "MagVarTextBox";
+            this.MagVarTextBox.Size = new System.Drawing.Size(60, 20);
+            this.MagVarTextBox.TabIndex = 4;
             // 
             // OutbndTrkTextBox
             // 
@@ -359,107 +483,6 @@
             this.label2.TabIndex = 2;
             this.label2.Text = "Outbnd Trk";
             // 
-            // MagVarTextBox
-            // 
-            this.MagVarTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.MagVarTextBox.Location = new System.Drawing.Point(114, 40);
-            this.MagVarTextBox.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
-            this.MagVarTextBox.Name = "MagVarTextBox";
-            this.MagVarTextBox.Size = new System.Drawing.Size(60, 20);
-            this.MagVarTextBox.TabIndex = 4;
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.label3.Location = new System.Drawing.Point(6, 43);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(47, 13);
-            this.label3.TabIndex = 5;
-            this.label3.Text = "Mag Var";
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
-            this.label4.Location = new System.Drawing.Point(6, 67);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(57, 15);
-            this.label4.TabIndex = 6;
-            this.label4.Text = "Dist (nm)";
-            // 
-            // textBox1
-            // 
-            this.textBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.textBox1.Location = new System.Drawing.Point(114, 64);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(60, 20);
-            this.textBox1.TabIndex = 7;
-            // 
-            // textBox2
-            // 
-            this.textBox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.textBox2.Location = new System.Drawing.Point(114, 88);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(60, 20);
-            this.textBox2.TabIndex = 9;
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.label5.Location = new System.Drawing.Point(6, 91);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(88, 13);
-            this.label5.TabIndex = 8;
-            this.label5.Text = "Turn Radius (nm)";
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.label6.Location = new System.Drawing.Point(6, 113);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(74, 13);
-            this.label6.TabIndex = 10;
-            this.label6.Text = "Turn Direction";
-            // 
-            // radioButton1
-            // 
-            this.radioButton1.AutoSize = true;
-            this.radioButton1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
-            this.radioButton1.Location = new System.Drawing.Point(95, 112);
-            this.radioButton1.Name = "radioButton1";
-            this.radioButton1.Size = new System.Drawing.Size(34, 19);
-            this.radioButton1.TabIndex = 11;
-            this.radioButton1.TabStop = true;
-            this.radioButton1.Text = "R";
-            this.radioButton1.UseVisualStyleBackColor = true;
-            // 
-            // radioButton2
-            // 
-            this.radioButton2.AutoSize = true;
-            this.radioButton2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
-            this.radioButton2.Location = new System.Drawing.Point(133, 112);
-            this.radioButton2.Name = "radioButton2";
-            this.radioButton2.Size = new System.Drawing.Size(32, 19);
-            this.radioButton2.TabIndex = 45;
-            this.radioButton2.TabStop = true;
-            this.radioButton2.Text = "L";
-            this.radioButton2.UseVisualStyleBackColor = true;
-            // 
-            // checkBox1
-            // 
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.checkBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.checkBox1.Location = new System.Drawing.Point(6, 134);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(123, 17);
-            this.checkBox1.TabIndex = 46;
-            this.checkBox1.Text = "Turn Direction Arrow";
-            this.checkBox1.UseVisualStyleBackColor = true;
-            // 
             // HoldCalculatorGroupBox
             // 
             this.HoldCalculatorGroupBox.Controls.Add(this.label10);
@@ -477,54 +500,14 @@
             this.HoldCalculatorGroupBox.TabStop = false;
             this.HoldCalculatorGroupBox.Text = "Hold Calculator";
             // 
-            // AltitudeTypeComboBox
+            // label10
             // 
-            this.AltitudeTypeComboBox.FormattingEnabled = true;
-            this.AltitudeTypeComboBox.Location = new System.Drawing.Point(82, 19);
-            this.AltitudeTypeComboBox.Name = "AltitudeTypeComboBox";
-            this.AltitudeTypeComboBox.Size = new System.Drawing.Size(93, 21);
-            this.AltitudeTypeComboBox.TabIndex = 0;
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(3, 21);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(73, 13);
-            this.label7.TabIndex = 1;
-            this.label7.Text = "Hold Alt or AC";
-            // 
-            // textBox3
-            // 
-            this.textBox3.Location = new System.Drawing.Point(95, 43);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(52, 20);
-            this.textBox3.TabIndex = 2;
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(6, 45);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(70, 13);
-            this.label8.TabIndex = 3;
-            this.label8.Text = "Max IAS (kts)";
-            // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(19, 67);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(57, 13);
-            this.label9.TabIndex = 5;
-            this.label9.Text = "Max Alt (ft)";
-            // 
-            // textBox4
-            // 
-            this.textBox4.Location = new System.Drawing.Point(95, 66);
-            this.textBox4.Name = "textBox4";
-            this.textBox4.Size = new System.Drawing.Size(52, 20);
-            this.textBox4.TabIndex = 4;
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(6, 93);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(80, 13);
+            this.label10.TabIndex = 7;
+            this.label10.Text = "Leg Lngth (min)";
             // 
             // numericUpDown1
             // 
@@ -554,14 +537,54 @@
             0,
             0});
             // 
-            // label10
+            // label9
             // 
-            this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(6, 93);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(80, 13);
-            this.label10.TabIndex = 7;
-            this.label10.Text = "Leg Lngth (min)";
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(19, 67);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(57, 13);
+            this.label9.TabIndex = 5;
+            this.label9.Text = "Max Alt (ft)";
+            // 
+            // textBox4
+            // 
+            this.textBox4.Location = new System.Drawing.Point(95, 66);
+            this.textBox4.Name = "textBox4";
+            this.textBox4.Size = new System.Drawing.Size(52, 20);
+            this.textBox4.TabIndex = 4;
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(6, 45);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(70, 13);
+            this.label8.TabIndex = 3;
+            this.label8.Text = "Max IAS (kts)";
+            // 
+            // textBox3
+            // 
+            this.textBox3.Location = new System.Drawing.Point(95, 43);
+            this.textBox3.Name = "textBox3";
+            this.textBox3.Size = new System.Drawing.Size(52, 20);
+            this.textBox3.TabIndex = 2;
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(3, 21);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(73, 13);
+            this.label7.TabIndex = 1;
+            this.label7.Text = "Hold Alt or AC";
+            // 
+            // AltitudeTypeComboBox
+            // 
+            this.AltitudeTypeComboBox.FormattingEnabled = true;
+            this.AltitudeTypeComboBox.Location = new System.Drawing.Point(82, 19);
+            this.AltitudeTypeComboBox.Name = "AltitudeTypeComboBox";
+            this.AltitudeTypeComboBox.Size = new System.Drawing.Size(93, 21);
+            this.AltitudeTypeComboBox.TabIndex = 0;
             // 
             // button1
             // 
@@ -582,12 +605,9 @@
             // groupBox2
             // 
             this.groupBox2.Controls.Add(this.PasteToTextBox);
-            this.groupBox2.Controls.Add(this.PasteToEndButton);
-            this.groupBox2.Controls.Add(this.PasteToStartButton);
-            this.groupBox2.Controls.Add(this.PasteToCenterButton);
-            this.groupBox2.Location = new System.Drawing.Point(527, 19);
+            this.groupBox2.Location = new System.Drawing.Point(527, 39);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(215, 77);
+            this.groupBox2.Size = new System.Drawing.Size(215, 48);
             this.groupBox2.TabIndex = 86;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Paste Coords Here";
@@ -598,36 +618,8 @@
             this.PasteToTextBox.Name = "PasteToTextBox";
             this.PasteToTextBox.Size = new System.Drawing.Size(190, 20);
             this.PasteToTextBox.TabIndex = 72;
-            // 
-            // PasteToEndButton
-            // 
-            this.PasteToEndButton.Enabled = false;
-            this.PasteToEndButton.Location = new System.Drawing.Point(135, 45);
-            this.PasteToEndButton.Name = "PasteToEndButton";
-            this.PasteToEndButton.Size = new System.Drawing.Size(59, 23);
-            this.PasteToEndButton.TabIndex = 76;
-            this.PasteToEndButton.Text = "To End";
-            this.PasteToEndButton.UseVisualStyleBackColor = true;
-            // 
-            // PasteToStartButton
-            // 
-            this.PasteToStartButton.Enabled = false;
-            this.PasteToStartButton.Location = new System.Drawing.Point(73, 45);
-            this.PasteToStartButton.Name = "PasteToStartButton";
-            this.PasteToStartButton.Size = new System.Drawing.Size(56, 23);
-            this.PasteToStartButton.TabIndex = 75;
-            this.PasteToStartButton.Text = "To Start";
-            this.PasteToStartButton.UseVisualStyleBackColor = true;
-            // 
-            // PasteToCenterButton
-            // 
-            this.PasteToCenterButton.Enabled = false;
-            this.PasteToCenterButton.Location = new System.Drawing.Point(6, 45);
-            this.PasteToCenterButton.Name = "PasteToCenterButton";
-            this.PasteToCenterButton.Size = new System.Drawing.Size(65, 23);
-            this.PasteToCenterButton.TabIndex = 74;
-            this.PasteToCenterButton.Text = "To Center";
-            this.PasteToCenterButton.UseVisualStyleBackColor = true;
+            this.PasteToTextBox.TextChanged += new System.EventHandler(this.PasteToTextBox_TextChanged);
+            this.PasteToTextBox.Validated += new System.EventHandler(this.PasteToTextBox_Validated);
             // 
             // AddArc
             // 
@@ -827,45 +819,21 @@
             this.SectionComboBox.Size = new System.Drawing.Size(121, 21);
             this.SectionComboBox.TabIndex = 0;
             // 
-            // button2
+            // CopyToHoldButton
             // 
-            this.button2.BackColor = System.Drawing.Color.White;
-            this.button2.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("button2.BackgroundImage")));
-            this.button2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.button2.Enabled = false;
-            this.button2.Location = new System.Drawing.Point(483, 47);
-            this.button2.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(39, 38);
-            this.button2.TabIndex = 87;
-            this.button2.TabStop = false;
-            this.button2.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.button2.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            this.button2.UseVisualStyleBackColor = false;
-            // 
-            // checkBox2
-            // 
-            this.checkBox2.AutoSize = true;
-            this.checkBox2.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.checkBox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.checkBox2.Location = new System.Drawing.Point(61, 151);
-            this.checkBox2.Name = "checkBox2";
-            this.checkBox2.Size = new System.Drawing.Size(68, 17);
-            this.checkBox2.TabIndex = 47;
-            this.checkBox2.Text = "Fix Label";
-            this.checkBox2.UseVisualStyleBackColor = true;
-            // 
-            // checkBox3
-            // 
-            this.checkBox3.AutoSize = true;
-            this.checkBox3.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.checkBox3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.checkBox3.Location = new System.Drawing.Point(53, 170);
-            this.checkBox3.Name = "checkBox3";
-            this.checkBox3.Size = new System.Drawing.Size(76, 17);
-            this.checkBox3.TabIndex = 88;
-            this.checkBox3.Text = "Fix Symbol";
-            this.checkBox3.UseVisualStyleBackColor = true;
+            this.CopyToHoldButton.BackColor = System.Drawing.Color.White;
+            this.CopyToHoldButton.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("CopyToHoldButton.BackgroundImage")));
+            this.CopyToHoldButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.CopyToHoldButton.Enabled = false;
+            this.CopyToHoldButton.Location = new System.Drawing.Point(483, 47);
+            this.CopyToHoldButton.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
+            this.CopyToHoldButton.Name = "CopyToHoldButton";
+            this.CopyToHoldButton.Size = new System.Drawing.Size(39, 38);
+            this.CopyToHoldButton.TabIndex = 87;
+            this.CopyToHoldButton.TabStop = false;
+            this.CopyToHoldButton.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.CopyToHoldButton.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.CopyToHoldButton.UseVisualStyleBackColor = false;
             // 
             // SuffixLabel
             // 
@@ -906,7 +874,7 @@
             this.Controls.Add(this.SuffixLabel);
             this.Controls.Add(this.PrefixLabel);
             this.Controls.Add(this.label13);
-            this.Controls.Add(this.button2);
+            this.Controls.Add(this.CopyToHoldButton);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.AddArc);
             this.Controls.Add(this.Copy2ClipboardButton);
@@ -925,6 +893,7 @@
             this.Name = "Racetrack";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Racetrack";
+            this.Load += new System.EventHandler(this.Racetrack_Load);
             this.FixImportGroupBox.ResumeLayout(false);
             this.FixImportGroupBox.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.FixBrgNUD)).EndInit();
@@ -967,15 +936,15 @@
         private System.Windows.Forms.GroupBox HoldParamsGroupBox;
         private System.Windows.Forms.TextBox OutbndTrkTextBox;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.TextBox TurnRadiusTextBox;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox LegLengthTextBox;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox MagVarTextBox;
-        private System.Windows.Forms.CheckBox checkBox1;
-        private System.Windows.Forms.RadioButton radioButton2;
-        private System.Windows.Forms.RadioButton radioButton1;
+        private System.Windows.Forms.CheckBox AddTurnArrowCheckBox;
+        private System.Windows.Forms.RadioButton LeftTurnRadioButton;
+        private System.Windows.Forms.RadioButton RightTurnRadioButton;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.GroupBox HoldCalculatorGroupBox;
         private System.Windows.Forms.ComboBox AltitudeTypeComboBox;
@@ -989,9 +958,6 @@
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.TextBox PasteToTextBox;
-        private System.Windows.Forms.Button PasteToEndButton;
-        private System.Windows.Forms.Button PasteToStartButton;
-        private System.Windows.Forms.Button PasteToCenterButton;
         private System.Windows.Forms.Button AddArc;
         private System.Windows.Forms.Button Copy2ClipboardButton;
         private System.Windows.Forms.Button ClearOutputButton;
@@ -1010,9 +976,9 @@
         private System.Windows.Forms.NumericUpDown DashedNUD;
         private System.Windows.Forms.Label ColorValueLabel;
         private System.Windows.Forms.ComboBox SectionComboBox;
-        private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.CheckBox checkBox3;
-        private System.Windows.Forms.CheckBox checkBox2;
+        private System.Windows.Forms.Button CopyToHoldButton;
+        private System.Windows.Forms.CheckBox AddFixSymbolCheckBox;
+        private System.Windows.Forms.CheckBox AddFixLabelCheckBox;
         private System.Windows.Forms.Label SuffixLabel;
         private System.Windows.Forms.Label PrefixLabel;
         private System.Windows.Forms.Label label13;
