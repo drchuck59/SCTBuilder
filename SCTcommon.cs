@@ -10,6 +10,7 @@ using System.Text.RegularExpressions;
 using System.Globalization;
 using System.Media;
 using SCTBuilder;
+using System.Text;
 
 namespace SCTBuilder
 {
@@ -403,7 +404,7 @@ namespace SCTBuilder
             {
                 RowFilter = "[FacilityID] = '" + Arpt + "'"
             };
-            if (drvAPT.Count > 0) 
+            if ((drvAPT.Count > 0) && (drvAPT[0]["ICAO"].ToString().Length > 0))
                 result = drvAPT[0]["ICAO"].ToString();
             drvAPT.Dispose();
             return result;
@@ -599,13 +600,13 @@ namespace SCTBuilder
             }
             tempDecDeg = Math.Abs(DecDeg);
             int DD = (int)Math.Floor(tempDecDeg);     // Need integer value WITHOUT rounding
-            string strDD = DD.ToString("000");          // This cannot be done in one step
+            string strDD = DD.ToString();             // This cannot be done in one step
             double tmpDecDeg = (tempDecDeg - DD) * 60;
             int MM = (int)Math.Floor(tmpDecDeg);
             string strMM = MM.ToString("00");
             double SS = (tmpDecDeg - MM) * 60;
             string strSS = SS.ToString("00.000");
-            result = strDD + " " + strMM + " " + strSS + quadrant;
+            result = strDD + '°' + strMM + "'" + strSS + "\"" + quadrant;
             return result;
         }
 

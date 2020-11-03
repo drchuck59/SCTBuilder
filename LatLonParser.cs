@@ -312,7 +312,7 @@ namespace SCTBuilder
                             if (grp.Value == "W")
                                 LonNegate = -1.0;
                             else
-                                LatNegate = 1.0;
+                                LonNegate = 1.0;
                             break;
                         case "lonDeg":
                             Coords[1] = Convert.ToDouble(grp.Value);

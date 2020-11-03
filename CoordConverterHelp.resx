@@ -117,7 +117,20 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <metadata name="toolTip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>17, 17</value>
-  </metadata>
+  <data name="label1.Text" xml:space="preserve">
+    <value>Most coordinate formats are accepted in these windows.
+The program will interpret your string and convert to 
+the appropriate format displayed in the text box label.
+Textboxes  allow quick copying by double-click. 
+Quadrants (N, S, E, W) may lead or follow the coordinates.
+Errors are always displayed as "199.00.00"
+Bounds (+/- 90 Lat, +/- 180 Lon) are enforced.
+Acceptable formats:
+- VRC: [D]DD.MM.SS.sss
+- Decimal Degrees: [D]DD.ddddddd (S &amp;&amp; W are neg)
+- FAA data file: [D]DD-MM-SS.ssss
+- FAA Seconds: SSSSS.sssss
+- NaviGraph: {D]DD MM.sssssss
+- Rich Text DD°MM'SS[.ss]"</value>
+  </data>
 </root>

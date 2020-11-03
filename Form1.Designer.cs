@@ -1521,28 +1521,28 @@
             // LineGeneratorToolStripMenuItem
             // 
             this.LineGeneratorToolStripMenuItem.Name = "LineGeneratorToolStripMenuItem";
-            this.LineGeneratorToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.LineGeneratorToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
             this.LineGeneratorToolStripMenuItem.Text = "Line generator";
             this.LineGeneratorToolStripMenuItem.Click += new System.EventHandler(this.LineGeneratorToolStripMenuItem_Click);
             // 
             // arcGeneratorToolStripMenuItem
             // 
             this.arcGeneratorToolStripMenuItem.Name = "arcGeneratorToolStripMenuItem";
-            this.arcGeneratorToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.arcGeneratorToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
             this.arcGeneratorToolStripMenuItem.Text = "Arc generator";
             this.arcGeneratorToolStripMenuItem.Click += new System.EventHandler(this.arcGeneratorToolStripMenuItem_Click);
             // 
             // labelGeneratorforDiagramsToolStripMenuItem
             // 
             this.labelGeneratorforDiagramsToolStripMenuItem.Name = "labelGeneratorforDiagramsToolStripMenuItem";
-            this.labelGeneratorforDiagramsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.labelGeneratorforDiagramsToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
             this.labelGeneratorforDiagramsToolStripMenuItem.Text = "Label generator";
             this.labelGeneratorforDiagramsToolStripMenuItem.Click += new System.EventHandler(this.LabelGeneratorforDiagramsToolStripMenuItem_Click);
             // 
             // SSDGeneratorToolStripMenuItem
             // 
             this.SSDGeneratorToolStripMenuItem.Name = "SSDGeneratorToolStripMenuItem";
-            this.SSDGeneratorToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.SSDGeneratorToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
             this.SSDGeneratorToolStripMenuItem.Text = "SID/STAR generator";
             this.SSDGeneratorToolStripMenuItem.ToolTipText = "Opens a tool to generate ONE SID or STAR diagram";
             this.SSDGeneratorToolStripMenuItem.Click += new System.EventHandler(this.SSDGeneratorToolStripMenuItem_Click);
@@ -1550,7 +1550,7 @@
             // racetrackholdToolStripMenuItem
             // 
             this.racetrackholdToolStripMenuItem.Name = "racetrackholdToolStripMenuItem";
-            this.racetrackholdToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.racetrackholdToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
             this.racetrackholdToolStripMenuItem.Text = "Racetrack (hold)";
             this.racetrackholdToolStripMenuItem.Click += new System.EventHandler(this.racetrackholdToolStripMenuItem_Click);
             // 
@@ -1558,35 +1558,35 @@
             // 
             this.iLSGeneratorToolStripMenuItem.Enabled = false;
             this.iLSGeneratorToolStripMenuItem.Name = "iLSGeneratorToolStripMenuItem";
-            this.iLSGeneratorToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.iLSGeneratorToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
             this.iLSGeneratorToolStripMenuItem.Text = "ILS generator";
             // 
             // xML2SCTToolStripMenuItem
             // 
             this.xML2SCTToolStripMenuItem.Enabled = false;
             this.xML2SCTToolStripMenuItem.Name = "xML2SCTToolStripMenuItem";
-            this.xML2SCTToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.xML2SCTToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
             this.xML2SCTToolStripMenuItem.Text = "XML2SCT";
             this.xML2SCTToolStripMenuItem.Click += new System.EventHandler(this.XML2SCTToolStripMenuItem_Click);
             // 
             // dMSDecDegToolStripMenuItem
             // 
             this.dMSDecDegToolStripMenuItem.Name = "dMSDecDegToolStripMenuItem";
-            this.dMSDecDegToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.dMSDecDegToolStripMenuItem.Text = "DMS_DecDeg";
+            this.dMSDecDegToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
+            this.dMSDecDegToolStripMenuItem.Text = "Coordinate Converter";
             this.dMSDecDegToolStripMenuItem.Click += new System.EventHandler(this.DMSDecDegToolStripMenuItem_Click);
             // 
             // sCTColorMgrToolStripMenuItem
             // 
             this.sCTColorMgrToolStripMenuItem.Enabled = false;
             this.sCTColorMgrToolStripMenuItem.Name = "sCTColorMgrToolStripMenuItem";
-            this.sCTColorMgrToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.sCTColorMgrToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
             this.sCTColorMgrToolStripMenuItem.Text = "SCT Color Mgr";
             // 
             // pOFManagerToolStripMenuItem
             // 
             this.pOFManagerToolStripMenuItem.Name = "pOFManagerToolStripMenuItem";
-            this.pOFManagerToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.pOFManagerToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
             this.pOFManagerToolStripMenuItem.Text = "POF manager";
             this.pOFManagerToolStripMenuItem.Click += new System.EventHandler(this.pOFManagerToolStripMenuItem_Click);
             // 

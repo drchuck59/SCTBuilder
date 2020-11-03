@@ -8,6 +8,7 @@ using System.ComponentModel;
 using System.Media;
 using System.Drawing;
 
+
 namespace SCTBuilder
 {
     public partial class Form1 : Form
@@ -1376,14 +1377,14 @@ namespace SCTBuilder
         private void XML2SCTToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Form form = new XML2SCT();
-            form.ShowDialog(this);
+            form.ShowDialog();
             form.Dispose();
         }
 
         private void LineGeneratorToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Form form = new LineGenerator();
-            form.ShowDialog(this);
+            form.ShowDialog();
             form.Dispose();
         }
 
@@ -1759,7 +1760,7 @@ namespace SCTBuilder
 
         private void DMSDecDegToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Form ConvertDMS = new DMS_DecDeg();
+            Form ConvertDMS = new CoordConverter();
             ConvertDMS.Show();
         }
 
@@ -1942,7 +1943,7 @@ namespace SCTBuilder
         private void SSDGeneratorToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Form form = new SSDGenerator();
-            form.ShowDialog(this);
+            form.ShowDialog();
             form.Dispose();
         }
 
@@ -1976,14 +1977,14 @@ namespace SCTBuilder
         private void arcGeneratorToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Form form = new ArcGenerator();
-            form.ShowDialog(this);
+            form.ShowDialog();
             form.Dispose();
         }
 
         private void pOFManagerToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Form form = new POFmanager();
-            form.ShowDialog(this);
+            form.ShowDialog();
             form.Dispose();
         }
 

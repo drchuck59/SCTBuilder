@@ -1090,6 +1090,7 @@
             this.Controls.Add(this.label11);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "ArcGenerator";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Arc Generator";
             this.Load += new System.EventHandler(this.ArcGenerator_Load);
             this.FixImportGroupBox.ResumeLayout(false);
