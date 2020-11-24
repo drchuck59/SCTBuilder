@@ -11,6 +11,7 @@ using System.Globalization;
 using System.Media;
 using SCTBuilder;
 using System.Text;
+using Org.BouncyCastle.Asn1.Crmf;
 
 namespace SCTBuilder
 {
@@ -825,7 +826,7 @@ namespace SCTBuilder
             return IsASCII;
         }
 
-        public static bool CharIsDecimal(char chrInput, ref TextBox txtBox, int intNoOfDec = 0)
+        public static bool CharIsDecimal(char chrInput, ref TextBox txtBox, int intNoOfDec = 0, bool NegativeOK = false)
         {
             /** 
            Purpose    : to allow only numbers and decimal with i# behind decimal
@@ -841,6 +842,12 @@ namespace SCTBuilder
                 {
                     return false;
                 }
+                // test for negative
+                if (chrInput == '-')
+                    if (NegativeOK)
+                        if (txtBox.TextLength == 0) return false;
+                        else return true;
+                    else return false;
 
                 if (intNoOfDec == 0)
                 {

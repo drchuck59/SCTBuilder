@@ -48,7 +48,7 @@
             // 
             this.OKbutton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.OKbutton.Location = new System.Drawing.Point(311, 299);
-            this.OKbutton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.OKbutton.Margin = new System.Windows.Forms.Padding(2);
             this.OKbutton.Name = "OKbutton";
             this.OKbutton.Size = new System.Drawing.Size(61, 29);
             this.OKbutton.TabIndex = 1;
@@ -64,10 +64,11 @@
             this.Controls.Add(this.OKbutton);
             this.Controls.Add(this.label1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "LatLongHelp";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "FEBU -> Lat Long -> Help";
             this.TopMost = true;
             this.ResumeLayout(false);

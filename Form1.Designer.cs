@@ -1530,7 +1530,7 @@
             this.arcGeneratorToolStripMenuItem.Name = "arcGeneratorToolStripMenuItem";
             this.arcGeneratorToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
             this.arcGeneratorToolStripMenuItem.Text = "Arc generator";
-            this.arcGeneratorToolStripMenuItem.Click += new System.EventHandler(this.arcGeneratorToolStripMenuItem_Click);
+            this.arcGeneratorToolStripMenuItem.Click += new System.EventHandler(this.ArcGeneratorToolStripMenuItem_Click);
             // 
             // labelGeneratorforDiagramsToolStripMenuItem
             // 
@@ -1552,7 +1552,7 @@
             this.racetrackholdToolStripMenuItem.Name = "racetrackholdToolStripMenuItem";
             this.racetrackholdToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
             this.racetrackholdToolStripMenuItem.Text = "Racetrack (hold)";
-            this.racetrackholdToolStripMenuItem.Click += new System.EventHandler(this.racetrackholdToolStripMenuItem_Click);
+            this.racetrackholdToolStripMenuItem.Click += new System.EventHandler(this.RacetrackholdToolStripMenuItem_Click);
             // 
             // iLSGeneratorToolStripMenuItem
             // 
@@ -1588,7 +1588,7 @@
             this.pOFManagerToolStripMenuItem.Name = "pOFManagerToolStripMenuItem";
             this.pOFManagerToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
             this.pOFManagerToolStripMenuItem.Text = "POF manager";
-            this.pOFManagerToolStripMenuItem.Click += new System.EventHandler(this.pOFManagerToolStripMenuItem_Click);
+            this.pOFManagerToolStripMenuItem.Click += new System.EventHandler(this.POFManagerToolStripMenuItem_Click);
             // 
             // helpToolStripMenuItem
             // 

@@ -22,6 +22,11 @@ namespace SCTBuilder
         private static double ArcRadius = -1;
         private static double PasteLat = -1;
         private static double PasteLon = -1;
+        private static double ChordLength = -1;
+        private static double ChordHeight = -1;
+        private static double ChordArcLength = -1;
+        private static double ChordArcAngle = -1;
+        private static double ChordRadius = -1;
         private static readonly string cr = Environment.NewLine;
 
         public ArcGenerator()
@@ -141,7 +146,7 @@ namespace SCTBuilder
                 double Lon = Convert.ToDouble(FixListDataGridView.SelectedRows[0].Cells[2].Value);
                 // VORs are in bearings and need no adjustment
                 //double MagVar = Convert.ToDouble(MagVarTextBox.Text);
-                if ((FixDistTextBox.TextLength > 0) && (Convert.ToDouble(FixDistTextBox.Text)) != 0f)
+                if (FixOffsetCheckBox.Checked)
                 {
                     double Dist = Convert.ToDouble(FixDistTextBox.Text);
                     double Brg = Convert.ToDouble(FixBrgNUD.Value);
@@ -172,7 +177,7 @@ namespace SCTBuilder
                 double Lon = Convert.ToDouble(FixListDataGridView.SelectedRows[0].Cells[2].Value);
                 // VORs are in bearings and need no adjustment
                 //double MagVar = Convert.ToDouble(MagVarTextBox.Text);
-                if ((FixDistTextBox.TextLength > 0) && (Convert.ToDouble(FixDistTextBox.Text)) != 0f)
+                if (FixOffsetCheckBox.Checked)
                 {
                     double Dist = Convert.ToDouble(FixDistTextBox.Text);
                     double Brg = Convert.ToDouble(FixBrgNUD.Value);
@@ -207,7 +212,7 @@ namespace SCTBuilder
                 double Lon = Convert.ToDouble(FixListDataGridView.SelectedRows[0].Cells[2].Value);
                 // VORs are in bearings and need no adjustment
                 //double MagVar = Convert.ToDouble(MagVarTextBox.Text);
-                if ((FixDistTextBox.TextLength > 0) && (Convert.ToDouble(FixDistTextBox.Text)) != 0f)
+                if (FixOffsetCheckBox.Checked)
                 {
                     double Dist = Convert.ToDouble(FixDistTextBox.Text);
                     double Brg = Convert.ToDouble(FixBrgNUD.Value);
@@ -401,12 +406,15 @@ namespace SCTBuilder
             UpdateStats();
         }
 
-        private bool TestTextBox(TextBox tb)
+        private bool TestTextBox(TextBox tb, int method = 0)
         {
             bool ParsedResult = false;
-            int method = 0;
             if (tb.Name.IndexOf("Lat") != -1) method = 1;
             if (tb.Name.IndexOf("Lon") != -1) method = 2;
+            // Determine the format if not forced (aka, method 0)
+            if ((tb.Text.ToUpperInvariant().IndexOf("N") > -1) || (tb.Text.ToUpperInvariant().IndexOf("S") > -1)) method = 1;
+            if ((tb.Text.ToUpperInvariant().IndexOf("W") > -1) || (tb.Text.ToUpperInvariant().IndexOf("E") > -1)) method += 2;
+
             if ((tb.Modified) && tb.TextLength != 0)
             {
                 if (LatLonParser.TryParseAny(tb))
@@ -414,6 +422,7 @@ namespace SCTBuilder
                     switch (method)
                     {
                         case 0:
+                        case 3:
                             PasteLat = LatLonParser.ParsedLatitude;
                             PasteLon = LatLonParser.ParsedLongitude;
                             ParsedResult = true;
@@ -534,7 +543,7 @@ namespace SCTBuilder
                     if (StartBrg == 0) StartBrg = 360;
                     StartRadialNUD.Value = Convert.ToInt32(StartBrg);
                     ArcRadius = LatLongCalc.Distance(CenterLat, CenterLon, StartLat, StartLon);
-                    CalcDistanceTextBox.Text = ArcRadius.ToString("0.000");
+                    CalcDistanceTextBox.Text = ArcRadius.ToString("F3");
                 }
                 else
                 {
@@ -548,8 +557,8 @@ namespace SCTBuilder
                     EndBrg = LatLongCalc.Bearing(CenterLat, CenterLon, EndLat, EndLon);
                     if (EndBrg == 0) EndBrg = 360;
                     EndRadialNUD.Value = Convert.ToInt32(EndBrg);
-                    EndDistTextBox.Text = LatLongCalc.Distance(CenterLat, CenterLon, EndLat, EndLon).ToString();
-
+                    EndDistTextBox.Text = LatLongCalc.Distance(CenterLat, CenterLon, EndLat, EndLon).ToString("F3");
+                    if (ArcRadius != -1) ChordStats();
                 }
                 else
                 {
@@ -565,6 +574,17 @@ namespace SCTBuilder
             CheckArcButton();
         }
 
+        private void ChordStats()
+        {
+            ChordLength = LatLongCalc.Distance(EndLat, EndLon, StartLat, StartLon);
+            ChordArcAngle = LatLongCalc.Deg2Rad(Math.Abs(StartBrg = EndBrg));
+            ChordArcLength = ChordArcAngle * ArcRadius;
+            ChordRadius = ChordArcLength / 2;
+            ChordLengthTextBox.Text = ChordLength.ToString("F3");
+            ChordRadiusTextBox.Text = ChordRadius.ToString("F3");
+            ChordArcLengthTextBox.Text = ChordArcLength.ToString("F3");
+        }
+
         private void AddArc_Click(object sender, EventArgs e)
         {
             OutputTextBox.Text = BuildArcString();
@@ -575,30 +595,66 @@ namespace SCTBuilder
             string Lat0 = string.Empty; string Lon0 = string.Empty; string Lat1; string Lon1;
             string output = string.Empty;
             double[] Coords;
-            for (double i = StartBrg; i < EndBrg; i++)
+            if (CircleCheckBox.Checked)
             {
-                Coords = LatLongCalc.Destination(CenterLat, CenterLon, ArcRadius, i, 'N');
-                Lat1 = Conversions.DecDeg2SCT(Coords[0], true);
-                Lon1 = Conversions.DecDeg2SCT(Coords[1], false);
-                if ((Lat0.Length > 0) && (Lon0.Length > 0) && (Lat1.Length > 0) && (Lon1.Length > 0))
-                    switch (SectionComboBox.SelectedIndex)
-                    {
-                        case 0:         // SIDSTAR
-                            output += SCTstrings.SSDout(Lat0, Lon0, Lat1, Lon1) + cr;
-                            break;
-                        case 1:         // ARTCC
-                            output += SCTstrings.BoundaryOut(PrefixTextBox.Text, Lat0, Lon0, Lat1, Lon1) + cr;
-                            break;
-                        case 2:         // Airway (prefix textbox req'd)
-                            output += SCTstrings.AWYout(PrefixTextBox.Text, Lat0, Lon0, Lat1, Lon1,"" , "") + cr;
-                            break;
-                        case 3:         // GEO format
-                            output += SCTstrings.GeoOut(Lat0, Lon0, Lat1, Lon1, ColorValueTextBox.Text) + cr;
-                            break;
-                    }
-                Lat0 = Lat1; Lon0 = Lon1;
+                StartBrg = 0; EndBrg = 360;
+            }
+            // Make sure we aren't crossing 360...
+            if ((StartBrg + (EndBrg - StartBrg)) > 360)
+            {
+                for (double i = StartBrg; i < 360; i++)
+                {
+                    Coords = LatLongCalc.Destination(StartLat, StartLon, ArcRadius, i, 'N');
+                    Lat1 = Conversions.DecDeg2SCT(Coords[0], true);
+                    Lon1 = Conversions.DecDeg2SCT(Coords[1], false);
+                    output += OutputText(Lat0, Lon0, Lat1, Lon1);
+                    Lat0 = Lat1; Lon0 = Lon1;
+                }
+                for (double i = 1; i < EndBrg; i++)
+                {
+                    Coords = LatLongCalc.Destination(StartLat, StartLon, ArcRadius, i, 'N');
+                    Lat1 = Conversions.DecDeg2SCT(Coords[0], true);
+                    Lon1 = Conversions.DecDeg2SCT(Coords[1], false);
+                    output += OutputText(Lat0, Lon0, Lat1, Lon1);
+                    Lat0 = Lat1; Lon0 = Lon1;
+                }
+            }
+            else
+            {
+                for (double i = StartBrg; i < EndBrg; i++)
+                {
+                    Coords = LatLongCalc.Destination(StartLat, StartLon, ArcRadius, i, 'N');
+                    Lat1 = Conversions.DecDeg2SCT(Coords[0], true);
+                    Lon1 = Conversions.DecDeg2SCT(Coords[1], false);
+                    output += OutputText(Lat0, Lon0, Lat1, Lon1);
+                    Lat0 = Lat1; Lon0 = Lon1;
+                }
             }
             return output;
+        }
+
+        private string OutputText(string Lat0, string Lon0, string Lat1, string Lon1)
+        {
+            string result = string.Empty;
+            if ((Lat0.Length > 0) && (Lon0.Length > 0) && (Lat1.Length > 0) && (Lon1.Length > 0))
+            {
+                switch (SectionComboBox.SelectedIndex)
+                {
+                    case 0:         // SIDSTAR
+                        result = SCTstrings.SSDout(Lat0, Lon0, Lat1, Lon1) + cr;
+                        break;
+                    case 1:         // ARTCC
+                        result = SCTstrings.BoundaryOut(PrefixTextBox.Text, Lat0, Lon0, Lat1, Lon1) + cr;
+                        break;
+                    case 2:         // Airway (prefix textbox req'd)
+                        result = SCTstrings.AWYout(PrefixTextBox.Text, Lat0, Lon0, Lat1, Lon1, "", "") + cr;
+                        break;
+                    case 3:         // GEO format
+                        result = SCTstrings.GeoOut(Lat0, Lon0, Lat1, Lon1, ColorValueTextBox.Text) + cr;
+                        break;
+                }
+            }
+            return result;
         }
 
         private void ColorValueTextBox_MouseDoubleClick(object sender, MouseEventArgs e)
@@ -643,6 +699,77 @@ namespace SCTBuilder
                 StartLatitudeTextBox.Text = Conversions.DecDeg2SCT(StartLat, true);
                 StartLongitudeTextBox.Text = Conversions.DecDeg2SCT(StartLon, false);
             }
+        }
+
+        private void FixOffsetCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            FixBrgNUD.Enabled = FixDistTextBox.Enabled = FixOffsetCheckBox.Checked;
+            if (!FixOffsetCheckBox.Checked)
+            {
+                FixBrgNUD.Value = 360; FixDistTextBox.Text = string.Empty;
+            }
+        }
+
+        private void FixListDataGridView_CellContentDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (FixListDataGridView.SelectedRows.Count == 1)
+            {
+                IdentifierTextBox.Text = FixListDataGridView.SelectedRows[0].Cells[0].Value.ToString();
+            }
+        }
+
+        private void ArcHeightTextBox_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            e.Handled = Extensions.CharIsDecimal(e.KeyChar, ref FixDistTextBox, 1);
+        }
+
+        private void ClearArcButton_Click(object sender, EventArgs e)
+        {
+            ArcHeightTextBox.Text = string.Empty;
+        }
+
+        private void ArcHeightTextBox_Validated(object sender, EventArgs e)
+        {
+            if (ArcHeightTextBox.TextLength != 0)
+            {
+                double tempHeight = Convert.ToDouble(ArcHeightTextBox.Text);
+                if (tempHeight > ChordRadius)
+                {
+                    SCTcommon.SendMessage("Height cannot exceed chord radius (R)." + cr +
+                        "(One-half distance between start and end coordinate");
+                    ArcHeightTextBox.Text = ArcRadius.ToString("F3");
+                }
+                if (tempHeight <= 0)
+                {
+                    SCTcommon.SendMessage("Height must be positive value");
+                    ArcHeightTextBox.Text = ArcRadius.ToString("F3");
+                }
+                ChordHeight = Convert.ToDouble(ArcHeightTextBox.Text);
+                CenterFromChord();
+            }
+        }
+
+        private void CenterFromChord()
+        {
+            // The center is perpendicular to the midpoint of the start/end chord
+            // Since I'm always turning to the right, perpendicular is always +90
+            double Lat0 = (StartLat + EndLat) / 2.0;
+            double Lon0 = (StartLon + EndLon) / 2.0;
+            double Brg = (LatLongCalc.Bearing(StartLat, StartLon, EndLat, EndLon) + 90) % 360;
+            double[] Coords = LatLongCalc.Destination(Lat0, Lon0, RadiusFromChordArc(), Brg, 'N');
+            CenterLat = Coords[0]; CenterLon = Coords[1];
+            CenterLatitudeTextBox.Text = Conversions.DecDeg2SCT(CenterLat, true);
+            CenterLongitudeTextBox.Text = Conversions.DecDeg2SCT(CenterLon, false);
+            CenterFixTextBox.Text = "<calculated from chord>";
+            StartBrg = (LatLongCalc.Bearing(CenterLat, CenterLon, StartLat, StartLon) + 90) % 360;
+            StartRadialNUD.Value = (int)StartBrg;
+            EndBrg = (LatLongCalc.Bearing(CenterLat, CenterLon, EndLat, EndLon) + 90) % 360;
+            EndRadialNUD.Value = (int)EndBrg;
+        }
+
+        private double RadiusFromChordArc ()
+        {
+            return Math.Pow(ChordLength, 2) / (8 * ChordHeight) + (ChordHeight / 2.0);
         }
     }
 }

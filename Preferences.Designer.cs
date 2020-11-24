@@ -49,8 +49,8 @@
             this.GeneralPrefTabPage = new System.Windows.Forms.TabPage();
             this.VRCprefTabPage = new System.Windows.Forms.TabPage();
             this.EuroScopePrefTabPage = new System.Windows.Forms.TabPage();
-            this.SSDprefTabPage = new System.Windows.Forms.TabPage();
             this.ESCombineCheckBox = new System.Windows.Forms.CheckBox();
+            this.SSDprefTabPage = new System.Windows.Forms.TabPage();
             this.tabControl1.SuspendLayout();
             this.GeneralPrefTabPage.SuspendLayout();
             this.VRCprefTabPage.SuspendLayout();
@@ -273,6 +273,17 @@
             this.EuroScopePrefTabPage.TabIndex = 2;
             this.EuroScopePrefTabPage.Text = "Euroscope files";
             // 
+            // ESCombineCheckBox
+            // 
+            this.ESCombineCheckBox.AutoSize = true;
+            this.ESCombineCheckBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ESCombineCheckBox.Location = new System.Drawing.Point(6, 15);
+            this.ESCombineCheckBox.Name = "ESCombineCheckBox";
+            this.ESCombineCheckBox.Size = new System.Drawing.Size(274, 19);
+            this.ESCombineCheckBox.TabIndex = 15;
+            this.ESCombineCheckBox.Text = "Combine individual files into one ES SCT2 file";
+            this.ESCombineCheckBox.UseVisualStyleBackColor = true;
+            // 
             // SSDprefTabPage
             // 
             this.SSDprefTabPage.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
@@ -290,17 +301,6 @@
             this.SSDprefTabPage.TabIndex = 3;
             this.SSDprefTabPage.Text = "SID/STAR Diagrams";
             // 
-            // ESCombineCheckBox
-            // 
-            this.ESCombineCheckBox.AutoSize = true;
-            this.ESCombineCheckBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ESCombineCheckBox.Location = new System.Drawing.Point(6, 15);
-            this.ESCombineCheckBox.Name = "ESCombineCheckBox";
-            this.ESCombineCheckBox.Size = new System.Drawing.Size(274, 19);
-            this.ESCombineCheckBox.TabIndex = 15;
-            this.ESCombineCheckBox.Text = "Combine individual files into one ES SCT2 file";
-            this.ESCombineCheckBox.UseVisualStyleBackColor = true;
-            // 
             // Preferences
             // 
             this.AcceptButton = this.OKButton;
@@ -317,6 +317,7 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "Preferences";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Preferences";
             this.Load += new System.EventHandler(this.Preferences_Load);
             this.tabControl1.ResumeLayout(false);

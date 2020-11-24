@@ -303,7 +303,6 @@
             this.Controls.Add(this.label1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "CoordConverter";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "CoordConverter";
             this.ResumeLayout(false);
             this.PerformLayout();

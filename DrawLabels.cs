@@ -8,9 +8,61 @@ namespace SCTBuilder
 {
     public partial class DrawLabels : Form
     {
+
+        private double PasteLat;
+        private double PasteLon;
+        private double LabelLat;
+        private double LabelLon;
+        private double Bearing;
+
         public DrawLabels()
         {
             InitializeComponent();
+        }
+
+        private bool TestTextBox(TextBox tb, int method = 0)
+        {
+            bool ParsedResult = false;
+            if (tb.Name.IndexOf("Lat") != -1) method = 1;
+            if (tb.Name.IndexOf("Lon") != -1) method = 2;
+            if (method == 0)
+            {
+                // Determine the format if not forced (aka, method 0)
+                if ((tb.Text.ToUpperInvariant().IndexOf("N") > -1) || (tb.Text.ToUpperInvariant().IndexOf("S") > -1)) method = 1;
+                if ((tb.Text.ToUpperInvariant().IndexOf("W") > -1) || (tb.Text.ToUpperInvariant().IndexOf("E") > -1)) method += 2;
+            }
+            if ((tb.Modified) && tb.TextLength != 0)
+            {
+                if (LatLonParser.TryParseAny(tb))
+                {
+                    switch (method)
+                    {
+                        case 0:
+                        case 3:
+                            PasteLat = LatLonParser.ParsedLatitude;
+                            PasteLon = LatLonParser.ParsedLongitude;
+                            ParsedResult = true;
+                            tb.Text = Conversions.DecDeg2SCT(PasteLat, true) + " " +
+                                Conversions.DecDeg2SCT(PasteLon, false);
+                            break;
+                        case 1:
+                            PasteLat = LatLonParser.ParsedLatitude;
+                            PasteLon = -1;
+                            tb.Text = Conversions.DecDeg2SCT(PasteLat, true);
+                            ParsedResult = true;
+                            break;
+                        case 2:
+                            PasteLon = LatLonParser.ParsedLongitude;
+                            PasteLat = -1;
+                            tb.Text = Conversions.DecDeg2SCT(PasteLon, false);
+                            ParsedResult = true;
+                            break;
+                    }
+                    tb.BackColor = Color.White;
+                }
+                else tb.BackColor = Color.Yellow;
+            }
+            return ParsedResult;
         }
 
         private void IdentifierTextBox_TextChanged(object sender, EventArgs e)
@@ -57,13 +109,11 @@ namespace SCTBuilder
 
         private void FixListDataGridView_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
-            LatTextBox.Text =
-                Conversions.DecDeg2SCT(Convert.ToDouble(FixListDataGridView.SelectedRows[0].Cells[1].Value), true);
-            CrossForm.Lat = Convert.ToDouble(FixListDataGridView.SelectedRows[0].Cells[1].Value);
-            LonTextBox.Text =
-                Conversions.DecDeg2SCT(Convert.ToDouble(FixListDataGridView.SelectedRows[0].Cells[2].Value), true);
+            LabelLat = Convert.ToDouble(FixListDataGridView.SelectedRows[0].Cells[1].Value);
+            LatTextBox.Text = Conversions.DecDeg2SCT(Convert.ToDouble(LabelLat), true);
+            LabelLon = Convert.ToDouble(FixListDataGridView.SelectedRows[0].Cells[2].Value);
+            LonTextBox.Text = Conversions.DecDeg2SCT(Convert.ToDouble(LabelLon), false);
             LabelTextBox.Text = FixListDataGridView.SelectedRows[0].Cells[0].Value.ToString();
-            CrossForm.Lon = Convert.ToDouble(FixListDataGridView.SelectedRows[0].Cells[2].Value);
             CheckGenerate();
         }
 
@@ -76,74 +126,22 @@ namespace SCTBuilder
 
         private void LatTextBox_Validated(object sender, EventArgs e)
         {
-            string Msg; double Lat1;
-            try
+            if (TestTextBox(LatTextBox))
             {
-                Lat1 = Convert.ToDouble(LatTextBox.Text);
-                if (Math.Abs(Lat1) <= 90)
-                {
-                    LatTextBox.Text = Conversions.DecDeg2SCT(Lat1,true);
-                    CrossForm.Lat = Lat1;
-                }
-                else
-                {
-                    Msg = "Latitude must fall between -90 and 90 degrees.";
-                    SCTcommon.SendMessage(Msg);
-                    LatTextBox.Text = string.Empty;
-                }
+                LabelLat = PasteLat;
+                LatTextBox.Text = Conversions.DecDeg2SCT(LabelLat, true);
+                CheckGenerate();
             }
-            catch
-            {
-                Lat1 = Conversions.String2DecDeg(LatTextBox.Text);
-                if (Math.Abs(Lat1) <= 90)
-                {
-                    LatTextBox.Text = Conversions.DecDeg2SCT(Lat1, true);
-                    CrossForm.Lat = Lat1;
-                }
-                else
-                {
-                    Msg = "Conversion error or Latitude outside -90 and 90 degrees.";
-                    SCTcommon.SendMessage(Msg);
-                    LatTextBox.Text = string.Empty;
-                }
-            }
-            CheckGenerate();
         }
 
         private void LonTextBox_Validated(object sender, EventArgs e)
         {
-            string Msg; double Lon1;
-            try
+            if (TestTextBox(LatTextBox))
             {
-                Lon1 = Convert.ToDouble(LonTextBox.Text);
-                if (Math.Abs(Lon1) <= 180)
-                {
-                    LonTextBox.Text = Conversions.DecDeg2SCT(Lon1, true);
-                    CrossForm.Lat = Lon1;
-                }
-                else
-                {
-                    Msg = "Longitude must fall between -180 and 180 degrees.";
-                    SCTcommon.SendMessage(Msg);
-                    LonTextBox.Text = string.Empty;
-                }
+                LabelLon = PasteLon;
+                LatTextBox.Text = Conversions.DecDeg2SCT(LabelLon, false);
+                CheckGenerate();
             }
-            catch
-            {
-                Lon1 = Conversions.String2DecDeg(LonTextBox.Text);
-                if (Math.Abs(Lon1) <= 90)
-                {
-                    LonTextBox.Text = Conversions.DecDeg2SCT(Lon1, true);
-                    CrossForm.Lat = Lon1;
-                }
-                else
-                {
-                    Msg = "Conversion error or Latitude outside -90 and 90 degrees.";
-                    SCTcommon.SendMessage(Msg);
-                    LonTextBox.Text = string.Empty;
-                }
-            }
-            CheckGenerate();
         }
 
         private void LabelTextBox_Click(object sender, EventArgs e)
@@ -157,7 +155,7 @@ namespace SCTBuilder
             try
             {
                 double Brg1 = Convert.ToDouble(BearingTextBox.Text);
-                CrossForm.Bearing = Brg1;
+                Bearing = Brg1;
             }
             catch
             {

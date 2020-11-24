@@ -1974,20 +1974,6 @@ namespace SCTBuilder
             form.Dispose();
         }
 
-        private void arcGeneratorToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Form form = new ArcGenerator();
-            form.ShowDialog();
-            form.Dispose();
-        }
-
-        private void pOFManagerToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Form form = new POFmanager();
-            form.ShowDialog();
-            form.Dispose();
-        }
-
         private void ESdataCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             SCTchecked.ChkES_SCTfile = ESdataCheckBox.Checked;
@@ -2012,11 +1998,25 @@ namespace SCTBuilder
             SetChecked();
         }
 
-        private void racetrackholdToolStripMenuItem_Click(object sender, EventArgs e)
+        private void RacetrackholdToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Form frm = new Racetrack();
-            frm.ShowDialog();
-            frm.Dispose();
+            Form form = new Racetrack();
+            form.ShowDialog();
+            form.Dispose();
+        }
+
+        private void POFManagerToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Form form = new POFmanager();
+            form.ShowDialog();
+            form.Dispose();
+        }
+
+        private void ArcGeneratorToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Form form = new ArcGenerator();
+            form.ShowDialog();
+            form.Dispose();
         }
     }
 }
