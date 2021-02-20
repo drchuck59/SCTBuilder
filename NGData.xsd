@@ -1,0 +1,211 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="NGData" targetNamespace="http://tempuri.org/NGData.xsd" xmlns:mstns="http://tempuri.org/NGData.xsd" xmlns="http://tempuri.org/NGData.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="NGData" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="NGData" msprop:Generator_UserDSName="NGData">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="airports" msprop:Generator_TableClassName="airportsDataTable" msprop:Generator_TableVarName="tableairports" msprop:Generator_TablePropName="airports" msprop:Generator_RowDeletingName="airportsRowDeleting" msprop:Generator_RowChangingName="airportsRowChanging" msprop:Generator_RowEvHandlerName="airportsRowChangeEventHandler" msprop:Generator_RowDeletedName="airportsRowDeleted" msprop:Generator_UserTableName="airports" msprop:Generator_RowChangedName="airportsRowChanged" msprop:Generator_RowEvArgName="airportsRowChangeEvent" msprop:Generator_RowClassName="airportsRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="FacilityID" msprop:Generator_ColumnVarNameInTable="columnFacilityID" msprop:Generator_ColumnPropNameInRow="FacilityID" msprop:Generator_ColumnPropNameInTable="FacilityIDColumn" msprop:Generator_UserColumnName="FacilityID" type="xs:string" minOccurs="0" />
+              <xs:element name="Latitude" msprop:Generator_ColumnVarNameInTable="columnLatitude" msprop:Generator_ColumnPropNameInRow="Latitude" msprop:Generator_ColumnPropNameInTable="LatitudeColumn" msprop:Generator_UserColumnName="Latitude" type="xs:double" minOccurs="0" />
+              <xs:element name="Longitude" msprop:Generator_ColumnVarNameInTable="columnLongitude" msprop:Generator_ColumnPropNameInRow="Longitude" msprop:Generator_ColumnPropNameInTable="LongitudeColumn" msprop:Generator_UserColumnName="Longitude" type="xs:double" minOccurs="0" />
+              <xs:element name="Selected" msprop:Generator_ColumnVarNameInTable="columnSelected" msprop:Generator_ColumnPropNameInRow="Selected" msprop:Generator_ColumnPropNameInTable="SelectedColumn" msprop:Generator_UserColumnName="Selected" type="xs:boolean" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="wpNavAPT" msprop:Generator_TableClassName="wpNavAPTDataTable" msprop:Generator_TableVarName="tablewpNavAPT" msprop:Generator_TablePropName="wpNavAPT" msprop:Generator_RowDeletingName="wpNavAPTRowDeleting" msprop:Generator_RowChangingName="wpNavAPTRowChanging" msprop:Generator_RowEvHandlerName="wpNavAPTRowChangeEventHandler" msprop:Generator_RowDeletedName="wpNavAPTRowDeleted" msprop:Generator_UserTableName="wpNavAPT" msprop:Generator_RowChangedName="wpNavAPTRowChanged" msprop:Generator_RowEvArgName="wpNavAPTRowChangeEvent" msprop:Generator_RowClassName="wpNavAPTRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="FacilityID" msprop:Generator_ColumnVarNameInTable="columnFacilityID" msprop:Generator_ColumnPropNameInRow="FacilityID" msprop:Generator_ColumnPropNameInTable="FacilityIDColumn" msprop:Generator_UserColumnName="FacilityID" type="xs:string" minOccurs="0" />
+              <xs:element name="Name" msprop:Generator_ColumnVarNameInTable="columnName" msprop:Generator_ColumnPropNameInRow="Name" msprop:Generator_ColumnPropNameInTable="NameColumn" msprop:Generator_UserColumnName="Name" type="xs:string" minOccurs="0" />
+              <xs:element name="Runway" msprop:Generator_ColumnVarNameInTable="columnRunway" msprop:Generator_ColumnPropNameInRow="Runway" msprop:Generator_ColumnPropNameInTable="RunwayColumn" msprop:Generator_UserColumnName="Runway" type="xs:string" minOccurs="0" />
+              <xs:element name="Length" msprop:Generator_ColumnVarNameInTable="columnLength" msprop:Generator_ColumnPropNameInRow="Length" msprop:Generator_ColumnPropNameInTable="LengthColumn" msprop:Generator_UserColumnName="Length" type="xs:int" minOccurs="0" />
+              <xs:element name="Bearing" msprop:Generator_ColumnVarNameInTable="columnBearing" msprop:Generator_ColumnPropNameInRow="Bearing" msprop:Generator_ColumnPropNameInTable="BearingColumn" msprop:Generator_UserColumnName="Bearing" type="xs:int" minOccurs="0" />
+              <xs:element name="Latitude" msprop:Generator_ColumnVarNameInTable="columnLatitude" msprop:Generator_ColumnPropNameInRow="Latitude" msprop:Generator_ColumnPropNameInTable="LatitudeColumn" msprop:Generator_UserColumnName="Latitude" type="xs:double" minOccurs="0" />
+              <xs:element name="Longitude" msprop:Generator_ColumnVarNameInTable="columnLongitude" msprop:Generator_ColumnPropNameInRow="Longitude" msprop:Generator_ColumnPropNameInTable="LongitudeColumn" msprop:Generator_UserColumnName="Longitude" type="xs:double" minOccurs="0" />
+              <xs:element name="FrequencyILS" msprop:Generator_ColumnVarNameInTable="columnFrequencyILS" msprop:Generator_ColumnPropNameInRow="FrequencyILS" msprop:Generator_ColumnPropNameInTable="FrequencyILSColumn" msprop:Generator_UserColumnName="FrequencyILS" type="xs:float" minOccurs="0" />
+              <xs:element name="FinalBearing" msprop:Generator_ColumnVarNameInTable="columnFinalBearing" msprop:Generator_ColumnPropNameInRow="FinalBearing" msprop:Generator_ColumnPropNameInTable="FinalBearingColumn" msprop:Generator_UserColumnName="FinalBearing" type="xs:int" minOccurs="0" />
+              <xs:element name="Elevation" msprop:Generator_ColumnVarNameInTable="columnElevation" msprop:Generator_ColumnPropNameInRow="Elevation" msprop:Generator_ColumnPropNameInTable="ElevationColumn" msprop:Generator_UserColumnName="Elevation" type="xs:int" minOccurs="0" />
+              <xs:element name="Selected" msprop:Generator_ColumnVarNameInTable="columnSelected" msprop:Generator_ColumnPropNameInRow="Selected" msprop:Generator_ColumnPropNameInTable="SelectedColumn" msprop:Generator_UserColumnName="Selected" type="xs:boolean" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="pmdgSID" msprop:Generator_TableClassName="pmdgSIDDataTable" msprop:Generator_TableVarName="tablepmdgSID" msprop:Generator_TablePropName="pmdgSID" msprop:Generator_RowDeletingName="pmdgSIDRowDeleting" msprop:Generator_RowChangingName="pmdgSIDRowChanging" msprop:Generator_RowEvHandlerName="pmdgSIDRowChangeEventHandler" msprop:Generator_RowDeletedName="pmdgSIDRowDeleted" msprop:Generator_UserTableName="pmdgSID" msprop:Generator_RowChangedName="pmdgSIDRowChanged" msprop:Generator_RowEvArgName="pmdgSIDRowChangeEvent" msprop:Generator_RowClassName="pmdgSIDRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="FacilityID" msprop:Generator_ColumnVarNameInTable="columnFacilityID" msprop:Generator_ColumnPropNameInRow="FacilityID" msprop:Generator_ColumnPropNameInTable="FacilityIDColumn" msprop:Generator_UserColumnName="FacilityID" type="xs:string" minOccurs="0" />
+              <xs:element name="SSDcode" msprop:Generator_ColumnVarNameInTable="columnSSDcode" msprop:Generator_ColumnPropNameInRow="SSDcode" msprop:Generator_ColumnPropNameInTable="SSDcodeColumn" msprop:Generator_UserColumnName="SSDcode" type="xs:string" minOccurs="0" />
+              <xs:element name="Rwy" msprop:Generator_ColumnVarNameInTable="columnRwy" msprop:Generator_ColumnPropNameInRow="Rwy" msprop:Generator_ColumnPropNameInTable="RwyColumn" msprop:Generator_UserColumnName="Rwy" type="xs:string" minOccurs="0" />
+              <xs:element name="Fix" msprop:Generator_ColumnVarNameInTable="columnFix" msprop:Generator_ColumnPropNameInRow="Fix" msprop:Generator_ColumnPropNameInTable="FixColumn" msprop:Generator_UserColumnName="Fix" type="xs:string" minOccurs="0" />
+              <xs:element name="AltAOA" msprop:Generator_ColumnVarNameInTable="columnAltAOA" msprop:Generator_ColumnPropNameInRow="AltAOA" msprop:Generator_ColumnPropNameInTable="AltAOAColumn" msprop:Generator_UserColumnName="AltAOA" type="xs:string" minOccurs="0" />
+              <xs:element name="AltAOB" msprop:Generator_ColumnVarNameInTable="columnAltAOB" msprop:Generator_ColumnPropNameInRow="AltAOB" msprop:Generator_ColumnPropNameInTable="AltAOBColumn" msprop:Generator_UserColumnName="AltAOB" type="xs:string" minOccurs="0" />
+              <xs:element name="AltAT" msprop:Generator_ColumnVarNameInTable="columnAltAT" msprop:Generator_ColumnPropNameInRow="AltAT" msprop:Generator_ColumnPropNameInTable="AltATColumn" msprop:Generator_UserColumnName="AltAT" type="xs:string" minOccurs="0" />
+              <xs:element name="Speed" msprop:Generator_ColumnVarNameInTable="columnSpeed" msprop:Generator_ColumnPropNameInRow="Speed" msprop:Generator_ColumnPropNameInTable="SpeedColumn" msprop:Generator_UserColumnName="Speed" type="xs:string" minOccurs="0" />
+              <xs:element name="Hdg" msprop:Generator_ColumnVarNameInTable="columnHdg" msprop:Generator_ColumnPropNameInRow="Hdg" msprop:Generator_ColumnPropNameInTable="HdgColumn" msprop:Generator_UserColumnName="Hdg" type="xs:string" minOccurs="0" />
+              <xs:element name="UntilAlt" msprop:Generator_ColumnVarNameInTable="columnUntilAlt" msprop:Generator_ColumnPropNameInRow="UntilAlt" msprop:Generator_ColumnPropNameInTable="UntilAltColumn" msprop:Generator_UserColumnName="UntilAlt" type="xs:string" minOccurs="0" />
+              <xs:element name="Radial" msprop:Generator_ColumnVarNameInTable="columnRadial" msprop:Generator_ColumnPropNameInRow="Radial" msprop:Generator_ColumnPropNameInTable="RadialColumn" msprop:Generator_UserColumnName="Radial" type="xs:string" minOccurs="0" />
+              <xs:element name="Sequence" msprop:Generator_ColumnVarNameInTable="columnSequence" msprop:Generator_ColumnPropNameInRow="Sequence" msprop:Generator_ColumnPropNameInTable="SequenceColumn" msprop:Generator_UserColumnName="Sequence" type="xs:int" minOccurs="0" />
+              <xs:element name="Selected" msprop:Generator_ColumnVarNameInTable="columnSelected" msprop:Generator_ColumnPropNameInRow="Selected" msprop:Generator_ColumnPropNameInTable="SelectedColumn" msprop:Generator_UserColumnName="Selected" type="xs:boolean" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="pmdgSTAR" msprop:Generator_TableClassName="pmdgSTARDataTable" msprop:Generator_TableVarName="tablepmdgSTAR" msprop:Generator_TablePropName="pmdgSTAR" msprop:Generator_RowDeletingName="pmdgSTARRowDeleting" msprop:Generator_RowChangingName="pmdgSTARRowChanging" msprop:Generator_RowEvHandlerName="pmdgSTARRowChangeEventHandler" msprop:Generator_RowDeletedName="pmdgSTARRowDeleted" msprop:Generator_UserTableName="pmdgSTAR" msprop:Generator_RowChangedName="pmdgSTARRowChanged" msprop:Generator_RowEvArgName="pmdgSTARRowChangeEvent" msprop:Generator_RowClassName="pmdgSTARRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="FacilityID" msprop:Generator_ColumnVarNameInTable="columnFacilityID" msprop:Generator_ColumnPropNameInRow="FacilityID" msprop:Generator_ColumnPropNameInTable="FacilityIDColumn" msprop:Generator_UserColumnName="FacilityID" type="xs:string" minOccurs="0" />
+              <xs:element name="SSDCode" msprop:Generator_ColumnVarNameInTable="columnSSDCode" msprop:Generator_ColumnPropNameInRow="SSDCode" msprop:Generator_ColumnPropNameInTable="SSDCodeColumn" msprop:Generator_UserColumnName="SSDCode" type="xs:string" minOccurs="0" />
+              <xs:element name="SSDmodifier" msprop:Generator_ColumnVarNameInTable="columnSSDmodifier" msprop:Generator_ColumnPropNameInRow="SSDmodifier" msprop:Generator_ColumnPropNameInTable="SSDmodifierColumn" msprop:Generator_UserColumnName="SSDmodifier" type="xs:string" minOccurs="0" />
+              <xs:element name="NavAid" msdata:Caption="FIX" msprop:Generator_ColumnVarNameInTable="columnNavAid" msprop:Generator_ColumnPropNameInRow="NavAid" msprop:Generator_ColumnPropNameInTable="NavAidColumn" msprop:Generator_UserColumnName="NavAid" type="xs:string" minOccurs="0" />
+              <xs:element name="AltAOA" msprop:Generator_ColumnVarNameInTable="columnAltAOA" msprop:Generator_ColumnPropNameInRow="AltAOA" msprop:Generator_ColumnPropNameInTable="AltAOAColumn" msprop:Generator_UserColumnName="AltAOA" type="xs:string" minOccurs="0" />
+              <xs:element name="AltAOB" msprop:Generator_ColumnVarNameInTable="columnAltAOB" msprop:Generator_ColumnPropNameInRow="AltAOB" msprop:Generator_ColumnPropNameInTable="AltAOBColumn" msprop:Generator_UserColumnName="AltAOB" type="xs:string" minOccurs="0" />
+              <xs:element name="AltAT" msprop:Generator_ColumnVarNameInTable="columnAltAT" msprop:Generator_ColumnPropNameInRow="AltAT" msprop:Generator_ColumnPropNameInTable="AltATColumn" msprop:Generator_UserColumnName="AltAT" type="xs:string" minOccurs="0" />
+              <xs:element name="Speed" msprop:Generator_ColumnVarNameInTable="columnSpeed" msprop:Generator_ColumnPropNameInRow="Speed" msprop:Generator_ColumnPropNameInTable="SpeedColumn" msprop:Generator_UserColumnName="Speed" type="xs:string" minOccurs="0" />
+              <xs:element name="OverflyHdg" msprop:Generator_ColumnVarNameInTable="columnOverflyHdg" msprop:Generator_ColumnPropNameInRow="OverflyHdg" msprop:Generator_ColumnPropNameInTable="OverflyHdgColumn" msprop:Generator_UserColumnName="OverflyHdg" type="xs:string" minOccurs="0" />
+              <xs:element name="Sequence" msprop:Generator_ColumnVarNameInTable="columnSequence" msprop:Generator_ColumnPropNameInRow="Sequence" msprop:Generator_ColumnPropNameInTable="SequenceColumn" msprop:Generator_UserColumnName="Sequence" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="pmdgSIDTransition" msprop:Generator_TableClassName="pmdgSIDTransitionDataTable" msprop:Generator_TableVarName="tablepmdgSIDTransition" msprop:Generator_TablePropName="pmdgSIDTransition" msprop:Generator_RowDeletingName="pmdgSIDTransitionRowDeleting" msprop:Generator_RowChangingName="pmdgSIDTransitionRowChanging" msprop:Generator_RowEvHandlerName="pmdgSIDTransitionRowChangeEventHandler" msprop:Generator_RowDeletedName="pmdgSIDTransitionRowDeleted" msprop:Generator_UserTableName="pmdgSIDTransition" msprop:Generator_RowChangedName="pmdgSIDTransitionRowChanged" msprop:Generator_RowEvArgName="pmdgSIDTransitionRowChangeEvent" msprop:Generator_RowClassName="pmdgSIDTransitionRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="SSDcode" msprop:Generator_ColumnVarNameInTable="columnSSDcode" msprop:Generator_ColumnPropNameInRow="SSDcode" msprop:Generator_ColumnPropNameInTable="SSDcodeColumn" msprop:Generator_UserColumnName="SSDcode" type="xs:string" minOccurs="0" />
+              <xs:element name="Transition" msprop:Generator_ColumnVarNameInTable="columnTransition" msprop:Generator_ColumnPropNameInRow="Transition" msprop:Generator_ColumnPropNameInTable="TransitionColumn" msprop:Generator_UserColumnName="Transition" type="xs:string" minOccurs="0" />
+              <xs:element name="Fix" msprop:Generator_ColumnVarNameInTable="columnFix" msprop:Generator_ColumnPropNameInRow="Fix" msprop:Generator_ColumnPropNameInTable="FixColumn" msprop:Generator_UserColumnName="Fix" type="xs:string" minOccurs="0" />
+              <xs:element name="Sequence" msprop:Generator_ColumnVarNameInTable="columnSequence" msprop:Generator_ColumnPropNameInRow="Sequence" msprop:Generator_ColumnPropNameInTable="SequenceColumn" msprop:Generator_UserColumnName="Sequence" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="pmdgSTARRNW" msprop:Generator_TableClassName="pmdgSTARRNWDataTable" msprop:Generator_TableVarName="tablepmdgSTARRNW" msprop:Generator_TablePropName="pmdgSTARRNW" msprop:Generator_RowDeletingName="pmdgSTARRNWRowDeleting" msprop:Generator_RowChangingName="pmdgSTARRNWRowChanging" msprop:Generator_RowEvHandlerName="pmdgSTARRNWRowChangeEventHandler" msprop:Generator_RowDeletedName="pmdgSTARRNWRowDeleted" msprop:Generator_UserTableName="pmdgSTARRNW" msprop:Generator_RowChangedName="pmdgSTARRNWRowChanged" msprop:Generator_RowEvArgName="pmdgSTARRNWRowChangeEvent" msprop:Generator_RowClassName="pmdgSTARRNWRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="FacilityID" msprop:Generator_ColumnVarNameInTable="columnFacilityID" msprop:Generator_ColumnPropNameInRow="FacilityID" msprop:Generator_ColumnPropNameInTable="FacilityIDColumn" msprop:Generator_UserColumnName="FacilityID" type="xs:string" minOccurs="0" />
+              <xs:element name="SSDcode" msprop:Generator_ColumnVarNameInTable="columnSSDcode" msprop:Generator_ColumnPropNameInRow="SSDcode" msprop:Generator_ColumnPropNameInTable="SSDcodeColumn" msprop:Generator_UserColumnName="SSDcode" type="xs:string" minOccurs="0" />
+              <xs:element name="SSDmodifier" msprop:Generator_ColumnVarNameInTable="columnSSDmodifier" msprop:Generator_ColumnPropNameInRow="SSDmodifier" msprop:Generator_ColumnPropNameInTable="SSDmodifierColumn" msprop:Generator_UserColumnName="SSDmodifier" type="xs:string" minOccurs="0" />
+              <xs:element name="RWY" msprop:Generator_ColumnVarNameInTable="columnRWY" msprop:Generator_ColumnPropNameInRow="RWY" msprop:Generator_ColumnPropNameInTable="RWYColumn" msprop:Generator_UserColumnName="RWY" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="pmdgSTARTransition" msprop:Generator_TableClassName="pmdgSTARTransitionDataTable" msprop:Generator_TableVarName="tablepmdgSTARTransition" msprop:Generator_TablePropName="pmdgSTARTransition" msprop:Generator_RowDeletingName="pmdgSTARTransitionRowDeleting" msprop:Generator_RowChangingName="pmdgSTARTransitionRowChanging" msprop:Generator_RowEvHandlerName="pmdgSTARTransitionRowChangeEventHandler" msprop:Generator_RowDeletedName="pmdgSTARTransitionRowDeleted" msprop:Generator_UserTableName="pmdgSTARTransition" msprop:Generator_RowChangedName="pmdgSTARTransitionRowChanged" msprop:Generator_RowEvArgName="pmdgSTARTransitionRowChangeEvent" msprop:Generator_RowClassName="pmdgSTARTransitionRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="FacilityID" msprop:Generator_ColumnVarNameInTable="columnFacilityID" msprop:Generator_ColumnPropNameInRow="FacilityID" msprop:Generator_ColumnPropNameInTable="FacilityIDColumn" msprop:Generator_UserColumnName="FacilityID" type="xs:string" minOccurs="0" />
+              <xs:element name="SSDcode" msprop:Generator_ColumnVarNameInTable="columnSSDcode" msprop:Generator_ColumnPropNameInRow="SSDcode" msprop:Generator_ColumnPropNameInTable="SSDcodeColumn" msprop:Generator_UserColumnName="SSDcode" type="xs:string" minOccurs="0" />
+              <xs:element name="SSDmodifier" msprop:Generator_ColumnVarNameInTable="columnSSDmodifier" msprop:Generator_ColumnPropNameInRow="SSDmodifier" msprop:Generator_ColumnPropNameInTable="SSDmodifierColumn" msprop:Generator_UserColumnName="SSDmodifier" type="xs:string" minOccurs="0" />
+              <xs:element name="TransitionName" msprop:Generator_ColumnVarNameInTable="columnTransitionName" msprop:Generator_ColumnPropNameInRow="TransitionName" msprop:Generator_ColumnPropNameInTable="TransitionNameColumn" msprop:Generator_UserColumnName="TransitionName" type="xs:string" minOccurs="0" />
+              <xs:element name="NavAId" msdata:Caption="Fix" msprop:Generator_ColumnVarNameInTable="columnNavAId" msprop:Generator_ColumnPropNameInRow="NavAId" msprop:Generator_ColumnPropNameInTable="NavAIdColumn" msprop:Generator_UserColumnName="NavAId" type="xs:string" minOccurs="0" />
+              <xs:element name="AltAOA" msprop:Generator_ColumnVarNameInTable="columnAltAOA" msprop:Generator_ColumnPropNameInRow="AltAOA" msprop:Generator_ColumnPropNameInTable="AltAOAColumn" msprop:Generator_UserColumnName="AltAOA" type="xs:string" minOccurs="0" />
+              <xs:element name="AltAOB" msprop:Generator_ColumnVarNameInTable="columnAltAOB" msprop:Generator_ColumnPropNameInRow="AltAOB" msprop:Generator_ColumnPropNameInTable="AltAOBColumn" msprop:Generator_UserColumnName="AltAOB" type="xs:string" minOccurs="0" />
+              <xs:element name="AltAt" msprop:Generator_ColumnVarNameInTable="columnAltAt" msprop:Generator_ColumnPropNameInRow="AltAt" msprop:Generator_ColumnPropNameInTable="AltAtColumn" msprop:Generator_UserColumnName="AltAt" type="xs:string" minOccurs="0" />
+              <xs:element name="Speed" msprop:Generator_ColumnVarNameInTable="columnSpeed" msprop:Generator_ColumnPropNameInRow="Speed" msprop:Generator_ColumnPropNameInTable="SpeedColumn" msprop:Generator_UserColumnName="Speed" type="xs:string" minOccurs="0" />
+              <xs:element name="Sequence" msprop:Generator_ColumnVarNameInTable="columnSequence" msprop:Generator_ColumnPropNameInRow="Sequence" msprop:Generator_ColumnPropNameInTable="SequenceColumn" msprop:Generator_UserColumnName="Sequence" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="wpNavAID" msprop:Generator_TableClassName="wpNavAIDDataTable" msprop:Generator_TableVarName="tablewpNavAID" msprop:Generator_TablePropName="wpNavAID" msprop:Generator_RowDeletingName="wpNavAIDRowDeleting" msprop:Generator_RowChangingName="wpNavAIDRowChanging" msprop:Generator_RowEvHandlerName="wpNavAIDRowChangeEventHandler" msprop:Generator_RowDeletedName="wpNavAIDRowDeleted" msprop:Generator_UserTableName="wpNavAID" msprop:Generator_RowChangedName="wpNavAIDRowChanged" msprop:Generator_RowEvArgName="wpNavAIDRowChangeEvent" msprop:Generator_RowClassName="wpNavAIDRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="FacilityID" msprop:Generator_ColumnVarNameInTable="columnFacilityID" msprop:Generator_ColumnPropNameInRow="FacilityID" msprop:Generator_ColumnPropNameInTable="FacilityIDColumn" msprop:Generator_UserColumnName="FacilityID" type="xs:string" minOccurs="0" />
+              <xs:element name="Name" msprop:Generator_ColumnVarNameInTable="columnName" msprop:Generator_ColumnPropNameInRow="Name" msprop:Generator_ColumnPropNameInTable="NameColumn" msprop:Generator_UserColumnName="Name" type="xs:string" minOccurs="0" />
+              <xs:element name="Latitude" msprop:Generator_ColumnVarNameInTable="columnLatitude" msprop:Generator_ColumnPropNameInRow="Latitude" msprop:Generator_ColumnPropNameInTable="LatitudeColumn" msprop:Generator_UserColumnName="Latitude" type="xs:double" minOccurs="0" />
+              <xs:element name="Longitude" msprop:Generator_ColumnVarNameInTable="columnLongitude" msprop:Generator_ColumnPropNameInRow="Longitude" msprop:Generator_ColumnPropNameInTable="LongitudeColumn" msprop:Generator_UserColumnName="Longitude" type="xs:double" minOccurs="0" />
+              <xs:element name="Frequency" msprop:Generator_ColumnVarNameInTable="columnFrequency" msprop:Generator_ColumnPropNameInRow="Frequency" msprop:Generator_ColumnPropNameInTable="FrequencyColumn" msprop:Generator_UserColumnName="Frequency" type="xs:string" minOccurs="0" />
+              <xs:element name="Type" msprop:Generator_ColumnVarNameInTable="columnType" msprop:Generator_ColumnPropNameInRow="Type" msprop:Generator_ColumnPropNameInTable="TypeColumn" msprop:Generator_UserColumnName="Type" type="xs:string" minOccurs="0" />
+              <xs:element name="Selected" msprop:Generator_ColumnVarNameInTable="columnSelected" msprop:Generator_ColumnPropNameInRow="Selected" msprop:Generator_ColumnPropNameInTable="SelectedColumn" msprop:Generator_UserColumnName="Selected" type="xs:boolean" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="wpNavRTE" msprop:Generator_TableClassName="wpNavRTEDataTable" msprop:Generator_TableVarName="tablewpNavRTE" msprop:Generator_TablePropName="wpNavRTE" msprop:Generator_RowDeletingName="wpNavRTERowDeleting" msprop:Generator_RowChangingName="wpNavRTERowChanging" msprop:Generator_RowEvHandlerName="wpNavRTERowChangeEventHandler" msprop:Generator_RowDeletedName="wpNavRTERowDeleted" msprop:Generator_UserTableName="wpNavRTE" msprop:Generator_RowChangedName="wpNavRTERowChanged" msprop:Generator_RowEvArgName="wpNavRTERowChangeEvent" msprop:Generator_RowClassName="wpNavRTERow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="AWYID" msprop:Generator_ColumnVarNameInTable="columnAWYID" msprop:Generator_ColumnPropNameInRow="AWYID" msprop:Generator_ColumnPropNameInTable="AWYIDColumn" msprop:Generator_UserColumnName="AWYID" type="xs:string" minOccurs="0" />
+              <xs:element name="Sequence" msprop:Generator_ColumnVarNameInTable="columnSequence" msprop:Generator_ColumnPropNameInRow="Sequence" msprop:Generator_ColumnPropNameInTable="SequenceColumn" msprop:Generator_UserColumnName="Sequence" type="xs:int" minOccurs="0" />
+              <xs:element name="NavAid" msprop:Generator_ColumnVarNameInTable="columnNavAid" msprop:Generator_ColumnPropNameInRow="NavAid" msprop:Generator_ColumnPropNameInTable="NavAidColumn" msprop:Generator_UserColumnName="NavAid" type="xs:string" minOccurs="0" />
+              <xs:element name="Latitude" msprop:Generator_ColumnVarNameInTable="columnLatitude" msprop:Generator_ColumnPropNameInRow="Latitude" msprop:Generator_ColumnPropNameInTable="LatitudeColumn" msprop:Generator_UserColumnName="Latitude" type="xs:double" minOccurs="0" />
+              <xs:element name="Longitude" msprop:Generator_ColumnVarNameInTable="columnLongitude" msprop:Generator_ColumnPropNameInRow="Longitude" msprop:Generator_ColumnPropNameInTable="LongitudeColumn" msprop:Generator_UserColumnName="Longitude" type="xs:double" minOccurs="0" />
+              <xs:element name="IsLow" msprop:Generator_ColumnVarNameInTable="columnIsLow" msprop:Generator_ColumnPropNameInRow="IsLow" msprop:Generator_ColumnPropNameInTable="IsLowColumn" msprop:Generator_UserColumnName="IsLow" type="xs:boolean" default="false" minOccurs="0" />
+              <xs:element name="Selected" msprop:Generator_ColumnVarNameInTable="columnSelected" msprop:Generator_ColumnPropNameInRow="Selected" msprop:Generator_ColumnPropNameInTable="SelectedColumn" msprop:Generator_UserColumnName="Selected" type="xs:boolean" default="false" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="wpNavFIX" msprop:Generator_TableClassName="wpNavFIXDataTable" msprop:Generator_TableVarName="tablewpNavFIX" msprop:Generator_TablePropName="wpNavFIX" msprop:Generator_RowDeletingName="wpNavFIXRowDeleting" msprop:Generator_RowChangingName="wpNavFIXRowChanging" msprop:Generator_RowEvHandlerName="wpNavFIXRowChangeEventHandler" msprop:Generator_RowDeletedName="wpNavFIXRowDeleted" msprop:Generator_UserTableName="wpNavFIX" msprop:Generator_RowChangedName="wpNavFIXRowChanged" msprop:Generator_RowEvArgName="wpNavFIXRowChangeEvent" msprop:Generator_RowClassName="wpNavFIXRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="FacilityID" msprop:Generator_ColumnVarNameInTable="columnFacilityID" msprop:Generator_ColumnPropNameInRow="FacilityID" msprop:Generator_ColumnPropNameInTable="FacilityIDColumn" msprop:Generator_UserColumnName="FacilityID" type="xs:string" minOccurs="0" />
+              <xs:element name="Latitude" msprop:Generator_ColumnVarNameInTable="columnLatitude" msprop:Generator_ColumnPropNameInRow="Latitude" msprop:Generator_ColumnPropNameInTable="LatitudeColumn" msprop:Generator_UserColumnName="Latitude" type="xs:double" minOccurs="0" />
+              <xs:element name="Longitude" msprop:Generator_ColumnVarNameInTable="columnLongitude" msprop:Generator_ColumnPropNameInRow="Longitude" msprop:Generator_ColumnPropNameInTable="LongitudeColumn" msprop:Generator_UserColumnName="Longitude" type="xs:double" minOccurs="0" />
+              <xs:element name="Selected" msprop:Generator_ColumnVarNameInTable="columnSelected" msprop:Generator_ColumnPropNameInRow="Selected" msprop:Generator_ColumnPropNameInTable="SelectedColumn" msprop:Generator_UserColumnName="Selected" type="xs:boolean" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="pmdgAPPRTransition" msprop:Generator_TableClassName="pmdgAPPRTransitionDataTable" msprop:Generator_TableVarName="tablepmdgAPPRTransition" msprop:Generator_TablePropName="pmdgAPPRTransition" msprop:Generator_RowDeletingName="pmdgAPPRTransitionRowDeleting" msprop:Generator_RowChangingName="pmdgAPPRTransitionRowChanging" msprop:Generator_RowEvHandlerName="pmdgAPPRTransitionRowChangeEventHandler" msprop:Generator_RowDeletedName="pmdgAPPRTransitionRowDeleted" msprop:Generator_UserTableName="pmdgAPPRTransition" msprop:Generator_RowChangedName="pmdgAPPRTransitionRowChanged" msprop:Generator_RowEvArgName="pmdgAPPRTransitionRowChangeEvent" msprop:Generator_RowClassName="pmdgAPPRTransitionRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="APPID" msprop:Generator_ColumnVarNameInTable="columnAPPID" msprop:Generator_ColumnPropNameInRow="APPID" msprop:Generator_ColumnPropNameInTable="APPIDColumn" msprop:Generator_UserColumnName="APPID" type="xs:string" minOccurs="0" />
+              <xs:element name="Fix" msprop:Generator_ColumnVarNameInTable="columnFix" msprop:Generator_ColumnPropNameInRow="Fix" msprop:Generator_ColumnPropNameInTable="FixColumn" msprop:Generator_UserColumnName="Fix" type="xs:string" minOccurs="0" />
+              <xs:element name="AltRestrict" msprop:Generator_ColumnVarNameInTable="columnAltRestrict" msprop:Generator_ColumnPropNameInRow="AltRestrict" msprop:Generator_ColumnPropNameInTable="AltRestrictColumn" msprop:Generator_UserColumnName="AltRestrict" type="xs:string" minOccurs="0" />
+              <xs:element name="Altitude" msprop:Generator_ColumnVarNameInTable="columnAltitude" msprop:Generator_ColumnPropNameInRow="Altitude" msprop:Generator_ColumnPropNameInTable="AltitudeColumn" msprop:Generator_UserColumnName="Altitude" type="xs:string" minOccurs="0" />
+              <xs:element name="SpeedRestric" msprop:Generator_ColumnVarNameInTable="columnSpeedRestric" msprop:Generator_ColumnPropNameInRow="SpeedRestric" msprop:Generator_ColumnPropNameInTable="SpeedRestricColumn" msprop:Generator_UserColumnName="SpeedRestric" type="xs:string" minOccurs="0" />
+              <xs:element name="Speed" msprop:Generator_ColumnVarNameInTable="columnSpeed" msprop:Generator_ColumnPropNameInRow="Speed" msprop:Generator_ColumnPropNameInTable="SpeedColumn" msprop:Generator_UserColumnName="Speed" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="pmdgAPPR" msprop:Generator_TableClassName="pmdgAPPRDataTable" msprop:Generator_TableVarName="tablepmdgAPPR" msprop:Generator_TablePropName="pmdgAPPR" msprop:Generator_RowDeletingName="pmdgAPPRRowDeleting" msprop:Generator_RowChangingName="pmdgAPPRRowChanging" msprop:Generator_RowEvHandlerName="pmdgAPPRRowChangeEventHandler" msprop:Generator_RowDeletedName="pmdgAPPRRowDeleted" msprop:Generator_UserTableName="pmdgAPPR" msprop:Generator_RowChangedName="pmdgAPPRRowChanged" msprop:Generator_RowEvArgName="pmdgAPPRRowChangeEvent" msprop:Generator_RowClassName="pmdgAPPRRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="APPID" msprop:Generator_ColumnVarNameInTable="columnAPPID" msprop:Generator_ColumnPropNameInRow="APPID" msprop:Generator_ColumnPropNameInTable="APPIDColumn" msprop:Generator_UserColumnName="APPID" type="xs:string" minOccurs="0" />
+              <xs:element name="FacilityID" msprop:Generator_ColumnVarNameInTable="columnFacilityID" msprop:Generator_ColumnPropNameInRow="FacilityID" msprop:Generator_ColumnPropNameInTable="FacilityIDColumn" msprop:Generator_UserColumnName="FacilityID" type="xs:string" minOccurs="0" />
+              <xs:element name="Rwy" msprop:Generator_ColumnVarNameInTable="columnRwy" msprop:Generator_ColumnPropNameInRow="Rwy" msprop:Generator_ColumnPropNameInTable="RwyColumn" msprop:Generator_UserColumnName="Rwy" type="xs:string" minOccurs="0" />
+              <xs:element name="Fix" msprop:Generator_ColumnVarNameInTable="columnFix" msprop:Generator_ColumnPropNameInRow="Fix" msprop:Generator_ColumnPropNameInTable="FixColumn" msprop:Generator_UserColumnName="Fix" type="xs:string" minOccurs="0" />
+              <xs:element name="AltRestrict" msprop:Generator_ColumnVarNameInTable="columnAltRestrict" msprop:Generator_ColumnPropNameInRow="AltRestrict" msprop:Generator_ColumnPropNameInTable="AltRestrictColumn" msprop:Generator_UserColumnName="AltRestrict" type="xs:string" minOccurs="0" />
+              <xs:element name="Altitude" msprop:Generator_ColumnVarNameInTable="columnAltitude" msprop:Generator_ColumnPropNameInRow="Altitude" msprop:Generator_ColumnPropNameInTable="AltitudeColumn" msprop:Generator_UserColumnName="Altitude" type="xs:string" minOccurs="0" />
+              <xs:element name="SpeedRestrict" msprop:Generator_ColumnVarNameInTable="columnSpeedRestrict" msprop:Generator_ColumnPropNameInRow="SpeedRestrict" msprop:Generator_ColumnPropNameInTable="SpeedRestrictColumn" msprop:Generator_UserColumnName="SpeedRestrict" type="xs:string" minOccurs="0" />
+              <xs:element name="Speed" msprop:Generator_ColumnVarNameInTable="columnSpeed" msprop:Generator_ColumnPropNameInRow="Speed" msprop:Generator_ColumnPropNameInTable="SpeedColumn" msprop:Generator_UserColumnName="Speed" type="xs:string" minOccurs="0" />
+              <xs:element name="HoldFix" msprop:Generator_ColumnVarNameInTable="columnHoldFix" msprop:Generator_ColumnPropNameInRow="HoldFix" msprop:Generator_ColumnPropNameInTable="HoldFixColumn" msprop:Generator_UserColumnName="HoldFix" type="xs:string" minOccurs="0" />
+              <xs:element name="Turn" msprop:Generator_ColumnVarNameInTable="columnTurn" msprop:Generator_ColumnPropNameInRow="Turn" msprop:Generator_ColumnPropNameInTable="TurnColumn" msprop:Generator_UserColumnName="Turn" type="xs:string" minOccurs="0" />
+              <xs:element name="InBndCrs" msprop:Generator_ColumnVarNameInTable="columnInBndCrs" msprop:Generator_ColumnPropNameInRow="InBndCrs" msprop:Generator_ColumnPropNameInTable="InBndCrsColumn" msprop:Generator_UserColumnName="InBndCrs" type="xs:string" minOccurs="0" />
+              <xs:element name="LegTime" msprop:Generator_ColumnVarNameInTable="columnLegTime" msprop:Generator_ColumnPropNameInRow="LegTime" msprop:Generator_ColumnPropNameInTable="LegTimeColumn" msprop:Generator_UserColumnName="LegTime" type="xs:string" minOccurs="0" />
+              <xs:element name="LegDist" msprop:Generator_ColumnVarNameInTable="columnLegDist" msprop:Generator_ColumnPropNameInRow="LegDist" msprop:Generator_ColumnPropNameInTable="LegDistColumn" msprop:Generator_UserColumnName="LegDist" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="cycle_info" msprop:Generator_TableClassName="cycle_infoDataTable" msprop:Generator_TableVarName="tablecycle_info" msprop:Generator_TablePropName="cycle_info" msprop:Generator_RowDeletingName="cycle_infoRowDeleting" msprop:Generator_RowChangingName="cycle_infoRowChanging" msprop:Generator_RowEvHandlerName="cycle_infoRowChangeEventHandler" msprop:Generator_RowDeletedName="cycle_infoRowDeleted" msprop:Generator_UserTableName="cycle_info" msprop:Generator_RowChangedName="cycle_infoRowChanged" msprop:Generator_RowEvArgName="cycle_infoRowChangeEvent" msprop:Generator_RowClassName="cycle_infoRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="AIRAC" msprop:Generator_ColumnVarNameInTable="columnAIRAC" msprop:Generator_ColumnPropNameInRow="AIRAC" msprop:Generator_ColumnPropNameInTable="AIRACColumn" msprop:Generator_UserColumnName="AIRAC" type="xs:int" minOccurs="0" />
+              <xs:element name="Verson" msprop:Generator_ColumnVarNameInTable="columnVerson" msprop:Generator_ColumnPropNameInRow="Verson" msprop:Generator_ColumnPropNameInTable="VersonColumn" msprop:Generator_UserColumnName="Verson" type="xs:float" minOccurs="0" />
+              <xs:element name="BeginDate" msprop:Generator_ColumnVarNameInTable="columnBeginDate" msprop:Generator_ColumnPropNameInRow="BeginDate" msprop:Generator_ColumnPropNameInTable="BeginDateColumn" msprop:Generator_UserColumnName="BeginDate" type="xs:dateTime" minOccurs="0" />
+              <xs:element name="EndDate" msprop:Generator_ColumnVarNameInTable="columnEndDate" msprop:Generator_ColumnPropNameInRow="EndDate" msprop:Generator_ColumnPropNameInTable="EndDateColumn" msprop:Generator_UserColumnName="EndDate" type="xs:dateTime" minOccurs="0" />
+              <xs:element name="ParsedDate" msprop:Generator_ColumnVarNameInTable="columnParsedDate" msprop:Generator_ColumnPropNameInRow="ParsedDate" msprop:Generator_ColumnPropNameInTable="ParsedDateColumn" msprop:Generator_UserColumnName="ParsedDate" type="xs:dateTime" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="pmdgRWY" msprop:Generator_TableClassName="pmdgRWYDataTable" msprop:Generator_TableVarName="tablepmdgRWY" msprop:Generator_TablePropName="pmdgRWY" msprop:Generator_RowDeletingName="pmdgRWYRowDeleting" msprop:Generator_RowChangingName="pmdgRWYRowChanging" msprop:Generator_RowEvHandlerName="pmdgRWYRowChangeEventHandler" msprop:Generator_RowDeletedName="pmdgRWYRowDeleted" msprop:Generator_UserTableName="pmdgRWY" msprop:Generator_RowChangedName="pmdgRWYRowChanged" msprop:Generator_RowEvArgName="pmdgRWYRowChangeEvent" msprop:Generator_RowClassName="pmdgRWYRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="FacilityID" msprop:Generator_ColumnVarNameInTable="columnFacilityID" msprop:Generator_ColumnPropNameInRow="FacilityID" msprop:Generator_ColumnPropNameInTable="FacilityIDColumn" msprop:Generator_UserColumnName="FacilityID" type="xs:string" minOccurs="0" />
+              <xs:element name="Rwy" msprop:Generator_ColumnVarNameInTable="columnRwy" msprop:Generator_ColumnPropNameInRow="Rwy" msprop:Generator_ColumnPropNameInTable="RwyColumn" msprop:Generator_UserColumnName="Rwy" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+  <xs:annotation>
+    <xs:appinfo>
+      <msdata:Relationship name="airports_NGNavAPT" msdata:parent="airports" msdata:child="wpNavAPT" msdata:parentkey="FacilityID" msdata:childkey="FacilityID" msprop:Generator_UserChildTable="wpNavAPT" msprop:Generator_ChildPropName="GetwpNavAPTRows" msprop:Generator_UserRelationName="airports_NGNavAPT" msprop:Generator_ParentPropName="airportsRow" msprop:Generator_RelationVarName="relationairports_NGNavAPT" msprop:Generator_UserParentTable="airports" />
+      <msdata:Relationship name="pmdgAPPR_pmdgAPPRTransition" msdata:parent="pmdgAPPR" msdata:child="pmdgAPPRTransition" msdata:parentkey="APPID Fix" msdata:childkey="APPID Fix" msprop:Generator_UserChildTable="pmdgAPPRTransition" msprop:Generator_ChildPropName="GetpmdgAPPRTransitionRows" msprop:Generator_UserRelationName="pmdgAPPR_pmdgAPPRTransition" msprop:Generator_RelationVarName="relationpmdgAPPR_pmdgAPPRTransition" msprop:Generator_UserParentTable="pmdgAPPR" msprop:Generator_ParentPropName="pmdgAPPRRowParent" />
+      <msdata:Relationship name="pmdgSTAR_pmdgRWY" msdata:parent="pmdgSTAR" msdata:child="pmdgSTARRNW" msdata:parentkey="FacilityID" msdata:childkey="FacilityID" msprop:Generator_UserChildTable="pmdgSTARRNW" msprop:Generator_ChildPropName="GetpmdgSTARRNWRows" msprop:Generator_UserRelationName="pmdgSTAR_pmdgRWY" msprop:Generator_ParentPropName="pmdgSTARRow" msprop:Generator_RelationVarName="relationpmdgSTAR_pmdgRWY" msprop:Generator_UserParentTable="pmdgSTAR" />
+      <msdata:Relationship name="pmdgSTAR_pmdgSTARTransition" msdata:parent="pmdgSTAR" msdata:child="pmdgSTARTransition" msdata:parentkey="FacilityID SSDCode" msdata:childkey="FacilityID SSDcode" msprop:Generator_UserChildTable="pmdgSTARTransition" msprop:Generator_ChildPropName="GetpmdgSTARTransitionRows" msprop:Generator_UserRelationName="pmdgSTAR_pmdgSTARTransition" msprop:Generator_ParentPropName="pmdgSTARRowParent" msprop:Generator_RelationVarName="relationpmdgSTAR_pmdgSTARTransition" msprop:Generator_UserParentTable="pmdgSTAR" />
+      <msdata:Relationship name="pmdgSID_pmdgSIDTransition" msdata:parent="pmdgSID" msdata:child="pmdgSIDTransition" msdata:parentkey="SSDcode" msdata:childkey="SSDcode" msprop:Generator_UserChildTable="pmdgSIDTransition" msprop:Generator_ChildPropName="GetpmdgSIDTransitionRows" msprop:Generator_UserRelationName="pmdgSID_pmdgSIDTransition" msprop:Generator_RelationVarName="relationpmdgSID_pmdgSIDTransition" msprop:Generator_UserParentTable="pmdgSID" msprop:Generator_ParentPropName="pmdgSIDRow" />
+    </xs:appinfo>
+  </xs:annotation>
+</xs:schema>

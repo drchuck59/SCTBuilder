@@ -646,7 +646,7 @@
             this.groupBox2.Size = new System.Drawing.Size(211, 48);
             this.groupBox2.TabIndex = 86;
             this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Paste Coords Here";
+            this.groupBox2.Text = "Paste Lat/Lon Coords Here";
             // 
             // PasteToTextBox
             // 

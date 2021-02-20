@@ -399,8 +399,8 @@ namespace SCTBuilder
             DataTable AWY = Form1.AWY;
             string Awy0 = string.Empty; string Awy1;
             string NavAid0 = string.Empty; string NavAid1;
-            double Lat0=-1; double Lat1=-1;
-            double Lon0=-1; double Lon1=-1;
+            double Lat0=-1; double Lat1;
+            double Lon0=-1; double Lon1;
             bool IsBreak;
             string filter = "[Selected]";
             if (IsLow) filter += " AND [IsLow]";

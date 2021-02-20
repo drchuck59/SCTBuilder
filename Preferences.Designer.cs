@@ -51,6 +51,7 @@
             this.EuroScopePrefTabPage = new System.Windows.Forms.TabPage();
             this.ESCombineCheckBox = new System.Windows.Forms.CheckBox();
             this.SSDprefTabPage = new System.Windows.Forms.TabPage();
+            this.RolloverLonCheckBox = new System.Windows.Forms.CheckBox();
             this.tabControl1.SuspendLayout();
             this.GeneralPrefTabPage.SuspendLayout();
             this.VRCprefTabPage.SuspendLayout();
@@ -80,6 +81,7 @@
             this.UseNaviGraphCheckBox.Size = new System.Drawing.Size(189, 19);
             this.UseNaviGraphCheckBox.TabIndex = 1;
             this.UseNaviGraphCheckBox.Text = "Use NaviGraph data if present";
+            this.toolTip1.SetToolTip(this.UseNaviGraphCheckBox, "If checked, Navigraph data will take priority over FAA text data");
             this.UseNaviGraphCheckBox.UseVisualStyleBackColor = true;
             // 
             // UseFixesAsCoordinatesCheckBox
@@ -219,7 +221,7 @@
             this.IncludeSUACheckBox.AutoSize = true;
             this.IncludeSUACheckBox.Enabled = false;
             this.IncludeSUACheckBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.IncludeSUACheckBox.Location = new System.Drawing.Point(6, 65);
+            this.IncludeSUACheckBox.Location = new System.Drawing.Point(6, 87);
             this.IncludeSUACheckBox.Name = "IncludeSUACheckBox";
             this.IncludeSUACheckBox.Size = new System.Drawing.Size(230, 19);
             this.IncludeSUACheckBox.TabIndex = 15;
@@ -241,6 +243,7 @@
             // GeneralPrefTabPage
             // 
             this.GeneralPrefTabPage.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.GeneralPrefTabPage.Controls.Add(this.RolloverLonCheckBox);
             this.GeneralPrefTabPage.Controls.Add(this.UseNaviGraphCheckBox);
             this.GeneralPrefTabPage.Controls.Add(this.IncludeSUACheckBox);
             this.GeneralPrefTabPage.Controls.Add(this.ConfirmOverwriteCheckBox);
@@ -301,6 +304,23 @@
             this.SSDprefTabPage.TabIndex = 3;
             this.SSDprefTabPage.Text = "SID/STAR Diagrams";
             // 
+            // RolloverLonCheckBox
+            // 
+            this.RolloverLonCheckBox.AutoSize = true;
+            this.RolloverLonCheckBox.Checked = true;
+            this.RolloverLonCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.RolloverLonCheckBox.Enabled = false;
+            this.RolloverLonCheckBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.RolloverLonCheckBox.Location = new System.Drawing.Point(6, 62);
+            this.RolloverLonCheckBox.Name = "RolloverLonCheckBox";
+            this.RolloverLonCheckBox.Size = new System.Drawing.Size(200, 19);
+            this.RolloverLonCheckBox.TabIndex = 16;
+            this.RolloverLonCheckBox.Text = "Allow E/W Longitudes to rollover";
+            this.toolTip1.SetToolTip(this.RolloverLonCheckBox, "If a longitude exceeds crosses from \r\nW to E or vice versa, the longitude is \r\nco" +
+        "nverted to to allow correct on VRC.\r\nClear this box to BLOCK stop rollovers.\r\nNO" +
+        "TE: Unintended results may occur.\r\n");
+            this.RolloverLonCheckBox.UseVisualStyleBackColor = true;
+            // 
             // Preferences
             // 
             this.AcceptButton = this.OKButton;
@@ -356,5 +376,6 @@
         private System.Windows.Forms.TabPage EuroScopePrefTabPage;
         private System.Windows.Forms.TabPage SSDprefTabPage;
         private System.Windows.Forms.CheckBox ESCombineCheckBox;
+        private System.Windows.Forms.CheckBox RolloverLonCheckBox;
     }
 }

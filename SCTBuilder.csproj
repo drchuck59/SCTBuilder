@@ -16,7 +16,7 @@
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
-    <PublishUrl>C:\Documents\SCTBuilder\</PublishUrl>
+    <PublishUrl>C:\Users\drchu\source\repos\SCT Builder Setup\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
     <UpdateEnabled>false</UpdateEnabled>
@@ -26,10 +26,10 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <AutorunEnabled>true</AutorunEnabled>
-    <ApplicationRevision>6</ApplicationRevision>
-    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <ApplicationRevision>2</ApplicationRevision>
+    <ApplicationVersion>1.4.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
+    <CreateDesktopShortcut>true</CreateDesktopShortcut>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
@@ -235,6 +235,12 @@
     <Compile Include="LineGenerator.Designer.cs">
       <DependentUpon>LineGenerator.cs</DependentUpon>
     </Compile>
+    <Compile Include="NGData.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>NGData.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="NGRunTime.cs" />
     <Compile Include="POFmanager.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -341,6 +347,17 @@
       <DependentUpon>XML2SCT.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="ClassDiagram1.cd" />
+    <None Include="NGData.xsc">
+      <DependentUpon>NGData.xsd</DependentUpon>
+    </None>
+    <None Include="NGData.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>NGData.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="NGData.xss">
+      <DependentUpon>NGData.xsd</DependentUpon>
+    </None>
     <None Include="packages.config" />
     <None Include="Properties\app.manifest" />
     <None Include="Properties\DataSources\FilterBy.datasource" />

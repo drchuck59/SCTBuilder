@@ -118,9 +118,9 @@
             this.label4.Location = new System.Drawing.Point(315, 110);
             this.label4.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(104, 20);
+            this.label4.Size = new System.Drawing.Size(91, 20);
             this.label4.TabIndex = 29;
-            this.label4.Text = "v 1.3.3 - 2020";
+            this.label4.Text = "v 1.4 - 2020";
             // 
             // label5
             // 

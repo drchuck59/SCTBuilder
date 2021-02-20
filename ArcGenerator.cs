@@ -20,8 +20,6 @@ namespace SCTBuilder
         private static double StartBrg = -1;
         private static double EndBrg = -1;
         private static double ArcRadius = -1;
-        private static double PasteLat = -1;
-        private static double PasteLon = -1;
         private static double ChordLength = -1;
         private static double ChordHeight = -1;
         private static double ChordArcLength = -1;
@@ -406,130 +404,89 @@ namespace SCTBuilder
             UpdateStats();
         }
 
-        private bool TestTextBox(TextBox tb, int method = 0)
-        {
-            bool ParsedResult = false;
-            if (tb.Name.IndexOf("Lat") != -1) method = 1;
-            if (tb.Name.IndexOf("Lon") != -1) method = 2;
-            // Determine the format if not forced (aka, method 0)
-            if ((tb.Text.ToUpperInvariant().IndexOf("N") > -1) || (tb.Text.ToUpperInvariant().IndexOf("S") > -1)) method = 1;
-            if ((tb.Text.ToUpperInvariant().IndexOf("W") > -1) || (tb.Text.ToUpperInvariant().IndexOf("E") > -1)) method += 2;
-
-            if ((tb.Modified) && tb.TextLength != 0)
-            {
-                if (LatLonParser.TryParseAny(tb))
-                {
-                    switch (method)
-                    {
-                        case 0:
-                        case 3:
-                            PasteLat = LatLonParser.ParsedLatitude;
-                            PasteLon = LatLonParser.ParsedLongitude;
-                            ParsedResult = true;
-                            tb.Text = Conversions.DecDeg2SCT(PasteLat, true) + " " +
-                                Conversions.DecDeg2SCT(PasteLon, false);
-                            break;
-                        case 1:
-                            PasteLat = LatLonParser.ParsedLatitude;
-                            tb.Text = Conversions.DecDeg2SCT(PasteLat, true);
-                            ParsedResult = true;
-                            break;
-                        case 2:
-                            PasteLon = LatLonParser.ParsedLongitude;
-                            tb.Text = Conversions.DecDeg2SCT(PasteLon, false);
-                            ParsedResult = true;
-                            break;
-                    }
-                    tb.BackColor = Color.White;
-                }
-                else tb.BackColor = Color.Yellow;
-            }
-            return ParsedResult;
-        }
-
         private void CenterLatitudeTextBox_Validated(object sender, EventArgs e)
         {
-            if (TestTextBox(CenterLatitudeTextBox))
+            if (CrossForm.TestTextBox(CenterLatitudeTextBox))
             {
-                CenterLat = PasteLat;
+                CenterLat = CrossForm.Lat;
                 UpdateStats();
             }
         }
 
         private void CenterLongitudeTextBox_Validated(object sender, EventArgs e)
         {
-            if (TestTextBox(CenterLongitudeTextBox))
+            if (CrossForm.TestTextBox(CenterLongitudeTextBox))
             {
-                CenterLon = PasteLon;
+                CenterLon = CrossForm.Lon;
                 UpdateStats();
             }
         }
 
         private void StartLatitudeTextBox_Validated(object sender, EventArgs e)
         {
-            if (TestTextBox(StartLatitudeTextBox))
+            if (CrossForm.TestTextBox(StartLatitudeTextBox))
             {
-                StartLat = PasteLat;
+                StartLat = CrossForm.Lat;
                 UpdateStats();
             }
         }
 
         private void StartLongitudeTextBox_Validated(object sender, EventArgs e)
         {
-            if (TestTextBox(StartLongitudeTextBox))
+            if (CrossForm.TestTextBox(StartLongitudeTextBox))
             {
-                StartLon = PasteLon;
+                StartLon = CrossForm.Lon;
                 UpdateStats();
             }
         }
 
         private void EndLatitudeTextBox_Validated(object sender, EventArgs e)
         {
-            if (TestTextBox(EndLatitudeTextBox))
+            if (CrossForm.TestTextBox(EndLatitudeTextBox))
             {
-                EndLat = PasteLat;
+                EndLat = CrossForm.Lat;
                 UpdateStats();
             }
         }
 
         private void EndLongitudeTextBox_Validated(object sender, EventArgs e)
         {
-            if (TestTextBox(EndLongitudeTextBox))
+            if (CrossForm.TestTextBox(EndLongitudeTextBox))
             {
-                EndLon = PasteLon;
+                EndLon = CrossForm.Lon;
                 UpdateStats();
             }
         }
 
         private void PasteToTextBox_Validated(object sender, EventArgs e)
         {
-            PasteToCenterButton.Enabled = PasteToEndButton.Enabled = PasteToStartButton.Enabled = TestTextBox(PasteToTextBox);
+            PasteToCenterButton.Enabled = PasteToEndButton.Enabled = PasteToStartButton.Enabled = CrossForm.TestTextBox(PasteToTextBox);
         }
 
         private void PasteToCenterButton_Click(object sender, EventArgs e)
         {
-            CenterLatitudeTextBox.Text = Conversions.DecDeg2SCT(PasteLat, true);
-            CenterLat = PasteLat;
-            CenterLongitudeTextBox.Text = Conversions.DecDeg2SCT(PasteLon, false);
-            CenterLon = PasteLon;
+            CenterLat = CrossForm.Lat;
+            CenterLatitudeTextBox.Text = Conversions.DecDeg2SCT(CenterLat, true);
+            CenterLon = CrossForm.Lon;
+            CenterLongitudeTextBox.Text = Conversions.DecDeg2SCT(CenterLon, false);
             UpdateStats();
         }
 
         private void PasteToStartButton_Click(object sender, EventArgs e)
         {
-            StartLatitudeTextBox.Text = Conversions.DecDeg2SCT(PasteLat, true);
-            StartLongitudeTextBox.Text = Conversions.DecDeg2SCT(PasteLon, false);
-            StartLat = PasteLat;
-            StartLon = PasteLon;
+            StartLat = CrossForm.Lat;
+            StartLon = CrossForm.Lon;
+            StartLatitudeTextBox.Text = Conversions.DecDeg2SCT(StartLat, true);
+            StartLongitudeTextBox.Text = Conversions.DecDeg2SCT(StartLon, false);
             UpdateStats();
         }
 
         private void PasteToEndButton_Click(object sender, EventArgs e)
         {
-            EndLatitudeTextBox.Text = Conversions.DecDeg2SCT(PasteLat, true);
-            EndLongitudeTextBox.Text = Conversions.DecDeg2SCT(PasteLon, false);
-            EndLat = PasteLat;
-            EndLon = PasteLon;
+            EndLat = CrossForm.Lat;
+            EndLon = CrossForm.Lon;
+            EndLatitudeTextBox.Text = Conversions.DecDeg2SCT(EndLat, true);
+            EndLongitudeTextBox.Text = Conversions.DecDeg2SCT(EndLon, false);
             UpdateStats();
         }
 

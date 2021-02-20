@@ -8,61 +8,12 @@ namespace SCTBuilder
 {
     public partial class DrawLabels : Form
     {
-
-        private double PasteLat;
-        private double PasteLon;
         private double LabelLat;
         private double LabelLon;
-        private double Bearing;
 
         public DrawLabels()
         {
             InitializeComponent();
-        }
-
-        private bool TestTextBox(TextBox tb, int method = 0)
-        {
-            bool ParsedResult = false;
-            if (tb.Name.IndexOf("Lat") != -1) method = 1;
-            if (tb.Name.IndexOf("Lon") != -1) method = 2;
-            if (method == 0)
-            {
-                // Determine the format if not forced (aka, method 0)
-                if ((tb.Text.ToUpperInvariant().IndexOf("N") > -1) || (tb.Text.ToUpperInvariant().IndexOf("S") > -1)) method = 1;
-                if ((tb.Text.ToUpperInvariant().IndexOf("W") > -1) || (tb.Text.ToUpperInvariant().IndexOf("E") > -1)) method += 2;
-            }
-            if ((tb.Modified) && tb.TextLength != 0)
-            {
-                if (LatLonParser.TryParseAny(tb))
-                {
-                    switch (method)
-                    {
-                        case 0:
-                        case 3:
-                            PasteLat = LatLonParser.ParsedLatitude;
-                            PasteLon = LatLonParser.ParsedLongitude;
-                            ParsedResult = true;
-                            tb.Text = Conversions.DecDeg2SCT(PasteLat, true) + " " +
-                                Conversions.DecDeg2SCT(PasteLon, false);
-                            break;
-                        case 1:
-                            PasteLat = LatLonParser.ParsedLatitude;
-                            PasteLon = -1;
-                            tb.Text = Conversions.DecDeg2SCT(PasteLat, true);
-                            ParsedResult = true;
-                            break;
-                        case 2:
-                            PasteLon = LatLonParser.ParsedLongitude;
-                            PasteLat = -1;
-                            tb.Text = Conversions.DecDeg2SCT(PasteLon, false);
-                            ParsedResult = true;
-                            break;
-                    }
-                    tb.BackColor = Color.White;
-                }
-                else tb.BackColor = Color.Yellow;
-            }
-            return ParsedResult;
         }
 
         private void IdentifierTextBox_TextChanged(object sender, EventArgs e)
@@ -126,9 +77,9 @@ namespace SCTBuilder
 
         private void LatTextBox_Validated(object sender, EventArgs e)
         {
-            if (TestTextBox(LatTextBox))
+            if (CrossForm.TestTextBox(LatTextBox))
             {
-                LabelLat = PasteLat;
+                LabelLat = CrossForm.Lat;
                 LatTextBox.Text = Conversions.DecDeg2SCT(LabelLat, true);
                 CheckGenerate();
             }
@@ -136,9 +87,9 @@ namespace SCTBuilder
 
         private void LonTextBox_Validated(object sender, EventArgs e)
         {
-            if (TestTextBox(LatTextBox))
+            if (CrossForm.TestTextBox(LatTextBox))
             {
-                LabelLon = PasteLon;
+                LabelLon = CrossForm.Lon;
                 LatTextBox.Text = Conversions.DecDeg2SCT(LabelLon, false);
                 CheckGenerate();
             }
@@ -155,7 +106,6 @@ namespace SCTBuilder
             try
             {
                 double Brg1 = Convert.ToDouble(BearingTextBox.Text);
-                Bearing = Brg1;
             }
             catch
             {

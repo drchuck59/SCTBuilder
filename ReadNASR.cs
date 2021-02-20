@@ -204,7 +204,8 @@ namespace SCTBuilder
             string tempFacID = string.Empty; double tempLatR = 0.0; double tempLongR = 0.0; 
             double tempLength = 0.0; bool tempOpen = false; string temp; string tempICAO = string.Empty;
             double tempWidth = 0.0; double tempHdgB = -1f; double tempHdgR = -1f; string tempRwyID; 
-            string tempRwyName = string.Empty; double tempElevB = 0.0; double tempElevR = 0.0; double tempMagVar;
+            string tempRwyName = string.Empty; double tempElevB = 0.0; double tempElevR = 0.0; 
+            double tempMagVar; bool tempSFC = false;
             string tempARTCC = string.Empty; string tempFacilityName = string.Empty;
             using (StreamReader reader = new StreamReader(FullFilename))
             {
@@ -217,7 +218,8 @@ namespace SCTBuilder
                         case "APT":
                             // Get the facility type
                             tempID = Line.Substring(3, 11).Trim();
-                            //if (tempID == "03534.*A")
+                            //if (tempID == "00199.1*A")
+                            //    Debug.WriteLine("At Choctaw");
                             FacType = Extensions.Right(tempID, 1);
                             tempOpen = Line.Substring(840, 2).Trim() == "O";
                             if ((FacType.IndexOfAny(FacilityType) != -1) && (tempOpen))     // Only operational APTs of "A", "H" and "C"
@@ -243,7 +245,7 @@ namespace SCTBuilder
                                 Line.Substring(50, 20).Trim(),                  // State
                                 tempMagVar,                                     // Magnetic Variation
                                 Line.Substring(183, 2),                         // Owner Type
-                                Line.Substring(185, 2) == "PU"                  // True if public
+                                Line.Substring(185, 2) == "PU"                 // FACILITY USE True if public (PU or PR)
                                 };
                                 AddFixes(APTtable, AptInfo);
                                 tempRwyName = string.Empty;
@@ -252,6 +254,7 @@ namespace SCTBuilder
                         case "RWY":
                             /// Only interested in Airport, Seaplane, and Heliports
                             /// And can only insert runways that have a beginning and ending Lat Long
+                            /// and either a heading for the RWY or calculated heading for hard surfaces
                             /// Basically, if any conversion fails, the RWY is invalid and should be skipped
                             tempRwyID = Line.Substring(3, 11).Trim();
                             if (tempOpen && (tempRwyID == tempID) && (FacType.IndexOfAny(FacilityType) != -1))
@@ -263,64 +266,65 @@ namespace SCTBuilder
                                 else tempOpen = false;
                                 if (tempOpen)
                                 {
-                                    temp = Line.Substring(28, 4).Trim();
+                                    temp = Line.Substring(28, 4).Trim();            // RWY Width
                                     if (temp.Length != 0)
                                         tempWidth = Convert.ToSingle(temp);
                                     else tempOpen = false;
                                 }
                                 if (tempOpen)
                                 {
-                                    tempBID = Line.Substring(65, 3).Trim();
+                                    tempBID = Line.Substring(65, 3).Trim();         // Base end identifier
                                     if (tempBID.Length == 0) tempOpen = false;
                                 }
                                 if (tempOpen)
                                 {
-                                    tempHdgB = LatLongCalc.RWYBearing(Line.Substring(68, 3).Trim(), tempBID);
-                                    if (tempHdgB == -1) tempOpen = false;
-                                }
-                                if (tempOpen)
-                                {
-                                    tempLatB = Conversions.Seconds2DecDeg(Line.Substring(103, 12).Trim());   // Latitude
+                                    tempLatB = Conversions.Seconds2DecDeg(Line.Substring(103, 12).Trim());   // Base Latitude
                                     if (tempLatB == -1) tempOpen = false;
                                 }
                                 if (tempOpen)
                                 {
-                                    tempLongB = Conversions.Seconds2DecDeg(Line.Substring(130, 12).Trim());  // Longitude
+                                    tempLongB = Conversions.Seconds2DecDeg(Line.Substring(130, 12).Trim());  // Base Longitude
                                     if (tempLongB == -1) tempOpen = false;
                                 }
                                 if (tempOpen)
                                 {
-                                    temp = Line.Substring(142, 7).Trim();
+                                    temp = Line.Substring(142, 7).Trim();                               // Elevation
                                     if (temp.Length != 0)
                                         tempElevB = Convert.ToSingle(Line.Substring(142, 7).Trim());
                                     else tempOpen = false;
                                 }
                                 if (tempOpen)
                                 {
-                                    tempRID = Line.Substring(287, 3).Trim();
+                                    tempSFC = RWYSFC(Line.Substring(32, 12).Trim());
+                                    tempHdgB = LatLongCalc.RWYBearing(Line.Substring(68, 3).Trim(), tempBID, tempICAO, tempSFC);   // Base RWY mag hdg
+                                    if (tempHdgB == -1) tempOpen = false;
+                                }
+                                if (tempOpen)
+                                {
+                                    tempRID = Line.Substring(287, 3).Trim();                        // Reciprocal End Identifier
                                     if (tempRID.Length == 0) tempOpen = false;
                                 }
                                 if (tempOpen)
                                 {
-                                    tempHdgR = LatLongCalc.RWYBearing(Line.Substring(290, 3).Trim(), tempRID);
-                                    if (tempHdgR == -1) tempOpen = false;
-                                }
-                                if (tempOpen)
-                                {
-                                    tempLatR = Conversions.Seconds2DecDeg(Line.Substring(325, 12).Trim());   // EndLatitude
+                                    tempLatR = Conversions.Seconds2DecDeg(Line.Substring(325, 12).Trim());   // Reciprocal Latitude
                                     if (tempLatR == -1) tempOpen = false;
                                 }
                                 if (tempOpen)
                                 {
-                                    tempLongR = Conversions.Seconds2DecDeg(Line.Substring(352, 12).Trim());  // EndLongitude
+                                    tempLongR = Conversions.Seconds2DecDeg(Line.Substring(352, 12).Trim());  // Reciprocal Longitude
                                     if (tempLongR == -1) tempOpen = false;
                                 }
                                 if (tempOpen)
                                 {
-                                    temp = Line.Substring(364, 7).Trim();
+                                    temp = Line.Substring(364, 7).Trim();                                    //Reciprocal elevation
                                     if (temp.Length != 0)
                                         tempElevR = Convert.ToSingle(Line.Substring(364, 7).Trim());
                                     else tempOpen = false;
+                                }
+                                if (tempOpen)
+                                {
+                                    tempHdgR = LatLongCalc.RWYBearing(Line.Substring(290, 3).Trim(), tempRID, tempICAO, tempSFC);   // Reciprocal RWY mag hdg
+                                    if (tempHdgR == -1) tempOpen = false;
                                 }
                             }
                             else tempOpen = false;
@@ -355,6 +359,23 @@ namespace SCTBuilder
             Console.WriteLine("APT rows read: " + APTtable.Rows.Count.ToString());
             Console.WriteLine("RWY rows read: " + RWYtable.Rows.Count.ToString());
         }
+
+        
+        private static bool RWYSFC(string surface)
+        {
+            bool result = false;
+            string[] sfc = new string[]
+            {
+                "CONC",
+                "ASPH",
+            };
+            foreach (string s in sfc)
+            {
+                if (surface.IndexOf(s) != 1) return true;
+            }
+            return result;
+        }
+
         public static void FillTWR()
         {
             DataTable TWR = Form1.TWR;

@@ -43,6 +43,19 @@ namespace SCTBuilder
             dT.Rows.Add(new object[] { "Runway ", 14737632 });
             dT.Rows.Add(new object[] { "Building ", 5196883 });
         }
+        public static bool dtHasRows(DataTable dT)
+        {
+            return (dT.Rows.Count > 0);
+        }
+
+        public static int dtHasXSelectedRows(DataTable dt)
+        {
+            DataView dv = new DataView(dt)
+            {
+                RowFilter = "[Selected]"
+            };
+            return dv.Count;
+        }
 
         public static string GetFullPathname(string DataFolder, string Filename)
         /// <summary>
@@ -784,6 +797,12 @@ namespace SCTBuilder
             {
             }
             return blnRetVal;
+        }
+
+        public static bool IsRwy(string RwyID)
+        {
+            // Parses the Runway Id to determine if this is a "real" RWY ID.  Excludes Helo pads, compass IDs
+            return Regex.Match(RwyID, "([^A-Za-z]{0,1})([0-9]{1,2})([LCR]{0,1})([^A-Za-z])").Success;
         }
 
         public static bool IsValidDecCoordKey(char chr, TextBox tb)

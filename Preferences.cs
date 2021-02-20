@@ -44,9 +44,11 @@ namespace SCTBuilder
             InfoSection.DrawFixSymbolsOnDiagrams = DrawSymbolsCheckBox.Checked;
             InfoSection.DrawAltRestrictsOnDiagrams = DrawAltitudeRestrictionsOnDiagramsCheckBox.Checked;
             InfoSection.DrawSpeedRestrictsOnDiagrams = DrawSpeedRestrictionsCheckBox.Checked;
+            InfoSection.UseNaviGraph = UseNaviGraphCheckBox.Checked;
             SCTchecked.ChkOneVRCFile = VRCCombineCheckBox.Checked;
             SCTchecked.ChkOneESFile = ESCombineCheckBox.Checked;
             SCTchecked.IncludeSUAfile = IncludeSIDSTARReferencesCheckBox.Checked;
+            InfoSection.RollOverLongitude = RolloverLonCheckBox.Checked;
             Close();
         }
 
@@ -63,6 +65,9 @@ namespace SCTBuilder
             VRCCombineCheckBox.Checked = SCTchecked.ChkOneVRCFile;
             ESCombineCheckBox.Checked = SCTchecked.ChkOneESFile;
             IncludeSUACheckBox.Checked = SCTchecked.IncludeSUAfile;
+            UseNaviGraphCheckBox.Checked = InfoSection.UseNaviGraph;
+            UseFixesAsCoordinatesCheckBox.Enabled = InfoSection.HasNaviGraph;
+            RolloverLonCheckBox.Checked = InfoSection.RollOverLongitude;
         }
     }
 }

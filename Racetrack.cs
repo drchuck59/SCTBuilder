@@ -9,11 +9,11 @@ namespace SCTBuilder
 {
     public partial class Racetrack : Form
     {
-        private static double PasteLat = -1;
-        private static double PasteLon = -1;
         private static readonly string cr = Environment.NewLine;
         private static double HoldLat = -1;
         private static double HoldLon = -1;
+        private static double PasteLat = -1;
+        private static double PasteLon = -1;
         private static string HoldFix = string.Empty;
         private static double MagVar = 0;
         private static double HoldSpeed = 0;
@@ -132,52 +132,7 @@ namespace SCTBuilder
 
         private void PasteToTextBox_Validated(object sender, EventArgs e)
         {
-            CopyToHoldButton.Enabled = TestTextBox(PasteToTextBox);
-        }
-
-        private bool TestTextBox(TextBox tb, int method = 0)
-        {
-            bool ParsedResult = false;
-            if (tb.Name.IndexOf("Lat") != -1) method = 1;
-            if (tb.Name.IndexOf("Lon") != -1) method = 2;
-            if (method == 0)
-            {
-                // Determine the format if not forced (aka, method 0)
-                if ((tb.Text.ToUpperInvariant().IndexOf("N") > -1) || (tb.Text.ToUpperInvariant().IndexOf("S") > -1)) method = 1;
-                if ((tb.Text.ToUpperInvariant().IndexOf("W") > -1) || (tb.Text.ToUpperInvariant().IndexOf("E") > -1)) method += 2;
-            }
-            if ((tb.Modified) && tb.TextLength != 0)
-            {
-                if (LatLonParser.TryParseAny(tb))
-                {
-                    switch (method)
-                    {
-                        case 0:
-                        case 3:
-                            PasteLat = LatLonParser.ParsedLatitude;
-                            PasteLon = LatLonParser.ParsedLongitude;
-                            ParsedResult = true;
-                            tb.Text = Conversions.DecDeg2SCT(PasteLat, true) + " " +
-                                Conversions.DecDeg2SCT(PasteLon, false);
-                            break;
-                        case 1:
-                            PasteLat = LatLonParser.ParsedLatitude;
-                            PasteLon = -1;
-                            tb.Text = Conversions.DecDeg2SCT(PasteLat, true);
-                            ParsedResult = true;
-                            break;
-                        case 2:
-                            PasteLon = LatLonParser.ParsedLongitude;
-                            PasteLat = -1;
-                            tb.Text = Conversions.DecDeg2SCT(PasteLon, false);
-                            ParsedResult = true;
-                            break;
-                    }
-                    tb.BackColor = Color.White;
-                }
-                else tb.BackColor = Color.Yellow;
-            }
-            return ParsedResult;
+            CopyToHoldButton.Enabled = CrossForm.TestTextBox(PasteToTextBox);
         }
 
         private void RightTurnRadioButton_CheckedChanged(object sender, EventArgs e)
@@ -197,17 +152,17 @@ namespace SCTBuilder
 
         private void HoldLatitudeTextBox_Validated(object sender, EventArgs e)
         {
-            if (TestTextBox(HoldLatitudeTextBox))
+            if (CrossForm.TestTextBox(HoldLatitudeTextBox))
             {
-                HoldLat = PasteLat;
+                HoldLat = CrossForm.Lat;
             }
         }
 
         private void HoldLongitudeTextBox_Validated(object sender, EventArgs e)
         {
-            if (TestTextBox(HoldLongitudeTextBox))
+            if (CrossForm.TestTextBox(HoldLongitudeTextBox))
             {
-                HoldLon = PasteLon;
+                HoldLon = CrossForm.Lat;
             }
         }
 
@@ -253,10 +208,10 @@ namespace SCTBuilder
 
         private void CopyToHoldButton_Click(object sender, EventArgs e)
         {
-            HoldLatitudeTextBox.Text = Conversions.DecDeg2SCT(PasteLat, true);
-            HoldLat = PasteLat;
-            HoldLongitudeTextBox.Text = Conversions.DecDeg2SCT(PasteLon, false);
-            HoldLon = PasteLon;
+            HoldLat = CrossForm.Lat;
+            HoldLatitudeTextBox.Text = Conversions.DecDeg2SCT(HoldLat, true);
+            HoldLon = CrossForm.Lon;
+            HoldLongitudeTextBox.Text = Conversions.DecDeg2SCT(HoldLon, false);
             HoldFixTextBox.Text = string.Empty;
             AddFixLabelCheckBox.Enabled = AddFixSymbolCheckBox.Enabled = false;
         }
@@ -378,8 +333,8 @@ namespace SCTBuilder
             if (InboundTrackRadioButton.Checked) OutTrack = Track + 540 % 360;  // Reverse track to outbnd
             Coords = LatLongCalc.Destination(StartLat, StartLon, LegLnthDist, OutTrack, 'N');
             EndLat = Coords[0]; EndLon = Coords[1];
-            Lat0 = Conversions.DecDeg2SCT(HoldLat, true);
-            Lon0 = Conversions.DecDeg2SCT(HoldLon, false);
+            Lat0 = Conversions.DecDeg2SCT(PasteLat, true);
+            Lon0 = Conversions.DecDeg2SCT(PasteLon, false);
             Lat1 = Conversions.DecDeg2SCT(EndLat, true);
             Lon1 = Conversions.DecDeg2SCT(EndLon, false);
             output += OutputText(Lat0, Lon0, Lat1, Lon1);

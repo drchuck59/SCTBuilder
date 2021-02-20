@@ -4,6 +4,10 @@
 
     partial class SCTdata
     {
+        partial class NGairportsDataTable
+        {
+        }
+
         partial class NDBDataTable
         {
         }

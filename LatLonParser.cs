@@ -41,16 +41,19 @@ namespace SCTBuilder
         Regex rgxLon = new Regex(@"^(?<lonSuf>[EW])?(?<lonDeg>\d{1,3})[D\*\u00B0\u00BA\-\.\s](?<lonMin>\d{1,2})[M'\.\u2032\u2019\s](?<lonSec>.+?)[\u0022\u2033\u201D]?(?<lonSuf>[EW])?$");
         Regex rgxDMS2 = new Regex(@"^(?<latSuf>[NS])?(?<latDeg>\d{1,3})[D\*\u00B0\u00BA\-\.\s](?<latMin>\d{1,2})[M'\.\u2032\u2019\s](?<latSec>.+?)[\u0022\u2033\u201D]?(?<latSuf>[NS])?(\s+)?(?<lonSuf>[EW])?(?<lonDeg>\d{1,3})[D\*\u00B0\u00BA\-\.\s](?<lonMin>\d{1,2})[M'\.\u2032\u2019\s](?<lonSec>.+?)[\u0022\u2033\u201D]?(?<lonSuf>[EW])?$");
         Regex rgxDD = new Regex(@"^(?<negate>(\-))?(?<Degrees>\d{1,3})(\.)?(?<Decimals>\d+)?$");
+        Regex rgxDdecM = new Regex(@"^(?<latSuf>[NS])?(?<latDeg>\d{1,3})[D\*\u00B0\u00BA\-\s](?<latMin>\d{1,2})[M'\u2032\u2019\s](?<latSuf>[NS])?$");
         Regex rgxDD2 = new Regex(@"^(?<negateLat>(\-))?(?<Degrees>\d{1,3})(\.)?(?<Decimals>\d+)?(\s+)?(?<negateLon>(\-))?(?<Degrees>\d{1,3})(\.)?(?<Decimals>\d+)?$");
         Regex rgxISO = new Regex(@"^\s*(?<latitude> [+-][0-9]{2,6}(?: \. [0-9]+)?)(?<longitude>[+-][0-9]{3,7}(?: \. [0-9]+)?)(?<altitude> [+-][0-9]+(?: \. [0-9]+)?)?/");
 
         private string cr = Environment.NewLine;
         // Same as above, but a constant string
         private const string DecimalDegrees = @"^ (?<negate>(\-))?(?<Degrees>\d{1,3})(\.)? (?<Decimals>\d+)?$";
+        private const string DegDecimalMinutes = @"^(?<latSuf>[NS])?(?<latDeg>\d{1,3})[D\*\u00B0\u00BA\-\s](?<latMin>\d{1,2})[M'\u2032\u2019\s](?<latSuf>[NS])?$";
         private const string DecDegree2 = @"^(?<latNegate>(\-))?(?<latDegrees>\d{1,3})(\.)?(?<latDecimals>\d+)?(\s+)?(?<lonNegate>(\-))?(?<lonDegrees>\d{1,3})(\.)?(?<lonDecimals>\d+)?$";
         private const string LatLonDMS = @"^(?<latSuf>[NS])?(?<latDeg>\d{1,3})[D\*\u00B0\u00BA\-\.\s](?<latMin>\d{1,2})[M'\.\u2032\u2019\s](?<latSec>.+?)[\u0022\u2033\u201D]?(?<latSuf>[NS])?(\s+)?(?<lonSuf>[EW])?(?<lonDeg>\d{1,3})[D\*\u00B0\u00BA\-\.\s](?<lonMin>\d{1,2})[M'\.\u2032\u2019\s](?<lonSec>.+?)[\u0022\u2033\u201D]?(?<lonSuf>[EW])?$";
         private const string LatitudeDMS = @"^(?<latSuf>[NS])?(?<latDeg>\d{1,3})[D\*\u00B0\u00BA\-\.\s](?<latMin>\d{1,2})[M'\.\u2032\u2019\s](?<latSec>.+?)[\u0022\u2033\u201D]?(?<latSuf>[NS])?$";
         private const string LongitudeDMS = @"^(?<lonSuf>[EW])?(?<lonDeg>\d{1,3})[D\*\u00B0\u00BA\-\.\s](?<lonMin>\d{1,2})[M'\.\u2032\u2019\s](?<lonSec>.+?)[\u0022\u2033\u201D]?(?<lonSuf>[EW])?$";
+
         private const string IsoPattern = @"^\s*(?<latitude> [+-][0-9]{2,6}(?: \. [0-9]+)?)(?<longitude>[+-][0-9]{3,7}(?: \. [0-9]+)?)(?<altitude> [+-][0-9]+(?: \. [0-9]+)?)?/";
         // IsoPattern is untested
         private const RegexOptions Options = RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace | RegexOptions.IgnoreCase;
@@ -65,14 +68,15 @@ namespace SCTBuilder
             new Regex(DecimalDegrees, Options);
         private static readonly Regex decimalDegreesTwoRegex =
             new Regex(DecDegree2, Options);
+        private static readonly Regex degreeDecimalMinuteRegex = 
+            new Regex(DegDecimalMinutes, Options);
 
         // Have one calling routing and go to each regex
         // If successful, 'Parsed...' will have the value(s) if needed
-        public static bool TryParseAny(TextBox tb)
+        public static bool TryParseAny(TextBox tb, int typeBox = 0)
         {
             string input = tb.Text; 
             string tbName = tb.Name;
-            int typeBox = 0;
             if (tbName.IndexOf("Lat") != -1) typeBox = 1;
             if (tbName.IndexOf("Lon") != -1) typeBox = 2;
             switch (typeBox)
@@ -106,18 +110,12 @@ namespace SCTBuilder
             bool success = m.Success;
             if (m.Success)
             {
-                Debug.WriteLine("LatLon DMS successs...");
                 names = rgx.GetGroupNames();
                 foreach (var name in names)
                 {
                     Group grp = m.Groups[name];
-                    Debug.WriteLine("Group {0}: {1}", name, grp.Value);
                 }
                 success = DMSToDD(input, rgx);
-            }
-            else
-            {
-                Debug.WriteLine("LatLon Match failed.");
             }
             return success;
         }
@@ -133,15 +131,12 @@ namespace SCTBuilder
             bool success = m.Success;
             if (success)
             {
-                Debug.WriteLine("LatDMS success...");
                 names = rgx.GetGroupNames();
                 foreach (var name in names)
                 {
                     Group grp = m.Groups[name];
-                    Debug.WriteLine("Group {0}: {1}", name, grp.Value);
                     if ((name == "latSuf") && (grp.Value.Trim().Length == 0))
                     {
-                        Debug.WriteLine("latSuf value empty, Success value = " + m.Success.ToString());
                         success = false;
                     }
                 }
@@ -149,7 +144,6 @@ namespace SCTBuilder
             }
             else
             {
-                Debug.WriteLine("Latitude Match failed.");
                 success = false;
             }
             return success;
@@ -166,15 +160,12 @@ namespace SCTBuilder
             bool success = m.Success;
             if (success)
             {
-                Debug.WriteLine("LonDMS success...");
                 names = rgx.GetGroupNames();
                 foreach (var name in names)
                 {
                     Group grp = m.Groups[name];
-                    Debug.WriteLine("Group {0}: {1}", name, grp.Value);
                     if ((name == "lonSuf") && (grp.Value.Trim().Length == 0))
                     {
-                        Debug.WriteLine("lonSuf value empty, Success value = " + m.Success.ToString());
                         success = false;
                     }
                 }
@@ -182,7 +173,6 @@ namespace SCTBuilder
             }
             else
             {
-                Debug.WriteLine("Longitude Match failed.");
                 success = false;
             }
             return success;
@@ -200,12 +190,10 @@ namespace SCTBuilder
             bool success = m.Success;
             if (success)
             {
-                Debug.WriteLine("Decimal Degree success...");
                 names = rgx.GetGroupNames();
                 foreach (var name in names)
                 {
                     Group grp = m.Groups[name];
-                    Debug.WriteLine("Group {0}: {1}", name, grp.Value);
                 }
                 value = Convert.ToDouble(m.Groups[0].Value);
                 switch (Lat1Lon2)
@@ -218,7 +206,6 @@ namespace SCTBuilder
                         }
                         else
                         {
-                            Debug.WriteLine("Latitude exceeds Abs 90 degrees.");
                             success = false;
                         }
                         break;
@@ -230,7 +217,6 @@ namespace SCTBuilder
                         }
                         else
                         {
-                            Debug.WriteLine("Longitude exceeds Abs 180 degrees.");
                             success = false;
                         }
                         break;
@@ -239,34 +225,21 @@ namespace SCTBuilder
                         break;
                 }
             }
-            else
-            {
-                Debug.WriteLine("Decimal Degree Match failed.");
-            }
             return success;
         }
 
         private static bool TryDecDeg2(string input)
         {
             // Parses latitude and longitude coordinate with degrees in decimal format.
-            // Returns null if no match, Returns decimal degrees if match
-            string[] names;
+            // Returns null if no match, Returns true if match and places result in ParsedResult
             string inputTest = input.Trim();
             Regex rgx = decimalDegreesTwoRegex;
             Match m = rgx.Match(inputTest.Trim());
             if (m.Success)
             {
-                Debug.WriteLine("Decimal Degree Two success...");
-                names = rgx.GetGroupNames();
-                foreach (var name in names)
-                {
-                    Group grp = m.Groups[name];
-                    Debug.WriteLine("Group {0}: {1}", name, grp.Value);
-                }
-            }
-            else
-            {
-                Debug.WriteLine("Decimal Degree Match failed.");
+                int tempInt = inputTest.IndexOf(' ');
+                ParsedLatitude = Convert.ToDouble(inputTest.Substring(0, tempInt));
+                ParsedLongitude = Convert.ToDouble(inputTest.Substring(tempInt + 1));
             }
             return m.Success;
         }
@@ -280,7 +253,6 @@ namespace SCTBuilder
             bool validCoord = true;
             double LatNegate = 0.0;
             double LonNegate = 0.0;
-            Debug.WriteLine("");
             string inputTest = input.Trim();
             Match m = rgx.Match(inputTest.Trim());
             if (m.Success)
@@ -290,7 +262,6 @@ namespace SCTBuilder
                 foreach (var name in names)
                 {
                     Group grp = m.Groups[name];
-                    Debug.WriteLine("Group {0}: {1}", name, grp.Value);
                     switch (name)
                     {
                         case "latSuf":
@@ -334,7 +305,6 @@ namespace SCTBuilder
                     {
                         decLatitude = Lat;
                         validCoord = true;
-                        Debug.WriteLine("Lat: " + decLatitude.ToString());
                     }
                     else validCoord = false;
 
@@ -346,14 +316,12 @@ namespace SCTBuilder
                     {
                         decLongitude = Lon;
                         validCoord = true;
-                        Debug.WriteLine("Lon: " + decLongitude.ToString());
                     }
                     else validCoord = false;
                 }
             }
             else
             {
-                Debug.WriteLine("Match failed.");
                 validCoord = false;
             }
             return validCoord;

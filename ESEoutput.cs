@@ -269,11 +269,11 @@ namespace SCTBuilder
             List<string> SSDcodes = new List<string>();
             string SIDout = string.Empty; string STARout = string.Empty;
             DataTable APT = Form1.APT;
-            DataView dvNGSID = new DataView(ReadNaviGraph.NGSID);
-            DataView dvNGSIDTransition = new DataView(ReadNaviGraph.NGSIDTransition);
-            DataView dvNGSTAR = new DataView(ReadNaviGraph.NGSTAR);
-            DataView dvNGSTARTransition = new DataView(ReadNaviGraph.NGSTARTransition);
-            DataView dvNGRWYS = new DataView(ReadNaviGraph.NGRWYS);
+            DataView dvNGSID = new DataView(ReadNaviGraph.pmdgSID);
+            DataView dvNGSIDTransition = new DataView(ReadNaviGraph.pmdgSIDTransition);
+            DataView dvNGSTAR = new DataView(ReadNaviGraph.pmdgSTAR);
+            DataView dvNGSTARTransition = new DataView(ReadNaviGraph.pmdgSTARTransition);
+            DataView dvNGRWYS = new DataView(ReadNaviGraph.RWYs);
             // Using the SELECTED airports, select the SIDS from NG
             // Get the list of Selected Airports
             DataView dvAPT = new DataView(APT)

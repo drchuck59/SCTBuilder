@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Collections;
-using System.Drawing.Text;
+using System.Windows.Forms;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -424,7 +424,7 @@ namespace SCTBuilder
 
     public class VersionInfo                            // Internal information
     {
-        public readonly static string Title = "SCT Builder";
+        public readonly static string Title = "SCT Builder v1.4";
     }
     public class FilterBy                               // Filter source for SCT2 output
     {
@@ -472,10 +472,12 @@ namespace SCTBuilder
         private static bool drawSpeedRestrictsOnDiagrams;
         private static bool includeSidStarReferences;
         private static bool useNaviGraphData;
-        private static double northsquare = 0;
-        private static double southsquare = 0;
-        private static double westsquare = 0;
-        private static double eastsquare = 0;
+        private static bool hasNaviGraphData;
+        private static bool rolloverLongitude;
+        private static double northlimit = 0;
+        private static double southlimit = 0;
+        private static double westlimit = 0;
+        private static double eastlimit = 0;
         private static double northoffset = 0;
         private static double southoffset = 0;
         private static double westoffset = 0;
@@ -600,6 +602,17 @@ namespace SCTBuilder
             get { return useNaviGraphData; } 
             set { useNaviGraphData = value; }
         }
+        public static bool HasNaviGraph
+        {
+            get { return hasNaviGraphData; }
+            set { hasNaviGraphData = value; }
+        }
+
+        public static bool RollOverLongitude
+        {
+            get { return rolloverLongitude; } 
+            set { rolloverLongitude = value; }
+        }
 
         public static bool OneFilePerSidStar
         {
@@ -613,25 +626,25 @@ namespace SCTBuilder
             set { includeSidStarReferences = value; }
         }
 
-        public static double NorthSquare
+        public static double NorthLimit
         {
-            get { return northsquare; }
-            set { northsquare = value; }
+            get { return northlimit; }
+            set { northlimit = value; }
         }
-        public static double SouthSquare
+        public static double SouthLimit
         {
-            get { return southsquare; }
-            set { southsquare = value; }
+            get { return southlimit; }
+            set { southlimit = value; }
         }
-        public static double EastSquare
+        public static double EastLimit
         {
-            get { return eastsquare; }
-            set { eastsquare = value; }
+            get { return eastlimit; }
+            set { eastlimit = value; }
         }
-        public static double WestSquare
+        public static double WestLimit
         {
-            get { return westsquare; }
-            set { westsquare = value; }
+            get { return westlimit; }
+            set { westlimit = value; }
         }
         public static double NorthOffset
         {
@@ -690,5 +703,58 @@ namespace SCTBuilder
         public static double Lon { get; set; }
         public static double Distance { get; set; }
         public static double Bearing { get; set; }
+
+        public static bool TestTextBox(TextBox tb, int method = 0)
+        {
+            // Tests the string for correct coordinate format
+            // Places Lat and/or Lon in public field above
+            // Returns FALSE if unable to parse text  and sets public fields to -1
+            bool ParsedResult = false;
+            if (tb.Name.IndexOf("Lat") != -1) method = 1;
+            if (tb.Name.IndexOf("Lon") != -1) method = 2;
+            if (method == 0)
+            {
+                // Determine the format if not forced (aka, method 0)
+                if ((tb.Text.ToUpperInvariant().IndexOf("N") != -1) || (tb.Text.ToUpperInvariant().IndexOf("S") != -1)) method = 1;
+                if ((tb.Text.ToUpperInvariant().IndexOf("W") != -1) || (tb.Text.ToUpperInvariant().IndexOf("E") != -1)) method += 2;
+            }
+            if (tb.TextLength != 0)
+            {
+                if (LatLonParser.TryParseAny(tb, method))
+                {
+                    switch (method)
+                    {
+                        case 0:
+                        case 3:
+                            Lat = LatLonParser.ParsedLatitude;
+                            Lon = LatLonParser.ParsedLongitude;
+                            ParsedResult = true;
+                            tb.Text = Conversions.DecDeg2SCT(Lat, true) + " " +
+                                Conversions.DecDeg2SCT(Lon, false);
+                            break;
+                        case 1:
+                            Lat = LatLonParser.ParsedLatitude;
+                            Lon = -1;
+                            tb.Text = Conversions.DecDeg2SCT(Lat, true);
+                            ParsedResult = true;
+                            break;
+                        case 2:
+                            Lon = LatLonParser.ParsedLongitude;
+                            Lat = -1;
+                            tb.Text = Conversions.DecDeg2SCT(Lon, false);
+                            ParsedResult = true;
+                            break;
+                    }
+                    tb.BackColor = Color.White;
+                }
+                else
+                {
+                    tb.BackColor = Color.Yellow;
+                    Lat = Lon = -1;
+                }
+            }
+            return ParsedResult;
+        }
+
     }
 } 

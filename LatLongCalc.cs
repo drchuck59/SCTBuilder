@@ -2,9 +2,10 @@
 using System.Linq;
 using System.Data;
 using System.Drawing;
-using System.Windows.Forms.VisualStyles;
+using System.Text.RegularExpressions;
 using Renci.SshNet.Security.Cryptography;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace SCTBuilder
 {
@@ -100,6 +101,7 @@ namespace SCTBuilder
 
         public static double[] PolarToCartesian(double angle, double radius)
         {
+            // Convert polar coordinates to X/Y coordinates
             double[] Coords = new double[2];
             double angleRad = Deg2Rad(angle);
             Coords[0] = radius * Math.Cos(angleRad);
@@ -109,6 +111,7 @@ namespace SCTBuilder
 
         public static double[] CartesianToPolar(double x, double y)
         {
+            // Convert X/Y coordinates to Polar
             double[] Polar = new double[2];
             Polar[0] = Math.Sqrt((x * x) + (y * y));
             Polar[1] = Math.Atan2(y, x);
@@ -130,34 +133,55 @@ namespace SCTBuilder
             return result;
         }
 
-        public static double RWYBearing(string Heading, string RwyID)
+        public static double RWYBearing(string Heading, string RwyID, string ICAO, bool hardSFC)
         {
-            if (RwyID.Length == 0) return -1;
-            // If there is no heading, create one from the RWY
-            if (Heading.Length == 0)
+            double result = -1;
+            if (RwyID.Length != 0)                      // If no RwyID, don't create a centerline
             {
-                if (!RwyID.All(char.IsDigit))
-                    if ((RwyID.Length > 1) &&
-                        (RwyID.Substring(0, 1).All(char.IsDigit)))
-                        return Convert.ToSingle(RwyID.Substring(0, RwyID.Length - 1));
-                    else return -1;
-                else return Convert.ToSingle(RwyID);
-            }
-            if (!Heading.All(char.IsDigit))      // See if this is a compass bearing
-            {
-                // Test for compass bearing
-                const string cPoints = "NWNESESW";
-                if (cPoints.IndexOf(Heading, 0) != -1)
-                    return Convert.ToSingle((CompassPoints)Enum.Parse(typeof(CompassPoints), Heading, true));
-                else
+                if (Heading.Length != 0)
                 {
-                    return Convert.ToSingle(RwyID.Substring(0, RwyID.Length - 1));
+                    if (Heading.All(char.IsDigit))      // If a bearing, return it
+                    {
+                        result = Convert.ToDouble(Heading);
+                    }
+                    else                                // May be a compass bearing
+                    {
+                        const string cPoints = "NWNESESW";
+                        if (cPoints.IndexOf(Heading, 0) != -1)
+                        {
+                            result = Convert.ToSingle((CompassPoints)Enum.Parse(typeof(CompassPoints), Heading, true));
+                            // Debug.WriteLine("ICAO:" + ICAO + " Rwy: " + RwyID + " Compass_Brg: " + result);
+                        }
+                    }
+                }
+                else
+                // Heading is empty. If the APT has an ICAO AND a conventional RWY, the RWY deserves a centerline
+                {
+                    if ((ICAO.Length != 0) && (hardSFC))
+                    {
+                        if (RwyID.All(char.IsDigit))
+                        {
+                            result = Convert.ToDouble(RwyID) * 10;
+                            // Debug.WriteLine("ICAO:" + ICAO + " Rwy: " + RwyID + " Brg: " + result);
+                        }
+                        else
+                        {
+                            // This Regex should match any valid RWY ID
+                            if (Regex.Match(RwyID, "([^A-Za-z]{0,1})([0-9]{1,2})([LCR]{0,1})([^A-Za-z])").Success)
+                            {
+                                if(Extensions.Right(RwyID,1).All(char.IsDigit))
+                                    result = Convert.ToSingle(RwyID) * 10;
+                                else
+                                    result = Convert.ToSingle(RwyID.Substring(0,RwyID.Length-1)) * 10;
+                                // Debug.WriteLine("ICAO:" + ICAO + " Rwy: " + RwyID + " Brg: " + result);
+                            }
+                            //else
+                            //    Debug.WriteLine("ICAO:" + ICAO + " Rwy: " + RwyID + " No RWY Bearing");
+                        }
+                    }
                 }
             }
-            else
-            {
-                return Convert.ToSingle(Heading);
-            }
+            return result;
         }
 
         public static double DMS2DecDeg(double DD, double MM, double SS, string quadrant)
@@ -304,14 +328,6 @@ namespace SCTBuilder
             return Endpoint;
         }
 
-        public static void VincentyDestination(double Latitude, double Longitude, double Dist, double Brg, char Type)
-        {
-            // Destination coordinates given distance and bearing from starting point
-            // Calculates using Haversine formula (spherical earth) - theoretically 0.5 millimeter error
-            // Reference: https://www.movable-type.co.uk/scripts/latlong-vincenty.html
-            // ** for another time **
-        }
-
         public static double[] Intersection
             (double Lat1, double Lon1, double Brg1, double Lat2, double Lon2, double Brg2)
         // This complex routine calculates the intersection of two lines
@@ -450,6 +466,130 @@ namespace SCTBuilder
         private static bool IsValidLon(double Lon)
         {
             return Math.Abs(Lon) <= 180;
+        }
+        // Returns true if the point p lies inside the polygon[] with n vertices 
+        
+
+        public static bool IsInsideARTCC(string ARTCC, double Latitude, double Longitude)
+        {
+            // Creates a polygon of the ARTCC and checks that the coords lie inside
+            // Generally, avoid this approach, as most waypoints/APTs have the owning ARTCC
+            PointF p = new PointF((float)Latitude, (float)Longitude);
+            PointF[] polygon = MakePolygon(ARTCC);
+            // There must be at least 3 vertices in polygon[] 
+            int n = polygon.Count();
+            if (n < 3) return false;
+
+            // Create a point for line segment from p to 10 degrees right of ARTCC limit
+            float east = polygon.Max(point => point.Y) + PolygonWidth(polygon);
+            PointF extreme =  new PointF (east, p.Y) ;
+
+            // Count intersections of the above line with sides of polygon 
+            int count = 0, i = 0;
+            do
+            {
+                int next = (i + 1) % n;
+
+                // Check if the line segment from 'p' to 'extreme' intersects 
+                // with the line segment from 'polygon[i]' to 'polygon[next]' 
+                if (DoIntersect(polygon[i], polygon[next], p, extreme))
+                {
+                    // If the point 'p' is colinear with line segment 'i-next', 
+                    // then check if it lies on segment. If it lies, return true, 
+                    // otherwise false 
+                    if (Orientation(polygon[i], p, polygon[next]) == 0)
+                        return OnSegment(polygon[i], p, polygon[next]);
+
+                    count++;
+                }
+                i = next;
+            } while (i != 0);
+
+            // Return true if count is odd, false otherwise 
+            return count % 2 == 1; 
+        }
+
+        private static PointF[] MakePolygon(string ARTCC)
+        {
+            DataView dvARB = new DataView(Form1.ARB)
+            {
+                Sort = "Sequence",
+                RowFilter = "[ARTCC] = '" + ARTCC + "'"
+            };
+            PointF[] polygon = new PointF[dvARB.Count];
+            if (dvARB.Count != 0)
+            {
+                int n = 0;
+                foreach (DataRowView drvARB in dvARB)
+                {
+                    polygon[n] = new PointF((float)(drvARB["Latitude"]), (float)drvARB["Longitude"]);
+                    n++;
+                }
+                polygon[n] = new PointF((float)(dvARB[0]["Latitude"]), (float)dvARB[0]["Longitude"]);
+            }
+            dvARB.Dispose();
+            return polygon;
+        }
+
+        private static float PolygonWidth(PointF[] polygon)
+        {
+            float east = polygon.Max(point => point.Y);  // Largest lon cannot be smaller than -180
+            float west = polygon.Min(point => point.Y);  // Largest lon cannot be smaller than -180
+            return east - west;
+        }
+
+        private static bool DoIntersect(PointF p1, PointF q1, PointF p2, PointF q2)
+        {
+            // Find the four orientations needed for general and 
+            // special cases 
+            int o1 = Orientation(p1, q1, p2);
+            int o2 = Orientation(p1, q1, q2);
+            int o3 = Orientation(p2, q2, p1);
+            int o4 = Orientation(p2, q2, q1);
+
+            // General case 
+            if (o1 != o2 && o3 != o4)
+                return true;
+
+            // Special Cases 
+            // p1, q1 and p2 are colinear and p2 lies on segment p1q1 
+            if (o1 == 0 && OnSegment(p1, p2, q1)) return true;
+
+            // p1, q1 and p2 are colinear and q2 lies on segment p1q1 
+            if (o2 == 0 && OnSegment(p1, q2, q1)) return true;
+
+            // p2, q2 and p1 are colinear and p1 lies on segment p2q2 
+            if (o3 == 0 && OnSegment(p2, p1, q2)) return true;
+
+            // p2, q2 and q1 are colinear and q1 lies on segment p2q2 
+            if (o4 == 0 && OnSegment(p2, q1, q2)) return true;
+
+            return false; // Doesn't fall in any of the above cases 
+        }
+
+
+        private static bool OnSegment(PointF p, PointF q, PointF r)
+        // Given three colinear points p, q, r, the function checks if 
+        // point q lies on line segment 'pr' 
+        {
+            if (q.X <= Math.Max(p.X, r.X) && q.X >= Math.Min(p.X, r.X) &&
+                    q.Y <= Math.Max(p.Y, r.Y) && q.Y >= Math.Min(p.Y, r.Y))
+                return true;
+            return false;
+        }
+
+        private static int Orientation(PointF p, PointF q, PointF r)
+        // To find orientation of ordered triplet (p, q, r). 
+        // The function returns following values 
+        // 0 --> p, q and r are colinear 
+        // 1 --> Clockwise 
+        // 2 --> Counterclockwise 
+        {
+            float val = Convert.ToSingle((q.Y - p.Y) * (r.X - q.X) -
+                    (q.X - p.X) * (r.Y - q.Y));
+
+            if (val == 0) return 0; // colinear 
+            return (val > 0) ? 1 : 2; // clock or counterclock wise 
         }
     }
 }

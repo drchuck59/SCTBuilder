@@ -2,6 +2,7 @@
 using System.Xml;
 using System.IO;
 using System.Globalization;
+using System.Diagnostics;
 
 namespace SCTBuilder
 {
@@ -66,16 +67,18 @@ namespace SCTBuilder
             WriteXmlElement(xml, "DrawAltRestrictsOnDiagrams", InfoSection.DrawAltRestrictsOnDiagrams.ToString());
             WriteXmlElement(xml, "DrawSpeedRestrictsOnDiagrams", InfoSection.DrawSpeedRestrictsOnDiagrams.ToString());
             WriteXmlElement(xml, "IncludeSidStarReferences", InfoSection.IncludeSidStarReferences.ToString());
-            WriteXmlElement(xml, "NorthSquare", InfoSection.NorthSquare.ToString());
-            WriteXmlElement(xml, "SouthSquare", InfoSection.SouthSquare.ToString());
-            WriteXmlElement(xml, "WestSquare", InfoSection.WestSquare.ToString());
-            WriteXmlElement(xml, "EastSquare", InfoSection.EastSquare.ToString());
+            WriteXmlElement(xml, "NorthLimit", InfoSection.NorthLimit.ToString());
+            WriteXmlElement(xml, "SouthLimit", InfoSection.SouthLimit.ToString());
+            WriteXmlElement(xml, "WestLimit", InfoSection.WestLimit.ToString());
+            WriteXmlElement(xml, "EastLimit", InfoSection.EastLimit.ToString());
             WriteXmlElement(xml, "NorthOffset", InfoSection.NorthOffset.ToString());
             WriteXmlElement(xml, "WestOffset", InfoSection.WestOffset.ToString());
             WriteXmlElement(xml, "SouthOffset", InfoSection.SouthOffset.ToString());
             WriteXmlElement(xml, "EastOffset", InfoSection.EastOffset.ToString());
             WriteXmlElement(xml, "CenterLatitude_Dec", InfoSection.CenterLatitude_Dec.ToString());
             WriteXmlElement(xml, "CenterLongitude_Dec", InfoSection.CenterLongitude_Dec.ToString());
+            WriteXmlElement(xml, "RollOverLon", InfoSection.RollOverLongitude.ToString());
+
             xml.WriteEndDocument();
             xml.Close();
         }
@@ -241,17 +244,17 @@ namespace SCTBuilder
                             case "IncludeSidStarReferences":
                                 InfoSection.IncludeSidStarReferences = Convert.ToBoolean(value);
                                 break;
-                            case "NorthSquare":
-                                InfoSection.NorthSquare = Convert.ToDouble(value);
+                            case "NorthLimit":
+                                InfoSection.NorthLimit = Convert.ToDouble(value);
                                 break;
-                            case "SouthSquare":
-                                InfoSection.SouthSquare = Convert.ToDouble(value);
+                            case "SouthLimit":
+                                InfoSection.SouthLimit = Convert.ToDouble(value);
                                 break;
-                            case "WestSquare":
-                                InfoSection.WestSquare = Convert.ToDouble(value);
+                            case "WestLimit":
+                                InfoSection.WestLimit = Convert.ToDouble(value);
                                 break;
-                            case "EastSquare":
-                                InfoSection.EastSquare = Convert.ToDouble(value);
+                            case "EastLimit":
+                                InfoSection.EastLimit = Convert.ToDouble(value);
                                 break;
                             case "NorthOffset":
                                 InfoSection.NorthOffset = Convert.ToDouble(value);
@@ -270,6 +273,9 @@ namespace SCTBuilder
                                 break;
                             case "CenterLongitude_Dec":
                                 InfoSection.CenterLongitude_Dec = Convert.ToDouble(value);
+                                break;
+                            case "RollOverLon":
+                                InfoSection.RollOverLongitude = Convert.ToBoolean(value);
                                 break;
                             default:
                                 break;

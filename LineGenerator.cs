@@ -458,82 +458,43 @@ namespace SCTBuilder
             }
         }
 
-        private double TestTextBox(TextBox tb)
-        {
-            double ParsedResult = -199;
-            int method = 0;
-            if (tb.Name.IndexOf("Lat") != -1) method = 1;
-            if (tb.Name.IndexOf("Lon") != -1) method = 2;
-            if ((tb.Modified) && tb.TextLength != 0)
-            {
-                if (LatLonParser.TryParseAny(tb))
-                {
-                    switch (method)
-                    {
-                        case 0:
-                            PasteLat = ParsedResult = LatLonParser.ParsedLatitude;
-                            PasteLon = LatLonParser.ParsedLongitude;
-                            tb.Text = Conversions.DecDeg2SCT(PasteLat, true) + " " +
-                                Conversions.DecDeg2SCT(PasteLon, false);
-                            break;
-                        case 1:
-                            PasteLat = ParsedResult = LatLonParser.ParsedLatitude;
-                            PasteLon = -199;
-                            tb.Text = Conversions.DecDeg2SCT(ParsedResult, true);
-                            break;
-                        case 2:
-                            PasteLon = ParsedResult = LatLonParser.ParsedLongitude;
-                            PasteLat = -199;
-                            tb.Text = Conversions.DecDeg2SCT(ParsedResult, false);
-                            break;
-                    }
-                    tb.BackColor = Color.White; 
-                }
-                else tb.BackColor = Color.Yellow;
-            }
-            return ParsedResult;
-        }
-
         private void StartLatitudeTextBox_Validated(object sender, EventArgs e)
         {
-            double result = TestTextBox(StartLatitudeTextBox);
-            if (result != -199)
+            
+            if (CrossForm.TestTextBox(StartLatitudeTextBox))
             {
-                StartLat = PasteLat;
-                if (PasteLon != -199) StartLon = PasteLon;
+                StartLat = CrossForm.Lat;
+                if (CrossForm.Lon != -1) StartLon = CrossForm.Lon;
                 UpdateCopyButtons();
             }
         }
 
         private void StartLongitudeTextBox_Validated(object sender, EventArgs e)
         {
-            double result = TestTextBox(StartLongitudeTextBox);
-            if (result != -199)
+            if (CrossForm.TestTextBox(StartLongitudeTextBox))
             {
-                StartLon = PasteLon;
-                if (PasteLat != -199) StartLat = PasteLat;
+                StartLon = CrossForm.Lon;
+                if (CrossForm.Lat != -1) StartLat = CrossForm.Lat;
                 UpdateCopyButtons();
             }
         }
 
         private void EndLatitudeTextBox_Validated(object sender, EventArgs e)
         {
-            double result = TestTextBox(EndLatitudeTextBox);
-            if (result != -199)
+            if (CrossForm.TestTextBox(EndLatitudeTextBox))
             {
-                EndLat = PasteLat;
-                if (PasteLon != -199) EndLon = PasteLon;
+                EndLat = CrossForm.Lat;
+                if (CrossForm.Lon != -1) EndLon = CrossForm.Lon;
                 UpdateCopyButtons();
             }
         }
 
         private void EndLongitudeTextBox_Validated(object sender, EventArgs e)
         {
-            double result = TestTextBox(EndLongitudeTextBox);
-            if (result != -199)
+            if (CrossForm.TestTextBox(EndLongitudeTextBox))
             {
-                EndLon = PasteLon;
-                if (PasteLat != -199) EndLat = PasteLat;
+                EndLon = CrossForm.Lon;
+                if (CrossForm.Lat != -199) EndLat = CrossForm.Lat;
                 UpdateCopyButtons();
             }
         }
@@ -809,9 +770,12 @@ namespace SCTBuilder
 
         private void PasteToTextBox_Validated(object sender, EventArgs e)
         {
-            double result = TestTextBox(PasteToTextBox);
-            if (result != -199)
-                PasteToEndButton.Enabled = PasteToStartButton.Enabled = (result != -199);
+            if (CrossForm.TestTextBox(PasteToTextBox))
+            {
+                PasteToEndButton.Enabled = PasteToStartButton.Enabled = true;
+                PasteLat = CrossForm.Lat;
+                PasteLon = CrossForm.Lon;
+            }
         }
 
         private void PasteToStartButton_Click(object sender, EventArgs e)

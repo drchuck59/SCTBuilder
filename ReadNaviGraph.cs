@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Diagnostics;
+using System.Globalization;
 
 namespace SCTBuilder
 {
@@ -15,51 +16,88 @@ namespace SCTBuilder
         static string SSDcode = string.Empty;
         static string SSDmod = string.Empty;
         private static readonly List<string> RNWS = new List<string>();
-        static public DataTable NGSID = new SCTdata.NGSIDDataTable();
-        static public DataTable NGSIDTransition = new SCTdata.NGSIDTransitionDataTable();
-        static public DataTable NGSTAR = new SCTdata.NGSTARDataTable();
-        static public DataTable NGSTARTransition = new SCTdata.NGSTARTransitionDataTable();
-        static public DataTable NGSTARRNW = new SCTdata.NGSTARRNWDataTable();
-        static public DataTable NGFixes = new SCTdata.NGFixesDataTable();
-        static public DataTable NGRWYS = new SCTdata.NGRWYsDataTable();
-        static public DataTable NGRTE = new SCTdata.NGRTEDataTable();
-        static public DataTable NGNavAID = new SCTdata.NGNavAIDDataTable();
+        static public DataTable cycleinfo = new NGData.cycle_infoDataTable();
+        static public DataTable pmdgSID = new NGData.pmdgSIDDataTable();
+        static public DataTable pmdgSIDTransition = new NGData.pmdgSIDTransitionDataTable();
+        static public DataTable pmdgSTAR = new NGData.pmdgSTARDataTable();
+        static public DataTable pmdgSTARTransition = new NGData.pmdgSTARTransitionDataTable();
+        static public DataTable STARRNW = new NGData.pmdgSTARRNWDataTable();
+        static public DataTable FIXes = new NGData.wpNavFIXDataTable();
+        static public DataTable RWYs = new NGData.pmdgRWYDataTable();
+        static public DataTable wpNavRTE = new NGData.wpNavRTEDataTable();
+        static public DataTable airports = new NGData.airportsDataTable();
+        static public DataTable wpNavAPT = new NGData.wpNavAPTDataTable();
+        static public DataTable wpNavAID = new NGData.wpNavAIDDataTable();
+        static public DataTable wpNavFIX = new NGData.wpNavFIXDataTable();
 
-        public static void NavAID()
+        public static void SelectNGTables(string filter)
+        {
+            SelectNGItems(ReadNaviGraph.airports, filter);
+            SelectNGItems(ReadNaviGraph.wpNavAID, filter);
+            SelectNGItems(ReadNaviGraph.wpNavAPT, filter);
+            SelectNGItems(ReadNaviGraph.wpNavFIX, filter);
+        }
+
+        private static int SelectNGItems(DataTable dt, string filter)
+        {
+            DataView dataView = new DataView(dt);
+            SetClearSelected(dataView, false);
+            Debug.Print(filter);
+            dataView.RowFilter = filter;
+            int result = dataView.Count;
+            SetClearSelected(dataView, true);
+            dataView.Dispose();
+            return result;
+        }
+
+        private static void SetClearSelected(DataView dv, bool set)
+        {
+            // If the filter is applied, selected boxes are true
+            // otherwise, ALL the selected boxes are false
+            // But if the ShowAll box is checked, ignore the update
+            foreach (DataRowView row in dv)
+            {
+                row["Selected"] = set;
+            }
+        }
+
+        public static int NavAID()
         {
             string FullFilename = SCTcommon.GetFullPathname(FolderMgt.DataFolder, "wpNavAID.txt");
-            DataView dvNGNavAid = new DataView(NGNavAID);
-            DataRowView dataRow;
+            DataView dv = new DataView(wpNavAID);
+            int result = 0;
             if (FullFilename.IndexOf("Error") == -1)
             {
-                NGNavAID.Clear();
+                wpNavAID.Clear();
                 using (StreamReader sr = new StreamReader(FullFilename))
                 {
                     while ((Line = sr.ReadLine()) != null)
                     {
                         if (Line.Substring(0, 1) != ";")
                         {
-                            dataRow = dvNGNavAid.AddNew();
-                            dataRow["Name"] = Line.Substring(0, 14).Trim();
-                            dataRow["FacilityID"] = Line.Substring(24, 5).Trim();
-                            dataRow["Type"] = Line.Substring(29, 4).Trim();
-                            dataRow["Latitude"] = Convert.ToDouble(Line.Substring(33, 10).Trim());
-                            dataRow["Longitude"] = Convert.ToDouble(Line.Substring(43, 11).Trim());
-                            dataRow["Frequency"] = Line.Substring(54, 6).Trim();
-                            dataRow.EndEdit();
+                            DataRowView drv = dv.AddNew();
+                            drv["Name"] = Line.Substring(0, 14).Trim();
+                            drv["FacilityID"] = Line.Substring(24, 5).Trim();
+                            drv["Type"] = Line.Substring(29, 4).Trim();
+                            drv["Latitude"] = Convert.ToDouble(Line.Substring(33, 10).Trim());
+                            drv["Longitude"] = Convert.ToDouble(Line.Substring(43, 11).Trim());
+                            drv["Frequency"] = Line.Substring(54, 6).Trim();
+                            drv.EndEdit();
                         }
                     }
                 }
-                Debug.Print(NGNavAID.Rows.Count + " rows added to NGNavAid table.");
+                result = dv.Count;
+                Console.WriteLine(result + " rows added to" + dv.Table.TableName);
             }
-            dvNGNavAid.Dispose();
+            dv.Dispose();
+            return result;
         }
 
-        public static void NavFIX()
+        public static int  NavFIX()
         {
             string FullFilename = SCTcommon.GetFullPathname(FolderMgt.DataFolder, "wpNavFIX.txt");
-            DataView dvNGFIX = new DataView(NGFixes);
-            DataRowView datarow;
+            DataView dv = new DataView(FIXes); 
+            int result = 0;
             if (FullFilename.IndexOf("Error") == -1)
             {
                 using (StreamReader sr = new StreamReader(FullFilename))
@@ -68,28 +106,102 @@ namespace SCTBuilder
                     {
                         if (Line.Substring(0, 1) != ";")
                         {
-                            datarow = dvNGFIX.AddNew();
-                            datarow["FacilityID"] = Line.Substring(0, 5).Trim();
-                            datarow[1] = Convert.ToDouble(Line.Substring(29, 10).Trim());
-                            datarow[2] = Convert.ToDouble(Line.Substring(39, 11).Trim());
-                            datarow.EndEdit();
+                            DataRowView drv = dv.AddNew();
+                            drv = dv.AddNew();
+                            drv["FacilityID"] = Line.Substring(0, 5).Trim();
+                            drv[1] = Convert.ToDouble(Line.Substring(29, 10).Trim());
+                            drv[2] = Convert.ToDouble(Line.Substring(39, 11).Trim());
+                            drv.EndEdit();
                         }
                     }
-                    Debug.WriteLine(NGFixes.Rows.Count + " rows added to NGFixes");
+                    result = dv.Count;
+                    Console.WriteLine(result + " rows added to " + dv.Table.TableName);
                 }
             }
-            dvNGFIX.Dispose();
+            dv.Dispose();
+            return result;
         }
 
-        public static void NavRTE()
+        public static int Airports()
         {
-            // Add NaviGraph routes that are NOT in FAA table
-            // That is - Ultra, Oceanic, and World routes
-            string curID; string prevID = string.Empty;
-            bool IDexists = false; bool Adding;
+            // Add the Airports index (has only ICAO and Lat/Lon)
+            // Use the wpNavAPT file for runways and Airport names
+            // RETURNS number of rows added (0 for no file or failed)
+            int result = 0; const int ICOA = 0; const int Lat = 1; const int Lon = 2;
+            string FullFilename = SCTcommon.GetFullPathname(FolderMgt.DataFolder, "airports.dat");
+            DataView dv = new DataView(airports);
+            if (FullFilename.IndexOf("Error") == -1)
+            {
+                using (StreamReader sr = new StreamReader(FullFilename))
+                {
+                    while ((Line = sr.ReadLine()) != null)    // Until EOF
+                    {
+                        if (Line.Substring(0, 1) != ";")     // Check for comment
+                        {
+                            DataRowView drv = dv.AddNew();
+                            drv[ICOA] = Line.Substring(0, 4);
+                            drv[Lat] = Convert.ToDouble(Line.Substring(4, 10).Trim());
+                            drv[Lon] = Convert.ToDouble(Line.Substring(14, 11).Trim());
+                            drv.EndEdit();
+                        }
+                    }
+                    result = dv.Count;
+                    Console.WriteLine(result + " rows added to" + dv.Table.TableName);
+                }
+            }
+            dv.Dispose();
+            return result;
+    }
+
+        public static int NavAPT()
+        {
+            // Add the NavAPT file to the DataTable
+            // Because this file is column-delimited, cannot use ParseLine
+            // RETURNS number of rows read (0 if no file or failed)
+            int result = 0;
+            const int FacID = 0; const int Name = 1; const int RWY = 2; const int Length = 3; const int Brg = 4;
+            const int FinalBrg = 8;  const int Lat = 5; const int Lon = 6; const int Freq = 7; const int Elev = 9;
+
+            string FullFilename = SCTcommon.GetFullPathname(FolderMgt.DataFolder, "wpNavAPT.txt");
+            DataView dv = new DataView(wpNavAPT);
+            if (FullFilename.IndexOf("Error") == -1)
+            {
+                using (StreamReader sr = new StreamReader(FullFilename))
+                {
+                    while ((Line = sr.ReadLine()) != null)    // Until EOF
+                    {
+                        if (Line.Substring(0, 1) != ";")     // Check for comment
+                        {
+                            DataRowView drv = dv.AddNew();
+                            drv[Name] = Line.Substring(0, 24);
+                            drv[FacID] = Line.Substring(24, 4);
+                            drv[RWY] = Line.Substring(28, 3).Trim();
+                            drv[Length] = Convert.ToInt32(Line.Substring(31, 5));
+                            drv[Brg] = Convert.ToInt32(Line.Substring(36, 3));
+                            drv[Lat] = Convert.ToDouble(Line.Substring(39, 10).Trim());
+                            drv[Lon] = Convert.ToDouble(Line.Substring(49, 11).Trim());
+                            drv[Freq] = Convert.ToDouble(Line.Substring(60, 6).Trim());
+                            drv[FinalBrg] = Convert.ToInt32(Line.Substring(66, 3));
+                            drv[Elev] = Convert.ToInt32(Line.Substring(69, 5));
+                            drv.EndEdit();
+                        }
+                    }
+                    result = dv.Count;
+                    Console.WriteLine(result + " rows added to" + dv.Table.TableName);
+                }
+            }
+            dv.Dispose();
+            return result;
+        }
+
+        public static int  NavRTE()
+        {
+            // Add NaviGraph routes (wpNavRTE)
+            // Returns number of rows read to datatable (0 if failed, no file)
             string FullFilename = SCTcommon.GetFullPathname(FolderMgt.DataFolder, "wpNavRTE.txt");
-            DataView dvRTE = new DataView(NGRTE);
-            if (FullFilename.IndexOf("Error") != -1)
+            DataView dv = new DataView(wpNavRTE);
+            int result = 0;
+            if (FullFilename.IndexOf("Error") == -1)
             {
                 using (StreamReader sr = new StreamReader(FullFilename))
                 {
@@ -97,41 +209,32 @@ namespace SCTBuilder
                     {
                         if (Line.Substring(0, 1) != ";")     // Check for comment
                         {
-                            curID = Line.Substring(0, Line.IndexOf(" ")).Trim();
-                            Adding = curID == prevID;
-                            if (!Adding)
-                            {
-                                dvRTE.RowFilter = "[AWYID] = '" + curID + "'";
-                                IDexists = (dvRTE.Count != 0);
-                            }
-                            if (Adding || !IDexists)
-                            {
-                                AddRTE(dvRTE);
-                            }
-                            prevID = curID;
+                            AddRTE(dv);
                         }
                     }
+                    result = dv.Count;
+                    Console.WriteLine(result + " rows added to" + dv.Table.TableName);
                 }
             }
+            dv.Dispose();
+            return result;
         }
 
         private static void AddRTE(DataView dv)
         {
-            string curID = Line.Substring(0, Line.IndexOf(" ")).Trim();
+            // Reads one row of wpNavRTE data
             string[] LowAirways = new string[6] {"V", "A", "B", "G", "R", "T"};
-            string temp = Line;
-            DataRowView dvRTE = dv.AddNew();
-            dvRTE["AWYID"] = curID;
-            temp = temp.Substring(temp.IndexOf(" ") + 1);
-            dvRTE["Sequence"] = Convert.ToInt32(temp.Substring(0, temp.IndexOf(" ")).Trim()) * 10;
-            temp = temp.Substring(temp.IndexOf(" ") + 1);
-            dvRTE["NavAid"] = temp.Substring(0, temp.IndexOf(" ")).Trim();
-            temp = temp.Substring(Line.IndexOf(" ") + 1);
-            dvRTE["Latitude"] = Convert.ToDouble(temp.Substring(0, temp.IndexOf(" ")).Trim());
-            Line = Line.Substring(temp.IndexOf(" ") + 1);
-            dvRTE["Longitude"] = Convert.ToDouble(temp.Substring(0, temp.IndexOf(" ")).Trim());
-            dvRTE["IsLow"] = LowAirways.Any(curID.Contains);
-            dvRTE.EndEdit();
+            string curID;
+            DataRowView drv = dv.AddNew();
+            Words.Clear();
+            Words.AddRange(ParseLine());
+            drv[0] = curID = Words[0].ToString();             // Airway ID
+            drv[1] = Convert.ToInt32(Words[1]);               // Sequence
+            drv[2] = Words[2].ToString();                     // NavAid
+            drv[3] = Convert.ToDouble(Words[3]);              // Latitude
+            drv[4] = Convert.ToDouble(Words[4]);              // Longitude
+            drv[5] = LowAirways.Any(curID.Contains);          // IsLow
+            drv.EndEdit();
         }
 
         public static bool SIDSTARS(string Apt, string FullFilename)
@@ -249,7 +352,7 @@ namespace SCTBuilder
 
         private static void SaveRwys()
         {
-            DataView dvRWYS = new DataView(NGRWYS);
+            DataView dvRWYS = new DataView(RWYs);
             DataRowView drvRWYS;
             foreach (string r in RNWS)
             {
@@ -277,13 +380,12 @@ namespace SCTBuilder
             decLat += Convert.ToSingle(temp.Substring(0, LocLat)) / 60;
             temp = temp.Substring(LocLat).Trim();
             if (quadrant == "S") decLat *= -1;
-            quadrant = temp.Substring(0, 1);
             temp = temp.Substring(2).Trim();
             int LocLon = temp.IndexOf(" ");
             float decLon = Convert.ToSingle(temp.Substring(0, LocLon));
             temp = temp.Substring(LocLon).Trim();
             decLon += Convert.ToSingle(temp) / 60;
-            DataView dvNGFix = new DataView(NGFixes);
+            DataView dvNGFix = new DataView(FIXes);
             DataRowView newrow = dvNGFix.AddNew();
             newrow["FacilityID"] = FixName;
             newrow["Latitude"] = decLat;        
@@ -296,7 +398,7 @@ namespace SCTBuilder
         {
             // Read a SID line which has everything in one line
             // These have no transitions, so can directly enter into table
-            DataView dvNGSID = new DataView(NGSID);
+            DataView dvNGSID = new DataView(pmdgSID);
             DataRowView newFIX;
             string runway = string.Empty; int Sequence;
             string fix = string.Empty; string oldfix = string.Empty;
@@ -343,7 +445,7 @@ namespace SCTBuilder
         {
             // These are multiline SIDs with one or more RNWs and a series of instructions
             // Can load each RNW as part of the SID
-            DataView dvNGSID = new DataView(NGSID);
+            DataView dvNGSID = new DataView(pmdgSID);
             DataRowView newFIX;
             string runway; int Sequence; string Radial;
             string fix = string.Empty; string oldfix = string.Empty;
@@ -445,7 +547,7 @@ namespace SCTBuilder
         private static void SIDTransition()
         {
             // SID Transition FIXes do not have restrictions
-            DataView dvNGSIDTransition = new DataView(NGSIDTransition);
+            DataView dvNGSIDTransition = new DataView(pmdgSIDTransition);
             DataRowView newrow; int Sequence = 0;
             string Transition = Words[2];
             for (int t = 1; t < Words.Count; t++)
@@ -466,7 +568,7 @@ namespace SCTBuilder
         private static string AddSTAR()
         {
             // Add the STAR information.  We'll add the RNWs later.
-            DataView dvNGStar = new DataView(NGSTAR);
+            DataView dvNGStar = new DataView(pmdgSTAR);
             DataRowView newFIX; int Sequence = 0; string fix;
             // This next line captures the modifier in the STAR Name
             if (Words[2].IndexOf(".") != -1)
@@ -500,7 +602,7 @@ namespace SCTBuilder
         private static void STAR_RNWS()
         {
             // Add the RNWs applicable to the SSDcode+SSDmode for the Airport
-            DataView dvNGSTAR = new DataView(NGSTAR);
+            DataView dvNGSTAR = new DataView(pmdgSTAR);
             DataRowView drvNGSTAR;
             for (int r = 1; r < Words.Count; r++)
             {
@@ -522,7 +624,7 @@ namespace SCTBuilder
             // Transitions apply to each SSDcode+SSDmod (if present, usually is)
             string TransitionName = Words[2];
             string fix; DataRowView newFIX; int Sequence = 0;
-            DataView dvNGSTARTransition = new DataView(NGSTARTransition);
+            DataView dvNGSTARTransition = new DataView(pmdgSTARTransition);
             {
                 for (int t = 1; t < Words.Count; t++)
                 {
@@ -700,47 +802,74 @@ namespace SCTBuilder
         private static string[] ParseLine()
         {
             // Parse the line into individual words
-            // First word indicates level: Title, Content, Addenda
-            // Blank and commens have already been skipped
+            // Blank and comments assumed to be skipped (not checked here)
             List<string> Words = new List<string>();
             string temp = Line;
             int Loc1;
             // Single Word
-                while (temp.Length != 0)
+            while (temp.Length != 0)
+            {
+                Loc1 = temp.IndexOf(" ");
+                if (Loc1 != -1)
                 {
-                    Loc1 = temp.IndexOf(" ");
-                    if (Loc1 != -1)
+                    // Test for whitespace string
+                    if (!string.IsNullOrWhiteSpace(temp.Substring(0, Loc1).Trim()))
                     {
                         Words.Add(temp.Substring(0, Loc1).Trim());
                         temp = temp.Substring(Loc1).Trim();
                     }
-                    else
-                    {
-                        Words.Add(temp.Trim());
-                        temp = string.Empty;
-                    }
                 }
+                else
+                {
+                    Words.Add(temp.Trim());
+                    temp = string.Empty;
+                }
+            }
             return Words.ToArray();
         }
 
         public static int AIRAC()
         {
             // Find the cycleinfo.txt file.  -1 if doesnt exist (bad folder) or return AIRAC
-            int result = -1; string Line; string sResult;
+            int result = -1; string Line; string sResult; string sTemp;
             string FullFilename = SCTcommon.GetFullPathname(FolderMgt.DataFolder, "cycle_info.txt");
             if (FullFilename.IndexOf("ERROR") != -1) return result;
+            DataView dv = new DataView(cycleinfo);
+            DataRowView drv = dv.AddNew();
             using (StreamReader reader = new StreamReader(FullFilename))
             {
                 Line = reader.ReadLine();
                 if (result == -1)
                 {
-                    if (Line.IndexOf("AIRAC") == -1)
+                    if (Line.IndexOf("AIRAC") != -1)
                     {
                         sResult = Line.Substring(Line.IndexOf(":") + 1);
                         result = Convert.ToInt32(sResult.Trim());
+                        drv["AIRAC"] = Convert.ToInt32(result);
+                    }
+                    if (Line.IndexOf("Version") != -1)
+                    {
+                        sResult = Line.Substring(Line.IndexOf(":") + 1);
+                        result = Convert.ToInt32(sResult.Trim());
+                        drv["Version"] = Convert.ToInt32(result);
+                    }
+                    if (Line.IndexOf("Valid") != -1)
+                    {
+                        sResult = Line.Substring(Line.IndexOf(":") + 1).Trim();
+                        sTemp = Line.Substring(0, Line.IndexOf("-") - 1).Trim();
+                        drv["BeginDate"] = DateTime.ParseExact(sTemp,"dd/MMM/yyyy",CultureInfo.InvariantCulture);
+                        sResult = Line.Substring(Line.IndexOf("-")).Trim();
+                        drv["EndDate"] = DateTime.ParseExact(sResult, "dd/MMM/yyyy", CultureInfo.InvariantCulture);
+                    }
+                    if (Line.IndexOf("Files parsed") != -1)
+                    {
+                        sResult = Line.Substring(Line.IndexOf(":") + 1).Trim();
+                        drv["ParsedDate"] = DateTime.ParseExact(sResult, "dd/mm/yyyy", CultureInfo.InvariantCulture);
                     }
                 }
             }
+            drv.EndEdit();
+            dv.Dispose();
             return result;
         }
     }

@@ -532,6 +532,7 @@
             this.CenterLatTextBox.TabIndex = 20;
             this.CenterLatTextBox.TabStop = false;
             this.toolTip1.SetToolTip(this.CenterLatTextBox, "VRC will open centered on these coordinates");
+            this.CenterLatTextBox.Validated += new System.EventHandler(this.CenterLatTextBox_Validated);
             // 
             // CenterLonTextBox
             // 
@@ -542,6 +543,7 @@
             this.CenterLonTextBox.TabIndex = 22;
             this.CenterLonTextBox.TabStop = false;
             this.toolTip1.SetToolTip(this.CenterLonTextBox, "VRC will open centered on these coordinates");
+            this.CenterLonTextBox.Validated += new System.EventHandler(this.CenterLonTextBox_Validated);
             // 
             // CenterLonLabel
             // 
@@ -671,6 +673,7 @@
             this.LimitAPT2ARTCCCheckBox.Text = "Limit to primary ARTCC";
             this.toolTip1.SetToolTip(this.LimitAPT2ARTCCCheckBox, "Airport selection must be enable to select Runways");
             this.LimitAPT2ARTCCCheckBox.UseVisualStyleBackColor = true;
+            this.LimitAPT2ARTCCCheckBox.CheckedChanged += new System.EventHandler(this.LimitAPT2ARTCCCheckBox_CheckedChanged);
             // 
             // QuickSearchLabel
             // 
