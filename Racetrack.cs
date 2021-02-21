@@ -196,9 +196,9 @@ namespace SCTBuilder
                     FixText = String.Format("{0:000}", FixOffsetBrgNUD.Value) +
                         String.Format("{0:000.0}", Convert.ToDouble(FixOffsetDistTextBox.Text));
                 }
-                HoldLatitudeTextBox.Text = Conversions.DecDeg2SCT(Lat, true);
+                HoldLatitudeTextBox.Text = Conversions.Degrees2SCT(Lat, true);
                 HoldLat = Lat;
-                HoldLongitudeTextBox.Text = Conversions.DecDeg2SCT(Lon, false);
+                HoldLongitudeTextBox.Text = Conversions.Degrees2SCT(Lon, false);
                 HoldLon = Lon;
                 //MagVarTextBox.Text = MagVar.ToString();
                 HoldFixTextBox.Text = FixListDataGridView.SelectedRows[0].Cells[0].Value.ToString() + FixText;
@@ -209,9 +209,9 @@ namespace SCTBuilder
         private void CopyToHoldButton_Click(object sender, EventArgs e)
         {
             HoldLat = CrossForm.Lat;
-            HoldLatitudeTextBox.Text = Conversions.DecDeg2SCT(HoldLat, true);
+            HoldLatitudeTextBox.Text = Conversions.Degrees2SCT(HoldLat, true);
             HoldLon = CrossForm.Lon;
-            HoldLongitudeTextBox.Text = Conversions.DecDeg2SCT(HoldLon, false);
+            HoldLongitudeTextBox.Text = Conversions.Degrees2SCT(HoldLon, false);
             HoldFixTextBox.Text = string.Empty;
             AddFixLabelCheckBox.Enabled = AddFixSymbolCheckBox.Enabled = false;
         }
@@ -333,10 +333,10 @@ namespace SCTBuilder
             if (InboundTrackRadioButton.Checked) OutTrack = Track + 540 % 360;  // Reverse track to outbnd
             Coords = LatLongCalc.Destination(StartLat, StartLon, LegLnthDist, OutTrack, 'N');
             EndLat = Coords[0]; EndLon = Coords[1];
-            Lat0 = Conversions.DecDeg2SCT(PasteLat, true);
-            Lon0 = Conversions.DecDeg2SCT(PasteLon, false);
-            Lat1 = Conversions.DecDeg2SCT(EndLat, true);
-            Lon1 = Conversions.DecDeg2SCT(EndLon, false);
+            Lat0 = Conversions.Degrees2SCT(PasteLat, true);
+            Lon0 = Conversions.Degrees2SCT(PasteLon, false);
+            Lat1 = Conversions.Degrees2SCT(EndLat, true);
+            Lon1 = Conversions.Degrees2SCT(EndLon, false);
             output += OutputText(Lat0, Lon0, Lat1, Lon1);
             // Step 2 - Enter first turn
             StartLat = EndLat; StartLon = EndLon;   // This is start of turn
@@ -357,19 +357,19 @@ namespace SCTBuilder
              // Need to close the end of arc with next line
             Coords = LatLongCalc.Destination(StartLat, StartLon, ArcRadius*2, EndBrg, 'N');
             StartLat = Coords[0]; StartLon = Coords[1];
-            Lat0 = Conversions.DecDeg2SCT(PasteLat, true);
-            Lon0 = Conversions.DecDeg2SCT(PasteLon, false);
-            Lat1 = Conversions.DecDeg2SCT(StartLat, true);
-            Lon1 = Conversions.DecDeg2SCT(StartLon, false);
+            Lat0 = Conversions.Degrees2SCT(PasteLat, true);
+            Lon0 = Conversions.Degrees2SCT(PasteLon, false);
+            Lat1 = Conversions.Degrees2SCT(StartLat, true);
+            Lon1 = Conversions.Degrees2SCT(StartLon, false);
             output += OutputText(Lat0, Lon0, Lat1, Lon1);
              // Now draw the leg line
             double InTrack = (OutTrack + 180) % 360;
             Coords = LatLongCalc.Destination(StartLat, StartLon, LegLnthDist, InTrack, 'N');
             EndLat = Coords[0]; EndLon = Coords[1];
-            Lat0 = Conversions.DecDeg2SCT(StartLat, true);
-            Lon0 = Conversions.DecDeg2SCT(StartLon, false);
-            Lat1 = Conversions.DecDeg2SCT(EndLat, true);
-            Lon1 = Conversions.DecDeg2SCT(EndLon, false);
+            Lat0 = Conversions.Degrees2SCT(StartLat, true);
+            Lon0 = Conversions.Degrees2SCT(StartLon, false);
+            Lat1 = Conversions.Degrees2SCT(EndLat, true);
+            Lon1 = Conversions.Degrees2SCT(EndLon, false);
             output += OutputText(Lat0, Lon0, Lat1, Lon1);
             // Step 4 - Return arc
             if (TurnRight)
@@ -426,16 +426,16 @@ namespace SCTBuilder
                 for (double i = StartBrg; i < 360; i++)
                 {
                     Coords = LatLongCalc.Destination(StartLat, StartLon, ArcRadius, i, 'N');
-                    Lat1 = Conversions.DecDeg2SCT(Coords[0], true);
-                    Lon1 = Conversions.DecDeg2SCT(Coords[1], false);
+                    Lat1 = Conversions.Degrees2SCT(Coords[0], true);
+                    Lon1 = Conversions.Degrees2SCT(Coords[1], false);
                     output += OutputText(Lat0, Lon0, Lat1, Lon1);
                     Lat0 = Lat1; Lon0 = Lon1;
                 }
                 for (double i = 1; i < EndBrg; i++)
                 {
                     Coords = LatLongCalc.Destination(StartLat, StartLon, ArcRadius, i, 'N');
-                    Lat1 = Conversions.DecDeg2SCT(Coords[0], true);
-                    Lon1 = Conversions.DecDeg2SCT(Coords[1], false);
+                    Lat1 = Conversions.Degrees2SCT(Coords[0], true);
+                    Lon1 = Conversions.Degrees2SCT(Coords[1], false);
                     output += OutputText(Lat0, Lon0, Lat1, Lon1);
                     Lat0 = Lat1; Lon0 = Lon1;
                 }
@@ -445,8 +445,8 @@ namespace SCTBuilder
                 for (double i = StartBrg; i < EndBrg; i++)
                 {
                     Coords = LatLongCalc.Destination(StartLat, StartLon, ArcRadius, i, 'N');
-                    Lat1 = Conversions.DecDeg2SCT(Coords[0], true);
-                    Lon1 = Conversions.DecDeg2SCT(Coords[1], false);
+                    Lat1 = Conversions.Degrees2SCT(Coords[0], true);
+                    Lon1 = Conversions.Degrees2SCT(Coords[1], false);
                     output += OutputText(Lat0, Lon0, Lat1, Lon1);
                     Lat0 = Lat1; Lon0 = Lon1;
                 }
@@ -454,8 +454,8 @@ namespace SCTBuilder
             // Draw last segment
             Coords = LatLongCalc.Destination(StartLat, StartLon, ArcRadius, EndBrg, 'N');
             PasteLat = Coords[0]; PasteLon = Coords[1];
-            Lat1 = Conversions.DecDeg2SCT(Coords[0], true);
-            Lon1 = Conversions.DecDeg2SCT(Coords[1], false);
+            Lat1 = Conversions.Degrees2SCT(Coords[0], true);
+            Lon1 = Conversions.Degrees2SCT(Coords[1], false);
             output += OutputText(Lat0, Lon0, Lat1, Lon1);
             return output;
         }

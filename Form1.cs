@@ -66,7 +66,7 @@ namespace SCTBuilder
             if (iniAIRAC > 0)
             {
                 // GOOD FILE - Does the DATA match the last used AIRAC?
-                int dataAIRAC = ReadNASR.AIRAC();
+                int dataAIRAC = CycleInfo.AIRAC = ReadNASR.AIRAC();
                 Console.WriteLine("Done reading NASR AIRAC " + dataAIRAC);
                 if (dataAIRAC != iniAIRAC)
                 {
@@ -74,22 +74,7 @@ namespace SCTBuilder
                 }
                 // Load the subscription data
                 if (LoadFAATextData() != -1) PostLoadTasks();
-                // Check the Navigraph data after loading FAA data
-                int NGAIRAC = ReadNaviGraph.AIRAC();
-                if ((NGAIRAC != -1) && (dataAIRAC != NGAIRAC))
-                {
-                    MismatchedNGmessage(NGAIRAC, dataAIRAC);
-                    InfoSection.HasNaviGraph = InfoSection.UseNaviGraph = false;
-                }
-                else
-                {
-                    InfoSection.HasNaviGraph = InfoSection.UseNaviGraph = true;
-                    Thread background = new Thread(ReadNGFiles)
-                    {
-                        IsBackground = true
-                    };
-                    background.Start();
-                }
+                CheckNG();
             }
             // No data folder or did not install a data set
             else
@@ -103,6 +88,28 @@ namespace SCTBuilder
                 NoXMLmessage();
             }
             TestWriteSCT();                 // Update the output button
+        }
+
+        private static void CheckNG()
+        {
+            // Check the Navigraph data after loading FAA data
+            InfoSection.NG_AIRAC = ReadNaviGraph.AIRAC();
+            int NG = InfoSection.NG_AIRAC;
+            int DA = CycleInfo.AIRAC;
+            if ((NG != -1) && (DA != NG))
+            {
+                MismatchedNGmessage(NG, DA);
+                InfoSection.HasNaviGraph = InfoSection.UseNaviGraph = false;
+            }
+            else
+            {
+                InfoSection.HasNaviGraph = InfoSection.UseNaviGraph = true;
+                Thread background = new Thread(ReadNGFiles)
+                {
+                    IsBackground = true
+                };
+                background.Start();
+            }
         }
 
         private static void ReadNGFiles()
@@ -119,35 +126,22 @@ namespace SCTBuilder
 
         private void NoXMLmessage()
         {
-            Msg = "It appears the program is running for the first time." + cr +
-                "First create or select a data folder ('DATA')." + cr +
-                "This folder will hold ALL the SCTBuilder data subfolders." + cr +
-                "Then click the 'Update AIRAC' button to retrieve the current FAA AIRAC.";
-            SCTcommon.SendMessage(Msg, MessageBoxIcon.Information);
+            SCTcommon.SendMessage(UserMessage.FirstTime, MessageBoxIcon.Information);
         }
 
         private void BadXMLmessage()
         {
-            Msg = "SCTBuilder closed with insufficient settings to resume.  " + cr +
-                "First create or select a data folder ('DATA')." + cr +
-                "This folder will hold ALL the SCTBuilder data subfolders." + cr +
-                "Then click the 'Update AIRAC' button to retrieve the current FAA AIRAC.";
-            SCTcommon.SendMessage(Msg);
+            SCTcommon.SendMessage(UserMessage.CorruptINI);
         }
 
         private void MismatchedXMLmessage()
         {
-            Msg = "The last AIRAC you used does not match the AIRAC in the data folder.  " + cr +
-                "The program will update to the data in the data folder.";
-            SCTcommon.SendMessage(Msg);
+            SCTcommon.SendMessage(UserMessage.AIRACdataMismatch);
         }
 
-        private void MismatchedNGmessage(int NGAIRAC, int dataAIRAC)
+        private static void MismatchedNGmessage(int NGAIRAC, int dataAIRAC)
         {
-            Msg = "The Navigraph AIRAC + " + NGAIRAC.ToString() +
-                " does not match the data AIRAC " + dataAIRAC.ToString() + "." + cr +
-            "The program cannot provide features that require the Navigraph data.";
-            SCTcommon.SendMessage(Msg);
+            SCTcommon.SendMessage(UserMessage.NGdataMismatch);
         }
         private void PostLoadTasks()
         {
@@ -392,8 +386,7 @@ namespace SCTBuilder
                     }
                     else
                     {
-                        Msg = "Cannot select Runways.  No airports with runways in the selected square.";
-                        SCTcommon.SendMessage(Msg);
+                        SCTcommon.SendMessage(UserMessage.NoValidAirports);
                     }
                 }
                 FilterBy.Method = "Square";
@@ -489,8 +482,7 @@ namespace SCTBuilder
             }
             else
             {
-                Msg = "You must have a square identifed, an output folder, and some selection items before you can Preview.";
-                SCTcommon.SendMessage(Msg);
+                SCTcommon.SendMessage(UserMessage.MissingSelectionCriteria);
             }
             Cursor.Current = Cursors.Default;
             SystemSounds.Beep.Play();
@@ -1045,10 +1037,9 @@ namespace SCTBuilder
         private void FacilityEngineerTextBox_Validating(object sender, CancelEventArgs e)
         {
             bool ToClass = true;
-            Msg = "Facility Engineer name may not be blank";
             if (FacilityEngineerTextBox.TextLength == 0)
             {
-                SCTcommon.SendMessage(Msg);
+                SCTcommon.SendMessage(UserMessage.FENameRequired);
                 FacilityEngineerTextBox.Text = "Facility Engineer Name";
                 UpdateEngineers(ToClass);
             }
@@ -1107,17 +1098,17 @@ namespace SCTBuilder
         {
             if (Save)
             {
-                InfoSection.NorthLimit = Conversions.String2DecDeg(NorthLimitTextBox.Text);
-                InfoSection.SouthLimit = Conversions.String2DecDeg(SouthLimitTextBox.Text);
-                InfoSection.EastLimit = Conversions.String2DecDeg(EastLimitTextBox.Text);
-                InfoSection.WestLimit = Conversions.String2DecDeg(WestLimitTextBox.Text);
+                InfoSection.NorthLimit = Conversions.DMS2Degrees(NorthLimitTextBox.Text);
+                InfoSection.SouthLimit = Conversions.DMS2Degrees(SouthLimitTextBox.Text);
+                InfoSection.EastLimit = Conversions.DMS2Degrees(EastLimitTextBox.Text);
+                InfoSection.WestLimit = Conversions.DMS2Degrees(WestLimitTextBox.Text);
             }
             else
             {
-                NorthLimitTextBox.Text = Conversions.DecDeg2SCT(InfoSection.NorthLimit, IsLat);
-                SouthLimitTextBox.Text = Conversions.DecDeg2SCT(InfoSection.SouthLimit, IsLat);
-                EastLimitTextBox.Text = Conversions.DecDeg2SCT(InfoSection.EastLimit, IsLon);
-                WestLimitTextBox.Text = Conversions.DecDeg2SCT(InfoSection.WestLimit, IsLon);
+                NorthLimitTextBox.Text = Conversions.Degrees2SCT(InfoSection.NorthLimit, IsLat);
+                SouthLimitTextBox.Text = Conversions.Degrees2SCT(InfoSection.SouthLimit, IsLat);
+                EastLimitTextBox.Text = Conversions.Degrees2SCT(InfoSection.EastLimit, IsLon);
+                WestLimitTextBox.Text = Conversions.Degrees2SCT(InfoSection.WestLimit, IsLon);
             }
         }
 
@@ -1255,8 +1246,7 @@ namespace SCTBuilder
                 }
                 else
                 {
-                    Msg = "This directory folder does not exist.  Consider using the selection button.";
-                    SCTcommon.SendMessage(Msg);
+                    SCTcommon.SendMessage(UserMessage.PathInvalid);
                     FAADataFolderTextBox.Text = string.Empty;
                 }
                 ClearAllDataGridViews();
@@ -1380,10 +1370,10 @@ namespace SCTBuilder
 
         private void SetSquareAndOffset()
         {
-            InfoSection.NorthLimit = Conversions.String2DecDeg(NorthLimitTextBox.Text);
-            InfoSection.SouthLimit = Conversions.String2DecDeg(SouthLimitTextBox.Text);
-            InfoSection.WestLimit = Conversions.String2DecDeg(WestLimitTextBox.Text);
-            InfoSection.EastLimit = Conversions.String2DecDeg(EastLimitTextBox.Text);
+            InfoSection.NorthLimit = Conversions.DMS2Degrees(NorthLimitTextBox.Text);
+            InfoSection.SouthLimit = Conversions.DMS2Degrees(SouthLimitTextBox.Text);
+            InfoSection.WestLimit = Conversions.DMS2Degrees(WestLimitTextBox.Text);
+            InfoSection.EastLimit = Conversions.DMS2Degrees(EastLimitTextBox.Text);
             InfoSection.NorthOffset = Convert.ToDouble(NorthMarginNumericUpDown.Value);
             InfoSection.EastOffset = Convert.ToDouble(EastMarginNumericUpDown.Value);
             InfoSection.SouthOffset = Convert.ToDouble(SouthMarginNumericUpDown.Value);
@@ -1392,10 +1382,10 @@ namespace SCTBuilder
 
         private void GetSquareAndOffset()
         {
-            NorthLimitTextBox.Text = Conversions.DecDeg2SCT(InfoSection.NorthLimit, IsLat);
-            SouthLimitTextBox.Text = Conversions.DecDeg2SCT(InfoSection.SouthLimit, IsLat);
-            WestLimitTextBox.Text = Conversions.DecDeg2SCT(InfoSection.WestLimit, IsLon);
-            EastLimitTextBox.Text = Conversions.DecDeg2SCT(InfoSection.EastLimit, IsLon);
+            NorthLimitTextBox.Text = Conversions.Degrees2SCT(InfoSection.NorthLimit, IsLat);
+            SouthLimitTextBox.Text = Conversions.Degrees2SCT(InfoSection.SouthLimit, IsLat);
+            WestLimitTextBox.Text = Conversions.Degrees2SCT(InfoSection.WestLimit, IsLon);
+            EastLimitTextBox.Text = Conversions.Degrees2SCT(InfoSection.EastLimit, IsLon);
             NorthMarginNumericUpDown.Text = InfoSection.NorthOffset.ToString();
             EastMarginNumericUpDown.Text = InfoSection.EastOffset.ToString();
             SouthMarginNumericUpDown.Text = InfoSection.SouthOffset.ToString();
@@ -1484,9 +1474,7 @@ namespace SCTBuilder
                     }
                     else
                     {
-                        Msg = "You must select your FAA data folder before you can search for Fixes.";
-                        MessageBoxIcon icon = MessageBoxIcon.Warning;
-                        SCTcommon.SendMessage(Msg, icon);
+                        SCTcommon.SendMessage(UserMessage.DataFolderRequired);
                         IdentifierTextBox.Text = string.Empty;
                     }
                 }
@@ -1497,8 +1485,7 @@ namespace SCTBuilder
             }
             else
             {
-                Msg = "You must first load FAA data";
-                SCTcommon.SendMessage(Msg);
+                SCTcommon.SendMessage(UserMessage.DataFolderRequired);
             }
         }
 
@@ -1507,20 +1494,18 @@ namespace SCTBuilder
             double limit = CrossForm.Lat;
             if (Math.Abs(limit) > 90)
             {
-                Msg = "Latitude must be a value between -90 to +90 degrees";
-                SCTcommon.SendMessage(Msg);
+                SCTcommon.SendMessage(UserMessage.LatOutOfBounds);
                 limit = 0;
                 tb.Focus();
             }
             else if (InfoSection.SouthLimit > InfoSection.NorthLimit)
             {
-                Msg = "The North Limit may not be south of the South Limit";
-                SCTcommon.SendMessage(Msg);
+                SCTcommon.SendMessage(UserMessage.NorthUnderSouth);
                 limit = 0;
             }
             else
             {
-                tb.Text = Conversions.DecDeg2SCT(limit, IsLat);
+                tb.Text = Conversions.Degrees2SCT(limit, IsLat);
                 InfoSection.SouthLimit = limit;
                 SetSquareAndOffset();
                 CheckARTCCAsCenterButton();
@@ -1533,20 +1518,22 @@ namespace SCTBuilder
             double limit = CrossForm.Lon;
             if (Math.Abs(limit) > 180)
             {
-                Msg = "Longitude must be a value between -180 to +180 degrees";
-                SCTcommon.SendMessage(Msg);
+                SCTcommon.SendMessage(UserMessage.LonOutOfBounds);
                 limit = 0;
                 tb.Focus();
             }
             else if (InfoSection.WestLimit > InfoSection.EastLimit)
             {
-                Msg = "The West Limit may not be east of the East Limit";
-                SCTcommon.SendMessage(Msg);
-                limit = 0;
+                if (((InfoSection.WestLimit > 0) && (InfoSection.EastLimit >= 0))
+                    || ((InfoSection.EastLimit < 0) && (InfoSection.WestLimit <= 0)))
+                {
+                    SCTcommon.SendMessage(UserMessage.WestRightOfEast);
+                    limit = 0;
+                }
             }
             else
             {
-                tb.Text = Conversions.DecDeg2SCT(limit, IsLon);
+                tb.Text = Conversions.Degrees2SCT(limit, IsLon);
                 SetSquareAndOffset();
                 CheckARTCCAsCenterButton();
             }
@@ -1563,8 +1550,7 @@ namespace SCTBuilder
             }
             else
             {
-                Msg = "Invalid coordinates - please try again";
-                SCTcommon.SendMessage(Msg);
+                SCTcommon.SendMessage(UserMessage.CoordsInvalid);
                 tb.Focus();
             }
         }
@@ -1578,8 +1564,7 @@ namespace SCTBuilder
             }
             else
             {
-                Msg = "Invalid coordinates - please try again";
-                SCTcommon.SendMessage(Msg);
+                SCTcommon.SendMessage(UserMessage.CoordsInvalid);
                 tb.Focus();
             }
         }
@@ -1593,8 +1578,7 @@ namespace SCTBuilder
             }
             else
             {
-                Msg = "Invalid coordinates - please try again";
-                SCTcommon.SendMessage(Msg);
+                SCTcommon.SendMessage(UserMessage.CoordsInvalid);
                 tb.Focus();
             }
         }
@@ -1608,8 +1592,7 @@ namespace SCTBuilder
             }
             else
             {
-                Msg = "Invalid coordinates - please try again";
-                SCTcommon.SendMessage(Msg);
+                SCTcommon.SendMessage(UserMessage.CoordsInvalid);
                 tb.Focus();
             }
         }
@@ -1622,8 +1605,7 @@ namespace SCTBuilder
                 double limit = CrossForm.Lat;
                 if (Math.Abs(limit) > 90)
                 {
-                    Msg = "Latitude must be a value between -90 to +90 degrees";
-                    SCTcommon.SendMessage(Msg);
+                    SCTcommon.SendMessage(UserMessage.LatOutOfBounds);
                     tb.Focus();
                 }
                 else
@@ -1634,8 +1616,7 @@ namespace SCTBuilder
             }
             else
             {
-                Msg = "Invalid coordinates - please try again";
-                SCTcommon.SendMessage(Msg);
+                SCTcommon.SendMessage(UserMessage.CoordsInvalid);
                 tb.Focus();
             }
         }
@@ -1648,8 +1629,7 @@ namespace SCTBuilder
                 double limit = CrossForm.Lon;
                 if (Math.Abs(limit) > 180)
                 {
-                    Msg = "Longitude must be a value between -180 to +180 degrees";
-                    SCTcommon.SendMessage(Msg);
+                    SCTcommon.SendMessage(UserMessage.LonOutOfBounds);
                     tb.Focus();
                 }
                 else
@@ -1660,8 +1640,7 @@ namespace SCTBuilder
             }
             else
             {
-                Msg = "Invalid coordinates - please try again";
-                SCTcommon.SendMessage(Msg);
+                SCTcommon.SendMessage(UserMessage.CoordsInvalid);
                 tb.Focus();
             }
         }
@@ -1727,13 +1706,12 @@ namespace SCTBuilder
                 }
                 else if (dialogResult == DialogResult.Abort)
                 {
-                    Msg = "FAA download returned an error.  Correct the error and retry.";
-                    SCTcommon.SendMessage(Msg, MessageBoxIcon.Error);
+                    SCTcommon.SendMessage(UserMessage.FAADownloadError, MessageBoxIcon.Error);
                 }
                 UpdateAIRACbutton.Visible = true;
             }
             else
-                SendMessage("You must first identify a data folder to store the AIRAC data.");
+                SCTcommon.SendMessage(UserMessage.OutputFolderRequired);
             TestWriteSCT();
         }
 
@@ -1753,9 +1731,7 @@ namespace SCTBuilder
                 CenterSquare();
             else
             {
-                Msg = "Must have value in all Square textboxes to find center." + 
-                    "(Latitude -90 to 90, Longitude -180 to 180)";
-                SCTcommon.SendMessage(Msg);
+                SCTcommon.SendMessage(UserMessage.LimitsMissing);
             }
         }
 
@@ -1791,8 +1767,7 @@ namespace SCTBuilder
             {
                 if (!APTsCheckBox.Checked)
                 {
-                    Msg = "In order to select Runways, airports will be selected.";
-                    SendMessage(Msg);
+                    SendMessage(UserMessage.APTrequired);
                     APTsCheckBox.Checked = true;
                 }
             }
@@ -1804,8 +1779,7 @@ namespace SCTBuilder
             {
                 if (!VORsCheckBox.Checked && NDBsCheckBox.Checked && FIXesCheckBox.Checked)
                 {
-                    Msg = "In order to select Airways, navaids will be selected.";
-                    SendMessage(Msg);
+                    SendMessage(UserMessage.NAVAIDrequired);
                     VORsCheckBox.Checked = NDBsCheckBox.Checked = FIXesCheckBox.Checked = true;
                 }
             }
@@ -1900,8 +1874,7 @@ namespace SCTBuilder
             }
             else
             {
-                Msg = "You must first select an airport to use it as a center point.";
-                SCTcommon.SendMessage(Msg);
+                SCTcommon.SendMessage(UserMessage.APTrequired);
             }
         }
 
@@ -2025,7 +1998,7 @@ namespace SCTBuilder
             SetSquareAndOffset();
             ExitClicked = false;
             CycleInfo.WriteINIxml();
-            SendMessage("SCT Builder preferences saved.");
+            SendMessage(UserMessage.PrefsSaved);
         }
 
         private void exitProgramToolStripMenuItem_Click(object sender, EventArgs e)
@@ -2126,7 +2099,7 @@ namespace SCTBuilder
             if (ARTCCComboBox.SelectedIndex != -1)
                 SCTchecked.LimitAPT2ARTC = LimitAPT2ARTCCCheckBox.Checked;
             else
-                SCTcommon.SendMessage("Select an ARTCC first");
+                SCTcommon.SendMessage(UserMessage.ARTCCrequired);
         }
     }
 }

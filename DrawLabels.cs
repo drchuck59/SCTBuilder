@@ -61,9 +61,9 @@ namespace SCTBuilder
         private void FixListDataGridView_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
             LabelLat = Convert.ToDouble(FixListDataGridView.SelectedRows[0].Cells[1].Value);
-            LatTextBox.Text = Conversions.DecDeg2SCT(Convert.ToDouble(LabelLat), true);
+            LatTextBox.Text = Conversions.Degrees2SCT(Convert.ToDouble(LabelLat), true);
             LabelLon = Convert.ToDouble(FixListDataGridView.SelectedRows[0].Cells[2].Value);
-            LonTextBox.Text = Conversions.DecDeg2SCT(Convert.ToDouble(LabelLon), false);
+            LonTextBox.Text = Conversions.Degrees2SCT(Convert.ToDouble(LabelLon), false);
             LabelTextBox.Text = FixListDataGridView.SelectedRows[0].Cells[0].Value.ToString();
             CheckGenerate();
         }
@@ -80,7 +80,7 @@ namespace SCTBuilder
             if (CrossForm.TestTextBox(LatTextBox))
             {
                 LabelLat = CrossForm.Lat;
-                LatTextBox.Text = Conversions.DecDeg2SCT(LabelLat, true);
+                LatTextBox.Text = Conversions.Degrees2SCT(LabelLat, true);
                 CheckGenerate();
             }
         }
@@ -90,7 +90,7 @@ namespace SCTBuilder
             if (CrossForm.TestTextBox(LatTextBox))
             {
                 LabelLon = CrossForm.Lon;
-                LatTextBox.Text = Conversions.DecDeg2SCT(LabelLon, false);
+                LatTextBox.Text = Conversions.Degrees2SCT(LabelLon, false);
                 CheckGenerate();
             }
         }
@@ -134,8 +134,8 @@ namespace SCTBuilder
         {
             string result = string.Empty;
             object[] NavData; string curFix;
-            double Lat1 = Conversions.String2DecDeg(LatTextBox.Text, ".");
-            double Lon1 = Conversions.String2DecDeg(LonTextBox.Text, ".");
+            double Lat1 = Conversions.DMS2Degrees(LatTextBox.Text, ".");
+            double Lon1 = Conversions.DMS2Degrees(LonTextBox.Text, ".");
             int Brg = Convert.ToInt32(BearingTextBox.Text) - 90;            // Rotation in addition to MagVar
             float Scale = Convert.ToSingle(ScaleTextBox.Text);              // Scaling beyond internal 1/3600
             if (IncludeSymbolCheckBox.Checked && (FixListDataGridView.CurrentRow != null))

@@ -123,10 +123,10 @@ namespace SCTBuilder
                     end = PointF.Empty;
                 if (!(start.IsEmpty) && !(end.IsEmpty))
                 {
-                    Lat0 = Conversions.DecDeg2SCT(start.Y, true);
-                    Lat1 = Conversions.DecDeg2SCT(end.Y, true);
-                    Lon0 = Conversions.DecDeg2SCT(start.X, false);
-                    Lon1 = Conversions.DecDeg2SCT(end.X, false);
+                    Lat0 = Conversions.Degrees2SCT(start.Y, true);
+                    Lat1 = Conversions.Degrees2SCT(end.Y, true);
+                    Lon0 = Conversions.Degrees2SCT(start.X, false);
+                    Lon1 = Conversions.Degrees2SCT(end.X, false);
                     Result += SCTstrings.SSDout(Lat0, Lon0, Lat1, Lon1) + cr;
                 }
                 start = end;
@@ -188,8 +188,8 @@ namespace SCTBuilder
                     if (!(start.IsEmpty) && !(end.IsEmpty))
                     {
                     result += 
-                        SCTstrings.CharOut(Conversions.DecDeg2SCT(start.Y, true), Conversions.DecDeg2SCT(start.X, false),
-                        Conversions.DecDeg2SCT(end.Y, true), Conversions.DecDeg2SCT(end.X, false));
+                        SCTstrings.CharOut(Conversions.Degrees2SCT(start.Y, true), Conversions.Degrees2SCT(start.X, false),
+                        Conversions.Degrees2SCT(end.Y, true), Conversions.Degrees2SCT(end.X, false));
                     if (isFirst)
                     {
                         result += ";" + c.ToString();

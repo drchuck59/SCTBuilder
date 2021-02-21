@@ -29,13 +29,13 @@ namespace SCTBuilder
             DecLongitude = LatLonParser.ParsedLongitude;
             LatDecTextBox.Text = decimal.Round(Convert.ToDecimal(DecLatitude), 6, MidpointRounding.AwayFromZero).ToString();
             LonDecTextBox.Text = decimal.Round(Convert.ToDecimal(DecLongitude), 6, MidpointRounding.AwayFromZero).ToString();
-            DMSLatitude = Conversions.DecDeg2DMS(DecLatitude, true);
+            DMSLatitude = Conversions.Degrees2DMS(DecLatitude, true);
             LatDMSTextBox.Text = DMSLatitude;
-            DMSLongitude = Conversions.DecDeg2DMS(DecLongitude, false);
+            DMSLongitude = Conversions.Degrees2DMS(DecLongitude, false);
             LonDMSTextBox.Text = DMSLongitude;
-            SCTLatitude = Conversions.DecDeg2SCT(DecLatitude, true);
+            SCTLatitude = Conversions.Degrees2SCT(DecLatitude, true);
             LatSCTTextBox.Text = SCTLatitude;
-            SCTLongitude = Conversions.DecDeg2SCT(DecLongitude, false);
+            SCTLongitude = Conversions.Degrees2SCT(DecLongitude, false);
             LonSCTTextBox.Text = SCTLongitude;
             UpdateStrings();
         }

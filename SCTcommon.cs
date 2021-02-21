@@ -366,7 +366,7 @@ namespace SCTBuilder
     public class Conversions
     // Convert a variety of strings 
     {
-        public static double ToNM(double value, string FromType)
+        public static double NMperDegree(double value, string FromType)
         {
             double result;
             switch (FromType)
@@ -390,7 +390,7 @@ namespace SCTBuilder
 
         public static double SetFilterByLimit(string LL, string nud, string LLedge)
         {
-            double result = Conversions.String2DecDeg(LL);
+            double result = Conversions.DMS2Degrees(LL);
             double offset = Convert.ToDouble(nud);
             switch (LLedge)
             {
@@ -438,7 +438,7 @@ namespace SCTBuilder
             return result;
         }
 
-        public static double String2DecDeg(string DMS, string Delim = "")
+        public static double DMS2Degrees(string DMS, string Delim = "")
         /// <summary>
         /// Returns a Decimal degrees value from the OpenAIG formatted string
         ///         where ? is the quadrant
@@ -546,11 +546,15 @@ namespace SCTBuilder
             return result;
         }
 
-        public static string DecDeg2SCT(double DecDeg, bool IsLatitude)
+        public static string Degrees2SCT(double DecDeg, bool IsLatitude)
         {
+            // When in the W quadrant, E coordinates need to assume the closest route.
+            // This means we output the SCT as the West-equivalent for VRC output.
+            // Note that we do not test for valid degrees Lon in this routine.
             string quadrant;
             string result;     // An empty string indicates an error occurred
             double tempDecDeg;
+            // Check for lon that crosses 180 or 0 when outputting longitudes
             if (DecDeg < 0)     // Tests for S or W quadrants
             {
                 if (IsLatitude)
@@ -575,17 +579,62 @@ namespace SCTBuilder
             }
             tempDecDeg = Math.Abs(DecDeg);
             int DD = (int)Math.Floor(tempDecDeg);     // Need integer value WITHOUT rounding
-            string strDD = DD.ToString("000");          // This cannot be done in one step
             double tmpDecDeg = (tempDecDeg - DD) * 60;
             int MM = (int)Math.Floor(tmpDecDeg);
-            string strMM = MM.ToString("00");
             double SS = (tmpDecDeg - MM) * 60;
+            if (SS > 59.995)
+            {
+                MM++;
+                SS = 0;
+                if (MM >= 60)
+                {
+                    DD++;
+                    MM -= 60;
+                }
+            }
+            string strDD = DD.ToString("000");          // This cannot be done in one step
+            string strMM = MM.ToString("00");
             string strSS = SS.ToString("00.000");
             result = quadrant + strDD + "." + strMM + "." + strSS;
             return result;
         }
 
-        public static string DecDeg2DMS(double DecDeg, bool IsLatitude)
+        public static bool LonQuadChanged(double StartLon, double EndLon)
+        {
+            return (((int)StartLon ^ (int)EndLon) < 0);
+        }
+
+        public static double FlipCoord (double referenceLon, double TestLon)
+        {
+            // Called to test for a change in coordinate sign from reference (taken as Center_Lon)
+            // Returns the double value of the Lon closest to the reference
+            // The value will be converted to SCT format, which will be allowed to be >Abs(180)
+            // VRC will use the coordinate in the correct orientation for the map
+            // For example UHMA (E177.46.76) would be -186.220 or W186.12.12 in SCT
+            // We can int these because it won't affect the sign
+            double result = TestLon;
+            if (LonQuadChanged(referenceLon, TestLon))
+            {
+                double antimeridianDistance = (180 - Math.Abs(TestLon)) + (180 - Math.Abs(referenceLon));
+                double meridianDistance = Math.Abs(TestLon) + Math.Abs(referenceLon);
+                if (meridianDistance < antimeridianDistance)
+                    // Lon is moving across meridian; use original Lon
+                    return result;
+                else
+                // Lon is moving across antiMeridian; need the calculated Lon based on W/E center coord
+                {
+                    if (TestLon > 0)
+                        // Moving from E to W
+                        result += (180 - Math.Abs(TestLon));
+                    else
+                        // Moving from W to E
+                        result -= (180 - Math.Abs(TestLon));
+                }
+            }
+            return result;
+        }
+
+        public static string Degrees2DMS(double DecDeg, bool IsLatitude)
         {
             string quadrant;
             string result;     // An empty string indicates an error occurred
@@ -614,17 +663,27 @@ namespace SCTBuilder
             }
             tempDecDeg = Math.Abs(DecDeg);
             int DD = (int)Math.Floor(tempDecDeg);     // Need integer value WITHOUT rounding
-            string strDD = DD.ToString();             // This cannot be done in one step
             double tmpDecDeg = (tempDecDeg - DD) * 60;
             int MM = (int)Math.Floor(tmpDecDeg);
-            string strMM = MM.ToString("00");
             double SS = (tmpDecDeg - MM) * 60;
+            if (SS > 59.995)
+            {
+                MM++;
+                SS = 0;
+                if (MM >= 60)
+                {
+                    DD++;
+                    MM -= 60;
+                }
+            }
+            string strDD = DD.ToString();             // This cannot be done in one step
+            string strMM = MM.ToString("00");
             string strSS = SS.ToString("00.000");
             result = strDD + '°' + strMM + "'" + strSS + "\"" + quadrant;
             return result;
         }
 
-        public static double Seconds2DecDeg(string seconds)
+        public static double Seconds2Degrees(string seconds)
         {
             if (seconds.Length == 0) return -1;
             try
@@ -1068,19 +1127,19 @@ namespace SCTBuilder
         {
             string Lat0; string Lat1; string Lon0; string Lon1;
             if (Extensions.IsNumeric(StartLat.ToString()))
-                Lat0 = Conversions.DecDeg2SCT(Convert.ToDouble(StartLat), true);
+                Lat0 = Conversions.Degrees2SCT(Convert.ToDouble(StartLat), true);
             else
                 Lat0 = StartLat.ToString();
             if (Extensions.IsNumeric(StartLong.ToString()))
-                Lon0 = Conversions.DecDeg2SCT(Convert.ToDouble(StartLong), false);
+                Lon0 = Conversions.Degrees2SCT(Convert.ToDouble(StartLong), false);
             else
                 Lon0 = StartLong.ToString();
             if (Extensions.IsNumeric(EndLat.ToString()))
-                Lat1 = Conversions.DecDeg2SCT(Convert.ToDouble(EndLat), true);
+                Lat1 = Conversions.Degrees2SCT(Convert.ToDouble(EndLat), true);
             else
                 Lat1 = EndLat.ToString();
             if (Extensions.IsNumeric(EndLong.ToString()))
-                Lon1 = Conversions.DecDeg2SCT(Convert.ToDouble(EndLong), false);
+                Lon1 = Conversions.Degrees2SCT(Convert.ToDouble(EndLong), false);
             else
                 Lon1 = EndLong.ToString();
             string space = new string(' ', 27);

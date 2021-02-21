@@ -109,8 +109,8 @@ namespace SCTBuilder
                     dvAPT.RowFilter = "[FacilityID] = '" + drvPOF["CallPrefix"].ToString() + "'";
                     if (dvAPT.Count > 0)
                     {
-                        drvPOF["Latitude"] = Conversions.DecDeg2SCT(Convert.ToDouble(dvAPT[0]["Latitude"]), true);
-                        drvPOF["Longitude"] = Conversions.DecDeg2SCT(Convert.ToDouble(dvAPT[0]["Longitude"]), false);
+                        drvPOF["Latitude"] = Conversions.Degrees2SCT(Convert.ToDouble(dvAPT[0]["Latitude"]), true);
+                        drvPOF["Longitude"] = Conversions.Degrees2SCT(Convert.ToDouble(dvAPT[0]["Longitude"]), false);
                     }
                     else
                     {

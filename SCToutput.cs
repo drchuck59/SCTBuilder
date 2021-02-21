@@ -21,14 +21,13 @@ namespace SCTBuilder
         static List<string> FixesUsed = new List<string>();
         static List<string> APTsUsed = new List<string>();
         private static string BigResult = string.Empty;
-        static string PartialPath = FolderMgt.OutputFolder + "\\" + InfoSection.SponsorARTCC + "_";
-
+        static readonly bool IsOutput = true;
         public static void WriteSCT()
         {
             // DataTable LS = Form1.LocalSector;
             var TextFiles = new List<string>();
             string Message;
-
+            string PartialPath = FolderMgt.OutputFolder + "\\" + InfoSection.SponsorARTCC + "_";
             Console.WriteLine("Header...");
             string path = SCTcommon.CheckFile(PartialPath, "Header");
             WriteHeader(path);
@@ -107,13 +106,13 @@ namespace SCTBuilder
             if (SCTchecked.ChkSID)
             {
                 Console.WriteLine("SIDS...");
-                WriteSIDSTAR(IsSID: true);
+                WriteSIDSTAR(PartialPath, IsSID: true);
                 TextFiles.Add(path);
             }
             if (SCTchecked.ChkSTAR)
             {
                 Console.WriteLine("STARS...");
-                WriteSIDSTAR(IsSID: false);
+                WriteSIDSTAR(PartialPath, IsSID: false);
                 TextFiles.Add(path);
             }
             if (SCTchecked.IncludeSUAfile)
@@ -219,10 +218,13 @@ namespace SCTBuilder
                 sw.WriteLine("[VOR]");
                 foreach (DataRowView row in dataView)
                 {
+                    double Lon = Convert.ToSingle(row["Longitude"]);
+                    if (Conversions.LonQuadChanged(InfoSection.CenterLongitude_Dec, Lon))
+                        Lon = Conversions.FlipCoord(InfoSection.CenterLongitude_Dec, Lon);
                     strOut[0] = row["FacilityID"].ToString();
                     strOut[1] = string.Format("{0:000.000}", row["Frequency"]);
-                    strOut[2] = Conversions.DecDeg2SCT(Convert.ToSingle(row["Latitude"]), true);
-                    strOut[3] = Conversions.DecDeg2SCT(Convert.ToSingle(row["Longitude"]), false);
+                    strOut[2] = Conversions.Degrees2SCT(Convert.ToSingle(row["Latitude"]), true);
+                    strOut[3] = Conversions.Degrees2SCT(Lon, false);
                     strOut[4] = row["Name"].ToString();
                     strOut[5] = row["FixType"].ToString();
                     if (!(strOut[2] + strOut[3]).Contains("-1 "))      // Do NOT write VORs having no fix
@@ -246,10 +248,13 @@ namespace SCTBuilder
                 sw.WriteLine("[NDB]");
                 foreach (DataRowView row in dataView)
                 {
+                    double Lon = Convert.ToSingle(row["Longitude"]);
+                    if (Conversions.LonQuadChanged(InfoSection.CenterLongitude_Dec, Lon))
+                        Lon = Conversions.FlipCoord(InfoSection.CenterLongitude_Dec, Lon);
                     strOut[0] = row["FacilityID"].ToString().PadRight(3);
                     strOut[1] = string.Format("{0:000.000}", row["Frequency"]);
-                    strOut[2] = Conversions.DecDeg2SCT(Convert.ToSingle(row["Latitude"]), true);
-                    strOut[3] = Conversions.DecDeg2SCT(Convert.ToSingle(row["Longitude"]), false);
+                    strOut[2] = Conversions.Degrees2SCT(Convert.ToSingle(row["Latitude"]), true);
+                    strOut[3] = Conversions.Degrees2SCT(Lon, false);
                     strOut[4] = row["Name"].ToString();
                     LineOut = strOut[0] + " " + strOut[1] + " " +
                         strOut[2] + " " + strOut[3] + " ;" + strOut[4];
@@ -296,9 +301,12 @@ namespace SCTBuilder
                             LCL = "0";
                         ATIS = string.Empty;
                     }
+                    double Lon = Convert.ToSingle(row["Longitude"]);
+                    if (Conversions.LonQuadChanged(InfoSection.CenterLongitude_Dec, Lon))
+                        Lon = Conversions.FlipCoord(InfoSection.CenterLongitude_Dec, Lon);
                     strOut[1] = LCL.PadRight(7);
-                    strOut[2] = Conversions.DecDeg2SCT(Convert.ToSingle(row["Latitude"]), true);
-                    strOut[3] = Conversions.DecDeg2SCT(Convert.ToSingle(row["Longitude"]), false);
+                    strOut[2] = Conversions.Degrees2SCT(Convert.ToSingle(row["Latitude"]), true);
+                    strOut[3] = Conversions.Degrees2SCT(Lon, false);
                     strOut[4] = row["Name"].ToString();
                     if (Convert.ToBoolean(row["Public"]))
                         strOut[5] = " (Public) ";
@@ -316,6 +324,7 @@ namespace SCTBuilder
         public static void WriteFixes(string path)
         {
             string[] strOut = new string[5];
+            double Lon;
             DataTable FIX = Form1.FIX;
             DataView dataView = new DataView(FIX)
             {
@@ -328,9 +337,12 @@ namespace SCTBuilder
                 sw.WriteLine("[FIXES]");
                 foreach (DataRowView row in dataView)
                 {
+                    Lon = Convert.ToSingle(row["Longitude"]); 
+                    if (Conversions.LonQuadChanged(InfoSection.CenterLongitude_Dec, Lon))
+                        Lon = Conversions.FlipCoord(InfoSection.CenterLongitude_Dec, Lon);
                     strOut[0] = row["FacilityID"].ToString();
-                    strOut[2] = Conversions.DecDeg2SCT(Convert.ToSingle(row["Latitude"]), true);
-                    strOut[3] = Conversions.DecDeg2SCT(Convert.ToSingle(row["Longitude"]), false);
+                    strOut[2] = Conversions.Degrees2SCT(Convert.ToSingle(row["Latitude"]), true);
+                    strOut[3] = Conversions.Degrees2SCT(Lon, false);
                     strOut[4] = row["Use"].ToString();
                     sw.WriteLine(SCTstrings.FIXout(strOut));  // Uses 0, 2, 3, and 4
                 }
@@ -381,10 +393,10 @@ namespace SCTBuilder
                     else if (MagBHdg < 0) MagEHdg = (MagEHdg + 360) % 360;
                     if (MagBHdg == 0) MagBHdg = 360;
                     strOut[3] = Convert.ToString(MagEHdg).PadRight(3);
-                    strOut[4] = Conversions.DecDeg2SCT(Convert.ToSingle(row["Latitude"]), true);
-                    strOut[5] = Conversions.DecDeg2SCT(Convert.ToSingle(row["Longitude"]), false);
-                    strOut[6] = Conversions.DecDeg2SCT(Convert.ToSingle(row["EndLatitude"]), true);
-                    strOut[7] = Conversions.DecDeg2SCT(Convert.ToSingle(row["EndLongitude"]), false);
+                    strOut[4] = Conversions.Degrees2SCT(Convert.ToSingle(row["Latitude"]), true);
+                    strOut[5] = Conversions.Degrees2SCT(Convert.ToSingle(row["Longitude"]), false);
+                    strOut[6] = Conversions.Degrees2SCT(Convert.ToSingle(row["EndLatitude"]), true);
+                    strOut[7] = Conversions.Degrees2SCT(Convert.ToSingle(row["EndLongitude"]), false);
                     strOut[8] = FacFullName;
                     sw.WriteLine(SCTstrings.RWYout(strOut));
                     DRAW.Rows.Add(new object[] { strOut[0].ToString(), strOut[4].ToString(), strOut[5].ToString(), "", FacFullName });
@@ -399,9 +411,9 @@ namespace SCTBuilder
             DataTable AWY = Form1.AWY;
             string Awy0 = string.Empty; string Awy1;
             string NavAid0 = string.Empty; string NavAid1;
-            double Lat0=-1; double Lat1;
-            double Lon0=-1; double Lon1;
-            bool IsBreak;
+            double Lat0=-1; double Lat1; 
+            double Lon0=-1; double Lon1; 
+            bool IsBreak; 
             string filter = "[Selected]";
             if (IsLow) filter += " AND [IsLow]";
             else filter += " AND NOT [IsLow]";
@@ -423,31 +435,34 @@ namespace SCTBuilder
                     IsBreak = (bool)rowAWY["IsBreak"];
                     Lat1 = Convert.ToSingle(rowAWY["Latitude"]);
                     Lon1 = Convert.ToSingle(rowAWY["Longitude"]);
-                    if (IsBreak) 
-                        Lat1 = -1f;            // Break in awy; restart sequence with next
-                    if (Awy1 != Awy0) Lat0 = -1f;       // New air, last segment was written (but save this coord)
+                    if (IsBreak) Lat1 = -199f;            // Break in awy; restart sequence with next
+                    if (Awy1 != Awy0) Lat0 = -199f;       // New air, last segment was written (but save this coord)
                     {
-                        if ((Lat0 != -1) && (Lat1 != -1))
-                            sw.WriteLine(SCTstrings.AWYout(Awy1, 
-                                Conversions.DecDeg2SCT(Convert.ToSingle(Lat0), true), 
-                                Conversions.DecDeg2SCT(Convert.ToSingle(Lon0), false), 
-                                Conversions.DecDeg2SCT(Convert.ToSingle(Lat1), true), 
-                                Conversions.DecDeg2SCT(Convert.ToSingle(Lon1),false), 
+                        if ((Lat0 != -199) & (Lat1 != -199))
+                        {
+                            // Make sure Lon1 isn't outside the working quadrant
+                            if (Conversions.LonQuadChanged(InfoSection.CenterLongitude_Dec, Lon1))
+                                Lon1 = Conversions.FlipCoord(Lon0, Lon1);
+                            sw.WriteLine(SCTstrings.AWYout(Awy1,
+                                Conversions.Degrees2SCT(Convert.ToSingle(Lat0), true),
+                                Conversions.Degrees2SCT(Convert.ToSingle(Lon0), false),
+                                Conversions.Degrees2SCT(Convert.ToSingle(Lat1), true),
+                                Conversions.Degrees2SCT(Convert.ToSingle(Lon1), false),
                                 NavAid0, NavAid1));
+                        }
                     }
                     // Shift all items
                     Awy0 = Awy1; NavAid0 = NavAid1;
-                    Lat0 = Lat1; Lon0 = Lon1; 
+                    Lat0 = Lat1; Lon0 = Lon1;
                 }
             }
             dvAWY.Dispose();
         }
 
-        public static void WriteSIDSTAR(bool IsSID)
+        public static void WriteSIDSTAR(string PartialPath, bool IsSID)
         {
             // Calling routine for SID and STAR diagrams
             // SSD = Either SID or STAR, depending on flag
-            string path;
             string SSDfilter;
             string Section = "STAR"; if (IsSID) Section = "SID";
 
@@ -484,7 +499,7 @@ namespace SCTBuilder
                     if (dvSSD.Count != 0)
                         BuildSSD(dvSSD);
                     // Creating a file for each dvSSD...
-                    path = SCTcommon.CheckFile(PartialPath, dvSSD[0]["SSDcode"].ToString());
+                    string path = SCTcommon.CheckFile(PartialPath, dvSSD[0]["SSDcode"].ToString());
                     using (StreamWriter sw = new StreamWriter(path))
                     {
                         sw.WriteLine(CycleHeader);
@@ -513,7 +528,7 @@ namespace SCTBuilder
                         BuildSSD(dvSSD);
                 }
                 // Create ONE file for all the SSDs
-                path = SCTcommon.CheckFile(PartialPath, Section);
+                string path = SCTcommon.CheckFile(PartialPath, Section);
                 using (StreamWriter sw = new StreamWriter(path))
                 {
                     sw.WriteLine(CycleHeader);
@@ -631,8 +646,11 @@ namespace SCTBuilder
                     strOut[1] = string.Format("{0:000.000}", dvTWR[0]["LCLfreq"].ToString());
                 else
                     strOut[1] = "122.8  ";
-                strOut[2] = Conversions.DecDeg2SCT(Convert.ToDouble(dvAPT[0]["Latitude"]), true);
-                strOut[3] = Conversions.DecDeg2SCT(Convert.ToDouble(dvAPT[0]["Longitude"]), false);
+                double Lon = Convert.ToSingle(dvAPT[0]["Longitude"]);
+                if (Conversions.LonQuadChanged(InfoSection.CenterLongitude_Dec, Lon))
+                    Lon = Conversions.FlipCoord(InfoSection.CenterLongitude_Dec, Lon);
+                strOut[2] = Conversions.Degrees2SCT(Convert.ToDouble(dvAPT[0]["Latitude"]), true);
+                strOut[3] = Conversions.Degrees2SCT(Lon, false);
                 strOut[4] = dvAPT[0]["Name"].ToString();
                 sw.WriteLine(SCTstrings.APTout(strOut.ToArray()));
             }
@@ -646,11 +664,14 @@ namespace SCTBuilder
                 sw.WriteLine(cr + "[VOR]");
                 foreach (object[] VORs in VORData)
                 {
+                    double Lon = Convert.ToDouble(VORs[4]);
+                    if (Conversions.LonQuadChanged(InfoSection.CenterLongitude_Dec, Lon))
+                        Lon = Conversions.FlipCoord(InfoSection.CenterLongitude_Dec, Lon);
                     // strOut expects 0-Fix, 1-Freq, 2-Lat, 3-Lon, 4-Name, 5-Type
                     strOut[0] = VORs[1].ToString();
                     strOut[1] = VORs[2].ToString();
-                    strOut[2] = Conversions.DecDeg2SCT(Convert.ToDouble(VORs[3]), true);
-                    strOut[3] = Conversions.DecDeg2SCT(Convert.ToDouble(VORs[4]), false);
+                    strOut[2] = Conversions.Degrees2SCT(Convert.ToDouble(VORs[3]), true);
+                    strOut[3] = Conversions.Degrees2SCT(Lon, false);
                     strOut[4] = VORs[5].ToString();
                     strOut[5] = VORs[6].ToString();
                     sw.WriteLine(SCTstrings.VORout(strOut));
@@ -662,10 +683,13 @@ namespace SCTBuilder
                 sw.WriteLine(cr + "[NDB]");
                 foreach (object[] NDBs in NDBData)
                 {
+                    double Lon = Convert.ToDouble(NDBs[4]);
+                    if (Conversions.LonQuadChanged(InfoSection.CenterLongitude_Dec, Lon))
+                        Lon = Conversions.FlipCoord(InfoSection.CenterLongitude_Dec, Lon);
                     strOut[0] = NDBs[1].ToString();
                     strOut[1] = NDBs[2].ToString();
-                    strOut[2] = Conversions.DecDeg2SCT(Convert.ToDouble(NDBs[3]), true);
-                    strOut[3] = Conversions.DecDeg2SCT(Convert.ToDouble(NDBs[4]), false);
+                    strOut[2] = Conversions.Degrees2SCT(Convert.ToDouble(NDBs[3]), true);
+                    strOut[3] = Conversions.Degrees2SCT(Lon, false);
                     strOut[4] = NDBs[5].ToString();
                     strOut[5] = NDBs[6].ToString();
                     sw.WriteLine(SCTstrings.NDBout(strOut));
@@ -677,9 +701,12 @@ namespace SCTBuilder
                 sw.WriteLine(cr + "[FIXES]");
                 foreach (object[] FIXes in FixData)
                 {
+                    double Lon = Convert.ToDouble(FIXes[4]);
+                    if (Conversions.LonQuadChanged(InfoSection.CenterLongitude_Dec, Lon))
+                        Lon = Conversions.FlipCoord(InfoSection.CenterLongitude_Dec, Lon);
                     strOut[0] = FIXes[1].ToString();
-                    strOut[2] = Conversions.DecDeg2SCT(Convert.ToDouble(FIXes[3]), true);
-                    strOut[3] = Conversions.DecDeg2SCT(Convert.ToDouble(FIXes[4]), false);
+                    strOut[2] = Conversions.Degrees2SCT(Convert.ToDouble(FIXes[3]), true);
+                    strOut[3] = Conversions.Degrees2SCT(Lon, false);
                     strOut[4] = FIXes[5].ToString();
                     sw.WriteLine(SCTstrings.FIXout(strOut));
                 }
@@ -804,8 +831,11 @@ namespace SCTBuilder
                     {
                         if (Lat0.Length == 0)                   // First point of line
                         {
-                            Lat1 = Conversions.DecDeg2SCT(Convert.ToSingle(ARBdataRowView["Latitude"]), true);
-                            Long1 = Conversions.DecDeg2SCT(Convert.ToSingle(ARBdataRowView["Longitude"]), false);
+                            double Lon = Convert.ToSingle(ARBdataRowView["Longitude"]);
+                            if (Conversions.LonQuadChanged(InfoSection.CenterLongitude_Dec, Lon))
+                                Lon = Conversions.FlipCoord(InfoSection.CenterLongitude_Dec, Lon);
+                            Lat1 = Conversions.Degrees2SCT(Convert.ToSingle(ARBdataRowView["Latitude"]), true);
+                            Long1 = Conversions.Degrees2SCT(Lon, false);
                             LatFirst = Lat1; LongFirst = Long1;             // Save the first point
                             Descr1 = ARBdataRowView["Description"].ToString();
                             ARBname = ARBdataRowView["Name"].ToString();   // Initialize AARTC name
@@ -814,10 +844,13 @@ namespace SCTBuilder
                         }
                         else
                         {
+                            double Lon = Convert.ToSingle(ARBdataRowView["Longitude"]);
+                            if (Conversions.LonQuadChanged(InfoSection.CenterLongitude_Dec, Lon))
+                                Lon = Conversions.FlipCoord(InfoSection.CenterLongitude_Dec, Lon);
                             FacID1 = ARBdataRowView["ARTCC"].ToString();
                             Descr1 = ARBdataRowView["Description"].ToString();
-                            Lat1 = Conversions.DecDeg2SCT(Convert.ToSingle(ARBdataRowView["Latitude"]), true);
-                            Long1 = Conversions.DecDeg2SCT(Convert.ToSingle(ARBdataRowView["Longitude"]), false);
+                            Lat1 = Conversions.Degrees2SCT(Convert.ToSingle(ARBdataRowView["Latitude"]), true);
+                            Long1 = Conversions.Degrees2SCT(Lon, false);
                             if ((FacID0.Length != 0) && (FacID0 == FacID1))
                                 Output += SCTstrings.BoundaryOut(FacID1 + HL, Lat0, Long0, Lat1, Long1, Descr0) + cr;
                         }
@@ -916,8 +949,8 @@ namespace SCTBuilder
                 }
                 else
                 {
-                    Lat1 = Conversions.DecDeg2SCT(Convert.ToSingle(dataRow["Latitude"]), true);
-                    Long1 = Conversions.DecDeg2SCT(Convert.ToSingle(dataRow["Longitude"]), false);
+                    Lat1 = Conversions.Degrees2SCT(Convert.ToSingle(dataRow["Latitude"]), true);
+                    Long1 = Conversions.Degrees2SCT(Convert.ToSingle(dataRow["Longitude"]), false);
                 }
                 if ((Lat0 != string.Empty) && (Lat1 != string.Empty))
                 {

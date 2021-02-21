@@ -467,13 +467,12 @@ namespace SCTBuilder
         {
             return Math.Abs(Lon) <= 180;
         }
-        // Returns true if the point p lies inside the polygon[] with n vertices 
-        
 
         public static bool IsInsideARTCC(string ARTCC, double Latitude, double Longitude)
         {
             // Creates a polygon of the ARTCC and checks that the coords lie inside
             // Generally, avoid this approach, as most waypoints/APTs have the owning ARTCC
+            // Returns true if the point p lies inside the polygon[] with n vertices 
             PointF p = new PointF((float)Latitude, (float)Longitude);
             PointF[] polygon = MakePolygon(ARTCC);
             // There must be at least 3 vertices in polygon[] 

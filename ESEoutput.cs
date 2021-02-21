@@ -14,7 +14,6 @@ namespace SCTBuilder
     {
         public static string CycleHeader;
         public static readonly string cr = Environment.NewLine;
-        static readonly string PartialPath = FolderMgt.OutputFolder + "\\" + InfoSection.SponsorARTCC + "_ES_";
 
         public static void WriteESE()
         {
@@ -22,6 +21,8 @@ namespace SCTBuilder
             var TextFiles = new List<string>();
             string Message; string path;
             bool CombineIntoOneFile = SCTchecked.ChkOneESFile;
+            string PartialPath = FolderMgt.OutputFolder + "\\" + InfoSection.SponsorARTCC + "_ES_";
+
             if (SCTchecked.ChkES_SCTfile)
             {
                 path = SCTcommon.CheckFile(PartialPath, "Header");
@@ -104,14 +105,14 @@ namespace SCTBuilder
                 if (SCTchecked.ChkSID)
                 {
                     Console.WriteLine("SIDS...");
-                    SCToutput.WriteSIDSTAR(IsSID: true);
+                    SCToutput.WriteSIDSTAR(PartialPath, IsSID: true);
                     if (CombineIntoOneFile) TextFiles.Add(path);
                 }
 
                 if (SCTchecked.ChkSTAR)
                 {
                     Console.WriteLine("STARS...");
-                    SCToutput.WriteSIDSTAR(IsSID: false);
+                    SCToutput.WriteSIDSTAR(PartialPath, IsSID: false);
                     if (CombineIntoOneFile) TextFiles.Add(path);
                 }
             }
@@ -204,8 +205,8 @@ namespace SCTBuilder
                         LCL = foundRow["LCLfreq"].ToString();
                         Class = foundRow["Class"].ToString();
                     }
-                    Lat = Conversions.DecDeg2SCT(Convert.ToSingle(row["Latitude"]), true);
-                    Lon = Conversions.DecDeg2SCT(Convert.ToSingle(row["Longitude"]), false);
+                    Lat = Conversions.Degrees2SCT(Convert.ToSingle(row["Latitude"]), true);
+                    Lon = Conversions.Degrees2SCT(Convert.ToSingle(row["Longitude"]), false);
                     strOut = FacID.PadRight(4) + " " + LCL.PadRight(7) + " " + Lat + " " + Lon + " " + Class;
                     sw.WriteLine(strOut);
                 }
@@ -243,10 +244,10 @@ namespace SCTBuilder
                     strOut[1] = row["EndIdentifier"].ToString().Trim().PadRight(3);
                     strOut[2] = row["BaseHeading"].ToString().PadRight(3);
                     strOut[3] = row["EndHeading"].ToString().PadRight(3);
-                    strOut[4] = Conversions.DecDeg2SCT(Convert.ToSingle(row["Latitude"]), true);
-                    strOut[5] = Conversions.DecDeg2SCT(Convert.ToSingle(row["Longitude"]), false);
-                    strOut[6] = Conversions.DecDeg2SCT(Convert.ToSingle(row["EndLatitude"]), true);
-                    strOut[7] = Conversions.DecDeg2SCT(Convert.ToSingle(row["EndLongitude"]), false);
+                    strOut[4] = Conversions.Degrees2SCT(Convert.ToSingle(row["Latitude"]), true);
+                    strOut[5] = Conversions.Degrees2SCT(Convert.ToSingle(row["Longitude"]), false);
+                    strOut[6] = Conversions.Degrees2SCT(Convert.ToSingle(row["EndLatitude"]), true);
+                    strOut[7] = Conversions.Degrees2SCT(Convert.ToSingle(row["EndLongitude"]), false);
                     strOut[8] = FacID + "-" + FacName ;
                     sw.Write(SCTstrings.RWYout(strOut, ESformat: true));
                     DRAW.Rows.Add(new object[] { strOut[0].ToString(), strOut[4].ToString(), strOut[5].ToString(), strOut[8].ToString() });

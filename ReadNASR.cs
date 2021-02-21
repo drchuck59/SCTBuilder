@@ -68,8 +68,8 @@ namespace SCTBuilder
                         Line.Substring(0, 3),             // ARTCC
                         Line.Substring(12, 40).Trim(),    // Name
                         Line.Substring(52, 10).Trim(),    // Boundary type (H/L/Boundary, etc.)
-                        Conversions.String2DecDeg(Line.Substring(62, 14).Trim(), "-"),  // Latitude
-                        Conversions.String2DecDeg(Line.Substring(76, 14).Trim(), "-"),  // Longitude
+                        Conversions.DMS2Degrees(Line.Substring(62, 14).Trim(), "-"),  // Latitude
+                        Conversions.DMS2Degrees(Line.Substring(76, 14).Trim(), "-"),  // Longitude
                         Line.Substring(90, 300).Trim(),                     // Decode Name
                         Convert.ToInt32(Line.Substring(390, 6).Trim())    // Sequence number
                     };
@@ -176,8 +176,8 @@ namespace SCTBuilder
                             var FixItems = new List<object>
                                 {
                                     Line.Substring(4, 30).Trim(),                            // ID
-                                    Conversions.String2DecDeg(Line.Substring(66, 14).Trim(),"-"),      // Latitude
-                                    Conversions.String2DecDeg(Line.Substring(80, 14).Trim(),"-"),      // Longitude
+                                    Conversions.DMS2Degrees(Line.Substring(66, 14).Trim(),"-"),      // Latitude
+                                    Conversions.DMS2Degrees(Line.Substring(80, 14).Trim(),"-"),      // Longitude
                                     Line.Substring(237, 4).Trim(),                          // ARTCC
                                     Line.Substring(34, 30).Trim(),                          // State
                                     Line.Substring(213, 15).Trim(),                         // Use
@@ -239,8 +239,8 @@ namespace SCTBuilder
                                 tempFacID,                                      // Facility ID (FAA)
                                 tempICAO,                                       // Facility ID (ICAO)
                                 tempFacilityName,                               // Facility Name
-                                Conversions.Seconds2DecDeg(Line.Substring(538, 12)),    // Latitude
-                                Conversions.Seconds2DecDeg(Line.Substring(565, 12)),    // Longitude
+                                Conversions.Seconds2Degrees(Line.Substring(538, 12)),    // Latitude
+                                Conversions.Seconds2Degrees(Line.Substring(565, 12)),    // Longitude
                                 tempARTCC,                                      // Responsible ARTCC
                                 Line.Substring(50, 20).Trim(),                  // State
                                 tempMagVar,                                     // Magnetic Variation
@@ -278,12 +278,12 @@ namespace SCTBuilder
                                 }
                                 if (tempOpen)
                                 {
-                                    tempLatB = Conversions.Seconds2DecDeg(Line.Substring(103, 12).Trim());   // Base Latitude
+                                    tempLatB = Conversions.Seconds2Degrees(Line.Substring(103, 12).Trim());   // Base Latitude
                                     if (tempLatB == -1) tempOpen = false;
                                 }
                                 if (tempOpen)
                                 {
-                                    tempLongB = Conversions.Seconds2DecDeg(Line.Substring(130, 12).Trim());  // Base Longitude
+                                    tempLongB = Conversions.Seconds2Degrees(Line.Substring(130, 12).Trim());  // Base Longitude
                                     if (tempLongB == -1) tempOpen = false;
                                 }
                                 if (tempOpen)
@@ -306,12 +306,12 @@ namespace SCTBuilder
                                 }
                                 if (tempOpen)
                                 {
-                                    tempLatR = Conversions.Seconds2DecDeg(Line.Substring(325, 12).Trim());   // Reciprocal Latitude
+                                    tempLatR = Conversions.Seconds2Degrees(Line.Substring(325, 12).Trim());   // Reciprocal Latitude
                                     if (tempLatR == -1) tempOpen = false;
                                 }
                                 if (tempOpen)
                                 {
-                                    tempLongR = Conversions.Seconds2DecDeg(Line.Substring(352, 12).Trim());  // Reciprocal Longitude
+                                    tempLongR = Conversions.Seconds2Degrees(Line.Substring(352, 12).Trim());  // Reciprocal Longitude
                                     if (tempLongR == -1) tempOpen = false;
                                 }
                                 if (tempOpen)
@@ -434,8 +434,8 @@ namespace SCTBuilder
                             {
                                 tempFac = Line.Substring(4, 4).Trim();
                                 tempName = Line.Substring(104, 50).Trim();
-                                tempLat = Conversions.Seconds2DecDeg(Line.Substring(168, 11).Trim());
-                                tempLong = Conversions.Seconds2DecDeg(Line.Substring(193, 11).Trim());
+                                tempLat = Conversions.Seconds2Degrees(Line.Substring(168, 11).Trim());
+                                tempLong = Conversions.Seconds2Degrees(Line.Substring(193, 11).Trim());
                             }
                         }
                     }
@@ -546,8 +546,8 @@ namespace SCTBuilder
                             { aNAVID = Line.Substring(15, 30).Trim(); }
                             else
                             { aNAVID = Line.Substring(116, 4).Trim(); }
-                            aLat = Conversions.String2DecDeg(Line.Substring(83, 14).Trim(), "-");      // Latitude
-                            aLong = Conversions.String2DecDeg(Line.Substring(97, 14).Trim(), "-");      // Longitude
+                            aLat = Conversions.DMS2Degrees(Line.Substring(83, 14).Trim(), "-");      // Latitude
+                            aLong = Conversions.DMS2Degrees(Line.Substring(97, 14).Trim(), "-");      // Longitude
                             var FixItems = new List<object>
                             {
                                 aID,
@@ -593,8 +593,8 @@ namespace SCTBuilder
                     Seqno += 10;
                     SSDname = Line.Substring(51, 110).Trim();
                     NavAid = Line.Substring(30, 6).Trim();
-                    Lat1 = Conversions.String2DecDeg(Line.Substring(13, 8).Trim());           // Latitude
-                    Lon1 = Conversions.String2DecDeg(Line.Substring(21, 9).Trim());           // Longitude
+                    Lat1 = Conversions.DMS2Degrees(Line.Substring(13, 8).Trim());           // Latitude
+                    Lon1 = Conversions.DMS2Degrees(Line.Substring(21, 9).Trim());           // Longitude
                     FixType = Line.Substring(10, 2).Trim();
                     TransitionName = string.Empty;
                     // If present, this string identifies a new block or Transition
@@ -750,8 +750,8 @@ namespace SCTBuilder
                                             SectorLevel,
                                             SectorBase,
                                             SectorTop,
-                                            Conversions.String2DecDeg(Lat0," "),
-                                            Conversions.String2DecDeg(Long0, " "),
+                                            Conversions.DMS2Degrees(Lat0," "),
+                                            Conversions.DMS2Degrees(Long0, " "),
                                             Exclude,
                                         };
                                         AddFixes(LS, FixItems);

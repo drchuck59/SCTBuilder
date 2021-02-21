@@ -191,10 +191,10 @@ namespace SCTBuilder
         private void ImportFix2StartButton_Click(object sender, EventArgs e)
         {
             StartLatitudeTextBox.Text =
-                Conversions.DecDeg2SCT(Convert.ToDouble(FixListDataGridView.SelectedRows[0].Cells[1].Value), true);
+                Conversions.Degrees2SCT(Convert.ToDouble(FixListDataGridView.SelectedRows[0].Cells[1].Value), true);
             StartLat = Convert.ToDouble(FixListDataGridView.SelectedRows[0].Cells[1].Value);
             StartLongitudeTextBox.Text =
-                Conversions.DecDeg2SCT(Convert.ToDouble(FixListDataGridView.SelectedRows[0].Cells[2].Value), false);
+                Conversions.Degrees2SCT(Convert.ToDouble(FixListDataGridView.SelectedRows[0].Cells[2].Value), false);
             StartLon = Convert.ToDouble(FixListDataGridView.SelectedRows[0].Cells[2].Value);
             StartFixTextBox.Text = FixListDataGridView.SelectedRows[0].Cells[0].Value.ToString();
             UpdateCopyButtons();
@@ -203,10 +203,10 @@ namespace SCTBuilder
         private void ImportFix2EndButton_Click(object sender, EventArgs e)
         {
             EndLatitudeTextBox.Text =
-                Conversions.DecDeg2SCT(Convert.ToDouble(FixListDataGridView.SelectedRows[0].Cells[1].Value), true);
+                Conversions.Degrees2SCT(Convert.ToDouble(FixListDataGridView.SelectedRows[0].Cells[1].Value), true);
             EndLat = Convert.ToDouble(FixListDataGridView.SelectedRows[0].Cells[1].Value);
             EndLongitudeTextBox.Text =
-                Conversions.DecDeg2SCT(Convert.ToDouble(FixListDataGridView.SelectedRows[0].Cells[2].Value), false);
+                Conversions.Degrees2SCT(Convert.ToDouble(FixListDataGridView.SelectedRows[0].Cells[2].Value), false);
             EndLon = Convert.ToDouble(FixListDataGridView.SelectedRows[0].Cells[2].Value);
             EndFixTextBox.Text = FixListDataGridView.SelectedRows[0].Cells[0].Value.ToString();
             UpdateCopyButtons();
@@ -391,8 +391,8 @@ namespace SCTBuilder
                 LatLongCalc.Destination(StartLat, StartLon, DistanceAdjust(CalcDist, CalcType), CalcTrueBrg, CalcType);
             EndLat = CalcLocation[0];
             EndLon = CalcLocation[1];
-            EndLatitudeTextBox.Text = Conversions.DecDeg2SCT(EndLat, true);
-            EndLongitudeTextBox.Text = Conversions.DecDeg2SCT(EndLon, false);
+            EndLatitudeTextBox.Text = Conversions.Degrees2SCT(EndLat, true);
+            EndLongitudeTextBox.Text = Conversions.Degrees2SCT(EndLon, false);
             EndFixTextBox.Text = string.Empty;
             UpdateCopyButtons();
         }
@@ -524,8 +524,8 @@ namespace SCTBuilder
                     }
                     else
                     {
-                        strOut[2] = Conversions.DecDeg2SCT(Line[0], true);
-                        strOut[3] = Conversions.DecDeg2SCT(Line[1], false);
+                        strOut[2] = Conversions.Degrees2SCT(Line[0], true);
+                        strOut[3] = Conversions.Degrees2SCT(Line[1], false);
                     }
                     if ((strOut[0].Length != 0) && (strOut[2].Length != 0))
                     {
@@ -780,8 +780,8 @@ namespace SCTBuilder
 
         private void PasteToStartButton_Click(object sender, EventArgs e)
         {
-            StartLatitudeTextBox.Text = Conversions.DecDeg2SCT(PasteLat, true);
-            StartLongitudeTextBox.Text = Conversions.DecDeg2SCT(PasteLon, false);
+            StartLatitudeTextBox.Text = Conversions.Degrees2SCT(PasteLat, true);
+            StartLongitudeTextBox.Text = Conversions.Degrees2SCT(PasteLon, false);
             StartLat = PasteLat;
             StartLon = PasteLon;
             UpdateCopyButtons();
@@ -789,8 +789,8 @@ namespace SCTBuilder
 
         private void PasteToEndButton_Click(object sender, EventArgs e)
         {
-            EndLatitudeTextBox.Text = Conversions.DecDeg2SCT(PasteLat, true);
-            EndLongitudeTextBox.Text = Conversions.DecDeg2SCT(PasteLon, false);
+            EndLatitudeTextBox.Text = Conversions.Degrees2SCT(PasteLat, true);
+            EndLongitudeTextBox.Text = Conversions.Degrees2SCT(PasteLon, false);
             EndLat = PasteLat;
             EndLon = PasteLon;
             UpdateCopyButtons();

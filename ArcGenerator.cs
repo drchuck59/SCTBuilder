@@ -155,9 +155,9 @@ namespace SCTBuilder
                     FixText = String.Format("{0:000}", FixBrgNUD.Value) +
                         String.Format("{0:000.0}", Convert.ToDouble(FixDistTextBox.Text));
                 }
-                StartLatitudeTextBox.Text = Conversions.DecDeg2SCT(Lat, true);
+                StartLatitudeTextBox.Text = Conversions.Degrees2SCT(Lat, true);
                 StartLat = Lat;
-                StartLongitudeTextBox.Text = Conversions.DecDeg2SCT(Lon, false);
+                StartLongitudeTextBox.Text = Conversions.Degrees2SCT(Lon, false);
                 StartLon = Lon;
                 //MagVarTextBox.Text = MagVar.ToString();
                 StartFixTextBox.Text = FixListDataGridView.SelectedRows[0].Cells[0].Value.ToString() + FixText;
@@ -186,9 +186,9 @@ namespace SCTBuilder
                     FixText = String.Format("{0:000}", FixBrgNUD.Value) +
                         String.Format("{0:000.0}", Convert.ToDouble(FixDistTextBox.Text));
                 }
-                EndLatitudeTextBox.Text = Conversions.DecDeg2SCT(Lat, true);
+                EndLatitudeTextBox.Text = Conversions.Degrees2SCT(Lat, true);
                 EndLat = Lat;
-                EndLongitudeTextBox.Text = Conversions.DecDeg2SCT(Lon, false);
+                EndLongitudeTextBox.Text = Conversions.Degrees2SCT(Lon, false);
                 EndLon = Lon;
                 //MagVarTextBox.Text = MagVar.ToString();
                 EndFixTextBox.Text = FixListDataGridView.SelectedRows[0].Cells[0].Value.ToString() + FixText;
@@ -221,9 +221,9 @@ namespace SCTBuilder
                     FixText = String.Format("{0:000}", FixBrgNUD.Value) +
                         String.Format("{0:000.0}", Convert.ToDouble(FixDistTextBox.Text));
                 }
-                CenterLatitudeTextBox.Text = Conversions.DecDeg2SCT(Lat, true);
+                CenterLatitudeTextBox.Text = Conversions.Degrees2SCT(Lat, true);
                 CenterLat = Lat;
-                CenterLongitudeTextBox.Text = Conversions.DecDeg2SCT(Lon, false);
+                CenterLongitudeTextBox.Text = Conversions.Degrees2SCT(Lon, false);
                 CenterLon = Lon;
                 //MagVarTextBox.Text = MagVar.ToString();
                 CenterFixTextBox.Text = FixListDataGridView.SelectedRows[0].Cells[0].Value.ToString() + FixText;
@@ -325,8 +325,8 @@ namespace SCTBuilder
             else
             {
                 double[] Coords;
-                double CenterLat = Conversions.String2DecDeg(CenterLatitudeTextBox.Text);
-                double CenterLon = Conversions.String2DecDeg(CenterLongitudeTextBox.Text);
+                double CenterLat = Conversions.DMS2Degrees(CenterLatitudeTextBox.Text);
+                double CenterLon = Conversions.DMS2Degrees(CenterLongitudeTextBox.Text);
                 double Dist = Convert.ToDouble(CalcDistanceTextBox.Text);
                 double BrgStart = Convert.ToDouble(StartRadialNUD.Value);
                 double BrgEnd = Convert.ToDouble(EndRadialNUD.Value);
@@ -337,12 +337,12 @@ namespace SCTBuilder
                     Coords = LatLongCalc.Destination(CenterLat, CenterLon, Dist, 90, 'N');
                     Lat = Coords[0];
                     Lon = Coords[1];
-                    StartLatitudeTextBox.Text = Conversions.DecDeg2SCT(Lat, true);
-                    StartLongitudeTextBox.Text = Conversions.DecDeg2SCT(Lon, false);
+                    StartLatitudeTextBox.Text = Conversions.Degrees2SCT(Lat, true);
+                    StartLongitudeTextBox.Text = Conversions.Degrees2SCT(Lon, false);
                     StartLat = Lat;
                     StartLon = Lon;
-                    EndLatitudeTextBox.Text = Conversions.DecDeg2SCT(Lat, true);
-                    EndLongitudeTextBox.Text = Conversions.DecDeg2SCT(Lon, false);
+                    EndLatitudeTextBox.Text = Conversions.Degrees2SCT(Lat, true);
+                    EndLongitudeTextBox.Text = Conversions.Degrees2SCT(Lon, false);
                     EndLat = Lat;
                     EndLon = Lon;
                 }
@@ -355,15 +355,15 @@ namespace SCTBuilder
                     Coords = LatLongCalc.Destination(CenterLat, CenterLon, Dist, BrgStart, 'N');
                     Lat = Coords[0];
                     Lon = Coords[1];
-                    StartLatitudeTextBox.Text = Conversions.DecDeg2SCT(Lat, true);
-                    StartLongitudeTextBox.Text = Conversions.DecDeg2SCT(Lon, false);
+                    StartLatitudeTextBox.Text = Conversions.Degrees2SCT(Lat, true);
+                    StartLongitudeTextBox.Text = Conversions.Degrees2SCT(Lon, false);
                     StartLat = Lat;
                     StartLon = Lon;
                     Coords = LatLongCalc.Destination(CenterLat, CenterLon, Dist, BrgEnd, 'N');
                     Lat = Coords[0];
                     Lon = Coords[1];
-                    EndLatitudeTextBox.Text = Conversions.DecDeg2SCT(Lat, true);
-                    EndLongitudeTextBox.Text = Conversions.DecDeg2SCT(Lon, false);
+                    EndLatitudeTextBox.Text = Conversions.Degrees2SCT(Lat, true);
+                    EndLongitudeTextBox.Text = Conversions.Degrees2SCT(Lon, false);
                     EndLat = Lat;
                     EndLon = Lon;
                 }
@@ -389,8 +389,8 @@ namespace SCTBuilder
             }
             else
             {
-                StartLatitudeTextBox.Text = Conversions.DecDeg2SCT(StartLat, true);
-                StartLongitudeTextBox.Text = Conversions.DecDeg2SCT(StartLon, false);
+                StartLatitudeTextBox.Text = Conversions.Degrees2SCT(StartLat, true);
+                StartLongitudeTextBox.Text = Conversions.Degrees2SCT(StartLon, false);
             }
             if ((EndLat == -1) || (EndLon == -1))
             {
@@ -398,8 +398,8 @@ namespace SCTBuilder
             }
             else
             {
-                EndLatitudeTextBox.Text = Conversions.DecDeg2SCT(EndLat, true);
-                EndLongitudeTextBox.Text = Conversions.DecDeg2SCT(EndLon, false);
+                EndLatitudeTextBox.Text = Conversions.Degrees2SCT(EndLat, true);
+                EndLongitudeTextBox.Text = Conversions.Degrees2SCT(EndLon, false);
             }
             UpdateStats();
         }
@@ -466,9 +466,9 @@ namespace SCTBuilder
         private void PasteToCenterButton_Click(object sender, EventArgs e)
         {
             CenterLat = CrossForm.Lat;
-            CenterLatitudeTextBox.Text = Conversions.DecDeg2SCT(CenterLat, true);
+            CenterLatitudeTextBox.Text = Conversions.Degrees2SCT(CenterLat, true);
             CenterLon = CrossForm.Lon;
-            CenterLongitudeTextBox.Text = Conversions.DecDeg2SCT(CenterLon, false);
+            CenterLongitudeTextBox.Text = Conversions.Degrees2SCT(CenterLon, false);
             UpdateStats();
         }
 
@@ -476,8 +476,8 @@ namespace SCTBuilder
         {
             StartLat = CrossForm.Lat;
             StartLon = CrossForm.Lon;
-            StartLatitudeTextBox.Text = Conversions.DecDeg2SCT(StartLat, true);
-            StartLongitudeTextBox.Text = Conversions.DecDeg2SCT(StartLon, false);
+            StartLatitudeTextBox.Text = Conversions.Degrees2SCT(StartLat, true);
+            StartLongitudeTextBox.Text = Conversions.Degrees2SCT(StartLon, false);
             UpdateStats();
         }
 
@@ -485,8 +485,8 @@ namespace SCTBuilder
         {
             EndLat = CrossForm.Lat;
             EndLon = CrossForm.Lon;
-            EndLatitudeTextBox.Text = Conversions.DecDeg2SCT(EndLat, true);
-            EndLongitudeTextBox.Text = Conversions.DecDeg2SCT(EndLon, false);
+            EndLatitudeTextBox.Text = Conversions.Degrees2SCT(EndLat, true);
+            EndLongitudeTextBox.Text = Conversions.Degrees2SCT(EndLon, false);
             UpdateStats();
         }
 
@@ -562,16 +562,16 @@ namespace SCTBuilder
                 for (double i = StartBrg; i < 360; i++)
                 {
                     Coords = LatLongCalc.Destination(StartLat, StartLon, ArcRadius, i, 'N');
-                    Lat1 = Conversions.DecDeg2SCT(Coords[0], true);
-                    Lon1 = Conversions.DecDeg2SCT(Coords[1], false);
+                    Lat1 = Conversions.Degrees2SCT(Coords[0], true);
+                    Lon1 = Conversions.Degrees2SCT(Coords[1], false);
                     output += OutputText(Lat0, Lon0, Lat1, Lon1);
                     Lat0 = Lat1; Lon0 = Lon1;
                 }
                 for (double i = 1; i < EndBrg; i++)
                 {
                     Coords = LatLongCalc.Destination(StartLat, StartLon, ArcRadius, i, 'N');
-                    Lat1 = Conversions.DecDeg2SCT(Coords[0], true);
-                    Lon1 = Conversions.DecDeg2SCT(Coords[1], false);
+                    Lat1 = Conversions.Degrees2SCT(Coords[0], true);
+                    Lon1 = Conversions.Degrees2SCT(Coords[1], false);
                     output += OutputText(Lat0, Lon0, Lat1, Lon1);
                     Lat0 = Lat1; Lon0 = Lon1;
                 }
@@ -581,8 +581,8 @@ namespace SCTBuilder
                 for (double i = StartBrg; i < EndBrg; i++)
                 {
                     Coords = LatLongCalc.Destination(StartLat, StartLon, ArcRadius, i, 'N');
-                    Lat1 = Conversions.DecDeg2SCT(Coords[0], true);
-                    Lon1 = Conversions.DecDeg2SCT(Coords[1], false);
+                    Lat1 = Conversions.Degrees2SCT(Coords[0], true);
+                    Lon1 = Conversions.Degrees2SCT(Coords[1], false);
                     output += OutputText(Lat0, Lon0, Lat1, Lon1);
                     Lat0 = Lat1; Lon0 = Lon1;
                 }
@@ -630,8 +630,8 @@ namespace SCTBuilder
             LatLongCalc.Destination(CenterLat, CenterLon, ArcRadius, Convert.ToDouble(EndRadialNUD.Value), 'N');
             EndLat = coords[0];
             EndLon = coords[1];
-            EndLatitudeTextBox.Text = Conversions.DecDeg2SCT(EndLat, true);
-            EndLongitudeTextBox.Text = Conversions.DecDeg2SCT(EndLon, false);
+            EndLatitudeTextBox.Text = Conversions.Degrees2SCT(EndLat, true);
+            EndLongitudeTextBox.Text = Conversions.Degrees2SCT(EndLon, false);
             UpdateStats();
         }
 
@@ -653,8 +653,8 @@ namespace SCTBuilder
                 coords = LatLongCalc.Destination(CenterLat, CenterLon, ArcRadius, Convert.ToDouble(StartRadialNUD.Value), 'N');
                 StartLat = coords[0];
                 StartLon = coords[1];
-                StartLatitudeTextBox.Text = Conversions.DecDeg2SCT(StartLat, true);
-                StartLongitudeTextBox.Text = Conversions.DecDeg2SCT(StartLon, false);
+                StartLatitudeTextBox.Text = Conversions.Degrees2SCT(StartLat, true);
+                StartLongitudeTextBox.Text = Conversions.Degrees2SCT(StartLon, false);
             }
         }
 
@@ -715,8 +715,8 @@ namespace SCTBuilder
             double Brg = (LatLongCalc.Bearing(StartLat, StartLon, EndLat, EndLon) + 90) % 360;
             double[] Coords = LatLongCalc.Destination(Lat0, Lon0, RadiusFromChordArc(), Brg, 'N');
             CenterLat = Coords[0]; CenterLon = Coords[1];
-            CenterLatitudeTextBox.Text = Conversions.DecDeg2SCT(CenterLat, true);
-            CenterLongitudeTextBox.Text = Conversions.DecDeg2SCT(CenterLon, false);
+            CenterLatitudeTextBox.Text = Conversions.Degrees2SCT(CenterLat, true);
+            CenterLongitudeTextBox.Text = Conversions.Degrees2SCT(CenterLon, false);
             CenterFixTextBox.Text = "<calculated from chord>";
             StartBrg = (LatLongCalc.Bearing(CenterLat, CenterLon, StartLat, StartLon) + 90) % 360;
             StartRadialNUD.Value = (int)StartBrg;

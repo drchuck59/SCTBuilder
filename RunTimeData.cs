@@ -422,6 +422,63 @@ namespace SCTBuilder
 
     }
 
+    public class UserMessage
+    {
+        private static readonly string cr = Environment.NewLine;
+        public static readonly string FirstTime =
+            "It appears the program is running for the first time." + cr +
+                "First create or select a data folder ('DATA')." + cr +
+                "This folder will hold ALL the SCTBuilder data subfolders." + cr +
+                "Then click the 'Update AIRAC' button to retrieve the current FAA AIRAC.";
+        public static readonly string CorruptINI =
+            "SCTBuilder closed with insufficient settings to resume.  " + cr +
+                "First create or select a data folder ('DATA')." + cr +
+                "This folder will hold ALL the SCTBuilder data subfolders." + cr +
+                "Then click the 'Update AIRAC' button to retrieve the current FAA AIRAC.";
+        public static readonly string AIRACdataMismatch =
+            "The last AIRAC you used does not match the AIRAC in the data folder.  " + cr +
+                "The program will update to the data in the data folder.";
+        public static readonly string NGdataMismatch =
+            "The NaviGraph AIRAC " + InfoSection.NG_AIRAC + " does not match the FAA AIRAC " + CycleInfo.AIRAC + "." + cr +
+                "Use of NaviGraph data has been disabled.";
+        public static readonly string NoValidAirports =
+            "Cannot select Runways.  No airports with runways found meeting search parameters.";
+        public static readonly string MissingSelectionCriteria =
+            "You must have a square identifed, an output folder, and some selection items before you can Preview.";
+        public static readonly string FENameRequired =
+            "Facility Engineer name may not be blank";
+        public static readonly string PathInvalid =
+            "The directory does not exist.  Consider using the selection button (...).";
+        public static readonly string DataFolderRequired =
+            "You must select your data folder before you can perform searches.";
+        public static readonly string OutputFolderRequired =
+            "You must select your output folder before you can write results.";
+        public static readonly string LatOutOfBounds =
+            "Latitude must be a value between -90 to +90 degrees";
+        public static readonly string LonOutOfBounds =
+            "Longitude must be a value between -180 to +180 degrees";
+        public static readonly string NorthUnderSouth =
+            "The North Limit must be north of the South Limit";
+        public static readonly string WestRightOfEast =
+            "The West Limit must be west of the East Limit";
+        public static readonly string LimitsMissing =
+            "One or more limits are missing from the square.";
+        public static readonly string APTselectRequired =
+            "In order to select Runways, airports must be selected.";
+        public static readonly string NAVAIDrequired =
+            "In order to select Airways, NavAids must be selected.";
+        public static readonly string APTrequired =
+            "You must first select an airport first.";
+        public static readonly string ARTCCrequired =
+            "You must first select an ARTCC to filter by ARTCC.";
+        public static readonly string CoordsInvalid =
+            "Invalid coordinates - please try again";
+        public static readonly string FAADownloadError =
+            "FAA download returned an error.  Correct the error or enter issue in GitHub.";
+        public static readonly string PrefsSaved =
+            "Preferences saved.";
+    }
+
     public class VersionInfo                            // Internal information
     {
         public readonly static string Title = "SCT Builder v1.4";
@@ -473,6 +530,7 @@ namespace SCTBuilder
         private static bool includeSidStarReferences;
         private static bool useNaviGraphData;
         private static bool hasNaviGraphData;
+        private static int nG_AIRAC;
         private static bool rolloverLongitude;
         private static double northlimit = 0;
         private static double southlimit = 0;
@@ -517,11 +575,11 @@ namespace SCTBuilder
         public static string CenterLatitude_SCT               // Latitude of default sector center point as SCT format
         {
             get
-            { return Conversions.DecDeg2SCT(centerLat, true); }
+            { return Conversions.Degrees2SCT(centerLat, true); }
             set
             {
                 if (value.IsNumeric()) centerLat = Convert.ToDouble(value);
-                else centerLat = Conversions.String2DecDeg(value);
+                else centerLat = Conversions.DMS2Degrees(value);
             }
         }
         public static double CenterLatitude_Dec               // Latitude of default sector center point
@@ -534,11 +592,11 @@ namespace SCTBuilder
         public static string CenterLongitude_SCT  // Longitude of default sector center point
         {
             get
-            { return Conversions.DecDeg2SCT(centerLon, false); }
+            { return Conversions.Degrees2SCT(centerLon, false); }
             set
             {
                 if (value.IsNumeric()) centerLon = Convert.ToDouble(value);
-                else centerLon = Conversions.String2DecDeg(value);
+                else centerLon = Conversions.DMS2Degrees(value);
             }
         }
         public static double CenterLongitude_Dec
@@ -606,6 +664,12 @@ namespace SCTBuilder
         {
             get { return hasNaviGraphData; }
             set { hasNaviGraphData = value; }
+        }
+
+        public static int NG_AIRAC
+        {
+            get { return nG_AIRAC; }
+            set { nG_AIRAC = value; }
         }
 
         public static bool RollOverLongitude
@@ -729,19 +793,19 @@ namespace SCTBuilder
                             Lat = LatLonParser.ParsedLatitude;
                             Lon = LatLonParser.ParsedLongitude;
                             ParsedResult = true;
-                            tb.Text = Conversions.DecDeg2SCT(Lat, true) + " " +
-                                Conversions.DecDeg2SCT(Lon, false);
+                            tb.Text = Conversions.Degrees2SCT(Lat, true) + " " +
+                                Conversions.Degrees2SCT(Lon, false);
                             break;
                         case 1:
                             Lat = LatLonParser.ParsedLatitude;
                             Lon = -1;
-                            tb.Text = Conversions.DecDeg2SCT(Lat, true);
+                            tb.Text = Conversions.Degrees2SCT(Lat, true);
                             ParsedResult = true;
                             break;
                         case 2:
                             Lon = LatLonParser.ParsedLongitude;
                             Lat = -1;
-                            tb.Text = Conversions.DecDeg2SCT(Lon, false);
+                            tb.Text = Conversions.Degrees2SCT(Lon, false);
                             ParsedResult = true;
                             break;
                     }

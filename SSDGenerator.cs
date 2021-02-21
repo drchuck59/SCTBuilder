@@ -298,8 +298,8 @@ namespace SCTBuilder
                     strOut[1] = string.Format("{0:000.000}", dvTWR[0]["LCLfreq"].ToString());
                 else
                     strOut[1] = "122.8  ";
-                strOut[2] = Conversions.DecDeg2SCT(Convert.ToDouble(dvAPT[0]["Latitude"]), true);
-                strOut[3] = Conversions.DecDeg2SCT(Convert.ToDouble(dvAPT[0]["Longitude"]), false);
+                strOut[2] = Conversions.Degrees2SCT(Convert.ToDouble(dvAPT[0]["Latitude"]), true);
+                strOut[3] = Conversions.Degrees2SCT(Convert.ToDouble(dvAPT[0]["Longitude"]), false);
                 strOut[4] = dvAPT[0]["Name"].ToString();
                 BigResult += SCTstrings.APTout(strOut.ToArray()) + cr;
             }
@@ -316,8 +316,8 @@ namespace SCTBuilder
                     // strOut expects 0-Fix, 1-Freq, 2-Lat, 3-Lon, 4-Name, 5-Type
                     strOut[0] = VORs[1].ToString();
                     strOut[1] = VORs[2].ToString();
-                    strOut[2] = Conversions.DecDeg2SCT(Convert.ToDouble(VORs[3]), true);
-                    strOut[3] = Conversions.DecDeg2SCT(Convert.ToDouble(VORs[4]), false);
+                    strOut[2] = Conversions.Degrees2SCT(Convert.ToDouble(VORs[3]), true);
+                    strOut[3] = Conversions.Degrees2SCT(Convert.ToDouble(VORs[4]), false);
                     strOut[4] = VORs[5].ToString();
                     strOut[5] = VORs[6].ToString();
                     BigResult += SCTstrings.VORout(strOut) + cr;
@@ -331,8 +331,8 @@ namespace SCTBuilder
                 {
                     strOut[0] = NDBs[1].ToString();
                     strOut[1] = NDBs[2].ToString();
-                    strOut[2] = Conversions.DecDeg2SCT(Convert.ToDouble(NDBs[3]), true);
-                    strOut[3] = Conversions.DecDeg2SCT(Convert.ToDouble(NDBs[4]), false);
+                    strOut[2] = Conversions.Degrees2SCT(Convert.ToDouble(NDBs[3]), true);
+                    strOut[3] = Conversions.Degrees2SCT(Convert.ToDouble(NDBs[4]), false);
                     strOut[4] = NDBs[5].ToString();
                     strOut[5] = NDBs[6].ToString();
                     BigResult += SCTstrings.NDBout(strOut) + cr;
@@ -345,8 +345,8 @@ namespace SCTBuilder
                 foreach (object[] FIXes in FixData)
                 {
                     strOut[0] = FIXes[1].ToString();
-                    strOut[2] = Conversions.DecDeg2SCT(Convert.ToDouble(FIXes[3]), true);
-                    strOut[3] = Conversions.DecDeg2SCT(Convert.ToDouble(FIXes[4]), false);
+                    strOut[2] = Conversions.Degrees2SCT(Convert.ToDouble(FIXes[3]), true);
+                    strOut[3] = Conversions.Degrees2SCT(Convert.ToDouble(FIXes[4]), false);
                     strOut[4] = FIXes[5].ToString();
                     BigResult += SCTstrings.FIXout(strOut) + cr;
                 }
