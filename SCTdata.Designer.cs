@@ -1193,6 +1193,10 @@ namespace SCTBuilder {
             
             private global::System.Data.DataColumn columnState;
             
+            private global::System.Data.DataColumn columnAssocCity;
+            
+            private global::System.Data.DataColumn columnElevation;
+            
             private global::System.Data.DataColumn columnMagVar;
             
             private global::System.Data.DataColumn columnOwnerType;
@@ -1300,6 +1304,22 @@ namespace SCTBuilder {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn AssocCityColumn {
+                get {
+                    return this.columnAssocCity;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn ElevationColumn {
+                get {
+                    return this.columnElevation;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public global::System.Data.DataColumn MagVarColumn {
                 get {
                     return this.columnMagVar;
@@ -1367,7 +1387,7 @@ namespace SCTBuilder {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public APTRow AddAPTRow(string ID, string FacilityID, string ICAO, string Name, double Latitude, double Longitude, string ARTCC, string State, double MagVar, string OwnerType, bool Public, bool Selected) {
+            public APTRow AddAPTRow(string ID, string FacilityID, string ICAO, string Name, double Latitude, double Longitude, string ARTCC, string State, string AssocCity, double Elevation, double MagVar, string OwnerType, bool Public, bool Selected) {
                 APTRow rowAPTRow = ((APTRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         ID,
@@ -1378,6 +1398,8 @@ namespace SCTBuilder {
                         Longitude,
                         ARTCC,
                         State,
+                        AssocCity,
+                        Elevation,
                         MagVar,
                         OwnerType,
                         Public,
@@ -1419,6 +1441,8 @@ namespace SCTBuilder {
                 this.columnLongitude = base.Columns["Longitude"];
                 this.columnARTCC = base.Columns["ARTCC"];
                 this.columnState = base.Columns["State"];
+                this.columnAssocCity = base.Columns["AssocCity"];
+                this.columnElevation = base.Columns["Elevation"];
                 this.columnMagVar = base.Columns["MagVar"];
                 this.columnOwnerType = base.Columns["OwnerType"];
                 this.columnPublic = base.Columns["Public"];
@@ -1444,6 +1468,10 @@ namespace SCTBuilder {
                 base.Columns.Add(this.columnARTCC);
                 this.columnState = new global::System.Data.DataColumn("State", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnState);
+                this.columnAssocCity = new global::System.Data.DataColumn("AssocCity", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnAssocCity);
+                this.columnElevation = new global::System.Data.DataColumn("Elevation", typeof(double), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnElevation);
                 this.columnMagVar = new global::System.Data.DataColumn("MagVar", typeof(double), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnMagVar);
                 this.columnOwnerType = new global::System.Data.DataColumn("OwnerType", typeof(string), null, global::System.Data.MappingType.Element);
@@ -7443,6 +7471,38 @@ namespace SCTBuilder {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public string AssocCity {
+                get {
+                    try {
+                        return ((string)(this[this.tableAPT.AssocCityColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'AssocCity\' in table \'APT\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableAPT.AssocCityColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public double Elevation {
+                get {
+                    try {
+                        return ((double)(this[this.tableAPT.ElevationColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'Elevation\' in table \'APT\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableAPT.ElevationColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public double MagVar {
                 get {
                     try {
@@ -7587,6 +7647,30 @@ namespace SCTBuilder {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public void SetStateNull() {
                 this[this.tableAPT.StateColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsAssocCityNull() {
+                return this.IsNull(this.tableAPT.AssocCityColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetAssocCityNull() {
+                this[this.tableAPT.AssocCityColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsElevationNull() {
+                return this.IsNull(this.tableAPT.ElevationColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetElevationNull() {
+                this[this.tableAPT.ElevationColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]

@@ -29,7 +29,7 @@ namespace SCTBuilder
         static public DataTable POFdata = new SCTdata.POFdataDataTable();
         static public DataSet SCT = new SCTdata();
         static public bool ExitClicked = false;
-        static readonly string cr = Environment.NewLine; 
+        static readonly string cr = Environment.NewLine;
         string Msg;
         static string SSDIDvalue = string.Empty;
         private const int LatTest = 1;
@@ -905,7 +905,7 @@ namespace SCTBuilder
         //    return Filter + AddlFilter;
         //}
 
-        private  void ClearSelected(DataView dv)
+        private void ClearSelected(DataView dv)
         {
             // DataView arrives filtered (or not)
             // otherwise, ALL the selected boxes are false
@@ -1546,7 +1546,7 @@ namespace SCTBuilder
             TextBox tb = SouthLimitTextBox;
             if (CrossForm.TestTextBox(tb, method: LatTest))
             {
-                    InfoSection.SouthLimit = TestLatLimits(tb);
+                InfoSection.SouthLimit = TestLatLimits(tb);
             }
             else
             {
@@ -1752,7 +1752,7 @@ namespace SCTBuilder
         {
             if (APTsCheckBox.Checked == false)
             {
-                RWYsCheckBox.Checked = LimitAPT2ARTCCCheckBox.Checked = 
+                RWYsCheckBox.Checked = LimitAPT2ARTCCCheckBox.Checked =
                 RWYsCheckBox.Enabled = LimitAPT2ARTCCCheckBox.Enabled = false;
             }
             else
@@ -1964,7 +1964,7 @@ namespace SCTBuilder
 
         private void dgvSTAR_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
-            if (SSDIDvalue.Length != 0) 
+            if (SSDIDvalue.Length != 0)
             {
                 bool Selected = (bool)dgvSTAR.CurrentCell.Value;
                 DataView dvSSD = new DataView(SSD)
@@ -2100,6 +2100,49 @@ namespace SCTBuilder
                 SCTchecked.LimitAPT2ARTC = LimitAPT2ARTCCCheckBox.Checked;
             else
                 SCTcommon.SendMessage(UserMessage.ARTCCrequired);
+        }
+
+        private void dgvAPT_CellContentDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex > -1 && e.ColumnIndex > -1)
+            {
+                ShowPanel();
+            }
+            else APTpanel.Visible = false;
+        }
+
+        private void dgvAPT_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex > -1 && e.ColumnIndex > -1 && APTpanel.Visible == true)
+            {
+                ShowPanel();
+            }
+            else APTpanel.Visible = false;
+        }
+
+        private void ShowPanel()
+        {
+            DataGridViewRow dgrv = dgvAPT.CurrentRow;
+            DataView dvAPT = new DataView(APT);
+            dvAPT.RowFilter = "FacilityID = '" + dgrv.Cells[1].Value.ToString() + "'";
+            ICAOTextBox.Text = dvAPT[0]["ICAO"].ToString();
+            FacIDTextBox.Text = dvAPT[0]["FacilityID"].ToString();
+            DataIDTextBox.Text = dvAPT[0]["ID"].ToString();
+            NameTextBox.Text = dvAPT[0]["Name"].ToString();
+            LatDecTextBox.Text = string.Format("{0:0.00000}", dvAPT[0]["Latitude"]);
+            LonDecTextBox.Text = string.Format("{0:0.00000}", dvAPT[0]["Longitude"]);
+            LatSCTTextBox.Text = Conversions.Degrees2SCT((double)dvAPT[0]["Latitude"], true);
+            LonSCTTextBox.Text = Conversions.Degrees2SCT((double)dvAPT[0]["Longitude"], false);
+            OwningARTTCTextBox.Text = dvAPT[0]["Artcc"].ToString();
+            ElevationTextBox.Text =  dvAPT[0]["Elevation"].ToString();
+            CityTextBox.Text = dvAPT[0]["AssocCity"].ToString();
+            StateTextBox.Text = dvAPT[0]["State"].ToString();
+            APTpanel.Visible = true;
+        }
+
+        private void ClosePanelButton_Click(object sender, EventArgs e)
+        {
+            APTpanel.Visible = false;
         }
     }
 }

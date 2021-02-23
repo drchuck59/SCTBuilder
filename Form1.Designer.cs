@@ -174,6 +174,32 @@
             this.UpdatingLabel = new System.Windows.Forms.Label();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.APTpanel = new System.Windows.Forms.Panel();
+            this.label13 = new System.Windows.Forms.Label();
+            this.ElevationTextBox = new System.Windows.Forms.TextBox();
+            this.label14 = new System.Windows.Forms.Label();
+            this.StateTextBox = new System.Windows.Forms.TextBox();
+            this.label15 = new System.Windows.Forms.Label();
+            this.CityTextBox = new System.Windows.Forms.TextBox();
+            this.label16 = new System.Windows.Forms.Label();
+            this.OwningARTTCTextBox = new System.Windows.Forms.TextBox();
+            this.label17 = new System.Windows.Forms.Label();
+            this.label18 = new System.Windows.Forms.Label();
+            this.LonSCTTextBox = new System.Windows.Forms.TextBox();
+            this.LatSCTTextBox = new System.Windows.Forms.TextBox();
+            this.LonDecTextBox = new System.Windows.Forms.TextBox();
+            this.label19 = new System.Windows.Forms.Label();
+            this.LatDecTextBox = new System.Windows.Forms.TextBox();
+            this.label20 = new System.Windows.Forms.Label();
+            this.DataIDTextBox = new System.Windows.Forms.TextBox();
+            this.label21 = new System.Windows.Forms.Label();
+            this.FacIDTextBox = new System.Windows.Forms.TextBox();
+            this.label22 = new System.Windows.Forms.Label();
+            this.NameTextBox = new System.Windows.Forms.TextBox();
+            this.label23 = new System.Windows.Forms.Label();
+            this.ICAOTextBox = new System.Windows.Forms.TextBox();
+            this.label24 = new System.Windows.Forms.Label();
+            this.ClosePanelButton = new System.Windows.Forms.Button();
             this.panelSUAs.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.AllMarginsNumericUpDown)).BeginInit();
             this.FilterGroupBox.SuspendLayout();
@@ -207,6 +233,7 @@
             this.FoldersGroupBox.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
+            this.APTpanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // lblInfoSection_Caption
@@ -429,7 +456,7 @@
             this.panelSUAs.Controls.Add(this.SUA_ClassBCheckBox);
             this.panelSUAs.Controls.Add(this.label6);
             this.panelSUAs.Enabled = false;
-            this.panelSUAs.Location = new System.Drawing.Point(599, 79);
+            this.panelSUAs.Location = new System.Drawing.Point(442, 160);
             this.panelSUAs.Name = "panelSUAs";
             this.panelSUAs.Size = new System.Drawing.Size(182, 90);
             this.panelSUAs.TabIndex = 47;
@@ -598,7 +625,7 @@
             this.PreviewButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.PreviewButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.PreviewButton.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.PreviewButton.Location = new System.Drawing.Point(468, 529);
+            this.PreviewButton.Location = new System.Drawing.Point(468, 506);
             this.PreviewButton.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
             this.PreviewButton.Name = "PreviewButton";
             this.PreviewButton.Size = new System.Drawing.Size(169, 70);
@@ -1103,6 +1130,8 @@
             this.dgvAPT.RowTemplate.Height = 24;
             this.dgvAPT.Size = new System.Drawing.Size(456, 302);
             this.dgvAPT.TabIndex = 0;
+            this.dgvAPT.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvAPT_CellClick);
+            this.dgvAPT.CellContentDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvAPT_CellContentDoubleClick);
             // 
             // RWYtabPage
             // 
@@ -1875,7 +1904,7 @@
             this.groupBox1.Controls.Add(this.RWYsCheckBox);
             this.groupBox1.Controls.Add(this.SIDsCheckBox);
             this.groupBox1.Controls.Add(this.ARTCCCheckBox);
-            this.groupBox1.Location = new System.Drawing.Point(429, 206);
+            this.groupBox1.Location = new System.Drawing.Point(451, 254);
             this.groupBox1.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Padding = new System.Windows.Forms.Padding(2, 1, 2, 1);
@@ -1920,12 +1949,260 @@
             // 
             this.groupBox2.Controls.Add(this.ESSSDCheckBox);
             this.groupBox2.Controls.Add(this.ESdataCheckBox);
-            this.groupBox2.Location = new System.Drawing.Point(429, 411);
+            this.groupBox2.Location = new System.Drawing.Point(451, 459);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(173, 42);
             this.groupBox2.TabIndex = 62;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Euroscope only";
+            // 
+            // APTpanel
+            // 
+            this.APTpanel.Controls.Add(this.ClosePanelButton);
+            this.APTpanel.Controls.Add(this.label13);
+            this.APTpanel.Controls.Add(this.ElevationTextBox);
+            this.APTpanel.Controls.Add(this.label14);
+            this.APTpanel.Controls.Add(this.StateTextBox);
+            this.APTpanel.Controls.Add(this.label15);
+            this.APTpanel.Controls.Add(this.CityTextBox);
+            this.APTpanel.Controls.Add(this.label16);
+            this.APTpanel.Controls.Add(this.OwningARTTCTextBox);
+            this.APTpanel.Controls.Add(this.label17);
+            this.APTpanel.Controls.Add(this.label18);
+            this.APTpanel.Controls.Add(this.LonSCTTextBox);
+            this.APTpanel.Controls.Add(this.LatSCTTextBox);
+            this.APTpanel.Controls.Add(this.LonDecTextBox);
+            this.APTpanel.Controls.Add(this.label19);
+            this.APTpanel.Controls.Add(this.LatDecTextBox);
+            this.APTpanel.Controls.Add(this.label20);
+            this.APTpanel.Controls.Add(this.DataIDTextBox);
+            this.APTpanel.Controls.Add(this.label21);
+            this.APTpanel.Controls.Add(this.FacIDTextBox);
+            this.APTpanel.Controls.Add(this.label22);
+            this.APTpanel.Controls.Add(this.NameTextBox);
+            this.APTpanel.Controls.Add(this.label23);
+            this.APTpanel.Controls.Add(this.ICAOTextBox);
+            this.APTpanel.Controls.Add(this.label24);
+            this.APTpanel.Location = new System.Drawing.Point(665, 70);
+            this.APTpanel.Name = "APTpanel";
+            this.APTpanel.Size = new System.Drawing.Size(438, 199);
+            this.APTpanel.TabIndex = 63;
+            this.APTpanel.Visible = false;
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(269, 20);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(54, 13);
+            this.label13.TabIndex = 47;
+            this.label13.Text = "Elevation ";
+            // 
+            // ElevationTextBox
+            // 
+            this.ElevationTextBox.Enabled = false;
+            this.ElevationTextBox.Location = new System.Drawing.Point(329, 17);
+            this.ElevationTextBox.Name = "ElevationTextBox";
+            this.ElevationTextBox.Size = new System.Drawing.Size(41, 20);
+            this.ElevationTextBox.TabIndex = 46;
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(76, 150);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(32, 13);
+            this.label14.TabIndex = 45;
+            this.label14.Text = "State";
+            // 
+            // StateTextBox
+            // 
+            this.StateTextBox.Enabled = false;
+            this.StateTextBox.Location = new System.Drawing.Point(114, 147);
+            this.StateTextBox.Name = "StateTextBox";
+            this.StateTextBox.Size = new System.Drawing.Size(256, 20);
+            this.StateTextBox.TabIndex = 44;
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(47, 127);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(61, 13);
+            this.label15.TabIndex = 43;
+            this.label15.Text = "Closest City";
+            // 
+            // CityTextBox
+            // 
+            this.CityTextBox.Enabled = false;
+            this.CityTextBox.Location = new System.Drawing.Point(114, 121);
+            this.CityTextBox.Name = "CityTextBox";
+            this.CityTextBox.Size = new System.Drawing.Size(256, 20);
+            this.CityTextBox.TabIndex = 42;
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Location = new System.Drawing.Point(25, 175);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(82, 13);
+            this.label16.TabIndex = 41;
+            this.label16.Text = "Owning ARTCC";
+            // 
+            // OwningARTTCTextBox
+            // 
+            this.OwningARTTCTextBox.Enabled = false;
+            this.OwningARTTCTextBox.Location = new System.Drawing.Point(114, 172);
+            this.OwningARTTCTextBox.Name = "OwningARTTCTextBox";
+            this.OwningARTTCTextBox.Size = new System.Drawing.Size(48, 20);
+            this.OwningARTTCTextBox.TabIndex = 40;
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Location = new System.Drawing.Point(211, 98);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(55, 13);
+            this.label17.TabIndex = 39;
+            this.label17.Text = "Lon (SCT)";
+            // 
+            // label18
+            // 
+            this.label18.AutoSize = true;
+            this.label18.Location = new System.Drawing.Point(55, 98);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(52, 13);
+            this.label18.TabIndex = 38;
+            this.label18.Text = "Lat (SCT)";
+            // 
+            // LonSCTTextBox
+            // 
+            this.LonSCTTextBox.Enabled = false;
+            this.LonSCTTextBox.Location = new System.Drawing.Point(269, 95);
+            this.LonSCTTextBox.Name = "LonSCTTextBox";
+            this.LonSCTTextBox.Size = new System.Drawing.Size(100, 20);
+            this.LonSCTTextBox.TabIndex = 37;
+            // 
+            // LatSCTTextBox
+            // 
+            this.LatSCTTextBox.Enabled = false;
+            this.LatSCTTextBox.Location = new System.Drawing.Point(113, 95);
+            this.LatSCTTextBox.Name = "LatSCTTextBox";
+            this.LatSCTTextBox.Size = new System.Drawing.Size(95, 20);
+            this.LatSCTTextBox.TabIndex = 36;
+            // 
+            // LonDecTextBox
+            // 
+            this.LonDecTextBox.Enabled = false;
+            this.LonDecTextBox.Location = new System.Drawing.Point(270, 69);
+            this.LonDecTextBox.Name = "LonDecTextBox";
+            this.LonDecTextBox.Size = new System.Drawing.Size(100, 20);
+            this.LonDecTextBox.TabIndex = 35;
+            // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.Location = new System.Drawing.Point(213, 72);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(54, 13);
+            this.label19.TabIndex = 34;
+            this.label19.Text = "Longitude";
+            // 
+            // LatDecTextBox
+            // 
+            this.LatDecTextBox.Enabled = false;
+            this.LatDecTextBox.Location = new System.Drawing.Point(113, 69);
+            this.LatDecTextBox.Name = "LatDecTextBox";
+            this.LatDecTextBox.Size = new System.Drawing.Size(95, 20);
+            this.LatDecTextBox.TabIndex = 33;
+            // 
+            // label20
+            // 
+            this.label20.AutoSize = true;
+            this.label20.Location = new System.Drawing.Point(62, 72);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(45, 13);
+            this.label20.TabIndex = 32;
+            this.label20.Text = "Latitude";
+            // 
+            // DataIDTextBox
+            // 
+            this.DataIDTextBox.Enabled = false;
+            this.DataIDTextBox.Location = new System.Drawing.Point(305, 172);
+            this.DataIDTextBox.Name = "DataIDTextBox";
+            this.DataIDTextBox.Size = new System.Drawing.Size(65, 20);
+            this.DataIDTextBox.TabIndex = 31;
+            // 
+            // label21
+            // 
+            this.label21.AutoSize = true;
+            this.label21.Location = new System.Drawing.Point(255, 175);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(44, 13);
+            this.label21.TabIndex = 30;
+            this.label21.Text = "Data ID";
+            // 
+            // FacIDTextBox
+            // 
+            this.FacIDTextBox.Enabled = false;
+            this.FacIDTextBox.Location = new System.Drawing.Point(215, 17);
+            this.FacIDTextBox.Name = "FacIDTextBox";
+            this.FacIDTextBox.Size = new System.Drawing.Size(48, 20);
+            this.FacIDTextBox.TabIndex = 29;
+            // 
+            // label22
+            // 
+            this.label22.AutoSize = true;
+            this.label22.Location = new System.Drawing.Point(168, 20);
+            this.label22.Name = "label22";
+            this.label22.Size = new System.Drawing.Size(41, 13);
+            this.label22.TabIndex = 28;
+            this.label22.Text = "FAA ID";
+            // 
+            // NameTextBox
+            // 
+            this.NameTextBox.Enabled = false;
+            this.NameTextBox.Location = new System.Drawing.Point(113, 43);
+            this.NameTextBox.Name = "NameTextBox";
+            this.NameTextBox.Size = new System.Drawing.Size(257, 20);
+            this.NameTextBox.TabIndex = 27;
+            // 
+            // label23
+            // 
+            this.label23.AutoSize = true;
+            this.label23.Location = new System.Drawing.Point(37, 46);
+            this.label23.Name = "label23";
+            this.label23.Size = new System.Drawing.Size(70, 13);
+            this.label23.TabIndex = 26;
+            this.label23.Text = "Facility Name";
+            // 
+            // ICAOTextBox
+            // 
+            this.ICAOTextBox.Enabled = false;
+            this.ICAOTextBox.Location = new System.Drawing.Point(113, 17);
+            this.ICAOTextBox.Name = "ICAOTextBox";
+            this.ICAOTextBox.Size = new System.Drawing.Size(49, 20);
+            this.ICAOTextBox.TabIndex = 25;
+            // 
+            // label24
+            // 
+            this.label24.AutoSize = true;
+            this.label24.Location = new System.Drawing.Point(23, 20);
+            this.label24.Name = "label24";
+            this.label24.Size = new System.Drawing.Size(84, 13);
+            this.label24.TabIndex = 24;
+            this.label24.Text = "ICAO (if present)";
+            // 
+            // ClosePanelButton
+            // 
+            this.ClosePanelButton.BackColor = System.Drawing.Color.Red;
+            this.ClosePanelButton.Location = new System.Drawing.Point(402, 16);
+            this.ClosePanelButton.Name = "ClosePanelButton";
+            this.ClosePanelButton.Size = new System.Drawing.Size(26, 21);
+            this.ClosePanelButton.TabIndex = 48;
+            this.ClosePanelButton.Text = "X";
+            this.ClosePanelButton.UseVisualStyleBackColor = false;
+            this.ClosePanelButton.Click += new System.EventHandler(this.ClosePanelButton_Click);
             // 
             // Form1
             // 
@@ -1935,6 +2212,7 @@
             this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(1133, 671);
+            this.Controls.Add(this.APTpanel);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.QuickSearchTextBox);
             this.Controls.Add(this.QuickSearchLabel);
@@ -2005,6 +2283,8 @@
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
+            this.APTpanel.ResumeLayout(false);
+            this.APTpanel.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -2156,6 +2436,32 @@
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.CheckBox ESSSDCheckBox;
         private System.Windows.Forms.CheckBox ESdataCheckBox;
+        private System.Windows.Forms.Panel APTpanel;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.TextBox ElevationTextBox;
+        private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.TextBox StateTextBox;
+        private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.TextBox CityTextBox;
+        private System.Windows.Forms.Label label16;
+        private System.Windows.Forms.TextBox OwningARTTCTextBox;
+        private System.Windows.Forms.Label label17;
+        private System.Windows.Forms.Label label18;
+        private System.Windows.Forms.TextBox LonSCTTextBox;
+        private System.Windows.Forms.TextBox LatSCTTextBox;
+        private System.Windows.Forms.TextBox LonDecTextBox;
+        private System.Windows.Forms.Label label19;
+        private System.Windows.Forms.TextBox LatDecTextBox;
+        private System.Windows.Forms.Label label20;
+        private System.Windows.Forms.TextBox DataIDTextBox;
+        private System.Windows.Forms.Label label21;
+        private System.Windows.Forms.TextBox FacIDTextBox;
+        private System.Windows.Forms.Label label22;
+        private System.Windows.Forms.TextBox NameTextBox;
+        private System.Windows.Forms.Label label23;
+        private System.Windows.Forms.TextBox ICAOTextBox;
+        private System.Windows.Forms.Label label24;
+        private System.Windows.Forms.Button ClosePanelButton;
     }
 }
 

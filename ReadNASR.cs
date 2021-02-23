@@ -243,6 +243,8 @@ namespace SCTBuilder
                                 Conversions.Seconds2Degrees(Line.Substring(565, 12)),    // Longitude
                                 tempARTCC,                                      // Responsible ARTCC
                                 Line.Substring(50, 20).Trim(),                  // State
+                                Line.Substring(93, 40).Trim(),                  // Associated City
+                                Line.Substring(578, 7).Trim(),                  // Elevation
                                 tempMagVar,                                     // Magnetic Variation
                                 Line.Substring(183, 2),                         // Owner Type
                                 Line.Substring(185, 2) == "PU"                 // FACILITY USE True if public (PU or PR)
