@@ -1544,104 +1544,122 @@ namespace SCTBuilder
         private void SouthLimitTextBox_Validated(object sender, EventArgs e)
         {
             TextBox tb = SouthLimitTextBox;
-            if (CrossForm.TestTextBox(tb, method: LatTest))
-            {
-                InfoSection.SouthLimit = TestLatLimits(tb);
-            }
-            else
-            {
-                SCTcommon.SendMessage(UserMessage.CoordsInvalid);
-                tb.Focus();
+            if (tb.TextLength != 0)
+            { 
+                if (CrossForm.TestTextBox(tb, method: LatTest))
+                {
+                    InfoSection.SouthLimit = TestLatLimits(tb);
+                }
+                else
+                {
+                    SCTcommon.SendMessage(UserMessage.CoordsInvalid);
+                    tb.Focus();
+                }
             }
         }
 
         private void NorthLimitTextBox_Validated(object sender, EventArgs e)
         {
             TextBox tb = NorthLimitTextBox;
-            if (CrossForm.TestTextBox(tb, method: LatTest))
+            if (tb.TextLength != 0)
             {
-                InfoSection.NorthLimit = TestLatLimits(tb);
-            }
-            else
-            {
-                SCTcommon.SendMessage(UserMessage.CoordsInvalid);
-                tb.Focus();
+                if (CrossForm.TestTextBox(tb, method: LatTest))
+                {
+                    InfoSection.NorthLimit = TestLatLimits(tb);
+                }
+                else
+                {
+                    SCTcommon.SendMessage(UserMessage.CoordsInvalid);
+                    tb.Focus();
+                }
             }
         }
 
         private void WestLimitTextBox_Validated(object sender, EventArgs e)
         {
             TextBox tb = WestLimitTextBox;
-            if (CrossForm.TestTextBox(tb, method: LonTest))
+            if (tb.TextLength != 0)
             {
-                InfoSection.WestLimit = TestLonLimits(tb);
-            }
-            else
-            {
-                SCTcommon.SendMessage(UserMessage.CoordsInvalid);
-                tb.Focus();
+                if (CrossForm.TestTextBox(tb, method: LonTest))
+                {
+                    InfoSection.WestLimit = TestLonLimits(tb);
+                }
+                else
+                {
+                    SCTcommon.SendMessage(UserMessage.CoordsInvalid);
+                    tb.Focus();
+                }
             }
         }
 
         private void EastLimitTextBox_Validated(object sender, EventArgs e)
         {
             TextBox tb = EastLimitTextBox;
-            if (CrossForm.TestTextBox(tb, method: LonTest))
+            if (tb.TextLength != 0)
             {
-                InfoSection.EastLimit = TestLonLimits(tb);
-            }
-            else
-            {
-                SCTcommon.SendMessage(UserMessage.CoordsInvalid);
-                tb.Focus();
+                if (CrossForm.TestTextBox(tb, method: LonTest))
+                {
+                    InfoSection.EastLimit = TestLonLimits(tb);
+                }
+                else
+                {
+                    SCTcommon.SendMessage(UserMessage.CoordsInvalid);
+                    tb.Focus();
+                }
             }
         }
 
         private void CenterLatTextBox_Validated(object sender, EventArgs e)
         {
             TextBox tb = CenterLatTextBox;
-            if (CrossForm.TestTextBox(tb))
+            if (tb.TextLength != 0)
             {
-                double limit = CrossForm.Lat;
-                if (Math.Abs(limit) > 90)
+                if (CrossForm.TestTextBox(tb))
                 {
-                    SCTcommon.SendMessage(UserMessage.LatOutOfBounds);
-                    tb.Focus();
+                    double limit = CrossForm.Lat;
+                    if (Math.Abs(limit) > 90)
+                    {
+                        SCTcommon.SendMessage(UserMessage.LatOutOfBounds);
+                        tb.Focus();
+                    }
+                    else
+                    {
+                        InfoSection.CenterLatitude_Dec = limit;
+                        tb.Text = InfoSection.CenterLatitude_SCT;
+                    }
                 }
                 else
                 {
-                    InfoSection.CenterLatitude_Dec = limit;
-                    tb.Text = InfoSection.CenterLatitude_SCT;
+                    SCTcommon.SendMessage(UserMessage.CoordsInvalid);
+                    tb.Focus();
                 }
-            }
-            else
-            {
-                SCTcommon.SendMessage(UserMessage.CoordsInvalid);
-                tb.Focus();
             }
         }
 
         private void CenterLonTextBox_Validated(object sender, EventArgs e)
         {
             TextBox tb = CenterLonTextBox;
-            if (CrossForm.TestTextBox(tb))
+            if (tb.TextLength != 0)
             {
-                double limit = CrossForm.Lon;
-                if (Math.Abs(limit) > 180)
+                if (CrossForm.TestTextBox(tb))
                 {
-                    SCTcommon.SendMessage(UserMessage.LonOutOfBounds);
-                    tb.Focus();
+                    double limit = CrossForm.Lon;
+                    if (Math.Abs(limit) > 180)
+                    {
+                        SCTcommon.SendMessage(UserMessage.LonOutOfBounds);
+                        tb.Focus();
+                    }
+                    else
+                    {
+                        InfoSection.CenterLongitude_Dec = limit;
+                        tb.Text = InfoSection.CenterLongitude_SCT;
+                    }
                 }
                 else
                 {
-                    InfoSection.CenterLongitude_Dec = limit;
-                    tb.Text = InfoSection.CenterLongitude_SCT;
+                    SCTcommon.SendMessage(UserMessage.CoordsInvalid);
+                    tb.Focus();
                 }
-            }
-            else
-            {
-                SCTcommon.SendMessage(UserMessage.CoordsInvalid);
-                tb.Focus();
             }
         }
 
