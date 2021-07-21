@@ -24,7 +24,7 @@ namespace SCTBuilder
 
         public static void WriteINIxml()
         {
-            XmlWriter xml = XmlWriter.Create(FolderMgt.INIxml);
+            XmlWriter xml = XmlWriter.Create(FolderMgt.INIFilePath);
             xml.WriteStartDocument();
             xml.WriteStartElement("SCT_Builder");
             WriteXmlElement(xml, "Version", VersionInfo.Title.ToString());
@@ -96,10 +96,10 @@ namespace SCTBuilder
             // Of course, that information is also placed into the CycleInfo class
             int result = -1;    // -1 equals XML file doesn't exist
             string temp;
-            if (File.Exists(FolderMgt.INIxml))
+            if (File.Exists(FolderMgt.INIFilePath))
             {
                 XmlDocument doc = new XmlDocument();
-                doc.Load(FolderMgt.INIxml);
+                doc.Load(FolderMgt.INIFilePath);
                 foreach (XmlNode node in doc.DocumentElement)
                 {
                     if (node.Name != "Version")

@@ -21,7 +21,7 @@ namespace SCTBuilder
         static List<string> FixesUsed = new List<string>();
         static List<string> APTsUsed = new List<string>();
         private static string BigResult = string.Empty;
-        static readonly bool IsOutput = true;
+
         public static void WriteSCT()
         {
             // DataTable LS = Form1.LocalSector;

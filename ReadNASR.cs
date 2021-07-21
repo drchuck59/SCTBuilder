@@ -18,23 +18,23 @@ namespace SCTBuilder
             // Returns the AIRAC of the current FAA data text files
             // Save the information if the read is successful
             // Returns an error if the AIRAC is corrupted
-            // D:\OneDrive\Documents\vFE_Files\Resources\28DaySubscription_Effective_2020-02-27
-            string FullFilename = SCTcommon.GetFullPathname(FolderMgt.DataFolder, "NATFIX.txt");
+            // 
+            // *** CHANGE v1.5 - NATFIX, HARFIX, and SSD files were removed on 17 June 2021
+            string FullFilename = SCTcommon.GetFullPathname(FolderMgt.DataFolder, "NAV.txt");
             int result = -1; string Msg;
             string cr = Environment.NewLine;
             if (FullFilename.IndexOf("ERROR", 0) == -1)
             {
-                string ExpectedCycle = FullFilename.Substring(FullFilename.Length - 21, 10);
+                string ExpectedCycle = FullFilename.Substring(FullFilename.Length - 18, 10);
                 DateTime ExpectedDate = Convert.ToDateTime(ExpectedCycle);
                 string Line = string.Empty;
                 using (StreamReader reader = new StreamReader(FullFilename))
                 {
                     Line = reader.ReadLine();
-                    Line = reader.ReadLine();
                 }
-                // Get the date in the NATFIX file
-                Line = Line.Substring(1, Line.Length - 1);
-                string strDate = Line.Substring(4, 2) + "/" + Line.Substring(6, 2) + "/" + Line.Substring(0, 4);
+                // Get a date from the NAV file (all will be updated)
+                string strDate = Line.Substring(32, 10);
+                //string strDate = Line.Substring(4, 2) + "/" + Line.Substring(6, 2) + "/" + Line.Substring(0, 4);
                 DateTime FoundDate = Convert.ToDateTime(strDate);
                 if (FoundDate != ExpectedDate)
                 {

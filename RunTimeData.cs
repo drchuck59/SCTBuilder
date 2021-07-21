@@ -418,7 +418,11 @@ namespace SCTBuilder
             set { outputFolder = value; }
         }
 
-        public static readonly string INIxml = Path.GetTempPath() + "SCTbuilder.xml";
+        public static readonly string AppDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "//SCTbuilder";
+
+        public static readonly DirectoryInfo INIdirectory = Directory.CreateDirectory(AppDataFolder);
+
+        public static readonly string INIFilePath = INIdirectory.FullName + "SCTBuilder.xml";
 
     }
 

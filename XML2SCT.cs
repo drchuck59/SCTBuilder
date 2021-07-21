@@ -39,7 +39,7 @@ namespace SCTBuilder
             if (File.Exists(SourceFileTextBox.Text))
             {
                 XmlDocument doc = new XmlDocument();
-                doc.Load(FolderMgt.INIxml);
+                doc.Load(FolderMgt.INIFilePath);
                 foreach (XmlNode node in doc.DocumentElement)
                 {
 
