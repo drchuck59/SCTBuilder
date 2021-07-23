@@ -485,7 +485,7 @@ namespace SCTBuilder
 
     public class VersionInfo                            // Internal information
     {
-        public readonly static string Title = "SCT Builder v1.4";
+        public readonly static string Title = "SCT Builder v1.4.3";
     }
     public class FilterBy                               // Filter source for SCT2 output
     {
