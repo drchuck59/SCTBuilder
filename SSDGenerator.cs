@@ -98,18 +98,17 @@ namespace SCTBuilder
 
         private void Copy2ClipboardButton_Click(object sender, EventArgs e)
         {
-            string Msg;
+            string Msg = "Textbox copied to clipboard";
             if (OutputTextBox.TextLength != 0)
             {
                 Clipboard.Clear();
                 Clipboard.SetText(OutputTextBox.Text.ToString());
-                Msg = "Contents of output textbox copied to clipboard";
             }
             else
             {
                 Msg = "No text in output textbox to copy!";
             }
-            SCTcommon.SendMessage(Msg, MessageBoxIcon.Information);
+            SCTcommon.UpdateLabel(UpdatingLabel, Msg, 1000);
         }
 
         private void SaveOutput2FileButton_Click(object sender, EventArgs e)
@@ -165,7 +164,7 @@ namespace SCTBuilder
                 SCTcommon.SendMessage("Double click the desired diagram first.");
             else
             {
-                UpdatingLabel.Visible = true;
+                SCTcommon.UpdateLabel(UpdatingLabel, "Working on it");
                 Refresh();
                 if (FixListDataGridView.CurrentRow != null)
                 {
@@ -179,11 +178,7 @@ namespace SCTBuilder
                     // Pass the single row of SSD data to the writing programs
                     if (dvSSD.Count != 0)
                         BuildSSD(dvSSD);
-                    if (BigResult.Length == 0) BigResult =
-                        "; ================================================================" + cr +
-                        "; AIRAC CYCLE: " + CycleInfo.AIRAC + cr +
-                        "; Cycle: " + CycleInfo.CycleStart + " to " + CycleInfo.CycleEnd + cr +
-                        "; ================================================================" + cr;
+                    if (BigResult.Length == 0) BigResult = CycleInfo.CycleHeader;
                     if (InfoSection.IncludeSidStarReferences)
                         WriteSSDrefs();
                     // Is this a SID or STAR section?  The 1st character will tell
@@ -194,7 +189,7 @@ namespace SCTBuilder
                 }
                 OutputTextBox.Text = BigResult;
             }
-            UpdatingLabel.Visible = false;
+            SCTcommon.UpdateLabel(UpdatingLabel);
             Refresh();
         }
         private static void BuildSSD(DataView dvSSD)

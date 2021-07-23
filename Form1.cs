@@ -29,7 +29,7 @@ namespace SCTBuilder
         static public DataTable POFdata = new SCTdata.POFdataDataTable();
         static public DataSet SCT = new SCTdata();
         static public bool ExitClicked = false;
-        static readonly string cr = Environment.NewLine;
+        //static readonly string cr = Environment.NewLine;
         string Msg;
         static string SSDIDvalue = string.Empty;
         private const int LatTest = 1;
@@ -146,23 +146,10 @@ namespace SCTBuilder
         private void PostLoadTasks()
         {
             // Assumes we have a fresh FAA text folder and need to update
-            UpdateCycleInfoOnForm();
             SetForm1Defaults();
             UpdateEngineers();
-            UpdateLabel("");
-        }
-
-        public void UpdateCycleInfoOnForm()
-        {
-            if (CycleInfo.AIRAC == 1501)
-            {
-                CycleInfoLabel.Text = "No Active Cycle Data!";
-            }
-            else
-            {
-                CycleInfoLabel.Text = CycleInfo.BuildCycleText();
-            }
-            CycleInfoLabel.Refresh();
+            //SCTcommon.UpdateLabel(UpdatingLabel);
+            SCTcommon.UpdateLabel(CycleInfoLabel, CycleInfo.CycleText);
         }
 
         private int LoadFAATextData()
@@ -174,8 +161,7 @@ namespace SCTBuilder
             {
                 CycleInfo.AIRAC = result;
                 CycleInfo.CycleDateFromAIRAC(result, true);     // Save the cycle information
-                UpdateCycleInfoOnForm();
-                CallNASRread();             // Read all the text files
+                CallNASRread();                             // Read all the text files
             }
             return result;
         }
@@ -370,7 +356,7 @@ namespace SCTBuilder
                 }
                 if (SCTchecked.ChkAPT)
                 {
-                    UpdateLabel("Building APT grid view from selection");
+                    SCTcommon.UpdateLabel(UpdatingLabel, "Building APT grid view from selection");
                     if (SCTcommon.dtHasRows(APT)) lastTab = LoadAPTDataGridView();
                 }
                 if (SCTchecked.ChkRWY)
@@ -394,20 +380,20 @@ namespace SCTBuilder
                 if (SCTchecked.ChkVOR)
                 {
                     SelectTableItems(VOR, filter);
-                    UpdateLabel("Building VOR grid view from selection");
+                    SCTcommon.UpdateLabel(UpdatingLabel, "Building VOR grid view from selection");
                     lastTab = LoadVORGridView();
                 }
                 if (SCTchecked.ChkNDB)
                 {
                     SelectTableItems(NDB, filter);
-                    UpdateLabel("Building NDB grid view from selection");
+                    SCTcommon.UpdateLabel(UpdatingLabel, "Building NDB grid view from selection");
                     lastTab = LoadNDBGridView();
                 }
 
                 if (SCTchecked.ChkFIX)
                 {
                     SelectTableItems(FIX, filter);
-                    UpdateLabel("Building FIX grid view from selection");
+                    SCTcommon.UpdateLabel(UpdatingLabel, "Building FIX grid view from selection");
                     lastTab = LoadFIXGridView();
                 }
                 // AWYs must come after VOR, NDB and FIX
@@ -415,7 +401,7 @@ namespace SCTBuilder
                 {
                     if (SelectAWYs() != 0)
                     {
-                        UpdateLabel("Building AWY grid view from selection");
+                        SCTcommon.UpdateLabel(UpdatingLabel, "Building AWY grid view from selection");
                         lastTab = LoadAWYDataGridView();
                     }
                     else ClearDataGridView(dgvAWY);
@@ -438,7 +424,7 @@ namespace SCTBuilder
                     }
                     if (SelectSSD(SID) != 0)
                     {
-                        UpdateLabel("Building SID grid view from selection");
+                        SCTcommon.UpdateLabel(UpdatingLabel, "Building SID grid view from selection");
                         lastTab = LoadSSDDataGridView(SID);
                     }
                 }
@@ -457,26 +443,26 @@ namespace SCTBuilder
                     }
                     if (SelectSSD(STAR) != 0)
                     {
-                        UpdateLabel("Building STAR grid view from selection");
+                        SCTcommon.UpdateLabel(UpdatingLabel, "Building STAR grid view from selection");
                         lastTab = LoadSSDDataGridView(STAR);
                     }
                 }
                 if (SCTchecked.ChkOceanic)
                 {
-                    UpdateLabel("Building Oceanic grid view from selection");
+                    SCTcommon.UpdateLabel(UpdatingLabel, "Building Oceanic grid view from selection");
                     SelectOceanic();
-                    UpdateLabel("Building RTE grid view from selection");
+                    SCTcommon.UpdateLabel(UpdatingLabel, "Building RTE grid view from selection");
                     lastTab = LoadOceanicDataGridView();
                 }
                 // Select the items for NaviGraph
                 if (InfoSection.UseNaviGraph)
                 {
-                    UpdateLabel("Selecting NaviGraph APT...");
+                    SCTcommon.UpdateLabel(UpdatingLabel, "Selecting NaviGraph APT...");
                     FilterBy.Method = "Square";
                     ReadNaviGraph.SelectNGTables(SetFilter(SelectNGdata));
                 }
                 SelectedTabControl.SelectedTab = SelectedTabControl.TabPages[lastTab];
-                UpdateLabel("");
+                SCTcommon.UpdateLabel(UpdatingLabel);
                 Refresh();
                 SCTtoolStripButton.Enabled = ESEToolStripButton.Enabled = true;
             }
@@ -517,7 +503,7 @@ namespace SCTBuilder
                 dvRWY.RowFilter = "[ID] = '" + drvAPT["ID"].ToString() + "'";
                 if (dvRWY.Count != 0)
                 {
-                    UpdateLabel("Selecting " + dvRWY.Count + " runways from " + drvAPT["FacilityID"]);
+                    SCTcommon.UpdateLabel(UpdatingLabel, "Selecting " + dvRWY.Count + " runways from " + drvAPT["FacilityID"]);
                     SetSelected(dvRWY, false);
                 }
             }
@@ -565,13 +551,13 @@ namespace SCTBuilder
             // Apply the square filter
             dvAWY.RowFilter = filter;
             int result = dvAWY.Count;
-            UpdateLabel("Selecting " + result + " airway segmentss...");
+            SCTcommon.UpdateLabel(UpdatingLabel, "Selecting " + result + " airway segmentss...");
             // Select all components inside the square
             SetSelected(dvAWY, true);
             // This filter shouldn't do anything...
             dvAWY.RowFilter = "[Selected]";
             result = dvAWY.Count;
-            UpdateLabel("Selected " + result + " airway segments...");
+            SCTcommon.UpdateLabel(UpdatingLabel, "Selected " + result + " airway segments...");
             // Build a unique list of airways
             DataTable dtAWYcheck = dvAWY.ToTable(true, "AWYID");
             // Loop the list of Airways to extend a leg beyond the square...
@@ -619,13 +605,13 @@ namespace SCTBuilder
             // Apply the square filter
             dvRTE.RowFilter = filter;
             int result = dvRTE.Count;
-            UpdateLabel("Selecting " + result + " airway segmentss...");
+            SCTcommon.UpdateLabel(UpdatingLabel, "Selecting " + result + " airway segmentss...");
             // Select all components inside the square
             SetSelected(dvRTE, true);
             // This filter shouldn't do anything...
             dvRTE.RowFilter = "[Selected]";
             result = dvRTE.Count;
-            UpdateLabel("Selected " + result + " airway segments...");
+            SCTcommon.UpdateLabel(UpdatingLabel, "Selected " + result + " airway segments...");
             // Build a unique list of airways
             DataTable dtRTEcheck = dvRTE.ToTable(true, "AWYID");
             // Loop the list of Airways to extend a leg beyond the square...
@@ -758,7 +744,7 @@ namespace SCTBuilder
         private int SelectSSD(bool isSID)
         {
             string proc = "STARs"; if (isSID) proc = "SIDs";
-            UpdateLabel("Clearing prior selections in " + proc);
+            SCTcommon.UpdateLabel(UpdatingLabel, "Clearing prior selections in " + proc);
             // Create the SSD view for the SID or STAR
             DataView dvSSD = new DataView(SSD)
             {
@@ -790,7 +776,7 @@ namespace SCTBuilder
                         foreach (DataRow data in IDdata.AsEnumerable())
                         {
                             dvSSD.RowFilter = "[ID] = '" + data[0].ToString() + "'";
-                            UpdateLabel("Selecting " + dvSSD[0]["SSDname"].ToString() + " for " + dtAptRow["FacilityID"].ToString());
+                            SCTcommon.UpdateLabel(UpdatingLabel, "Selecting " + dvSSD[0]["SSDname"].ToString() + " for " + dtAptRow["FacilityID"].ToString());
                             SetSelected(dvSSD);
                         }
                     }
@@ -925,7 +911,7 @@ namespace SCTBuilder
                 Counter++;
                 row["Selected"] = true;
                 if (Label)
-                    UpdateLabel("Selecting " + result + " rows from " + dv.Table.TableName +
+                    SCTcommon.UpdateLabel(UpdatingLabel, "Selecting " + result + " rows from " + dv.Table.TableName +
                        " (" + (Counter * 100 / dv.Count).ToString() + "% done)"); ;
             }
         }
@@ -1710,6 +1696,9 @@ namespace SCTBuilder
             if ((FolderMgt.DataFolder.Length != 0) &&
                     Directory.Exists(FolderMgt.DataFolder))
             {
+                UpdateAIRACbutton.Visible = false;
+                SCTcommon.UpdateLabel(CycleInfoLabel);
+                SCTcommon.UpdateLabel(WaitForCycleLabel, "Please wait until SCTBuilder imports the cycle");
                 Form getAIRAC = new SelectAIRAC();
                 DialogResult dialogResult = getAIRAC.ShowDialog();
                 while (dialogResult == DialogResult.None)
@@ -1726,11 +1715,13 @@ namespace SCTBuilder
                 {
                     SCTcommon.SendMessage(UserMessage.FAADownloadError, MessageBoxIcon.Error);
                 }
-                UpdateAIRACbutton.Visible = true;
             }
             else
                 SCTcommon.SendMessage(UserMessage.OutputFolderRequired);
             TestWriteSCT();
+            UpdateAIRACbutton.Visible = true;
+            SCTcommon.UpdateLabel(CycleInfoLabel, CycleInfo.CycleText);
+            SCTcommon.UpdateLabel(WaitForCycleLabel);
         }
 
         private void CenterARTCCButton_Click(object sender, EventArgs e)
@@ -1828,10 +1819,10 @@ namespace SCTBuilder
         private void SCTtoolStripButton_Click(object sender, EventArgs e)
         {
             SCTtoolStripButton.ToolTipText = "Please wait for the completion message."; Refresh();
-            UpdateLabel("Writing files. Please wait for completion message.");
+            SCTcommon.UpdateLabel(UpdatingLabel, "Writing files. Please wait for completion message.");
             UseWaitCursor = true;
             SCToutput.WriteSCT();
-            UpdateLabel("");
+            SCTcommon.UpdateLabel(UpdatingLabel);
             UseWaitCursor = false;
         }
 
@@ -1920,20 +1911,6 @@ namespace SCTBuilder
             }
         }
 
-        private void UpdateLabel(string Text)
-        {
-            if (Text.Length != 0)
-            {
-                UpdatingLabel.Visible = true;
-                UpdatingLabel.Text = Text;
-                UpdatingLabel.Refresh();
-            }
-            else
-            {
-                UpdatingLabel.Text = "";
-                UpdatingLabel.Visible = false;
-            }
-        }
         private void QuickSearchTextBox_TextChanged(object sender, EventArgs e)
         {
             if (QuickSearchTextBox.TextLength != 0)
@@ -1953,10 +1930,10 @@ namespace SCTBuilder
         private void ESEToolStripButton_Click(object sender, EventArgs e)
         {
             ESEToolStripButton.ToolTipText = "Please wait for the completion message."; Refresh();
-            UpdateLabel("Writing files. Please wait for completion message.");
+            SCTcommon.UpdateLabel(UpdatingLabel, "Writing files. Please wait for completion message.");
             UseWaitCursor = true;
             ESEoutput.WriteESE();
-            UpdateLabel("");
+            SCTcommon.UpdateLabel(UpdatingLabel);
             UseWaitCursor = false;
         }
 
@@ -2141,8 +2118,10 @@ namespace SCTBuilder
         private void ShowPanel()
         {
             DataGridViewRow dgrv = dgvAPT.CurrentRow;
-            DataView dvAPT = new DataView(APT);
-            dvAPT.RowFilter = "FacilityID = '" + dgrv.Cells[1].Value.ToString() + "'";
+            DataView dvAPT = new DataView(APT)
+            {
+                RowFilter = "FacilityID = '" + dgrv.Cells[1].Value.ToString() + "'"
+            };
             ICAOTextBox.Text = dvAPT[0]["ICAO"].ToString();
             FacIDTextBox.Text = dvAPT[0]["FacilityID"].ToString();
             DataIDTextBox.Text = dvAPT[0]["ID"].ToString();

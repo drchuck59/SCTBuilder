@@ -9,6 +9,7 @@ namespace SCTBuilder
     class CycleInfo
     {
         private readonly static DateTime Start1501 = Convert.ToDateTime("01/08/2015", CultureInfo.InvariantCulture);
+        private readonly static string cr = Environment.NewLine;
         public static int AIRAC = 1501;
         public static DateTime CycleStart;
         public static DateTime CycleEnd;
@@ -109,12 +110,12 @@ namespace SCTBuilder
                         {
                             case "LastAIRAC":
                                 result = Convert.ToInt32(value);
-                                if ( (result.ToString().Length == 0) || (result == 1501) )
+                                if ((result.ToString().Length == 0) || (result == 1501))
                                     result = 0;     // This file is corrupted.
                                 break;
                             case "DataFolder":
                                 temp = value;
-                                if ( (temp.Length!= 0) && (Directory.Exists(value)))
+                                if ((temp.Length != 0) && (Directory.Exists(value)))
                                     FolderMgt.DataFolder = value;
                                 else result = 0;    // This file is corrupted.
                                 break;
@@ -224,7 +225,7 @@ namespace SCTBuilder
                                 InfoSection.UseFixesAsCoords = Convert.ToBoolean(value);
                                 break;
                             case "UseNaviGraphData":
-                                InfoSection.UseNaviGraph = Convert.ToBoolean(value);                           
+                                InfoSection.UseNaviGraph = Convert.ToBoolean(value);
                                 break;
                             case "OneFilePerSidStar":
                                 InfoSection.OneFilePerSidStar = Convert.ToBoolean(value);
@@ -330,7 +331,7 @@ namespace SCTBuilder
         }
 
         public static DateTime CycleDateFromAIRAC(int reqAIRAC, bool Save2CycleInfo = false)
-            // Returns the beginning and ending cycle date for a given AIRAC
+        // Returns the beginning and ending cycle date for a given AIRAC
         {
             DateTime WorkingDate = Start1501; DateTime result;
             // Loop the cycles until the calculated AIRAC matches the requested one
@@ -360,31 +361,76 @@ namespace SCTBuilder
                 AIRAC = WorkingAIRAC;
                 CycleStart = WorkingDate;
                 CycleEnd = WorkingDate.AddDays(CycleInterval);
+                BuildCycleHeader();
+                BuildCycleText();
             }
             // result[0] has start cycle date, result[1] has end cycle date
             return result;
         }
 
         private static int CalcAIRAC(int iYear, int iCounter)
-            // Internal call to generate sample AIRAC values
+        // Internal call to generate sample AIRAC values
         {
             int result;
             result = Convert.ToInt32((Extensions.Right(iYear.ToString(), 2)) + iCounter.ToString("00").ToString());
             return result;
         }
 
-        public static string BuildCycleText()
+        private static string cycleText;
+        public static string CycleText
         {
-            string cr = Environment.NewLine;
-            string Message =
-                "AIRAC Cycle: " + AIRAC + cr +
-                "Cycle Start:    " + CycleStart.Date.ToShortDateString()+ cr +
-                "Cycle End:     " + CycleEnd.Date.ToShortDateString();
-            if (CycleEnd < DateTime.Today)
+            get { return cycleText; }
+            set
             {
-                Message = Message + cr + "*** Outdated Cycle Data ***";
+                if (AIRAC == 1501)
+                {
+                    cycleText = "No Active Cycle Data!";
+                }
+                else
+                {
+                    cycleText = "AIRAC Cycle: " + AIRAC + cr +
+                    "Cycle Start:    " + CycleStart.Date.ToShortDateString() + cr +
+                    "Cycle End:     " + CycleEnd.Date.ToShortDateString();
+                }
+                if (CycleEnd < DateTime.Today)
+                    cycleText += cr + "*** Outdated Cycle Data ***";
             }
-            return Message;
+        }
+
+        private static void BuildCycleText()
+        {
+            cycleText = "No Active Cycle Data!";
+            if (AIRAC != 1501)
+            {
+                cycleText = "AIRAC Cycle: " + AIRAC + cr +
+                "Cycle Start:    " + CycleStart.Date.ToShortDateString() + cr +
+                "Cycle End:     " + CycleEnd.Date.ToShortDateString();
+            }
+            if (CycleEnd < DateTime.Today)
+                cycleText += cr + "*** Outdated Cycle Data ***";
+        }
+
+        private static string cycleHeader;
+        public static string CycleHeader
+        {
+            get {return cycleHeader; }
+            set
+            {
+                cycleHeader =
+                "; ================================================================" + cr +
+                "; AIRAC CYCLE: " + CycleInfo.AIRAC + cr +
+                "; Cycle: " + CycleInfo.CycleStart.ToShortDateString() + " to " + CycleInfo.CycleEnd.ToShortDateString() + cr +
+                "; ================================================================" + cr;
+            }
+        }
+
+        private static void BuildCycleHeader()
+        {
+            cycleHeader =
+            "; ================================================================" + cr +
+            "; AIRAC CYCLE: " + CycleInfo.AIRAC + cr +
+            "; Cycle: " + CycleInfo.CycleStart.ToShortDateString() + " to " + CycleInfo.CycleEnd.ToShortDateString() + cr +
+            "; ================================================================" + cr;
         }
     }
 }

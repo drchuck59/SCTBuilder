@@ -96,10 +96,10 @@
             this.ColorValueTextBox = new System.Windows.Forms.TextBox();
             this.DispDistTextBox = new System.Windows.Forms.TextBox();
             this.DispBrgTextBox = new System.Windows.Forms.TextBox();
+            this.ColorNameTextBox = new System.Windows.Forms.TextBox();
             this.label11 = new System.Windows.Forms.Label();
             this.ColorGroupBox = new System.Windows.Forms.GroupBox();
             this.ColorValueLabel = new System.Windows.Forms.Label();
-            this.ColorNameTextBox = new System.Windows.Forms.TextBox();
             this.ColorNameLabel = new System.Windows.Forms.Label();
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
@@ -109,6 +109,7 @@
             this.PasteToTextBox = new System.Windows.Forms.TextBox();
             this.PasteToEndButton = new System.Windows.Forms.Button();
             this.PasteToStartButton = new System.Windows.Forms.Button();
+            this.UpdatingLabel = new System.Windows.Forms.Label();
             this.StartGroupBox.SuspendLayout();
             this.EndPointGroupBo.SuspendLayout();
             this.FixImportGroupBox.SuspendLayout();
@@ -924,6 +925,16 @@
             this.DispBrgTextBox.TabStop = false;
             this.toolTip1.SetToolTip(this.DispBrgTextBox, "Initial true bearing to end point");
             // 
+            // ColorNameTextBox
+            // 
+            this.ColorNameTextBox.Location = new System.Drawing.Point(47, 18);
+            this.ColorNameTextBox.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
+            this.ColorNameTextBox.Name = "ColorNameTextBox";
+            this.ColorNameTextBox.Size = new System.Drawing.Size(68, 20);
+            this.ColorNameTextBox.TabIndex = 1;
+            this.toolTip1.SetToolTip(this.ColorNameTextBox, "Double-click to create #define string");
+            this.ColorNameTextBox.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.ColorNameTextBox_MouseDoubleClick);
+            // 
             // label11
             // 
             this.label11.AutoSize = true;
@@ -959,16 +970,6 @@
             this.ColorValueLabel.Size = new System.Drawing.Size(34, 13);
             this.ColorValueLabel.TabIndex = 2;
             this.ColorValueLabel.Text = "Value";
-            // 
-            // ColorNameTextBox
-            // 
-            this.ColorNameTextBox.Location = new System.Drawing.Point(47, 18);
-            this.ColorNameTextBox.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
-            this.ColorNameTextBox.Name = "ColorNameTextBox";
-            this.ColorNameTextBox.Size = new System.Drawing.Size(68, 20);
-            this.ColorNameTextBox.TabIndex = 1;
-            this.toolTip1.SetToolTip(this.ColorNameTextBox, "Double-click to create #define string");
-            this.ColorNameTextBox.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.ColorNameTextBox_MouseDoubleClick);
             // 
             // ColorNameLabel
             // 
@@ -1062,12 +1063,24 @@
             this.PasteToStartButton.UseVisualStyleBackColor = true;
             this.PasteToStartButton.Click += new System.EventHandler(this.PasteToStartButton_Click);
             // 
+            // UpdatingLabel
+            // 
+            this.UpdatingLabel.AutoSize = true;
+            this.UpdatingLabel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(128)))));
+            this.UpdatingLabel.Location = new System.Drawing.Point(258, 501);
+            this.UpdatingLabel.Name = "UpdatingLabel";
+            this.UpdatingLabel.Size = new System.Drawing.Size(35, 13);
+            this.UpdatingLabel.TabIndex = 79;
+            this.UpdatingLabel.Text = "label8";
+            this.UpdatingLabel.Visible = false;
+            // 
             // LineGenerator
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
             this.ClientSize = new System.Drawing.Size(512, 669);
+            this.Controls.Add(this.UpdatingLabel);
             this.Controls.Add(this.groupBox6);
             this.Controls.Add(this.groupBox5);
             this.Controls.Add(this.ColorGroupBox);
@@ -1210,5 +1223,6 @@
         private System.Windows.Forms.TextBox PasteToTextBox;
         private System.Windows.Forms.Button PasteToEndButton;
         private System.Windows.Forms.Button PasteToStartButton;
+        private System.Windows.Forms.Label UpdatingLabel;
     }
 }

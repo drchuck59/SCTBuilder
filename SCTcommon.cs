@@ -167,6 +167,48 @@ namespace SCTBuilder
             return MessageBox.Show(Msg, VersionInfo.Title, buttons, icon);
         }
 
+        public static void UpdateLabel(Label lbl, string Message = "", int msSecWait = 0)
+        {
+            // Message only - display caption with Message and exit
+            // No Message - hide caption
+            // Message + delay in mSec - display caption with Message and hide caption after mSec wait
+            if (Message.Length != 0)
+            {
+                lbl.Text = Message;
+                lbl.Visible = true;
+                if (msSecWait != 0)
+                {
+                    SCTcommon.Wait(msSecWait);
+                    lbl.Visible = false;
+                }
+            }
+            else
+                lbl.Visible = false;
+        }
+
+        public static void Wait(int milliseconds)
+        {
+            var timer1 = new System.Windows.Forms.Timer();
+            if (milliseconds == 0 || milliseconds < 0) return;
+
+            // Console.WriteLine("start wait timer");
+            timer1.Interval = milliseconds;
+            timer1.Enabled = true;
+            timer1.Start();
+
+            timer1.Tick += (s, e) =>
+            {
+                timer1.Enabled = false;
+                timer1.Stop();
+                // Console.WriteLine("stop wait timer");
+            };
+
+            while (timer1.Enabled)
+            {
+                Application.DoEvents();
+            }
+        }
+
         public static object[] GetNavData(string FIX)
         {
             // Fix, Frequency(opt), Latitude, Longitude, Name, FixType
@@ -1054,7 +1096,7 @@ namespace SCTBuilder
 
         public static string CharOut(string Lat0, string Lon0, string Lat1, string Lon1, char c = ' ')
         {
-            string space = new string(' ', 27);
+            string space = new string(c, 27);
             string result = space +
                  String.Format(" ", 27) + Lat0 + " " + Lon0 + " " + Lat1 + " " + Lon1;
             return result;

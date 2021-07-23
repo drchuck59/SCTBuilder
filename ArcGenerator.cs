@@ -80,16 +80,17 @@ namespace SCTBuilder
         private void Copy2ClipboardButton_Click(object sender, EventArgs e)
         {
             MessageBoxIcon icon = MessageBoxIcon.Information;
-            string Msg;
+            string Msg = "Contents of output textbox copied to clipboard";
             if (OutputTextBox.TextLength != 0)
             {
                 Clipboard.Clear();
                 Clipboard.SetText(OutputTextBox.Text.ToString());
-                Msg = "Contents of output textbox copied to clipboard";
+                SCTcommon.UpdateLabel(UpdateLabel, Msg, 1000);
             }
             else
             {
                 Msg = "No text in output textbox to copy!";
+                SCTcommon.UpdateLabel(UpdateLabel, Msg, 1000);
             }
             SCTcommon.SendMessage(Msg, icon);
         }
@@ -647,7 +648,7 @@ namespace SCTBuilder
 
         private void RadBrgStartButton_Click(object sender, EventArgs e)
         {
-            double[] coords = new double[2];
+            double[] coords;
             if ((CenterLat != -1) && (CenterLon != -1))
             {
                 coords = LatLongCalc.Destination(CenterLat, CenterLon, ArcRadius, Convert.ToDouble(StartRadialNUD.Value), 'N');

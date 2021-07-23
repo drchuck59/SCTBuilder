@@ -175,6 +175,7 @@
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.APTpanel = new System.Windows.Forms.Panel();
+            this.ClosePanelButton = new System.Windows.Forms.Button();
             this.label13 = new System.Windows.Forms.Label();
             this.ElevationTextBox = new System.Windows.Forms.TextBox();
             this.label14 = new System.Windows.Forms.Label();
@@ -199,7 +200,7 @@
             this.label23 = new System.Windows.Forms.Label();
             this.ICAOTextBox = new System.Windows.Forms.TextBox();
             this.label24 = new System.Windows.Forms.Label();
-            this.ClosePanelButton = new System.Windows.Forms.Button();
+            this.WaitForCycleLabel = new System.Windows.Forms.Label();
             this.panelSUAs.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.AllMarginsNumericUpDown)).BeginInit();
             this.FilterGroupBox.SuspendLayout();
@@ -1930,7 +1931,7 @@
             this.UpdatingLabel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(224)))), ((int)(((byte)(192)))));
             this.UpdatingLabel.Enabled = false;
             this.UpdatingLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.UpdatingLabel.Location = new System.Drawing.Point(644, 243);
+            this.UpdatingLabel.Location = new System.Drawing.Point(642, 274);
             this.UpdatingLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.UpdatingLabel.Name = "UpdatingLabel";
             this.UpdatingLabel.Size = new System.Drawing.Size(16, 17);
@@ -1988,6 +1989,17 @@
             this.APTpanel.Size = new System.Drawing.Size(438, 199);
             this.APTpanel.TabIndex = 63;
             this.APTpanel.Visible = false;
+            // 
+            // ClosePanelButton
+            // 
+            this.ClosePanelButton.BackColor = System.Drawing.Color.Red;
+            this.ClosePanelButton.Location = new System.Drawing.Point(402, 16);
+            this.ClosePanelButton.Name = "ClosePanelButton";
+            this.ClosePanelButton.Size = new System.Drawing.Size(26, 21);
+            this.ClosePanelButton.TabIndex = 48;
+            this.ClosePanelButton.Text = "X";
+            this.ClosePanelButton.UseVisualStyleBackColor = false;
+            this.ClosePanelButton.Click += new System.EventHandler(this.ClosePanelButton_Click);
             // 
             // label13
             // 
@@ -2193,16 +2205,16 @@
             this.label24.TabIndex = 24;
             this.label24.Text = "ICAO (if present)";
             // 
-            // ClosePanelButton
+            // WaitForCycleLabel
             // 
-            this.ClosePanelButton.BackColor = System.Drawing.Color.Red;
-            this.ClosePanelButton.Location = new System.Drawing.Point(402, 16);
-            this.ClosePanelButton.Name = "ClosePanelButton";
-            this.ClosePanelButton.Size = new System.Drawing.Size(26, 21);
-            this.ClosePanelButton.TabIndex = 48;
-            this.ClosePanelButton.Text = "X";
-            this.ClosePanelButton.UseVisualStyleBackColor = false;
-            this.ClosePanelButton.Click += new System.EventHandler(this.ClosePanelButton_Click);
+            this.WaitForCycleLabel.AutoSize = true;
+            this.WaitForCycleLabel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(128)))));
+            this.WaitForCycleLabel.Location = new System.Drawing.Point(16, 147);
+            this.WaitForCycleLabel.Name = "WaitForCycleLabel";
+            this.WaitForCycleLabel.Size = new System.Drawing.Size(41, 13);
+            this.WaitForCycleLabel.TabIndex = 65;
+            this.WaitForCycleLabel.Text = "label26";
+            this.WaitForCycleLabel.Visible = false;
             // 
             // Form1
             // 
@@ -2212,6 +2224,7 @@
             this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(1133, 671);
+            this.Controls.Add(this.WaitForCycleLabel);
             this.Controls.Add(this.APTpanel);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.QuickSearchTextBox);
@@ -2462,6 +2475,7 @@
         private System.Windows.Forms.TextBox ICAOTextBox;
         private System.Windows.Forms.Label label24;
         private System.Windows.Forms.Button ClosePanelButton;
+        private System.Windows.Forms.Label WaitForCycleLabel;
     }
 }
 

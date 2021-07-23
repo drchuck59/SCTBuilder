@@ -48,6 +48,7 @@
             this.startPointLatitudeLabel = new System.Windows.Forms.Label();
             this.Fix2CenterButton = new System.Windows.Forms.Button();
             this.StartGroupBox = new System.Windows.Forms.GroupBox();
+            this.MagBrgCheckBox = new System.Windows.Forms.CheckBox();
             this.RadBrgStartButton = new System.Windows.Forms.Button();
             this.StartFixTextBox = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
@@ -96,7 +97,6 @@
             this.SuffixLabel = new System.Windows.Forms.Label();
             this.PrefixLabel = new System.Windows.Forms.Label();
             this.AddArc = new System.Windows.Forms.Button();
-            this.MagBrgCheckBox = new System.Windows.Forms.CheckBox();
             this.CircleCheckBox = new System.Windows.Forms.CheckBox();
             this.label20 = new System.Windows.Forms.Label();
             this.TradeStartEndButton = new System.Windows.Forms.Button();
@@ -107,18 +107,20 @@
             this.PasteToEndButton = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.colorDialog1 = new System.Windows.Forms.ColorDialog();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.ChordPictureBox = new System.Windows.Forms.PictureBox();
             this.ArcHeightTextBox = new System.Windows.Forms.TextBox();
-            this.label14 = new System.Windows.Forms.Label();
-            this.label19 = new System.Windows.Forms.Label();
-            this.ChordLengthTextBox = new System.Windows.Forms.TextBox();
-            this.ChordRadiusTextBox = new System.Windows.Forms.TextBox();
-            this.label22 = new System.Windows.Forms.Label();
+            this.colorDialog1 = new System.Windows.Forms.ColorDialog();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.ClearArcButton = new System.Windows.Forms.Button();
             this.ChordArcLengthTextBox = new System.Windows.Forms.TextBox();
             this.label24 = new System.Windows.Forms.Label();
-            this.ClearArcButton = new System.Windows.Forms.Button();
+            this.ChordRadiusTextBox = new System.Windows.Forms.TextBox();
+            this.label22 = new System.Windows.Forms.Label();
+            this.ChordLengthTextBox = new System.Windows.Forms.TextBox();
+            this.label19 = new System.Windows.Forms.Label();
+            this.label14 = new System.Windows.Forms.Label();
+            this.UpdateLabel = new System.Windows.Forms.Label();
+            this.label25 = new System.Windows.Forms.Label();
             this.FixImportGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.FixBrgNUD)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.FixListDataGridView)).BeginInit();
@@ -132,8 +134,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.colorDefsBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.sCTdata)).BeginInit();
             this.groupBox2.SuspendLayout();
-            this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ChordPictureBox)).BeginInit();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // label11
@@ -392,6 +394,18 @@
             this.StartGroupBox.TabIndex = 42;
             this.StartGroupBox.TabStop = false;
             this.StartGroupBox.Text = "Arc start coordinates";
+            // 
+            // MagBrgCheckBox
+            // 
+            this.MagBrgCheckBox.AutoSize = true;
+            this.MagBrgCheckBox.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.MagBrgCheckBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.MagBrgCheckBox.Location = new System.Drawing.Point(9, 124);
+            this.MagBrgCheckBox.Name = "MagBrgCheckBox";
+            this.MagBrgCheckBox.Size = new System.Drawing.Size(115, 17);
+            this.MagBrgCheckBox.TabIndex = 75;
+            this.MagBrgCheckBox.Text = "*Use Magnetic Brg";
+            this.MagBrgCheckBox.UseVisualStyleBackColor = true;
             // 
             // RadBrgStartButton
             // 
@@ -961,18 +975,6 @@
             this.AddArc.UseVisualStyleBackColor = true;
             this.AddArc.Click += new System.EventHandler(this.AddArc_Click);
             // 
-            // MagBrgCheckBox
-            // 
-            this.MagBrgCheckBox.AutoSize = true;
-            this.MagBrgCheckBox.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.MagBrgCheckBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.MagBrgCheckBox.Location = new System.Drawing.Point(9, 124);
-            this.MagBrgCheckBox.Name = "MagBrgCheckBox";
-            this.MagBrgCheckBox.Size = new System.Drawing.Size(115, 17);
-            this.MagBrgCheckBox.TabIndex = 75;
-            this.MagBrgCheckBox.Text = "*Use Magnetic Brg";
-            this.MagBrgCheckBox.UseVisualStyleBackColor = true;
-            // 
             // CircleCheckBox
             // 
             this.CircleCheckBox.AutoSize = true;
@@ -1075,6 +1077,30 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Paste Coords Here";
             // 
+            // ChordPictureBox
+            // 
+            this.ChordPictureBox.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("ChordPictureBox.BackgroundImage")));
+            this.ChordPictureBox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.ChordPictureBox.Location = new System.Drawing.Point(583, 339);
+            this.ChordPictureBox.Name = "ChordPictureBox";
+            this.ChordPictureBox.Size = new System.Drawing.Size(215, 108);
+            this.ChordPictureBox.TabIndex = 79;
+            this.ChordPictureBox.TabStop = false;
+            this.toolTip1.SetToolTip(this.ChordPictureBox, "While less accurate, use of a flattened arc may make\r\nyour Arc fit better on the " +
+        "display.  Jeppeson and some\r\nFAA approach plates use arcs, e.g., for missed appr" +
+        "oach\r\nholds.");
+            this.ChordPictureBox.Visible = false;
+            // 
+            // ArcHeightTextBox
+            // 
+            this.ArcHeightTextBox.Location = new System.Drawing.Point(77, 16);
+            this.ArcHeightTextBox.Name = "ArcHeightTextBox";
+            this.ArcHeightTextBox.Size = new System.Drawing.Size(34, 20);
+            this.ArcHeightTextBox.TabIndex = 0;
+            this.toolTip1.SetToolTip(this.ArcHeightTextBox, "Height may not exceed chord length (C)");
+            this.ArcHeightTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.ArcHeightTextBox_KeyPress);
+            this.ArcHeightTextBox.Validated += new System.EventHandler(this.ArcHeightTextBox_Validated);
+            // 
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.ClearArcButton);
@@ -1095,72 +1121,15 @@
             this.groupBox1.Text = "Arc (Optional)";
             this.groupBox1.Visible = false;
             // 
-            // ChordPictureBox
+            // ClearArcButton
             // 
-            this.ChordPictureBox.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("ChordPictureBox.BackgroundImage")));
-            this.ChordPictureBox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.ChordPictureBox.Location = new System.Drawing.Point(527, 360);
-            this.ChordPictureBox.Name = "ChordPictureBox";
-            this.ChordPictureBox.Size = new System.Drawing.Size(144, 65);
-            this.ChordPictureBox.TabIndex = 79;
-            this.ChordPictureBox.TabStop = false;
-            this.toolTip1.SetToolTip(this.ChordPictureBox, "While less accurate, use of a flattened arc may make\r\nyour Arc fit better on the " +
-        "display.  Jeppeson and some\r\nFAA approach plates use arcs, e.g., for missed appr" +
-        "oach\r\nholds.");
-            this.ChordPictureBox.Visible = false;
-            // 
-            // ArcHeightTextBox
-            // 
-            this.ArcHeightTextBox.Location = new System.Drawing.Point(77, 16);
-            this.ArcHeightTextBox.Name = "ArcHeightTextBox";
-            this.ArcHeightTextBox.Size = new System.Drawing.Size(34, 20);
-            this.ArcHeightTextBox.TabIndex = 0;
-            this.toolTip1.SetToolTip(this.ArcHeightTextBox, "Height may not exceed chord length (C)");
-            this.ArcHeightTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.ArcHeightTextBox_KeyPress);
-            this.ArcHeightTextBox.Validated += new System.EventHandler(this.ArcHeightTextBox_Validated);
-            // 
-            // label14
-            // 
-            this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(10, 19);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(64, 13);
-            this.label14.TabIndex = 1;
-            this.label14.Text = "Height (NM)";
-            // 
-            // label19
-            // 
-            this.label19.AutoSize = true;
-            this.label19.Location = new System.Drawing.Point(10, 45);
-            this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(14, 13);
-            this.label19.TabIndex = 2;
-            this.label19.Text = "C";
-            // 
-            // ChordLengthTextBox
-            // 
-            this.ChordLengthTextBox.Enabled = false;
-            this.ChordLengthTextBox.Location = new System.Drawing.Point(30, 41);
-            this.ChordLengthTextBox.Name = "ChordLengthTextBox";
-            this.ChordLengthTextBox.Size = new System.Drawing.Size(34, 20);
-            this.ChordLengthTextBox.TabIndex = 3;
-            // 
-            // ChordRadiusTextBox
-            // 
-            this.ChordRadiusTextBox.Enabled = false;
-            this.ChordRadiusTextBox.Location = new System.Drawing.Point(90, 41);
-            this.ChordRadiusTextBox.Name = "ChordRadiusTextBox";
-            this.ChordRadiusTextBox.Size = new System.Drawing.Size(34, 20);
-            this.ChordRadiusTextBox.TabIndex = 5;
-            // 
-            // label22
-            // 
-            this.label22.AutoSize = true;
-            this.label22.Location = new System.Drawing.Point(69, 46);
-            this.label22.Name = "label22";
-            this.label22.Size = new System.Drawing.Size(15, 13);
-            this.label22.TabIndex = 4;
-            this.label22.Text = "R";
+            this.ClearArcButton.Location = new System.Drawing.Point(117, 14);
+            this.ClearArcButton.Name = "ClearArcButton";
+            this.ClearArcButton.Size = new System.Drawing.Size(41, 23);
+            this.ClearArcButton.TabIndex = 8;
+            this.ClearArcButton.Text = "Clear";
+            this.ClearArcButton.UseVisualStyleBackColor = true;
+            this.ClearArcButton.Click += new System.EventHandler(this.ClearArcButton_Click);
             // 
             // ChordArcLengthTextBox
             // 
@@ -1179,15 +1148,68 @@
             this.label24.TabIndex = 6;
             this.label24.Text = "L";
             // 
-            // ClearArcButton
+            // ChordRadiusTextBox
             // 
-            this.ClearArcButton.Location = new System.Drawing.Point(117, 14);
-            this.ClearArcButton.Name = "ClearArcButton";
-            this.ClearArcButton.Size = new System.Drawing.Size(41, 23);
-            this.ClearArcButton.TabIndex = 8;
-            this.ClearArcButton.Text = "Clear";
-            this.ClearArcButton.UseVisualStyleBackColor = true;
-            this.ClearArcButton.Click += new System.EventHandler(this.ClearArcButton_Click);
+            this.ChordRadiusTextBox.Enabled = false;
+            this.ChordRadiusTextBox.Location = new System.Drawing.Point(90, 41);
+            this.ChordRadiusTextBox.Name = "ChordRadiusTextBox";
+            this.ChordRadiusTextBox.Size = new System.Drawing.Size(34, 20);
+            this.ChordRadiusTextBox.TabIndex = 5;
+            // 
+            // label22
+            // 
+            this.label22.AutoSize = true;
+            this.label22.Location = new System.Drawing.Point(69, 46);
+            this.label22.Name = "label22";
+            this.label22.Size = new System.Drawing.Size(15, 13);
+            this.label22.TabIndex = 4;
+            this.label22.Text = "R";
+            // 
+            // ChordLengthTextBox
+            // 
+            this.ChordLengthTextBox.Enabled = false;
+            this.ChordLengthTextBox.Location = new System.Drawing.Point(30, 41);
+            this.ChordLengthTextBox.Name = "ChordLengthTextBox";
+            this.ChordLengthTextBox.Size = new System.Drawing.Size(34, 20);
+            this.ChordLengthTextBox.TabIndex = 3;
+            // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.Location = new System.Drawing.Point(10, 45);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(14, 13);
+            this.label19.TabIndex = 2;
+            this.label19.Text = "C";
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(10, 19);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(64, 13);
+            this.label14.TabIndex = 1;
+            this.label14.Text = "Height (NM)";
+            // 
+            // UpdateLabel
+            // 
+            this.UpdateLabel.AutoSize = true;
+            this.UpdateLabel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(128)))));
+            this.UpdateLabel.Location = new System.Drawing.Point(546, 597);
+            this.UpdateLabel.Name = "UpdateLabel";
+            this.UpdateLabel.Size = new System.Drawing.Size(41, 13);
+            this.UpdateLabel.TabIndex = 80;
+            this.UpdateLabel.Text = "label25";
+            this.UpdateLabel.Visible = false;
+            // 
+            // label25
+            // 
+            this.label25.AutoSize = true;
+            this.label25.Location = new System.Drawing.Point(520, 382);
+            this.label25.Name = "label25";
+            this.label25.Size = new System.Drawing.Size(61, 13);
+            this.label25.TabIndex = 81;
+            this.label25.Text = "<-------------->";
             // 
             // ArcGenerator
             // 
@@ -1195,6 +1217,8 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
             this.ClientSize = new System.Drawing.Size(820, 683);
+            this.Controls.Add(this.label25);
+            this.Controls.Add(this.UpdateLabel);
             this.Controls.Add(this.ChordPictureBox);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.groupBox2);
@@ -1244,9 +1268,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.sCTdata)).EndInit();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ChordPictureBox)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.ChordPictureBox)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1343,5 +1367,7 @@
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.TextBox ArcHeightTextBox;
         private System.Windows.Forms.PictureBox ChordPictureBox;
+        private System.Windows.Forms.Label UpdateLabel;
+        private System.Windows.Forms.Label label25;
     }
 }

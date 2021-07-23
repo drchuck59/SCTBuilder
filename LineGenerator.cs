@@ -27,7 +27,6 @@ namespace SCTBuilder
         private static string OutputType = "SSD";
         string Msg = string.Empty;
         readonly string cr = Environment.NewLine;
-        MessageBoxIcon icon = MessageBoxIcon.Warning;
 
         public LineGenerator()
         {
@@ -41,7 +40,6 @@ namespace SCTBuilder
 
         private void Copy2ClipboardButton_Click(object sender, EventArgs e)
         {
-            icon = MessageBoxIcon.Information;
             string Msg;
             if (OutputTextBox.TextLength != 0)
             {
@@ -53,7 +51,7 @@ namespace SCTBuilder
             {
                 Msg = "No text in output textbox to copy!";
             }
-            SCTcommon.SendMessage(Msg, icon);
+            SCTcommon.UpdateLabel(UpdatingLabel, Msg, 1000);
         }
 
         private void SaveOutput2FileButton_Click(object sender, EventArgs e)

@@ -209,7 +209,7 @@ namespace SCTBuilder
             {
                 Msg = "No text in output textbox to copy!";
             }
-            SCTcommon.SendMessage(Msg, MessageBoxIcon.Information);
+            SCTcommon.UpdateLabel(UpdateLabel, Msg, 1000);
         }
 
         private void SaveOutput2FileButton_Click(object sender, EventArgs e)

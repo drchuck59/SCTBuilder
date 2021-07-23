@@ -53,6 +53,7 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
+            this.UpdateLabel = new System.Windows.Forms.Label();
             this.FixImportGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.FixListDataGridView)).BeginInit();
             this.SuspendLayout();
@@ -322,12 +323,24 @@
             this.label6.TabIndex = 20;
             this.label6.Text = "NOTE: Label can be changed after\r\n            inserting FIX information.";
             // 
+            // UpdateLabel
+            // 
+            this.UpdateLabel.AutoSize = true;
+            this.UpdateLabel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(128)))));
+            this.UpdateLabel.Location = new System.Drawing.Point(49, 725);
+            this.UpdateLabel.Name = "UpdateLabel";
+            this.UpdateLabel.Size = new System.Drawing.Size(35, 13);
+            this.UpdateLabel.TabIndex = 21;
+            this.UpdateLabel.Text = "label7";
+            this.UpdateLabel.Visible = false;
+            // 
             // DrawLabels
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
             this.ClientSize = new System.Drawing.Size(519, 764);
+            this.Controls.Add(this.UpdateLabel);
             this.Controls.Add(this.FixImportGroupBox);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.ScaleTextBox);
@@ -383,5 +396,6 @@
         private System.Windows.Forms.CheckBox IncludeSymbolCheckBox;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label UpdateLabel;
     }
 }

@@ -16,7 +16,7 @@ namespace SCTBuilder
         string SCTLatitude = string.Empty;
         string SCTLongitude = string.Empty;
 
-        string DecFormat = "0,0.000000";
+        readonly string DecFormat = "0,0.000000";
 
         public CoordConverter()
         {
