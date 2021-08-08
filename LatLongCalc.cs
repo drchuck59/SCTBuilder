@@ -121,7 +121,7 @@ namespace SCTBuilder
         public static double NMperLongDegree()
         {
             // Assumes all Lat/Longs are in Decimal degrees
-            double DegPerNMequator = 69.172;
+            double NMperDecDegEquator = 60;
             double radCenterLat;
             // Use the user's desired center if possible
             if (InfoSection.CenterLatitude_Dec == 0)
@@ -129,7 +129,7 @@ namespace SCTBuilder
                     LatLongCalc.Deg2Rad((FilterBy.NorthLimit + FilterBy.SouthLimit) / 2);
             else
                 radCenterLat = LatLongCalc.Deg2Rad(InfoSection.CenterLatitude_Dec);
-            double result = Math.Cos(radCenterLat) * DegPerNMequator;
+            double result = Math.Cos(radCenterLat) * NMperDecDegEquator;
             return result;
         }
 
