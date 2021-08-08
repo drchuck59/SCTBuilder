@@ -201,6 +201,28 @@
             this.ICAOTextBox = new System.Windows.Forms.TextBox();
             this.label24 = new System.Windows.Forms.Label();
             this.WaitForCycleLabel = new System.Windows.Forms.Label();
+            this.VORNDBPanel = new System.Windows.Forms.Panel();
+            this.VORNameTextBox = new System.Windows.Forms.TextBox();
+            this.label25 = new System.Windows.Forms.Label();
+            this.VORIDTextbox = new System.Windows.Forms.TextBox();
+            this.label26 = new System.Windows.Forms.Label();
+            this.VORLonDECTextBoc = new System.Windows.Forms.TextBox();
+            this.label27 = new System.Windows.Forms.Label();
+            this.VORLatDECTextBox = new System.Windows.Forms.TextBox();
+            this.label28 = new System.Windows.Forms.Label();
+            this.label29 = new System.Windows.Forms.Label();
+            this.label30 = new System.Windows.Forms.Label();
+            this.VORLonSCTTextbox = new System.Windows.Forms.TextBox();
+            this.VORLatSCTTextbox = new System.Windows.Forms.TextBox();
+            this.label31 = new System.Windows.Forms.Label();
+            this.VORTypeTextBox = new System.Windows.Forms.TextBox();
+            this.label32 = new System.Windows.Forms.Label();
+            this.VOROwningARTCCTextBox = new System.Windows.Forms.TextBox();
+            this.VORFrequencyTextBox = new System.Windows.Forms.TextBox();
+            this.label33 = new System.Windows.Forms.Label();
+            this.VORClassTextBox = new System.Windows.Forms.TextBox();
+            this.label34 = new System.Windows.Forms.Label();
+            this.button1 = new System.Windows.Forms.Button();
             this.panelSUAs.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.AllMarginsNumericUpDown)).BeginInit();
             this.FilterGroupBox.SuspendLayout();
@@ -235,6 +257,7 @@
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.APTpanel.SuspendLayout();
+            this.VORNDBPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // lblInfoSection_Caption
@@ -553,6 +576,7 @@
             // 
             // CenterLatTextBox
             // 
+            this.CenterLatTextBox.BackColor = System.Drawing.Color.White;
             this.CenterLatTextBox.Location = new System.Drawing.Point(35, 157);
             this.CenterLatTextBox.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.CenterLatTextBox.Name = "CenterLatTextBox";
@@ -564,6 +588,7 @@
             // 
             // CenterLonTextBox
             // 
+            this.CenterLonTextBox.BackColor = System.Drawing.Color.White;
             this.CenterLonTextBox.Location = new System.Drawing.Point(169, 157);
             this.CenterLonTextBox.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.CenterLonTextBox.Name = "CenterLonTextBox";
@@ -1187,6 +1212,8 @@
             this.dgvVOR.RowTemplate.Height = 24;
             this.dgvVOR.Size = new System.Drawing.Size(456, 302);
             this.dgvVOR.TabIndex = 1;
+            this.dgvVOR.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvVOR_CellClick);
+            this.dgvVOR.CellContentDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvVOR_CellContentDoubleClick);
             // 
             // NDBtabPage
             // 
@@ -1214,6 +1241,8 @@
             this.dgvNDB.RowTemplate.Height = 24;
             this.dgvNDB.Size = new System.Drawing.Size(456, 302);
             this.dgvNDB.TabIndex = 2;
+            this.dgvNDB.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvDNB_CellClick);
+            this.dgvNDB.CellContentDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvDNB_CellContentDoubleClick);
             // 
             // FIXTabPage
             // 
@@ -1999,7 +2028,7 @@
             this.ClosePanelButton.TabIndex = 48;
             this.ClosePanelButton.Text = "X";
             this.ClosePanelButton.UseVisualStyleBackColor = false;
-            this.ClosePanelButton.Click += new System.EventHandler(this.ClosePanelButton_Click);
+            this.ClosePanelButton.Click += new System.EventHandler(this.CloseAPTPanelButton_Click);
             // 
             // label13
             // 
@@ -2072,7 +2101,7 @@
             // label17
             // 
             this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(211, 98);
+            this.label17.Location = new System.Drawing.Point(212, 98);
             this.label17.Name = "label17";
             this.label17.Size = new System.Drawing.Size(55, 13);
             this.label17.TabIndex = 39;
@@ -2081,7 +2110,7 @@
             // label18
             // 
             this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(55, 98);
+            this.label18.Location = new System.Drawing.Point(56, 98);
             this.label18.Name = "label18";
             this.label18.Size = new System.Drawing.Size(52, 13);
             this.label18.TabIndex = 38;
@@ -2090,7 +2119,7 @@
             // LonSCTTextBox
             // 
             this.LonSCTTextBox.Enabled = false;
-            this.LonSCTTextBox.Location = new System.Drawing.Point(269, 95);
+            this.LonSCTTextBox.Location = new System.Drawing.Point(270, 95);
             this.LonSCTTextBox.Name = "LonSCTTextBox";
             this.LonSCTTextBox.Size = new System.Drawing.Size(100, 20);
             this.LonSCTTextBox.TabIndex = 37;
@@ -2098,7 +2127,7 @@
             // LatSCTTextBox
             // 
             this.LatSCTTextBox.Enabled = false;
-            this.LatSCTTextBox.Location = new System.Drawing.Point(113, 95);
+            this.LatSCTTextBox.Location = new System.Drawing.Point(114, 95);
             this.LatSCTTextBox.Name = "LatSCTTextBox";
             this.LatSCTTextBox.Size = new System.Drawing.Size(95, 20);
             this.LatSCTTextBox.TabIndex = 36;
@@ -2216,6 +2245,235 @@
             this.WaitForCycleLabel.Text = "label26";
             this.WaitForCycleLabel.Visible = false;
             // 
+            // VORNDBPanel
+            // 
+            this.VORNDBPanel.Controls.Add(this.button1);
+            this.VORNDBPanel.Controls.Add(this.VORClassTextBox);
+            this.VORNDBPanel.Controls.Add(this.label34);
+            this.VORNDBPanel.Controls.Add(this.VORFrequencyTextBox);
+            this.VORNDBPanel.Controls.Add(this.label33);
+            this.VORNDBPanel.Controls.Add(this.label32);
+            this.VORNDBPanel.Controls.Add(this.VOROwningARTCCTextBox);
+            this.VORNDBPanel.Controls.Add(this.label31);
+            this.VORNDBPanel.Controls.Add(this.VORTypeTextBox);
+            this.VORNDBPanel.Controls.Add(this.label29);
+            this.VORNDBPanel.Controls.Add(this.label30);
+            this.VORNDBPanel.Controls.Add(this.VORLonSCTTextbox);
+            this.VORNDBPanel.Controls.Add(this.VORLatSCTTextbox);
+            this.VORNDBPanel.Controls.Add(this.VORLonDECTextBoc);
+            this.VORNDBPanel.Controls.Add(this.label27);
+            this.VORNDBPanel.Controls.Add(this.VORLatDECTextBox);
+            this.VORNDBPanel.Controls.Add(this.label28);
+            this.VORNDBPanel.Controls.Add(this.VORIDTextbox);
+            this.VORNDBPanel.Controls.Add(this.label26);
+            this.VORNDBPanel.Controls.Add(this.label25);
+            this.VORNDBPanel.Controls.Add(this.VORNameTextBox);
+            this.VORNDBPanel.Location = new System.Drawing.Point(667, 71);
+            this.VORNDBPanel.Name = "VORNDBPanel";
+            this.VORNDBPanel.Size = new System.Drawing.Size(435, 198);
+            this.VORNDBPanel.TabIndex = 66;
+            this.VORNDBPanel.Visible = false;
+            // 
+            // VORNameTextBox
+            // 
+            this.VORNameTextBox.Location = new System.Drawing.Point(101, 42);
+            this.VORNameTextBox.Name = "VORNameTextBox";
+            this.VORNameTextBox.ReadOnly = true;
+            this.VORNameTextBox.Size = new System.Drawing.Size(255, 20);
+            this.VORNameTextBox.TabIndex = 0;
+            this.VORNameTextBox.TabStop = false;
+            // 
+            // label25
+            // 
+            this.label25.AutoSize = true;
+            this.label25.Location = new System.Drawing.Point(55, 46);
+            this.label25.Name = "label25";
+            this.label25.Size = new System.Drawing.Size(35, 13);
+            this.label25.TabIndex = 1;
+            this.label25.Text = "Name";
+            // 
+            // VORIDTextbox
+            // 
+            this.VORIDTextbox.Enabled = false;
+            this.VORIDTextbox.Location = new System.Drawing.Point(100, 16);
+            this.VORIDTextbox.Name = "VORIDTextbox";
+            this.VORIDTextbox.ReadOnly = true;
+            this.VORIDTextbox.Size = new System.Drawing.Size(48, 20);
+            this.VORIDTextbox.TabIndex = 31;
+            this.VORIDTextbox.TabStop = false;
+            // 
+            // label26
+            // 
+            this.label26.AutoSize = true;
+            this.label26.Location = new System.Drawing.Point(52, 19);
+            this.label26.Name = "label26";
+            this.label26.Size = new System.Drawing.Size(34, 13);
+            this.label26.TabIndex = 30;
+            this.label26.Text = "Fix ID";
+            // 
+            // VORLonDECTextBoc
+            // 
+            this.VORLonDECTextBoc.Enabled = false;
+            this.VORLonDECTextBoc.Location = new System.Drawing.Point(256, 70);
+            this.VORLonDECTextBoc.Name = "VORLonDECTextBoc";
+            this.VORLonDECTextBoc.ReadOnly = true;
+            this.VORLonDECTextBoc.Size = new System.Drawing.Size(100, 20);
+            this.VORLonDECTextBoc.TabIndex = 39;
+            this.VORLonDECTextBoc.TabStop = false;
+            // 
+            // label27
+            // 
+            this.label27.AutoSize = true;
+            this.label27.Location = new System.Drawing.Point(199, 73);
+            this.label27.Name = "label27";
+            this.label27.Size = new System.Drawing.Size(54, 13);
+            this.label27.TabIndex = 38;
+            this.label27.Text = "Longitude";
+            // 
+            // VORLatDECTextBox
+            // 
+            this.VORLatDECTextBox.Enabled = false;
+            this.VORLatDECTextBox.Location = new System.Drawing.Point(99, 70);
+            this.VORLatDECTextBox.Name = "VORLatDECTextBox";
+            this.VORLatDECTextBox.ReadOnly = true;
+            this.VORLatDECTextBox.Size = new System.Drawing.Size(95, 20);
+            this.VORLatDECTextBox.TabIndex = 37;
+            this.VORLatDECTextBox.TabStop = false;
+            // 
+            // label28
+            // 
+            this.label28.AutoSize = true;
+            this.label28.Location = new System.Drawing.Point(48, 73);
+            this.label28.Name = "label28";
+            this.label28.Size = new System.Drawing.Size(45, 13);
+            this.label28.TabIndex = 36;
+            this.label28.Text = "Latitude";
+            // 
+            // label29
+            // 
+            this.label29.AutoSize = true;
+            this.label29.Location = new System.Drawing.Point(198, 99);
+            this.label29.Name = "label29";
+            this.label29.Size = new System.Drawing.Size(55, 13);
+            this.label29.TabIndex = 43;
+            this.label29.Text = "Lon (SCT)";
+            // 
+            // label30
+            // 
+            this.label30.AutoSize = true;
+            this.label30.Location = new System.Drawing.Point(42, 99);
+            this.label30.Name = "label30";
+            this.label30.Size = new System.Drawing.Size(52, 13);
+            this.label30.TabIndex = 42;
+            this.label30.Text = "Lat (SCT)";
+            // 
+            // VORLonSCTTextbox
+            // 
+            this.VORLonSCTTextbox.Enabled = false;
+            this.VORLonSCTTextbox.Location = new System.Drawing.Point(256, 96);
+            this.VORLonSCTTextbox.Name = "VORLonSCTTextbox";
+            this.VORLonSCTTextbox.ReadOnly = true;
+            this.VORLonSCTTextbox.Size = new System.Drawing.Size(100, 20);
+            this.VORLonSCTTextbox.TabIndex = 41;
+            this.VORLonSCTTextbox.TabStop = false;
+            // 
+            // VORLatSCTTextbox
+            // 
+            this.VORLatSCTTextbox.Enabled = false;
+            this.VORLatSCTTextbox.Location = new System.Drawing.Point(100, 96);
+            this.VORLatSCTTextbox.Name = "VORLatSCTTextbox";
+            this.VORLatSCTTextbox.ReadOnly = true;
+            this.VORLatSCTTextbox.Size = new System.Drawing.Size(95, 20);
+            this.VORLatSCTTextbox.TabIndex = 40;
+            this.VORLatSCTTextbox.TabStop = false;
+            // 
+            // label31
+            // 
+            this.label31.AutoSize = true;
+            this.label31.Location = new System.Drawing.Point(161, 19);
+            this.label31.Name = "label31";
+            this.label31.Size = new System.Drawing.Size(31, 13);
+            this.label31.TabIndex = 49;
+            this.label31.Text = "Type";
+            // 
+            // VORTypeTextBox
+            // 
+            this.VORTypeTextBox.Enabled = false;
+            this.VORTypeTextBox.Location = new System.Drawing.Point(196, 16);
+            this.VORTypeTextBox.Name = "VORTypeTextBox";
+            this.VORTypeTextBox.ReadOnly = true;
+            this.VORTypeTextBox.Size = new System.Drawing.Size(160, 20);
+            this.VORTypeTextBox.TabIndex = 48;
+            this.VORTypeTextBox.TabStop = false;
+            // 
+            // label32
+            // 
+            this.label32.AutoSize = true;
+            this.label32.Location = new System.Drawing.Point(11, 154);
+            this.label32.Name = "label32";
+            this.label32.Size = new System.Drawing.Size(82, 13);
+            this.label32.TabIndex = 51;
+            this.label32.Text = "Owning ARTCC";
+            // 
+            // VOROwningARTCCTextBox
+            // 
+            this.VOROwningARTCCTextBox.Enabled = false;
+            this.VOROwningARTCCTextBox.Location = new System.Drawing.Point(100, 151);
+            this.VOROwningARTCCTextBox.Name = "VOROwningARTCCTextBox";
+            this.VOROwningARTCCTextBox.ReadOnly = true;
+            this.VOROwningARTCCTextBox.Size = new System.Drawing.Size(48, 20);
+            this.VOROwningARTCCTextBox.TabIndex = 50;
+            this.VOROwningARTCCTextBox.TabStop = false;
+            // 
+            // VORFrequencyTextBox
+            // 
+            this.VORFrequencyTextBox.Enabled = false;
+            this.VORFrequencyTextBox.Location = new System.Drawing.Point(101, 124);
+            this.VORFrequencyTextBox.Name = "VORFrequencyTextBox";
+            this.VORFrequencyTextBox.ReadOnly = true;
+            this.VORFrequencyTextBox.Size = new System.Drawing.Size(54, 20);
+            this.VORFrequencyTextBox.TabIndex = 53;
+            this.VORFrequencyTextBox.TabStop = false;
+            // 
+            // label33
+            // 
+            this.label33.AutoSize = true;
+            this.label33.Location = new System.Drawing.Point(40, 127);
+            this.label33.Name = "label33";
+            this.label33.Size = new System.Drawing.Size(57, 13);
+            this.label33.TabIndex = 52;
+            this.label33.Text = "Frequency";
+            // 
+            // VORClassTextBox
+            // 
+            this.VORClassTextBox.Enabled = false;
+            this.VORClassTextBox.Location = new System.Drawing.Point(258, 124);
+            this.VORClassTextBox.Name = "VORClassTextBox";
+            this.VORClassTextBox.ReadOnly = true;
+            this.VORClassTextBox.Size = new System.Drawing.Size(98, 20);
+            this.VORClassTextBox.TabIndex = 55;
+            this.VORClassTextBox.TabStop = false;
+            // 
+            // label34
+            // 
+            this.label34.AutoSize = true;
+            this.label34.Location = new System.Drawing.Point(216, 127);
+            this.label34.Name = "label34";
+            this.label34.Size = new System.Drawing.Size(32, 13);
+            this.label34.TabIndex = 54;
+            this.label34.Text = "Class";
+            // 
+            // button1
+            // 
+            this.button1.BackColor = System.Drawing.Color.Red;
+            this.button1.Location = new System.Drawing.Point(389, 15);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(26, 21);
+            this.button1.TabIndex = 56;
+            this.button1.Text = "X";
+            this.button1.UseVisualStyleBackColor = false;
+            this.button1.Click += new System.EventHandler(this.CloseVORNDBPanelButton_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2224,6 +2482,7 @@
             this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(1133, 671);
+            this.Controls.Add(this.VORNDBPanel);
             this.Controls.Add(this.WaitForCycleLabel);
             this.Controls.Add(this.APTpanel);
             this.Controls.Add(this.groupBox2);
@@ -2298,6 +2557,8 @@
             this.groupBox2.PerformLayout();
             this.APTpanel.ResumeLayout(false);
             this.APTpanel.PerformLayout();
+            this.VORNDBPanel.ResumeLayout(false);
+            this.VORNDBPanel.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -2476,6 +2737,28 @@
         private System.Windows.Forms.Label label24;
         private System.Windows.Forms.Button ClosePanelButton;
         private System.Windows.Forms.Label WaitForCycleLabel;
+        private System.Windows.Forms.Panel VORNDBPanel;
+        private System.Windows.Forms.Label label25;
+        private System.Windows.Forms.TextBox VORNameTextBox;
+        private System.Windows.Forms.Label label31;
+        private System.Windows.Forms.TextBox VORTypeTextBox;
+        private System.Windows.Forms.Label label29;
+        private System.Windows.Forms.Label label30;
+        private System.Windows.Forms.TextBox VORLonSCTTextbox;
+        private System.Windows.Forms.TextBox VORLatSCTTextbox;
+        private System.Windows.Forms.TextBox VORLonDECTextBoc;
+        private System.Windows.Forms.Label label27;
+        private System.Windows.Forms.TextBox VORLatDECTextBox;
+        private System.Windows.Forms.Label label28;
+        private System.Windows.Forms.TextBox VORIDTextbox;
+        private System.Windows.Forms.Label label26;
+        private System.Windows.Forms.TextBox VORFrequencyTextBox;
+        private System.Windows.Forms.Label label33;
+        private System.Windows.Forms.Label label32;
+        private System.Windows.Forms.TextBox VOROwningARTCCTextBox;
+        private System.Windows.Forms.TextBox VORClassTextBox;
+        private System.Windows.Forms.Label label34;
+        private System.Windows.Forms.Button button1;
     }
 }
 

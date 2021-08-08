@@ -443,7 +443,7 @@ namespace SCTBuilder
             "The last AIRAC you used does not match the AIRAC in the data folder.  " + cr +
                 "The program will update to the data in the data folder.";
         public static readonly string NGdataMismatch =
-            "The NaviGraph AIRAC " + InfoSection.NG_AIRAC + " does not match the FAA AIRAC " + CycleInfo.AIRAC + "." + cr +
+            "NaviGraph AIRAC " + InfoSection.NG_AIRAC + " does not match FAA AIRAC " + CycleInfo.AIRAC + "." + cr +
                 "Use of NaviGraph data has been disabled.";
         public static readonly string NoValidAirports =
             "Cannot select Runways.  No airports with runways found meeting search parameters.";

@@ -4,6 +4,158 @@
         <name>Splat</name>
     </assembly>
     <members>
+        <member name="T:Splat.ApplicationPerformanceMonitoring.DefaultFeatureUsageTrackingManager">
+            <summary>
+            Default implementation of the Feature Usage Tracking Manager.
+            </summary>
+        </member>
+        <member name="M:Splat.ApplicationPerformanceMonitoring.DefaultFeatureUsageTrackingManager.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Splat.ApplicationPerformanceMonitoring.DefaultFeatureUsageTrackingManager"/> class.
+            </summary>
+        </member>
+        <member name="T:Splat.ApplicationPerformanceMonitoring.DefaultFeatureUsageTrackingSession">
+            <summary>
+            Default Feature Usage Tracking Session. Used for output when a dev chooses not to override.
+            </summary>
+        </member>
+        <member name="M:Splat.ApplicationPerformanceMonitoring.DefaultFeatureUsageTrackingSession.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Splat.ApplicationPerformanceMonitoring.DefaultFeatureUsageTrackingSession"/> class.
+            </summary>
+            <param name="featureName">The name of the feature.</param>
+        </member>
+        <member name="P:Splat.ApplicationPerformanceMonitoring.DefaultFeatureUsageTrackingSession.ParentReference">
+            <inheritdoc />
+        </member>
+        <member name="P:Splat.ApplicationPerformanceMonitoring.DefaultFeatureUsageTrackingSession.FeatureReference">
+            <inheritdoc />
+        </member>
+        <member name="P:Splat.ApplicationPerformanceMonitoring.DefaultFeatureUsageTrackingSession.FeatureName">
+            <inheritdoc />
+        </member>
+        <member name="M:Splat.ApplicationPerformanceMonitoring.DefaultFeatureUsageTrackingSession.SubFeature(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:Splat.ApplicationPerformanceMonitoring.DefaultFeatureUsageTrackingSession.OnException(System.Exception)">
+            <inheritdoc />
+        </member>
+        <member name="M:Splat.ApplicationPerformanceMonitoring.DefaultFeatureUsageTrackingSession.Dispose">
+            <inheritdoc/>
+        </member>
+        <member name="T:Splat.ApplicationPerformanceMonitoring.EnableFeatureUsageTrackingExtensions">
+            <summary>
+            Extensions for the IEnableFeatureUsageTracking interface. This is a similar design to IEnableLogger, to allow
+            easy use and extension of classes such as ViewModels.
+            </summary>
+        </member>
+        <member name="M:Splat.ApplicationPerformanceMonitoring.EnableFeatureUsageTrackingExtensions.FeatureUsageTrackingSession(Splat.ApplicationPerformanceMonitoring.IEnableFeatureUsageTracking,System.String)">
+            <summary>
+            Gets a Feature Usage Tracking Sessions.
+            </summary>
+            <param name="instance">instance of class that uses IEnableFeatureUsageTracking.</param>
+            <param name="featureName">Name of the feature.</param>
+            <returns>Feature Usage Tracking Session.</returns>
+        </member>
+        <member name="M:Splat.ApplicationPerformanceMonitoring.EnableFeatureUsageTrackingExtensions.WithFeatureUsageTrackingSession(Splat.ApplicationPerformanceMonitoring.IEnableFeatureUsageTracking,System.String,System.Action{Splat.ApplicationPerformanceMonitoring.IFeatureUsageTrackingSession})">
+            <summary>
+            Helper for wrapping an action with a Feature Usage Tracking Session.
+            </summary>
+            <param name="instance">instance of class that uses IEnableFeatureUsageTracking.</param>
+            <param name="featureName">Name of the feature.</param>
+            <param name="action">Action to carry out.</param>
+        </member>
+        <member name="M:Splat.ApplicationPerformanceMonitoring.EnableFeatureUsageTrackingExtensions.WithSubFeatureUsageTrackingSession(Splat.ApplicationPerformanceMonitoring.IFeatureUsageTrackingSession,System.String,System.Action{Splat.ApplicationPerformanceMonitoring.IFeatureUsageTrackingSession})">
+            <summary>
+            Helper for wrapping an action with a SubFeature Usage Tracking Session.
+            </summary>
+            <param name="instance">instance of class that uses IEnableFeatureUsageTracking.</param>
+            <param name="featureName">Name of the feature.</param>
+            <param name="action">Action to carry out.</param>
+        </member>
+        <member name="T:Splat.ApplicationPerformanceMonitoring.FuncFeatureUsageTrackingManager">
+            <summary>
+            Func based Feature Usage Tracking Manager.
+            </summary>
+        </member>
+        <member name="M:Splat.ApplicationPerformanceMonitoring.FuncFeatureUsageTrackingManager.#ctor(System.Func{System.String,Splat.ApplicationPerformanceMonitoring.IFeatureUsageTrackingSession})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Splat.ApplicationPerformanceMonitoring.FuncFeatureUsageTrackingManager"/> class.
+            </summary>
+            <param name="featureUsageTrackingSessionFunc">
+            Factory function for a Feature Usage Tracking Session.
+            </param>
+        </member>
+        <member name="M:Splat.ApplicationPerformanceMonitoring.FuncFeatureUsageTrackingManager.GetFeatureUsageTrackingSession(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="T:Splat.ApplicationPerformanceMonitoring.IEnableFeatureUsageTracking">
+            <summary>
+            Interface for exposing Feature Usage Tracking as an extension to a class.
+            </summary>
+        </member>
+        <member name="T:Splat.ApplicationPerformanceMonitoring.IFeatureUsageTrackingManager">
+            <summary>
+            A manager which will generate a <see cref="T:Splat.ApplicationPerformanceMonitoring.IFeatureUsageTrackingSession"/> for the specified type.
+            </summary>
+        </member>
+        <member name="M:Splat.ApplicationPerformanceMonitoring.IFeatureUsageTrackingManager.GetFeatureUsageTrackingSession(System.String)">
+            <summary>
+            Generate a <see cref="T:Splat.ApplicationPerformanceMonitoring.IFeatureUsageTrackingSession"/> for the specified type.
+            </summary>
+            <param name="featureName">The name of the feature.</param>
+            <returns>The <see cref="T:Splat.ApplicationPerformanceMonitoring.IFeatureUsageTrackingSession"/>.</returns>
+        </member>
+        <member name="T:Splat.ApplicationPerformanceMonitoring.IFeatureUsageTrackingSession">
+            <summary>
+            Base interface for a feature usage tracking session.
+            </summary>
+        </member>
+        <member name="P:Splat.ApplicationPerformanceMonitoring.IFeatureUsageTrackingSession.FeatureName">
+            <summary>
+            Gets the name of the Feature being tracked.
+            </summary>
+        </member>
+        <member name="M:Splat.ApplicationPerformanceMonitoring.IFeatureUsageTrackingSession.SubFeature(System.String)">
+            <summary>
+            Starts a sub-feature usage tracking session on the current session.
+            </summary>
+            <param name="description">Description of the sub-feature.</param>
+            <returns>The sub-feature usage tracking session.</returns>
+        </member>
+        <member name="M:Splat.ApplicationPerformanceMonitoring.IFeatureUsageTrackingSession.OnException(System.Exception)">
+            <summary>
+            Notify the APM toolset an exception has occured in the current tracking session.
+            </summary>
+            <param name="exception">The exception that occurred.</param>
+        </member>
+        <member name="T:Splat.ApplicationPerformanceMonitoring.IFeatureUsageTrackingSession`1">
+            <summary>
+            Generic interface for a Feature Usage Tracking Session.
+            </summary>
+            <typeparam name="TReferenceType">The Type for the Unique Tracking References.</typeparam>
+        </member>
+        <member name="P:Splat.ApplicationPerformanceMonitoring.IFeatureUsageTrackingSession`1.FeatureReference">
+            <summary>
+            Gets the current Feature Usage Unique Reference.
+            </summary>
+        </member>
+        <member name="P:Splat.ApplicationPerformanceMonitoring.IFeatureUsageTrackingSession`1.ParentReference">
+            <summary>
+            Gets the unique reference for the Parent Tracking Session, if any.
+            </summary>
+        </member>
+        <member name="T:Splat.ApplicationPerformanceMonitoring.IViewTracking">
+            <summary>
+            Base interface for tracking view usage.
+            </summary>
+        </member>
+        <member name="M:Splat.ApplicationPerformanceMonitoring.IViewTracking.OnViewNavigation(System.String)">
+            <summary>
+            Track a view navigation using just a name.
+            </summary>
+            <param name="name">Name of the view.</param>
+        </member>
         <member name="M:Splat.AssemblyFinder.AttemptToLoadType``1(System.String)">
             <summary>
             Attempt to find the type based on the specified string.
@@ -85,12 +237,11 @@
             Disposes all disposables in the group and removes them from the group.
             </summary>
         </member>
-        <member name="M:Splat.CompositeDisposable.Init(System.Collections.Generic.IEnumerable{System.IDisposable},System.Int32)">
+        <member name="M:Splat.CompositeDisposable.Init(System.Collections.Generic.IEnumerable{System.IDisposable})">
             <summary>
             Initialize the inner disposable list and count fields.
             </summary>
             <param name="disposables">The enumerable sequence of disposables.</param>
-            <param name="capacityHint">The number of items expected from <paramref name="disposables"/>.</param>
         </member>
         <member name="T:Splat.ActionLogger">
             <summary>
@@ -3034,6 +3185,355 @@
             <param name="type">The type to generate the logger for.</param>
             <returns>The <see cref="T:Splat.IFullLogger"/> for the specified type.</returns>
         </member>
+        <member name="T:Splat.IStaticFullLogger">
+            <summary>
+            Represents the logging interface for the Static Default Logger.
+            </summary>
+        </member>
+        <member name="P:Splat.IStaticFullLogger.Level">
+            <summary>
+            Gets the level at which the target will emit messages.
+            </summary>
+        </member>
+        <member name="M:Splat.IStaticFullLogger.Debug(System.Exception,System.String,System.String)">
+            <summary>
+            Emits a debug log message with an exception.
+            </summary>
+            <param name="exception">The exception.</param>
+            <param name="message">The message.</param>
+            <param name="callerMemberName">Allows you to pass the method or property name of the caller to the method, used to allow the capture in the static logger of some additional context for support and debugging.</param>
+        </member>
+        <member name="M:Splat.IStaticFullLogger.Debug(System.String,System.String)">
+            <summary>
+            Emits a message to the debug log.
+            </summary>
+            <param name="message">A non-localizable message to send to the log.</param>
+            <param name="callerMemberName">Allows you to pass the method or property name of the caller to the method, used to allow the capture in the static logger of some additional context for support and debugging.</param>
+        </member>
+        <member name="M:Splat.IStaticFullLogger.Debug``1(System.String,System.String)">
+            <summary>
+            Emits a message to the debug log.
+            </summary>
+            <typeparam name="T">The calling type.</typeparam>
+            <param name="message">A non-localizable message to send to the log.</param>
+            <param name="callerMemberName">Allows you to pass the method or property name of the caller to the method, used to allow the capture in the static logger of some additional context for support and debugging.</param>
+        </member>
+        <member name="M:Splat.IStaticFullLogger.Debug``1(System.IFormatProvider,System.String,``0,System.String)">
+            <summary>
+            Emits a message using formatting to the debug log.
+            </summary>
+            <typeparam name="TArgument">The type of the argument which is used in the formatting.</typeparam>
+            <param name="formatProvider">The format provider to use.</param>
+            <param name="message">A message to emit to the log which includes the standard formatting tags.</param>
+            <param name="argument">The argument for formatting purposes.</param>
+            <param name="callerMemberName">Allows you to pass the method or property name of the caller to the method, used to allow the capture in the static logger of some additional context for support and debugging.</param>
+        </member>
+        <member name="M:Splat.IStaticFullLogger.Debug``2(System.IFormatProvider,System.String,``0,``1,System.String)">
+            <summary>
+            Emits a message using formatting to the debug log.
+            </summary>
+            <typeparam name="TArgument1">The type of the first argument which is used in the formatting.</typeparam>
+            <typeparam name="TArgument2">The type of the second argument which is used in the formatting.</typeparam>
+            <param name="formatProvider">The format provider to use.</param>
+            <param name="message">A message to emit to the log which includes the standard formatting tags.</param>
+            <param name="argument1">The first argument for formatting purposes.</param>
+            <param name="argument2">The second argument for formatting purposes.</param>
+            <param name="callerMemberName">Allows you to pass the method or property name of the caller to the method, used to allow the capture in the static logger of some additional context for support and debugging.</param>
+        </member>
+        <member name="M:Splat.IStaticFullLogger.Debug``3(System.IFormatProvider,System.String,``0,``1,``2,System.String)">
+            <summary>
+            Emits a message using formatting to the debug log.
+            </summary>
+            <typeparam name="TArgument1">The type of the first argument which is used in the formatting.</typeparam>
+            <typeparam name="TArgument2">The type of the second argument which is used in the formatting.</typeparam>
+            <typeparam name="TArgument3">The type of the third argument which is used in the formatting.</typeparam>
+            <param name="formatProvider">The format provider to use.</param>
+            <param name="message">A message to emit to the log which includes the standard formatting tags.</param>
+            <param name="argument1">The first argument for formatting purposes.</param>
+            <param name="argument2">The second argument for formatting purposes.</param>
+            <param name="argument3">The third argument for formatting purposes.</param>
+            <param name="callerMemberName">Allows you to pass the method or property name of the caller to the method, used to allow the capture in the static logger of some additional context for support and debugging.</param>
+        </member>
+        <member name="M:Splat.IStaticFullLogger.Info(System.Exception,System.String,System.String)">
+            <summary>
+            Emits a info log message with exception.
+            This will emit details about a exception.
+            This type of logging is not able to be localized.
+            </summary>
+            <param name="exception">The exception which to emit in the log.</param>
+            <param name="message">A message to emit.</param>
+            <param name="callerMemberName">Allows you to pass the method or property name of the caller to the method, used to allow the capture in the static logger of some additional context for support and debugging.</param>
+        </member>
+        <member name="M:Splat.IStaticFullLogger.Info(System.String,System.String)">
+            <summary>
+            Emits a message to the info log.
+            </summary>
+            <param name="message">A non-localizable message to send to the log.</param>
+            <param name="callerMemberName">Allows you to pass the method or property name of the caller to the method, used to allow the capture in the static logger of some additional context for support and debugging.</param>
+        </member>
+        <member name="M:Splat.IStaticFullLogger.Info``1(System.String,System.String)">
+            <summary>
+            Emits a message to the info log.
+            </summary>
+            <typeparam name="T">The calling type.</typeparam>
+            <param name="message">A non-localizable message to send to the log.</param>
+            <param name="callerMemberName">Allows you to pass the method or property name of the caller to the method, used to allow the capture in the static logger of some additional context for support and debugging.</param>
+        </member>
+        <member name="M:Splat.IStaticFullLogger.Info``1(System.IFormatProvider,System.String,``0,System.String)">
+            <summary>
+            Emits a message using formatting to the info log.
+            </summary>
+            <typeparam name="TArgument">The type of the argument which is used in the formatting.</typeparam>
+            <param name="formatProvider">The format provider to use.</param>
+            <param name="message">A message to emit to the log which includes the standard formatting tags.</param>
+            <param name="argument">The argument for formatting purposes.</param>
+            <param name="callerMemberName">Allows you to pass the method or property name of the caller to the method, used to allow the capture in the static logger of some additional context for support and debugging.</param>
+        </member>
+        <member name="M:Splat.IStaticFullLogger.Info``2(System.IFormatProvider,System.String,``0,``1,System.String)">
+            <summary>
+            Emits a message using formatting to the info log.
+            </summary>
+            <typeparam name="TArgument1">The type of the first argument which is used in the formatting.</typeparam>
+            <typeparam name="TArgument2">The type of the second argument which is used in the formatting.</typeparam>
+            <param name="formatProvider">The format provider to use.</param>
+            <param name="message">A message to emit to the log which includes the standard formatting tags.</param>
+            <param name="argument1">The first argument for formatting purposes.</param>
+            <param name="argument2">The second argument for formatting purposes.</param>
+            <param name="callerMemberName">Allows you to pass the method or property name of the caller to the method, used to allow the capture in the static logger of some additional context for support and debugging.</param>
+        </member>
+        <member name="M:Splat.IStaticFullLogger.Info``3(System.IFormatProvider,System.String,``0,``1,``2,System.String)">
+            <summary>
+            Emits a message using formatting to the info log.
+            </summary>
+            <typeparam name="TArgument1">The type of the first argument which is used in the formatting.</typeparam>
+            <typeparam name="TArgument2">The type of the second argument which is used in the formatting.</typeparam>
+            <typeparam name="TArgument3">The type of the third argument which is used in the formatting.</typeparam>
+            <param name="formatProvider">The format provider to use.</param>
+            <param name="message">A message to emit to the log which includes the standard formatting tags.</param>
+            <param name="argument1">The first argument for formatting purposes.</param>
+            <param name="argument2">The second argument for formatting purposes.</param>
+            <param name="argument3">The third argument for formatting purposes.</param>
+            <param name="callerMemberName">Allows you to pass the method or property name of the caller to the method, used to allow the capture in the static logger of some additional context for support and debugging.</param>
+        </member>
+        <member name="M:Splat.IStaticFullLogger.Warn(System.Exception,System.String,System.String)">
+            <summary>
+            Emits a warning log message with exception.
+            This will emit details about a exception.
+            This type of logging is not able to be localized.
+            </summary>
+            <param name="exception">The exception which to emit in the log.</param>
+            <param name="message">A message to emit.</param>
+            <param name="callerMemberName">Allows you to pass the method or property name of the caller to the method, used to allow the capture in the static logger of some additional context for support and debugging.</param>
+        </member>
+        <member name="M:Splat.IStaticFullLogger.Warn(System.String,System.String)">
+            <summary>
+            Emits a message to the warning log.
+            </summary>
+            <param name="message">A non-localizable message to send to the log.</param>
+            <param name="callerMemberName">Allows you to pass the method or property name of the caller to the method, used to allow the capture in the static logger of some additional context for support and debugging.</param>
+        </member>
+        <member name="M:Splat.IStaticFullLogger.Warn``1(System.String,System.String)">
+            <summary>
+            Emits a message to the warning log.
+            </summary>
+            <typeparam name="T">The calling type.</typeparam>
+            <param name="message">A non-localizable message to send to the log.</param>
+            <param name="callerMemberName">Allows you to pass the method or property name of the caller to the method, used to allow the capture in the static logger of some additional context for support and debugging.</param>
+        </member>
+        <member name="M:Splat.IStaticFullLogger.Warn``1(System.IFormatProvider,System.String,``0,System.String)">
+            <summary>
+            Emits a message using formatting to the warning log.
+            </summary>
+            <typeparam name="TArgument">The type of the argument which is used in the formatting.</typeparam>
+            <param name="formatProvider">The format provider to use.</param>
+            <param name="message">A message to emit to the log which includes the standard formatting tags.</param>
+            <param name="argument">The argument for formatting purposes.</param>
+            <param name="callerMemberName">Allows you to pass the method or property name of the caller to the method, used to allow the capture in the static logger of some additional context for support and debugging.</param>
+        </member>
+        <member name="M:Splat.IStaticFullLogger.Warn``2(System.IFormatProvider,System.String,``0,``1,System.String)">
+            <summary>
+            Emits a message using formatting to the warning log.
+            </summary>
+            <typeparam name="TArgument1">The type of the first argument which is used in the formatting.</typeparam>
+            <typeparam name="TArgument2">The type of the second argument which is used in the formatting.</typeparam>
+            <param name="formatProvider">The format provider to use.</param>
+            <param name="message">A message to emit to the log which includes the standard formatting tags.</param>
+            <param name="argument1">The first argument for formatting purposes.</param>
+            <param name="argument2">The second argument for formatting purposes.</param>
+            <param name="callerMemberName">Allows you to pass the method or property name of the caller to the method, used to allow the capture in the static logger of some additional context for support and debugging.</param>
+        </member>
+        <member name="M:Splat.IStaticFullLogger.Warn``3(System.IFormatProvider,System.String,``0,``1,``2,System.String)">
+            <summary>
+            Emits a message using formatting to the warning log.
+            </summary>
+            <typeparam name="TArgument1">The type of the first argument which is used in the formatting.</typeparam>
+            <typeparam name="TArgument2">The type of the second argument which is used in the formatting.</typeparam>
+            <typeparam name="TArgument3">The type of the third argument which is used in the formatting.</typeparam>
+            <param name="formatProvider">The format provider to use.</param>
+            <param name="message">A message to emit to the log which includes the standard formatting tags.</param>
+            <param name="argument1">The first argument for formatting purposes.</param>
+            <param name="argument2">The second argument for formatting purposes.</param>
+            <param name="argument3">The third argument for formatting purposes.</param>
+            <param name="callerMemberName">Allows you to pass the method or property name of the caller to the method, used to allow the capture in the static logger of some additional context for support and debugging.</param>
+        </member>
+        <member name="M:Splat.IStaticFullLogger.Error(System.Exception,System.String,System.String)">
+            <summary>
+            Emits a error log message with exception.
+            This will emit details about a exception.
+            This type of logging is not able to be localized.
+            </summary>
+            <param name="exception">The exception which to emit in the log.</param>
+            <param name="message">A message to emit.</param>
+            <param name="callerMemberName">Allows you to pass the method or property name of the caller to the method, used to allow the capture in the static logger of some additional context for support and debugging.</param>
+        </member>
+        <member name="M:Splat.IStaticFullLogger.Error(System.String,System.String)">
+            <summary>
+            Emits a message to the error log.
+            </summary>
+            <param name="message">A non-localizable message to send to the log.</param>
+            <param name="callerMemberName">Allows you to pass the method or property name of the caller to the method, used to allow the capture in the static logger of some additional context for support and debugging.</param>
+        </member>
+        <member name="M:Splat.IStaticFullLogger.Error``1(System.String,System.String)">
+            <summary>
+            Emits a message to the error log.
+            </summary>
+            <typeparam name="T">The calling type.</typeparam>
+            <param name="message">A non-localizable message to send to the log.</param>
+            <param name="callerMemberName">Allows you to pass the method or property name of the caller to the method, used to allow the capture in the static logger of some additional context for support and debugging.</param>
+        </member>
+        <member name="M:Splat.IStaticFullLogger.Error``1(System.IFormatProvider,System.String,``0,System.String)">
+            <summary>
+            Emits a message using formatting to the error log.
+            </summary>
+            <typeparam name="TArgument">The type of the argument which is used in the formatting.</typeparam>
+            <param name="formatProvider">The format provider to use.</param>
+            <param name="message">A message to emit to the log which includes the standard formatting tags.</param>
+            <param name="argument">The argument for formatting purposes.</param>
+            <param name="callerMemberName">Allows you to pass the method or property name of the caller to the method, used to allow the capture in the static logger of some additional context for support and debugging.</param>
+        </member>
+        <member name="M:Splat.IStaticFullLogger.Error``2(System.IFormatProvider,System.String,``0,``1,System.String)">
+            <summary>
+            Emits a message using formatting to the error log.
+            </summary>
+            <typeparam name="TArgument1">The type of the first argument which is used in the formatting.</typeparam>
+            <typeparam name="TArgument2">The type of the second argument which is used in the formatting.</typeparam>
+            <param name="formatProvider">The format provider to use.</param>
+            <param name="message">A message to emit to the log which includes the standard formatting tags.</param>
+            <param name="argument1">The first argument for formatting purposes.</param>
+            <param name="argument2">The second argument for formatting purposes.</param>
+            <param name="callerMemberName">Allows you to pass the method or property name of the caller to the method, used to allow the capture in the static logger of some additional context for support and debugging.</param>
+        </member>
+        <member name="M:Splat.IStaticFullLogger.Error``3(System.IFormatProvider,System.String,``0,``1,``2,System.String)">
+            <summary>
+            Emits a message using formatting to the error log.
+            </summary>
+            <typeparam name="TArgument1">The type of the first argument which is used in the formatting.</typeparam>
+            <typeparam name="TArgument2">The type of the second argument which is used in the formatting.</typeparam>
+            <typeparam name="TArgument3">The type of the third argument which is used in the formatting.</typeparam>
+            <param name="formatProvider">The format provider to use.</param>
+            <param name="message">A message to emit to the log which includes the standard formatting tags.</param>
+            <param name="argument1">The first argument for formatting purposes.</param>
+            <param name="argument2">The second argument for formatting purposes.</param>
+            <param name="argument3">The third argument for formatting purposes.</param>
+            <param name="callerMemberName">Allows you to pass the method or property name of the caller to the method, used to allow the capture in the static logger of some additional context for support and debugging.</param>
+        </member>
+        <member name="M:Splat.IStaticFullLogger.Fatal(System.Exception,System.String,System.String)">
+            <summary>
+            Emits a fatal log message with exception.
+            This will emit details about a exception.
+            This type of logging is not able to be localized.
+            </summary>
+            <param name="exception">The exception which to emit in the log.</param>
+            <param name="message">A message to emit.</param>
+            <param name="callerMemberName">Allows you to pass the method or property name of the caller to the method, used to allow the capture in the static logger of some additional context for support and debugging.</param>
+        </member>
+        <member name="M:Splat.IStaticFullLogger.Fatal(System.String,System.String)">
+            <summary>
+            Emits a message to the fatal log.
+            </summary>
+            <param name="message">A non-localizable message to send to the log.</param>
+            <param name="callerMemberName">Allows you to pass the method or property name of the caller to the method, used to allow the capture in the static logger of some additional context for support and debugging.</param>
+        </member>
+        <member name="M:Splat.IStaticFullLogger.Fatal``1(System.String,System.String)">
+            <summary>
+            Emits a message to the fatal log.
+            </summary>
+            <typeparam name="T">The calling type.</typeparam>
+            <param name="message">A non-localizable message to send to the log.</param>
+            <param name="callerMemberName">Allows you to pass the method or property name of the caller to the method, used to allow the capture in the static logger of some additional context for support and debugging.</param>
+        </member>
+        <member name="M:Splat.IStaticFullLogger.Fatal``1(System.IFormatProvider,System.String,``0,System.String)">
+            <summary>
+            Emits a message using formatting to the fatal log.
+            </summary>
+            <typeparam name="TArgument">The type of the argument which is used in the formatting.</typeparam>
+            <param name="formatProvider">The format provider to use.</param>
+            <param name="message">A message to emit to the log which includes the standard formatting tags.</param>
+            <param name="argument">The argument for formatting purposes.</param>
+            <param name="callerMemberName">Allows you to pass the method or property name of the caller to the method, used to allow the capture in the static logger of some additional context for support and debugging.</param>
+        </member>
+        <member name="M:Splat.IStaticFullLogger.Fatal``2(System.IFormatProvider,System.String,``0,``1,System.String)">
+            <summary>
+            Emits a message using formatting to the fatal log.
+            </summary>
+            <typeparam name="TArgument1">The type of the first argument which is used in the formatting.</typeparam>
+            <typeparam name="TArgument2">The type of the second argument which is used in the formatting.</typeparam>
+            <param name="formatProvider">The format provider to use.</param>
+            <param name="message">A message to emit to the log which includes the standard formatting tags.</param>
+            <param name="argument1">The first argument for formatting purposes.</param>
+            <param name="argument2">The second argument for formatting purposes.</param>
+            <param name="callerMemberName">Allows you to pass the method or property name of the caller to the method, used to allow the capture in the static logger of some additional context for support and debugging.</param>
+        </member>
+        <member name="M:Splat.IStaticFullLogger.Fatal``3(System.IFormatProvider,System.String,``0,``1,``2,System.String)">
+            <summary>
+            Emits a message using formatting to the fatal log.
+            </summary>
+            <typeparam name="TArgument1">The type of the first argument which is used in the formatting.</typeparam>
+            <typeparam name="TArgument2">The type of the second argument which is used in the formatting.</typeparam>
+            <typeparam name="TArgument3">The type of the third argument which is used in the formatting.</typeparam>
+            <param name="formatProvider">The format provider to use.</param>
+            <param name="message">A message to emit to the log which includes the standard formatting tags.</param>
+            <param name="argument1">The first argument for formatting purposes.</param>
+            <param name="argument2">The second argument for formatting purposes.</param>
+            <param name="argument3">The third argument for formatting purposes.</param>
+            <param name="callerMemberName">Allows you to pass the method or property name of the caller to the method, used to allow the capture in the static logger of some additional context for support and debugging.</param>
+        </member>
+        <member name="M:Splat.IStaticFullLogger.Write(System.String,Splat.LogLevel,System.String)">
+            <summary>
+            Writes a message to the target.
+            </summary>
+            <param name="message">The message to write.</param>
+            <param name="logLevel">The severity level of the log message.</param>
+            <param name="callerMemberName">Allows you to pass the method or property name of the caller to the method, used to allow the capture in the static logger of some additional context for support and debugging.</param>
+        </member>
+        <member name="M:Splat.IStaticFullLogger.Write(System.Exception,System.String,Splat.LogLevel,System.String)">
+            <summary>
+            Writes a message to the target.
+            </summary>
+            <param name="exception">The exception that occured.</param>
+            <param name="message">The message to write.</param>
+            <param name="logLevel">The severity level of the log message.</param>
+            <param name="callerMemberName">Allows you to pass the method or property name of the caller to the method, used to allow the capture in the static logger of some additional context for support and debugging.</param>
+        </member>
+        <member name="M:Splat.IStaticFullLogger.Write(System.String,System.Type,Splat.LogLevel,System.String)">
+            <summary>
+            Writes a messge to the target.
+            </summary>
+            <param name="message">The message.</param>
+            <param name="type">The type.</param>
+            <param name="logLevel">The log level.</param>
+            <param name="callerMemberName">Allows you to pass the method or property name of the caller to the method, used to allow the capture in the static logger of some additional context for support and debugging.</param>
+        </member>
+        <member name="M:Splat.IStaticFullLogger.Write(System.Exception,System.String,System.Type,Splat.LogLevel,System.String)">
+            <summary>
+            Writes a messge to the target.
+            </summary>
+            <param name="exception">The exception that occured.</param>
+            <param name="message">The message.</param>
+            <param name="type">The type.</param>
+            <param name="logLevel">The log level.</param>
+            <param name="callerMemberName">Allows you to pass the method or property name of the caller to the method, used to allow the capture in the static logger of some additional context for support and debugging.</param>
+        </member>
         <member name="T:Splat.LoggingException">
             <summary>
             A exception that occurs when there is a problem using the logging module.
@@ -3142,6 +3642,122 @@
         </member>
         <member name="M:Splat.NullLogger.Write(System.Exception,System.String,System.Type,Splat.LogLevel)">
             <inheritdoc />
+        </member>
+        <member name="T:Splat.StaticFullLogger">
+            <summary>
+            A full logger which used by the default static logger to allow capture of .NET framework caller data. Wraps a <see cref="T:Splat.IFullLogger"/>.
+            </summary>
+        </member>
+        <member name="M:Splat.StaticFullLogger.#ctor(Splat.IFullLogger)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Splat.StaticFullLogger"/> class.
+            </summary>
+            <param name="fullLogger">The <see cref="T:Splat.IFullLogger"/> to wrap in this class.</param>
+        </member>
+        <member name="P:Splat.StaticFullLogger.Level">
+            <inheritdoc/>
+        </member>
+        <member name="M:Splat.StaticFullLogger.Debug(System.Exception,System.String,System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Splat.StaticFullLogger.Debug(System.String,System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Splat.StaticFullLogger.Debug``1(System.String,System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Splat.StaticFullLogger.Debug``1(System.IFormatProvider,System.String,``0,System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Splat.StaticFullLogger.Debug``2(System.IFormatProvider,System.String,``0,``1,System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Splat.StaticFullLogger.Debug``3(System.IFormatProvider,System.String,``0,``1,``2,System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Splat.StaticFullLogger.Info(System.Exception,System.String,System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Splat.StaticFullLogger.Info(System.String,System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Splat.StaticFullLogger.Info``1(System.String,System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Splat.StaticFullLogger.Info``1(System.IFormatProvider,System.String,``0,System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Splat.StaticFullLogger.Info``2(System.IFormatProvider,System.String,``0,``1,System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Splat.StaticFullLogger.Info``3(System.IFormatProvider,System.String,``0,``1,``2,System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Splat.StaticFullLogger.Warn(System.Exception,System.String,System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Splat.StaticFullLogger.Warn(System.String,System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Splat.StaticFullLogger.Warn``1(System.String,System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Splat.StaticFullLogger.Warn``1(System.IFormatProvider,System.String,``0,System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Splat.StaticFullLogger.Warn``2(System.IFormatProvider,System.String,``0,``1,System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Splat.StaticFullLogger.Warn``3(System.IFormatProvider,System.String,``0,``1,``2,System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Splat.StaticFullLogger.Error(System.Exception,System.String,System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Splat.StaticFullLogger.Error(System.String,System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Splat.StaticFullLogger.Error``1(System.String,System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Splat.StaticFullLogger.Error``1(System.IFormatProvider,System.String,``0,System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Splat.StaticFullLogger.Error``2(System.IFormatProvider,System.String,``0,``1,System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Splat.StaticFullLogger.Error``3(System.IFormatProvider,System.String,``0,``1,``2,System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Splat.StaticFullLogger.Fatal(System.Exception,System.String,System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Splat.StaticFullLogger.Fatal(System.String,System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Splat.StaticFullLogger.Fatal``1(System.String,System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Splat.StaticFullLogger.Fatal``1(System.IFormatProvider,System.String,``0,System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Splat.StaticFullLogger.Fatal``2(System.IFormatProvider,System.String,``0,``1,System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Splat.StaticFullLogger.Fatal``3(System.IFormatProvider,System.String,``0,``1,``2,System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Splat.StaticFullLogger.Write(System.String,Splat.LogLevel,System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Splat.StaticFullLogger.Write(System.Exception,System.String,Splat.LogLevel,System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Splat.StaticFullLogger.Write(System.String,System.Type,Splat.LogLevel,System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Splat.StaticFullLogger.Write(System.Exception,System.String,System.Type,Splat.LogLevel,System.String)">
+            <inheritdoc/>
         </member>
         <member name="T:Splat.WrappingFullLogger">
             <summary>
@@ -3777,7 +4393,7 @@
         </member>
         <member name="M:Splat.DependencyResolverMixins.Register``1(Splat.IMutableDependencyResolver,System.Func{``0},System.String)">
             <summary>
-            Registers a factory for the the given <typeparamref name="T"/>.
+            Registers a factory for the given <typeparamref name="T"/>.
             </summary>
             <typeparam name="T">The service type to register for.</typeparam>
             <param name="resolver">The resolver to register the service type with.</param>
@@ -3941,7 +4557,7 @@
              <returns>When disposed removes the callback.</returns>
              <param name="serviceType">The type which is used for the registration.</param>
              <param name="contract">A optional contract value which will indicates to only generate the value if this contract is specified.</param>
-             <param name="callback">The callback which will be called when the the specified service type and contract are registered.</param>
+             <param name="callback">The callback which will be called when the specified service type and contract are registered.</param>
         </member>
         <member name="P:Splat.InternalLocator.Current">
             <summary>

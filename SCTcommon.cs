@@ -17,6 +17,8 @@ namespace SCTBuilder
 {
     class SCTcommon
     {
+        private const int LatTest = 1;
+        private const int LonTest = 2;
         public static void DefineColorConstants(DataTable dT)
         // Color name, Decimal color code
         {

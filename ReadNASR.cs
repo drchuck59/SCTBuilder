@@ -90,7 +90,7 @@ namespace SCTBuilder
             if (NDBtable.Rows.Count != 0) NDBtable.Clear();
             string FullFilename = SCTcommon.GetFullPathname(FolderMgt.DataFolder, "NAV.txt");
 
-            string ID; string FacilityID; string FacName; double Lat; double Lon;
+            string ID; string FacilityID; string FacName; double Lat; double Lon; string FixClass = string.Empty;
             string Frequency; string ARTCC; string State; double MagVar = 0; string FixType; 
             using (StreamReader reader = new StreamReader(FullFilename))
             {
@@ -112,6 +112,21 @@ namespace SCTBuilder
                             ID = Line.Substring(4, 4).Trim() + Line.Substring(8, 20).Trim() + Line.Substring(72, 40).Trim(); // ID
                             FacilityID = Line.Substring(28, 4).Trim(); 
                             FixType = Line.Substring(8, 20).Trim();                             // FixType
+                            switch (Line.Substring(281,1).Trim())
+                            {
+                                case "H":
+                                    FixClass = "HIGH";
+                                        break;
+                                case "L":
+                                    FixClass = "LOW";
+                                    break;
+                                case "T":
+                                    FixClass = "TERMINAL";
+                                    break;
+                                default:
+                                    FixClass = string.Empty;
+                                    break;
+                            }
                             FacName = Line.Substring(42, 30).Trim();                            // Name 
                             ARTCC = Line.Substring(337, 4).Trim();                              // ARTCC
                             Frequency = Line.Substring(533, 6).Trim();                          // Frequency
@@ -134,6 +149,7 @@ namespace SCTBuilder
                                     State,
                                     MagVar,
                                     FixType,
+                                    FixClass,
                                 };
                             // NOTE that we are NOT adding VOT, CONSOLAN, FAN MARKER or DME-only
                             if (FixType.IndexOf("VOR", 0, FixType.Length) > -1)
@@ -774,7 +790,14 @@ namespace SCTBuilder
 
         private static void AddFixes(DataTable dT, List<object> FixItems)
         {
-            dT.Rows.Add(FixItems.ToArray());
+            try
+            {
+                dT.Rows.Add(FixItems.ToArray());
+            }
+            catch
+            {
+                Debug.WriteLine("ERROR adding fixes to " + dT.TableName);
+            }
         }
 
         public static void FillAirSpace()

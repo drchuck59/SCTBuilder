@@ -1637,6 +1637,8 @@ namespace SCTBuilder {
             
             private global::System.Data.DataColumn columnFixType;
             
+            private global::System.Data.DataColumn columnFixClass;
+            
             private global::System.Data.DataColumn columnSelected;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -1754,6 +1756,14 @@ namespace SCTBuilder {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn FixClassColumn {
+                get {
+                    return this.columnFixClass;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public global::System.Data.DataColumn SelectedColumn {
                 get {
                     return this.columnSelected;
@@ -1797,7 +1807,7 @@ namespace SCTBuilder {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public VORRow AddVORRow(string ID, string FacilityID, string Name, double Latitude, double Longitude, string Frequency, string ARTCC, string State, double MagVar, string FixType, bool Selected) {
+            public VORRow AddVORRow(string ID, string FacilityID, string Name, double Latitude, double Longitude, string Frequency, string ARTCC, string State, double MagVar, string FixType, string FixClass, bool Selected) {
                 VORRow rowVORRow = ((VORRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         ID,
@@ -1810,6 +1820,7 @@ namespace SCTBuilder {
                         State,
                         MagVar,
                         FixType,
+                        FixClass,
                         Selected};
                 rowVORRow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowVORRow);
@@ -1850,6 +1861,7 @@ namespace SCTBuilder {
                 this.columnState = base.Columns["State"];
                 this.columnMagVar = base.Columns["MagVar"];
                 this.columnFixType = base.Columns["FixType"];
+                this.columnFixClass = base.Columns["FixClass"];
                 this.columnSelected = base.Columns["Selected"];
             }
             
@@ -1876,6 +1888,8 @@ namespace SCTBuilder {
                 base.Columns.Add(this.columnMagVar);
                 this.columnFixType = new global::System.Data.DataColumn("FixType", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnFixType);
+                this.columnFixClass = new global::System.Data.DataColumn("FixClass", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnFixClass);
                 this.columnSelected = new global::System.Data.DataColumn("Selected", typeof(bool), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnSelected);
                 this.Constraints.Add(new global::System.Data.UniqueConstraint("Constraint1", new global::System.Data.DataColumn[] {
@@ -2035,6 +2049,8 @@ namespace SCTBuilder {
             
             private global::System.Data.DataColumn columnFixType;
             
+            private global::System.Data.DataColumn columnFixClass;
+            
             private global::System.Data.DataColumn columnSelected;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -2152,6 +2168,14 @@ namespace SCTBuilder {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn FixClassColumn {
+                get {
+                    return this.columnFixClass;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public global::System.Data.DataColumn SelectedColumn {
                 get {
                     return this.columnSelected;
@@ -2195,7 +2219,7 @@ namespace SCTBuilder {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public NDBRow AddNDBRow(string ID, string FacilityID, string Name, double Latitude, double Longitude, string Frequency, string ARTCC, string State, double MagVar, string FixType, bool Selected) {
+            public NDBRow AddNDBRow(string ID, string FacilityID, string Name, double Latitude, double Longitude, string Frequency, string ARTCC, string State, double MagVar, string FixType, string FixClass, bool Selected) {
                 NDBRow rowNDBRow = ((NDBRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         ID,
@@ -2208,6 +2232,7 @@ namespace SCTBuilder {
                         State,
                         MagVar,
                         FixType,
+                        FixClass,
                         Selected};
                 rowNDBRow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowNDBRow);
@@ -2248,6 +2273,7 @@ namespace SCTBuilder {
                 this.columnState = base.Columns["State"];
                 this.columnMagVar = base.Columns["MagVar"];
                 this.columnFixType = base.Columns["FixType"];
+                this.columnFixClass = base.Columns["FixClass"];
                 this.columnSelected = base.Columns["Selected"];
             }
             
@@ -2274,6 +2300,8 @@ namespace SCTBuilder {
                 base.Columns.Add(this.columnMagVar);
                 this.columnFixType = new global::System.Data.DataColumn("FixType", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnFixType);
+                this.columnFixClass = new global::System.Data.DataColumn("FixClass", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnFixClass);
                 this.columnSelected = new global::System.Data.DataColumn("Selected", typeof(bool), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnSelected);
                 this.Constraints.Add(new global::System.Data.UniqueConstraint("Constraint1", new global::System.Data.DataColumn[] {
@@ -7893,6 +7921,22 @@ namespace SCTBuilder {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public string FixClass {
+                get {
+                    try {
+                        return ((string)(this[this.tableVOR.FixClassColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'FixClass\' in table \'VOR\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableVOR.FixClassColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public bool Selected {
                 get {
                     try {
@@ -8013,6 +8057,18 @@ namespace SCTBuilder {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public void SetFixTypeNull() {
                 this[this.tableVOR.FixTypeColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsFixClassNull() {
+                return this.IsNull(this.tableVOR.FixClassColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetFixClassNull() {
+                this[this.tableVOR.FixClassColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -8199,6 +8255,22 @@ namespace SCTBuilder {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public string FixClass {
+                get {
+                    try {
+                        return ((string)(this[this.tableNDB.FixClassColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'FixClass\' in table \'NDB\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableNDB.FixClassColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public bool Selected {
                 get {
                     try {
@@ -8319,6 +8391,18 @@ namespace SCTBuilder {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public void SetFixTypeNull() {
                 this[this.tableNDB.FixTypeColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsFixClassNull() {
+                return this.IsNull(this.tableNDB.FixClassColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetFixClassNull() {
+                this[this.tableNDB.FixClassColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]

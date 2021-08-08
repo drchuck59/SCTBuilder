@@ -37,15 +37,15 @@ namespace SCTBuilder
 \s*$                 # Match the end of the string (ignoring whitespace)";
 
         // DO NOT DELETE! THIS WORKS!
-        Regex rgxLat = new Regex(@"^(?<latSuf>[NS])?(?<latDeg>\d{1,3})[D\*\u00B0\u00BA\-\.\s](?<latMin>\d{1,2})[M'\.\u2032\u2019\s](?<latSec>.+?)[\u0022\u2033\u201D]?(?<latSuf>[NS])?$");
-        Regex rgxLon = new Regex(@"^(?<lonSuf>[EW])?(?<lonDeg>\d{1,3})[D\*\u00B0\u00BA\-\.\s](?<lonMin>\d{1,2})[M'\.\u2032\u2019\s](?<lonSec>.+?)[\u0022\u2033\u201D]?(?<lonSuf>[EW])?$");
-        Regex rgxDMS2 = new Regex(@"^(?<latSuf>[NS])?(?<latDeg>\d{1,3})[D\*\u00B0\u00BA\-\.\s](?<latMin>\d{1,2})[M'\.\u2032\u2019\s](?<latSec>.+?)[\u0022\u2033\u201D]?(?<latSuf>[NS])?(\s+)?(?<lonSuf>[EW])?(?<lonDeg>\d{1,3})[D\*\u00B0\u00BA\-\.\s](?<lonMin>\d{1,2})[M'\.\u2032\u2019\s](?<lonSec>.+?)[\u0022\u2033\u201D]?(?<lonSuf>[EW])?$");
-        Regex rgxDD = new Regex(@"^(?<negate>(\-))?(?<Degrees>\d{1,3})(\.)?(?<Decimals>\d+)?$");
-        Regex rgxDdecM = new Regex(@"^(?<latSuf>[NS])?(?<latDeg>\d{1,3})[D\*\u00B0\u00BA\-\s](?<latMin>\d{1,2})[M'\u2032\u2019\s](?<latSuf>[NS])?$");
-        Regex rgxDD2 = new Regex(@"^(?<negateLat>(\-))?(?<Degrees>\d{1,3})(\.)?(?<Decimals>\d+)?(\s+)?(?<negateLon>(\-))?(?<Degrees>\d{1,3})(\.)?(?<Decimals>\d+)?$");
-        Regex rgxISO = new Regex(@"^\s*(?<latitude> [+-][0-9]{2,6}(?: \. [0-9]+)?)(?<longitude>[+-][0-9]{3,7}(?: \. [0-9]+)?)(?<altitude> [+-][0-9]+(?: \. [0-9]+)?)?/");
+        readonly Regex rgxLat = new Regex(@"^(?<latSuf>[NS])?(?<latDeg>\d{1,3})[D\*\u00B0\u00BA\-\.\s](?<latMin>\d{1,2})[M'\.\u2032\u2019\s](?<latSec>.+?)[\u0022\u2033\u201D]?(?<latSuf>[NS])?$");
+        readonly Regex rgxLon = new Regex(@"^(?<lonSuf>[EW])?(?<lonDeg>\d{1,3})[D\*\u00B0\u00BA\-\.\s](?<lonMin>\d{1,2})[M'\.\u2032\u2019\s](?<lonSec>.+?)[\u0022\u2033\u201D]?(?<lonSuf>[EW])?$");
+        readonly Regex rgxDMS2 = new Regex(@"^(?<latSuf>[NS])?(?<latDeg>\d{1,3})[D\*\u00B0\u00BA\-\.\s](?<latMin>\d{1,2})[M'\.\u2032\u2019\s](?<latSec>.+?)[\u0022\u2033\u201D]?(?<latSuf>[NS])?(\s+)?(?<lonSuf>[EW])?(?<lonDeg>\d{1,3})[D\*\u00B0\u00BA\-\.\s](?<lonMin>\d{1,2})[M'\.\u2032\u2019\s](?<lonSec>.+?)[\u0022\u2033\u201D]?(?<lonSuf>[EW])?$");
+        readonly Regex rgxDD = new Regex(@"^(?<negate>(\-))?(?<Degrees>\d{1,3})(\.)?(?<Decimals>\d+)?$");
+        readonly Regex rgxDdecM = new Regex(@"^(?<latSuf>[NS])?(?<latDeg>\d{1,3})[D\*\u00B0\u00BA\-\s](?<latMin>\d{1,2})[M'\u2032\u2019\s](?<latSuf>[NS])?$");
+        readonly Regex rgxDD2 = new Regex(@"^(?<negateLat>(\-))?(?<Degrees>\d{1,3})(\.)?(?<Decimals>\d+)?(\s+)?(?<negateLon>(\-))?(?<Degrees>\d{1,3})(\.)?(?<Decimals>\d+)?$");
+        readonly Regex rgxISO = new Regex(@"^\s*(?<latitude> [+-][0-9]{2,6}(?: \. [0-9]+)?)(?<longitude>[+-][0-9]{3,7}(?: \. [0-9]+)?)(?<altitude> [+-][0-9]+(?: \. [0-9]+)?)?/");
 
-        private string cr = Environment.NewLine;
+        private readonly string cr = Environment.NewLine;
         // Same as above, but a constant string
         private const string DecimalDegrees = @"^ (?<negate>(\-))?(?<Degrees>\d{1,3})(\.)? (?<Decimals>\d+)?$";
         private const string DegDecimalMinutes = @"^(?<latSuf>[NS])?(?<latDeg>\d{1,3})[D\*\u00B0\u00BA\-\s](?<latMin>\d{1,2})[M'\u2032\u2019\s](?<latSuf>[NS])?$";

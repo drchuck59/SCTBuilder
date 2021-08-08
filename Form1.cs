@@ -37,6 +37,7 @@ namespace SCTBuilder
         private const bool IsLat = true;
         private const bool IsLon = false;
         private const bool SelectNGdata = true;
+        //private readonly string cr = Environment.NewLine;
         public Form1()
         {
             InitializeComponent();
@@ -321,17 +322,21 @@ namespace SCTBuilder
 
         private bool SectionSelected()
         {
-            return APTsCheckBox.Checked || RWYsCheckBox.Checked || AWYsCheckBox.Checked || VORsCheckBox.Checked
+            bool result = 
+                APTsCheckBox.Checked || RWYsCheckBox.Checked || AWYsCheckBox.Checked || VORsCheckBox.Checked
                 || NDBsCheckBox.Checked || FIXesCheckBox.Checked || ARTCCCheckBox.Checked
                 || SIDsCheckBox.Checked || STARsCheckBox.Checked || OceanicCheckBox.Checked;
+            return result;
         }
 
         private bool SquareSelected()
         {
-            return (SouthLimitTextBox.TextLength != 0) &&
+            bool result = (SouthLimitTextBox.TextLength != 0) &&
                 (NorthLimitTextBox.TextLength != 0) && (WestLimitTextBox.TextLength != 0) &&
                 (EastLimitTextBox.TextLength != 0);
+            return result;
         }
+
 
         private void PreviewButton_Click(object sender, EventArgs e)
         {
@@ -379,15 +384,15 @@ namespace SCTBuilder
                 filter = SetFilter();
                 if (SCTchecked.ChkVOR)
                 {
-                    SelectTableItems(VOR, filter);
-                    SCTcommon.UpdateLabel(UpdatingLabel, "Building VOR grid view from selection");
-                    lastTab = LoadVORGridView();
+                        SelectTableItems(VOR, filter);
+                        SCTcommon.UpdateLabel(UpdatingLabel, "Building VOR grid view from selection");
+                        lastTab = LoadVORGridView();
                 }
                 if (SCTchecked.ChkNDB)
                 {
-                    SelectTableItems(NDB, filter);
-                    SCTcommon.UpdateLabel(UpdatingLabel, "Building NDB grid view from selection");
-                    lastTab = LoadNDBGridView();
+                        SelectTableItems(NDB, filter);
+                        SCTcommon.UpdateLabel(UpdatingLabel, "Building NDB grid view from selection");
+                        lastTab = LoadNDBGridView();
                 }
 
                 if (SCTchecked.ChkFIX)
@@ -1372,6 +1377,8 @@ namespace SCTBuilder
             SouthLimitTextBox.Text = Conversions.Degrees2SCT(InfoSection.SouthLimit, IsLat);
             WestLimitTextBox.Text = Conversions.Degrees2SCT(InfoSection.WestLimit, IsLon);
             EastLimitTextBox.Text = Conversions.Degrees2SCT(InfoSection.EastLimit, IsLon);
+            // We can safely assume the values in Infosection are valid coordinates
+            NorthLimitTextBox.BackColor = SouthLimitTextBox.BackColor = WestLimitTextBox.BackColor = EastLimitTextBox.BackColor = Color.White;
             NorthMarginNumericUpDown.Text = InfoSection.NorthOffset.ToString();
             EastMarginNumericUpDown.Text = InfoSection.EastOffset.ToString();
             SouthMarginNumericUpDown.Text = InfoSection.SouthOffset.ToString();
@@ -1452,6 +1459,8 @@ namespace SCTBuilder
                         FixListDataGridView.DataSource = dtFixList;
                         FixListDataGridView.DefaultCellStyle.Font = new Font("Arial", 9);
                         FixListDataGridView.Columns[0].HeaderText = "ID";
+                        FixListDataGridView.Columns[1].DefaultCellStyle.Format = string.Format("F5");
+                        FixListDataGridView.Columns[2].DefaultCellStyle.Format = string.Format("F5");
                         if (FixListDataGridView.Rows.Count != 0)
                         {
                             FixListDataGridView.AutoResizeColumn(0, DataGridViewAutoSizeColumnMode.AllCells);
@@ -1526,73 +1535,129 @@ namespace SCTBuilder
             return limit;
         }
 
+        private bool TestCoordValid(TextBox tb, int method, bool echo = true)
+        {
+            // result may be valid (true) or invalid (false); nonempty assumed
+            bool result = false;            // return invalid if empty string
+            if (tb.TextLength != 0)
+            {
+                switch (method)
+                {
+                    case 1:
+                        result = CrossForm.TestTextBox(tb, method: LatTest);
+                        if (!result)
+                            if (echo)
+                            {
+                                SCTcommon.SendMessage(UserMessage.CoordsInvalid);
+                                tb.Focus();
+                            }
+                        break;
+                    case 2:
+                        result = CrossForm.TestTextBox(tb, method: LonTest);
+                        if (!result)
+                            if (echo)
+                            {
+                                SCTcommon.SendMessage(UserMessage.CoordsInvalid);
+                                tb.Focus();
+                            }
+                        break;
+                }
+            }
+            else
+            {
+                Console.WriteLine("ERROR!  Empty string sent to Form1:TestCoordValid!!");
+                SendMessage("ERROR in Form1:TestCoordValid - please notify software author", MessageBoxIcon.Error);
+            }
+            return result;
+        }
 
+        private bool TestCoordInbounds(TextBox tb, int method, bool echo = true)
+        {
+            bool result = false;
+            double limit;
+            switch (method)
+                {
+                case 1:
+                    limit = CrossForm.Lat;
+                    if (Math.Abs(limit) > 90)
+                    {
+                        if (echo)
+                        {
+                            SCTcommon.SendMessage(UserMessage.LatOutOfBounds);
+                            tb.Focus();
+                        }
+                        tb.BackColor = Color.Orange;
+                    }
+                    else
+                    {
+                        InfoSection.CenterLatitude_Dec = limit;
+                        tb.Text = InfoSection.CenterLatitude_SCT;
+                        tb.BackColor = Color.White;
+                    }
+                    break;
+                case 2:
+                    limit = CrossForm.Lon;
+                    if (Math.Abs(limit) > 180)
+                    {
+                        if (echo)
+                        {
+                            SCTcommon.SendMessage(UserMessage.LonOutOfBounds);
+                            tb.Focus();
+                        }
+                        tb.BackColor = Color.Orange;
+                    }
+                    else
+                    {
+                        InfoSection.CenterLongitude_Dec = limit;
+                        tb.Text = InfoSection.CenterLongitude_SCT;
+                        tb.BackColor = Color.White;
+                    }
+                    break;
+                default:
+                    Console.WriteLine("ERROR!  Invalid method in Form1:TestCoordInbounds!!");
+                    SendMessage("ERROR in Form1:TestCoordInbounds - please notify software author", MessageBoxIcon.Error);
+                    break;
+            }
+            return result;
+        }
+
+        // TestValidCoord evaluates the coordinate is parseable - if it is, the decimal result is in CrossForm as Lat or Lon (or both). If not, tb color is yellow
+        // TestCoordInbounds ensures the Abs(Lat) <= 90 or Abs(Lon) <= 180.  If not, changes tb color to orange.
+        // TestLat(Lon)Limits ensures the coordinates for a rectangle for the selection filter to work properly.
         private void SouthLimitTextBox_Validated(object sender, EventArgs e)
         {
             TextBox tb = SouthLimitTextBox;
             if (tb.TextLength != 0)
-            { 
-                if (CrossForm.TestTextBox(tb, method: LatTest))
-                {
-                    InfoSection.SouthLimit = TestLatLimits(tb);
-                }
-                else
-                {
-                    SCTcommon.SendMessage(UserMessage.CoordsInvalid);
-                    tb.Focus();
-                }
-            }
+                if (TestCoordValid(tb, method: LatTest, echo: false))
+                    if (TestCoordInbounds(tb, LatTest, echo: false))
+                        InfoSection.SouthLimit = TestLatLimits(tb);
         }
 
         private void NorthLimitTextBox_Validated(object sender, EventArgs e)
         {
             TextBox tb = NorthLimitTextBox;
             if (tb.TextLength != 0)
-            {
-                if (CrossForm.TestTextBox(tb, method: LatTest))
-                {
-                    InfoSection.NorthLimit = TestLatLimits(tb);
-                }
-                else
-                {
-                    SCTcommon.SendMessage(UserMessage.CoordsInvalid);
-                    tb.Focus();
-                }
-            }
+                if (TestCoordValid(tb, method: LatTest, echo: false))
+                    if (TestCoordInbounds(tb, LatTest, echo: false))
+                        InfoSection.NorthLimit = TestLatLimits(tb);
         }
 
         private void WestLimitTextBox_Validated(object sender, EventArgs e)
         {
             TextBox tb = WestLimitTextBox;
             if (tb.TextLength != 0)
-            {
-                if (CrossForm.TestTextBox(tb, method: LonTest))
-                {
-                    InfoSection.WestLimit = TestLonLimits(tb);
-                }
-                else
-                {
-                    SCTcommon.SendMessage(UserMessage.CoordsInvalid);
-                    tb.Focus();
-                }
-            }
+                if (TestCoordValid(tb, method: LonTest, echo: false))
+                    if (TestCoordInbounds(tb, LonTest, echo: false))
+                        InfoSection.WestLimit = TestLonLimits(tb);
         }
 
         private void EastLimitTextBox_Validated(object sender, EventArgs e)
         {
             TextBox tb = EastLimitTextBox;
             if (tb.TextLength != 0)
-            {
-                if (CrossForm.TestTextBox(tb, method: LonTest))
-                {
-                    InfoSection.EastLimit = TestLonLimits(tb);
-                }
-                else
-                {
-                    SCTcommon.SendMessage(UserMessage.CoordsInvalid);
-                    tb.Focus();
-                }
-            }
+                if (TestCoordValid(tb, method: LonTest, echo: false))
+                    if (TestCoordInbounds(tb, LonTest, echo: false))
+                        InfoSection.EastLimit = TestLonLimits(tb);
         }
 
         private void CenterLatTextBox_Validated(object sender, EventArgs e)
@@ -1601,24 +1666,12 @@ namespace SCTBuilder
             if (tb.TextLength != 0)
             {
                 if (CrossForm.TestTextBox(tb))
-                {
-                    double limit = CrossForm.Lat;
-                    if (Math.Abs(limit) > 90)
+                    if (TestCoordInbounds(tb, LatTest))
                     {
-                        SCTcommon.SendMessage(UserMessage.LatOutOfBounds);
-                        tb.Focus();
-                    }
-                    else
-                    {
-                        InfoSection.CenterLatitude_Dec = limit;
+                        InfoSection.CenterLatitude_Dec = CrossForm.Lat;
                         tb.Text = InfoSection.CenterLatitude_SCT;
+                        tb.BackColor = Color.White;
                     }
-                }
-                else
-                {
-                    SCTcommon.SendMessage(UserMessage.CoordsInvalid);
-                    tb.Focus();
-                }
             }
         }
 
@@ -1628,31 +1681,35 @@ namespace SCTBuilder
             if (tb.TextLength != 0)
             {
                 if (CrossForm.TestTextBox(tb))
-                {
-                    double limit = CrossForm.Lon;
-                    if (Math.Abs(limit) > 180)
+                    if (TestCoordInbounds(tb, LonTest))
                     {
-                        SCTcommon.SendMessage(UserMessage.LonOutOfBounds);
-                        tb.Focus();
-                    }
-                    else
-                    {
-                        InfoSection.CenterLongitude_Dec = limit;
+                        InfoSection.CenterLongitude_Dec = CrossForm.Lon;
                         tb.Text = InfoSection.CenterLongitude_SCT;
+                        tb.BackColor = Color.White;
                     }
-                }
-                else
-                {
-                    SCTcommon.SendMessage(UserMessage.CoordsInvalid);
-                    tb.Focus();
-                }
             }
+        }
+
+        private bool TestAllCoordinatesForPreview()
+        {
+            bool result;
+            //string Msg = "NorthLimit test = " + (NorthLimitTextBox.BackColor == Color.White).ToString() + cr +
+            //    "SouthLimit test = " + (SouthLimitTextBox.BackColor == Color.White).ToString() + cr +
+            //    "EastLimit test = " + (EastLimitTextBox.BackColor == Color.White).ToString() + cr +
+            //    "WestLimit test = " + (WestLimitTextBox.BackColor == Color.White).ToString() + cr +
+            //    "CenterLon test = " + (CenterLonTextBox.BackColor == Color.White).ToString() + cr +
+            //    "CenterLat test = " + (CenterLatTextBox.BackColor == Color.White).ToString();
+            //SCTcommon.SendMessage(Msg);
+            result = (NorthLimitTextBox.BackColor == Color.White) & (SouthLimitTextBox.BackColor == Color.White) &
+                (WestLimitTextBox.BackColor == Color.White) & (EastLimitTextBox.BackColor == Color.White) &
+                (CenterLatTextBox.BackColor == Color.White) & (CenterLonTextBox.BackColor == Color.White);
+            return result;
         }
 
         private bool PreviewButtonReady()
         {
             bool OutputFileExists = Directory.Exists(FolderMgt.OutputFolder);
-            bool result = OutputFileExists && SquareSelected() && SectionSelected();
+            bool result = OutputFileExists && SquareSelected() && SectionSelected() && TestAllCoordinatesForPreview();
             return result;
         }
 
@@ -2101,7 +2158,7 @@ namespace SCTBuilder
         {
             if (e.RowIndex > -1 && e.ColumnIndex > -1)
             {
-                ShowPanel();
+                ShowAPTPanel();
             }
             else APTpanel.Visible = false;
         }
@@ -2110,34 +2167,112 @@ namespace SCTBuilder
         {
             if (e.RowIndex > -1 && e.ColumnIndex > -1 && APTpanel.Visible == true)
             {
-                ShowPanel();
+                ShowAPTPanel();
             }
             else APTpanel.Visible = false;
         }
 
-        private void ShowPanel()
+        private void dgvVOR_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex > -1 && e.ColumnIndex > -1 && VORNDBPanel.Visible == true)
+            {
+                ShowVORPanel();
+            }
+            else VORNDBPanel.Visible = false;
+        }
+
+        private void dgvVOR_CellContentDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex > -1 && e.ColumnIndex > -1)
+            {
+                ShowVORPanel();
+            }
+            else VORNDBPanel.Visible = false;
+        }
+
+        private void dgvDNB_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex > -1 && e.ColumnIndex > -1 && VORNDBPanel.Visible == true)
+            {
+                ShowNDBPanel();
+            }
+            else VORNDBPanel.Visible = false;
+        }
+
+        private void dgvDNB_CellContentDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex > -1 && e.ColumnIndex > -1)
+            {
+                ShowNDBPanel();
+            }
+            else VORNDBPanel.Visible = false;
+        }
+        private void ShowAPTPanel()
         {
             DataGridViewRow dgrv = dgvAPT.CurrentRow;
-            DataView dvAPT = new DataView(APT)
+            DataView dv = new DataView(APT)
             {
                 RowFilter = "FacilityID = '" + dgrv.Cells[1].Value.ToString() + "'"
             };
-            ICAOTextBox.Text = dvAPT[0]["ICAO"].ToString();
-            FacIDTextBox.Text = dvAPT[0]["FacilityID"].ToString();
-            DataIDTextBox.Text = dvAPT[0]["ID"].ToString();
-            NameTextBox.Text = dvAPT[0]["Name"].ToString();
-            LatDecTextBox.Text = string.Format("{0:0.00000}", dvAPT[0]["Latitude"]);
-            LonDecTextBox.Text = string.Format("{0:0.00000}", dvAPT[0]["Longitude"]);
-            LatSCTTextBox.Text = Conversions.Degrees2SCT((double)dvAPT[0]["Latitude"], true);
-            LonSCTTextBox.Text = Conversions.Degrees2SCT((double)dvAPT[0]["Longitude"], false);
-            OwningARTTCTextBox.Text = dvAPT[0]["Artcc"].ToString();
-            ElevationTextBox.Text =  dvAPT[0]["Elevation"].ToString();
-            CityTextBox.Text = dvAPT[0]["AssocCity"].ToString();
-            StateTextBox.Text = dvAPT[0]["State"].ToString();
+            ICAOTextBox.Text = dv[0]["ICAO"].ToString();
+            FacIDTextBox.Text = dv[0]["FacilityID"].ToString();
+            DataIDTextBox.Text = dv[0]["ID"].ToString();
+            NameTextBox.Text = dv[0]["Name"].ToString();
+            LatDecTextBox.Text = string.Format("{0:0.00000}", dv[0]["Latitude"]);
+            LonDecTextBox.Text = string.Format("{0:0.00000}", dv[0]["Longitude"]);
+            LatSCTTextBox.Text = Conversions.Degrees2SCT((double)dv[0]["Latitude"], true);
+            LonSCTTextBox.Text = Conversions.Degrees2SCT((double)dv[0]["Longitude"], false);
+            OwningARTTCTextBox.Text = dv[0]["Artcc"].ToString();
+            ElevationTextBox.Text = dv[0]["Elevation"].ToString();
+            CityTextBox.Text = dv[0]["AssocCity"].ToString();
+            StateTextBox.Text = dv[0]["State"].ToString();
             APTpanel.Visible = true;
         }
 
-        private void ClosePanelButton_Click(object sender, EventArgs e)
+        private void ShowVORPanel()
+        {
+            DataGridViewRow dgrv = dgvVOR.CurrentRow;
+            DataView dv = new DataView(VOR)
+            {
+                RowFilter = "FacilityID = '" + dgrv.Cells[1].Value.ToString() + "'"
+            };
+            VORIDTextbox.Text = dv[0]["FacilityID"].ToString();
+            VORNameTextBox.Text = dv[0]["Name"].ToString();
+            VORLatDECTextBox.Text = string.Format("{0:0.00000}", dv[0]["Latitude"]);
+            VORLonDECTextBoc.Text = string.Format("{0:0.00000}", dv[0]["Longitude"]);
+            VORLatSCTTextbox.Text = Conversions.Degrees2SCT((double)dv[0]["Latitude"], true);
+            VORLonSCTTextbox.Text = Conversions.Degrees2SCT((double)dv[0]["Longitude"], false);
+            VORFrequencyTextBox.Text = dv[0]["Frequency"].ToString();
+            VORClassTextBox.Text = dv[0]["FixClass"].ToString();
+            VOROwningARTCCTextBox.Text = dv[0]["Artcc"].ToString();
+            VORNDBPanel.Visible = true;
+        }
+
+        private void ShowNDBPanel()
+        {
+            DataGridViewRow dgrv = dgvNDB.CurrentRow;
+            DataView dv = new DataView(NDB)
+            {
+                RowFilter = "FacilityID = '" + dgrv.Cells[1].Value.ToString() + "'"
+            };
+            VORIDTextbox.Text = dv[0]["FacilityID"].ToString();
+            VORNameTextBox.Text = dv[0]["Name"].ToString();
+            VORLatDECTextBox.Text = string.Format("{0:0.00000}", dv[0]["Latitude"]);
+            VORLonDECTextBoc.Text = string.Format("{0:0.00000}", dv[0]["Longitude"]);
+            VORLatSCTTextbox.Text = Conversions.Degrees2SCT((double)dv[0]["Latitude"], true);
+            VORLonSCTTextbox.Text = Conversions.Degrees2SCT((double)dv[0]["Longitude"], false);
+            VORFrequencyTextBox.Text = dv[0]["Frequency"].ToString();
+            VORClassTextBox.Text = dv[0]["FixClass"].ToString();
+            VOROwningARTCCTextBox.Text = dv[0]["Artcc"].ToString();
+            VORNDBPanel.Visible = true;
+        }
+
+        private void CloseVORNDBPanelButton_Click(object sender, EventArgs e)
+        {
+            VORNDBPanel.Visible = false;
+        }
+
+        private void CloseAPTPanelButton_Click(object sender, EventArgs e)
         {
             APTpanel.Visible = false;
         }
