@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
 namespace SCTBuilder
@@ -49,6 +50,9 @@ namespace SCTBuilder
             SCTchecked.ChkOneESFile = ESCombineCheckBox.Checked;
             SCTchecked.IncludeSUAfile = IncludeSIDSTARReferencesCheckBox.Checked;
             InfoSection.RollOverLongitude = RolloverLonCheckBox.Checked;
+            InfoSection.SIDprefix = (char)SIDPrefixTextBox.Text[0];
+            InfoSection.STARprefix = (char)STARPrefixTextBox.Text[0];
+
             Close();
         }
 
@@ -68,6 +72,28 @@ namespace SCTBuilder
             UseNaviGraphCheckBox.Checked = InfoSection.UseNaviGraph;
             UseFixesAsCoordinatesCheckBox.Enabled = InfoSection.HasNaviGraph;
             RolloverLonCheckBox.Checked = InfoSection.RollOverLongitude;
+            SIDPrefixTextBox.Text = InfoSection.SIDprefix.ToString();
+            STARPrefixTextBox.Text = InfoSection.STARprefix.ToString();
+        }
+
+        private void SIDPrefixTextBox_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            string punctuation = @"[!#$%&'*+-.<=>@^_{|}~\s]?";
+            Regex regex = new Regex(punctuation);
+            if (regex.Match(this.Text).Success)
+                e.Handled = false;          // Normal handling
+            else
+                e.Handled = true;           // Cancel keypress
+        }
+
+        private void STARPrefixTextBox_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            string punctuation = @"[!#$%&'*+-.<=>@^_{|}~\s]?";
+            Regex regex = new Regex(punctuation);
+            if (regex.Match(this.Text).Success)
+                e.Handled = false;          // Normal handling
+            else
+                e.Handled = true;           // Cancel keypress
         }
     }
 }

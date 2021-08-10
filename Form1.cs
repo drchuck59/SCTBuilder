@@ -2176,7 +2176,12 @@ namespace SCTBuilder
         {
             if (e.RowIndex > -1 && e.ColumnIndex > -1 && VORNDBPanel.Visible == true)
             {
-                ShowVORPanel();
+                DataGridViewRow dgrv = dgvVOR.CurrentRow;
+                DataView dv = new DataView(VOR)
+                {
+                    RowFilter = "FacilityID = '" + dgrv.Cells[1].Value.ToString() + "'"
+                };
+                ShowVORNDBPanel(dv);
             }
             else VORNDBPanel.Visible = false;
         }
@@ -2185,7 +2190,12 @@ namespace SCTBuilder
         {
             if (e.RowIndex > -1 && e.ColumnIndex > -1)
             {
-                ShowVORPanel();
+                DataGridViewRow dgrv = dgvVOR.CurrentRow;
+                DataView dv = new DataView(VOR)
+                {
+                    RowFilter = "FacilityID = '" + dgrv.Cells[1].Value.ToString() + "'"
+                };
+                ShowVORNDBPanel(dv);
             }
             else VORNDBPanel.Visible = false;
         }
@@ -2194,7 +2204,12 @@ namespace SCTBuilder
         {
             if (e.RowIndex > -1 && e.ColumnIndex > -1 && VORNDBPanel.Visible == true)
             {
-                ShowNDBPanel();
+                DataGridViewRow dgrv = dgvNDB.CurrentRow;
+                DataView dv = new DataView(NDB)
+                {
+                    RowFilter = "FacilityID = '" + dgrv.Cells[1].Value.ToString() + "'"
+                };
+                ShowVORNDBPanel(dv);
             }
             else VORNDBPanel.Visible = false;
         }
@@ -2203,7 +2218,12 @@ namespace SCTBuilder
         {
             if (e.RowIndex > -1 && e.ColumnIndex > -1)
             {
-                ShowNDBPanel();
+                DataGridViewRow dgrv = dgvNDB.CurrentRow;
+                DataView dv = new DataView(NDB)
+                {
+                    RowFilter = "FacilityID = '" + dgrv.Cells[1].Value.ToString() + "'"
+                };
+                ShowVORNDBPanel(dv);
             }
             else VORNDBPanel.Visible = false;
         }
@@ -2229,38 +2249,16 @@ namespace SCTBuilder
             APTpanel.Visible = true;
         }
 
-        private void ShowVORPanel()
+        private void ShowVORNDBPanel(DataView dv)
         {
-            DataGridViewRow dgrv = dgvVOR.CurrentRow;
-            DataView dv = new DataView(VOR)
-            {
-                RowFilter = "FacilityID = '" + dgrv.Cells[1].Value.ToString() + "'"
-            };
             VORIDTextbox.Text = dv[0]["FacilityID"].ToString();
             VORNameTextBox.Text = dv[0]["Name"].ToString();
             VORLatDECTextBox.Text = string.Format("{0:0.00000}", dv[0]["Latitude"]);
             VORLonDECTextBoc.Text = string.Format("{0:0.00000}", dv[0]["Longitude"]);
             VORLatSCTTextbox.Text = Conversions.Degrees2SCT((double)dv[0]["Latitude"], true);
             VORLonSCTTextbox.Text = Conversions.Degrees2SCT((double)dv[0]["Longitude"], false);
-            VORFrequencyTextBox.Text = dv[0]["Frequency"].ToString();
-            VORClassTextBox.Text = dv[0]["FixClass"].ToString();
-            VOROwningARTCCTextBox.Text = dv[0]["Artcc"].ToString();
-            VORNDBPanel.Visible = true;
-        }
-
-        private void ShowNDBPanel()
-        {
-            DataGridViewRow dgrv = dgvNDB.CurrentRow;
-            DataView dv = new DataView(NDB)
-            {
-                RowFilter = "FacilityID = '" + dgrv.Cells[1].Value.ToString() + "'"
-            };
-            VORIDTextbox.Text = dv[0]["FacilityID"].ToString();
-            VORNameTextBox.Text = dv[0]["Name"].ToString();
-            VORLatDECTextBox.Text = string.Format("{0:0.00000}", dv[0]["Latitude"]);
-            VORLonDECTextBoc.Text = string.Format("{0:0.00000}", dv[0]["Longitude"]);
-            VORLatSCTTextbox.Text = Conversions.Degrees2SCT((double)dv[0]["Latitude"], true);
-            VORLonSCTTextbox.Text = Conversions.Degrees2SCT((double)dv[0]["Longitude"], false);
+            VORCityTextBox.Text = dv[0]["City"].ToString();
+            VORStateTextBox.Text = dv[0]["State"].ToString();
             VORFrequencyTextBox.Text = dv[0]["Frequency"].ToString();
             VORClassTextBox.Text = dv[0]["FixClass"].ToString();
             VOROwningARTCCTextBox.Text = dv[0]["Artcc"].ToString();

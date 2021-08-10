@@ -79,6 +79,8 @@ namespace SCTBuilder
             WriteXmlElement(xml, "CenterLatitude_Dec", InfoSection.CenterLatitude_Dec.ToString());
             WriteXmlElement(xml, "CenterLongitude_Dec", InfoSection.CenterLongitude_Dec.ToString());
             WriteXmlElement(xml, "RollOverLon", InfoSection.RollOverLongitude.ToString());
+            WriteXmlElement(xml, "SIDprefix", InfoSection.SIDprefix.ToString());
+            WriteXmlElement(xml, "STARprefix", InfoSection.STARprefix.ToString());
 
             xml.WriteEndDocument();
             xml.Close();
@@ -277,6 +279,12 @@ namespace SCTBuilder
                                 break;
                             case "RollOverLon":
                                 InfoSection.RollOverLongitude = Convert.ToBoolean(value);
+                                break;
+                            case "SIDprefix":
+                                InfoSection.SIDprefix = Convert.ToChar(value);
+                                break;
+                            case "STARprefix":
+                                InfoSection.STARprefix = Convert.ToChar(value);
                                 break;
                             default:
                                 break;

@@ -91,7 +91,7 @@ namespace SCTBuilder
             string FullFilename = SCTcommon.GetFullPathname(FolderMgt.DataFolder, "NAV.txt");
 
             string ID; string FacilityID; string FacName; double Lat; double Lon; string FixClass = string.Empty;
-            string Frequency; string ARTCC; string State; double MagVar = 0; string FixType; 
+            string Frequency; string ARTCC; string State; double MagVar = 0; string FixType; string City;
             using (StreamReader reader = new StreamReader(FullFilename))
             {
                 string Temp = DateTime.Now.ToString("yyyyMMdd");
@@ -130,6 +130,7 @@ namespace SCTBuilder
                             FacName = Line.Substring(42, 30).Trim();                            // Name 
                             ARTCC = Line.Substring(337, 4).Trim();                              // ARTCC
                             Frequency = Line.Substring(533, 6).Trim();                          // Frequency
+                            City = Line.Substring(72, 40).Trim();
                             State = Line.Substring(142, 2).Trim();                              // State
                             Lat = Convert.ToDouble(Line.Substring(385, 10).Trim()) / 3600f;      // Latitude
                             if (Line.Substring(398, 1) == "S") Lat *= -1;
@@ -146,6 +147,7 @@ namespace SCTBuilder
                                     Lon,
                                     Frequency,
                                     ARTCC,
+                                    City,
                                     State,
                                     MagVar,
                                     FixType,

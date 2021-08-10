@@ -203,16 +203,31 @@ namespace SCTBuilder
             double Lat0 = -1; double Lon0 = -1;
             string lastFix = string.Empty; string curFix; string FixType0;
             string FixType1; string SSDname; string TransitionName;
-            string SSDcode; string TransitionCode;
-            int FixCount0; int FixCount1;
+            string SSDcode; string TransitionCode; char Prefix = '\0';
+            int FixCount0; int FixCount1; int MarkCount = 0;
 
             // Get the name and code for this SSD
             SSDname = dvSSD[0]["SSDName"].ToString();
             SSDcode = dvSSD[0]["SSDcode"].ToString();
-
             SSDlines.Add(cr);
-            SSDlines.Add(SSDHeader(SSDcode, "(" + SSDname + ")", 1, '-'));
-
+            // SSDcode, SSD name, # of prefix chars, char to be used)
+            if ((bool)dvSSD[0]["IsSID"])
+            {
+                if (InfoSection.SIDprefix != '\0')
+                {
+                    Prefix = InfoSection.SIDprefix;
+                    MarkCount = 1;
+                }
+            }
+            else
+            {
+                if (InfoSection.SIDprefix != '\0')
+                {
+                    Prefix = InfoSection.STARprefix;
+                    MarkCount = 1;
+                }
+            }
+            SSDlines.Add(SSDHeader(SSDcode, "(" + SSDname + ")", MarkCount, Prefix));
             // Now loop the entire SSD to get the lines, etc.
             foreach (DataRowView SSDrow in dvSSD)
             {

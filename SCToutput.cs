@@ -497,7 +497,7 @@ namespace SCTBuilder
                     dvSSD.RowFilter = "ID = '" + drSSDlist[0].ToString() + "'";
                     // Pass the single row of SSD data to the writing programs
                     if (dvSSD.Count != 0)
-                        BuildSSD(dvSSD);
+                        BuildSSD(dvSSD, IsSID);
                     // Creating a file for each dvSSD...
                     string path = SCTcommon.CheckFile(PartialPath, dvSSD[0]["SSDcode"].ToString());
                     using (StreamWriter sw = new StreamWriter(path))
@@ -525,7 +525,7 @@ namespace SCTBuilder
                     // Get the SSD in question - on this loop, the path is the SSDname
                     dvSSD.RowFilter = "ID = '" + drSSDlist[0].ToString() + "'";
                     if (dvSSD.Count != 0)
-                        BuildSSD(dvSSD);
+                        BuildSSD(dvSSD, IsSID);
                 }
                 // Create ONE file for all the SSDs
                 string path = SCTcommon.CheckFile(PartialPath, Section);
@@ -543,7 +543,7 @@ namespace SCTBuilder
             SSDlist.Dispose();
         }
 
-        private static void BuildSSD (DataView dvSSD)
+        private static void BuildSSD (DataView dvSSD, bool IsSID)
         {
             // Builds ONE SID or STAR from ONE SSD dataview (preselected)
             // RETURNS a string for the diagram
@@ -552,10 +552,10 @@ namespace SCTBuilder
 
             // Various and sundry variables for the loop
             double Lat1 = -1; double Lon1 = -1; string space = new string(' ', 27);
-            double Lat0 = -1; double Lon0 = -1;
+            double Lat0 = -1; double Lon0 = -1; int MarkCount = 0;
             string lastFix = string.Empty; string curFix; string FixType0;
             string FixType1; string SSDname; string TransitionName;
-            string SSDcode; string TransitionCode;
+            string SSDcode; string TransitionCode; char Prefix = '\0';
             int FixCount0; int FixCount1;
 
             // Get the name and code for this SSD
@@ -563,8 +563,24 @@ namespace SCTBuilder
             SSDcode = dvSSD[0]["SSDcode"].ToString();
 
             SSDlines.Add(cr);
-            SSDlines.Add(SSDHeader(SSDcode, "(" + SSDname + ")", 1, '-'));
-
+            // SSDcode, SSD name, # of prefix chars, char to be used)
+            if (IsSID)
+            {
+                if (InfoSection.SIDprefix != '\0')
+                {
+                    Prefix = InfoSection.SIDprefix;
+                    MarkCount = 1;
+                }
+            }
+            else
+            {
+                if (InfoSection.SIDprefix != '\0')
+                {
+                    Prefix = InfoSection.STARprefix;
+                    MarkCount = 1;
+                }
+            }
+            SSDlines.Add(SSDHeader(SSDcode, "(" + SSDname + ")", MarkCount, Prefix));
             // Now loop the entire SSD to get the lines, etc.
             foreach (DataRowView SSDrow in dvSSD)
             {
