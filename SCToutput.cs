@@ -12,7 +12,6 @@ namespace SCTBuilder
 {
     class SCToutput
     {
-        static string CycleHeader;
         static readonly string cr = Environment.NewLine;
         static List<object> FixData = new List<object>();
         static List<object> VORData = new List<object>();
@@ -151,6 +150,13 @@ namespace SCTBuilder
             Console.WriteLine("End writing output files in SCToutput");
         }
 
+        private static void WriteFooter(StreamWriter sw, string RegionTitle)
+        {
+            string footer = "; ======= END COMPUTED DATA * Do not remove this footer * ========" + cr +
+                            "; " + CycleInfo.AIRAC + " " + RegionTitle + cr +
+                            "; ================================================================" + cr;
+            sw.WriteLine(footer);
+        }
 
         private static void WriteHeader(string path)
         {
@@ -170,11 +176,6 @@ namespace SCTBuilder
                 "; <Add last modified and contributers from prior file>" + cr + cr;
                 sw.WriteLine(Message);
             }
-            CycleHeader =
-                "; ================================================================" + cr +
-                "; AIRAC CYCLE: " + CycleInfo.AIRAC + cr +
-                "; Cycle: " + CycleInfo.CycleStart + " to " + CycleInfo.CycleEnd + cr +
-                "; ================================================================" + cr;
         }
         public static void WriteColors(string path)
         {
@@ -202,6 +203,7 @@ namespace SCTBuilder
                 sw.WriteLine(InfoSection.NMperDegreeLongitude.ToString("F1", CultureInfo.InvariantCulture));
                 sw.WriteLine(InfoSection.MagneticVariation * -1d);   // Subtract the MagVar (converts True-Map to Mag)
                 sw.WriteLine(InfoSection.SectorScale);
+                WriteFooter(sw, "INFO");
             }
         }
         public static void WriteVOR(string path)
@@ -214,7 +216,7 @@ namespace SCTBuilder
             };
             using (StreamWriter sw = new StreamWriter(path))
             {
-                sw.WriteLine(CycleHeader);
+                sw.WriteLine(CycleInfo.CycleHeader);
                 sw.WriteLine("[VOR]");
                 foreach (DataRowView row in dataView)
                 {
@@ -230,6 +232,7 @@ namespace SCTBuilder
                     if (!(strOut[2] + strOut[3]).Contains("-1 "))      // Do NOT write VORs having no fix
                         sw.WriteLine(SCTstrings.VORout(strOut));
                 }
+                WriteFooter(sw, "VOR");
                 dataView.Dispose();
             }
         }
@@ -244,7 +247,7 @@ namespace SCTBuilder
             };
             using (StreamWriter sw = new StreamWriter(path))
             {
-                sw.WriteLine(CycleHeader);
+                sw.WriteLine(CycleInfo.CycleHeader);
                 sw.WriteLine("[NDB]");
                 foreach (DataRowView row in dataView)
                 {
@@ -261,6 +264,7 @@ namespace SCTBuilder
                     if (!(strOut[2] + strOut[3]).Contains("-1 "))      // Do NOT write NDBs having no fix
                         sw.WriteLine(SCTstrings.NDBout(strOut));
                 }
+                WriteFooter(sw, "NDB");
                 dataView.Dispose();
             }
         }
@@ -280,7 +284,7 @@ namespace SCTBuilder
             DataRow foundRow; string LCL; string ATIS;
             using (StreamWriter sw = new StreamWriter(path))
             {
-                sw.WriteLine(CycleHeader);
+                sw.WriteLine(CycleInfo.CycleHeader);
                 sw.WriteLine("[AIRPORT]");
                 foreach (DataRow row in dataTable.AsEnumerable())
                 {
@@ -318,6 +322,7 @@ namespace SCTBuilder
                     if (!(strOut[2] + " " + strOut[3]).Contains("-1 "))      // Do NOT write APTs having no fix
                         sw.WriteLine(SCTstrings.APTout(strOut));
                 }
+              WriteFooter(sw, "APT");
             }
             dvAPT.Dispose();
         }
@@ -333,7 +338,7 @@ namespace SCTBuilder
             };
             using (StreamWriter sw = new StreamWriter(path))
             {
-                sw.WriteLine(CycleHeader);
+                sw.WriteLine(CycleInfo.CycleHeader);
                 sw.WriteLine("[FIXES]");
                 foreach (DataRowView row in dataView)
                 {
@@ -346,6 +351,7 @@ namespace SCTBuilder
                     strOut[4] = row["Use"].ToString();
                     sw.WriteLine(SCTstrings.FIXout(strOut));  // Uses 0, 2, 3, and 4
                 }
+             WriteFooter(sw, "FIX");
             }
             dataView.Dispose();
         }
@@ -371,7 +377,7 @@ namespace SCTBuilder
                     {
                         if (FirstLine)
                         {
-                            sw.WriteLine(CycleHeader);
+                            sw.WriteLine(CycleInfo.CycleHeader);
                             sw.WriteLine("[RUNWAY]");
                             FirstLine = false;
                         }
@@ -403,6 +409,7 @@ namespace SCTBuilder
                     DRAW.Rows.Add(new object[] { strOut[1].ToString(), strOut[6].ToString(), strOut[7].ToString(), "", FacFullName });
                 }
                 WriteLabels(DRAW, sw);
+                WriteFooter(sw, "RWY");
             }
             dvRWY.Dispose();
         }
@@ -425,7 +432,7 @@ namespace SCTBuilder
             // Rotate output as in other output loops
             using (StreamWriter sw = new StreamWriter(path))
             {
-                sw.WriteLine(CycleHeader);
+                sw.WriteLine(CycleInfo.CycleHeader);
                 if (IsLow) sw.WriteLine("[LOW AIRWAY]");
                 else sw.WriteLine("[HIGH AIRWAY]");
                 foreach (DataRowView rowAWY in dvAWY)
@@ -455,6 +462,7 @@ namespace SCTBuilder
                     Awy0 = Awy1; NavAid0 = NavAid1;
                     Lat0 = Lat1; Lon0 = Lon1;
                 }
+                WriteFooter(sw, "AWY");
             }
             dvAWY.Dispose();
         }
@@ -502,12 +510,13 @@ namespace SCTBuilder
                     string path = SCTcommon.CheckFile(PartialPath, dvSSD[0]["SSDcode"].ToString());
                     using (StreamWriter sw = new StreamWriter(path))
                     {
-                        sw.WriteLine(CycleHeader);
+                        sw.WriteLine(CycleInfo.CycleHeader);
                         if (InfoSection.IncludeSidStarReferences)
                             WriteSSDrefs(sw);
                         // Is this a SID or STAR section?  The 1st character will tell
                         sw.WriteLine(cr + "[" + Section + "]");
                         WriteSSDLines(sw);          // Since Labels depend on lines, call them there
+                        WriteFooter(sw, dvSSD[0]["SSDcode"].ToString());
                     }
                 }
             }
@@ -531,12 +540,13 @@ namespace SCTBuilder
                 string path = SCTcommon.CheckFile(PartialPath, Section);
                 using (StreamWriter sw = new StreamWriter(path))
                 {
-                    sw.WriteLine(CycleHeader);
+                    sw.WriteLine(CycleInfo.CycleHeader);
                     if (InfoSection.IncludeSidStarReferences)
                         WriteSSDrefs(sw);
                     // Is this a SID or STAR section?  The 1st character will tell
                     sw.WriteLine("[" + Section + "]");
                     WriteSSDLines(sw);          // Since Labels depend on lines, call them there
+                    WriteFooter(sw, dvSSD[0]["SSDcode"].ToString());
                 }
             }
             dvSSD.Dispose();
@@ -650,7 +660,7 @@ namespace SCTBuilder
             // This is the header references
             // Write the file for this SSD
             string[] strOut = new string[6];
-            sw.WriteLine(cr + "[AIRPORT]");
+            sw.WriteLine(cr + "[AIRPORT]" + cr);
             DataView dvAPT = new DataView(Form1.APT);
             DataView dvTWR = new DataView(Form1.TWR);
             foreach (string Arpt in APTsUsed)
@@ -890,6 +900,7 @@ namespace SCTBuilder
                         Lat0 = Lat1; Long0 = Long1; FacID0 = FacID1; Descr0 = Descr1;
                     }
                 }
+                WriteFooter(sw, "ARTCC " + Sector + "");
             }
             ARBview.Dispose();
         }

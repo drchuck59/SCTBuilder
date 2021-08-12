@@ -4400,6 +4400,15 @@
             <param name="factory">A factory method for generating a object of the specified type.</param>
             <param name="contract">A optional contract value which will indicates to only generate the value if this contract is specified.</param>
         </member>
+        <member name="M:Splat.DependencyResolverMixins.Register``2(Splat.IMutableDependencyResolver,System.String)">
+            <summary>
+            Registers a factory for the given <typeparamref name="T" />.
+            </summary>
+            <typeparam name="TAs">The type to register as.</typeparam>
+            <typeparam name="T">The service type to register for.</typeparam>
+            <param name="resolver">The resolver to register the service type with.</param>
+            <param name="contract">A optional contract value which will indicates to only generate the value if this contract is specified.</param>
+        </member>
         <member name="M:Splat.DependencyResolverMixins.RegisterConstant(Splat.IMutableDependencyResolver,System.Object,System.Type,System.String)">
             <summary>
             Registers a constant value which will always return the specified object instance.
@@ -4702,18 +4711,20 @@
             <returns>A value indicating whether the notifications are happening.</returns>
         </member>
         <member name="T:Splat.ModernDependencyResolver">
-             <summary>
-             This class is a dependency resolver written for modern C# 5.0 times.
-             It implements all registrations via a Factory method. With the power
-             of Closures, you can actually implement most lifetime styles (i.e.
-             construct per call, lazy construct, singleton) using this.
-            
-             Unless you have a very compelling reason not to, this is the only class
-             you need in order to do dependency resolution, don't bother with using
-             a full IoC container.
-            
-             This container is not thread safe.
-             </summary>
+            <summary>
+            <para>
+            This class is a dependency resolver written for modern C# 5.0 times.
+            It implements all registrations via a Factory method. With the power
+            of Closures, you can actually implement most lifetime styles (i.e.
+            construct per call, lazy construct, singleton) using this.
+            </para>
+            <para>
+            Unless you have a very compelling reason not to, this is the only class
+            you need in order to do dependency resolution, don't bother with using
+            a full IoC container.
+            </para>
+            <para>This container is not thread safe.</para>
+            </summary>
         </member>
         <member name="M:Splat.ModernDependencyResolver.#ctor">
             <summary>
@@ -4762,6 +4773,128 @@
             Disposes of all managed memory from this class.
             </summary>
             <param name="isDisposing">If we are currently disposing managed resources.</param>
+        </member>
+        <member name="T:Splat.NullServiceType">
+            <summary>
+            Null Service Type.
+            </summary>
+        </member>
+        <member name="M:Splat.NullServiceType.#ctor(System.Func{System.Object})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Splat.NullServiceType"/> class.
+            </summary>
+            <param name="factory">The value factory.</param>
+        </member>
+        <member name="P:Splat.NullServiceType.Factory">
+            <summary>
+            Gets the Factory.
+            </summary>
+        </member>
+        <member name="T:Splat.ResolverMixins">
+            <summary>
+            Resolver Mixins.
+            </summary>
+        </member>
+        <member name="M:Splat.ResolverMixins.RegisterAnd``1(Splat.IMutableDependencyResolver,System.String)">
+            <summary>
+            Registers a factory for the given <typeparamref name="T" />.
+            </summary>
+            <typeparam name="T">The service type to register for.</typeparam>
+            <param name="resolver">The resolver to register the service type with.</param>
+            <param name="contract">A optional contract value which will indicates to only generate the value if this contract is specified.</param>
+            <returns>The resolver.</returns>
+        </member>
+        <member name="M:Splat.ResolverMixins.RegisterAnd``1(Splat.IMutableDependencyResolver,System.Func{``0},System.String)">
+            <summary>
+            Registers a factory for the given <typeparamref name="T" />.
+            </summary>
+            <typeparam name="T">The service type to register for.</typeparam>
+            <param name="resolver">The resolver to register the service type with.</param>
+            <param name="factory">A factory method for generating a object of the specified type.</param>
+            <param name="contract">A optional contract value which will indicates to only generate the value if this contract is specified.</param>
+            <returns>The resolver.</returns>
+        </member>
+        <member name="M:Splat.ResolverMixins.RegisterAnd``2(Splat.IMutableDependencyResolver,System.String)">
+            <summary>
+            Registers a factory for the given <typeparamref name="T" />.
+            </summary>
+            <typeparam name="TAs">The type to register as.</typeparam>
+            <typeparam name="T">The service type to register for.</typeparam>
+            <param name="resolver">The resolver to register the service type with.</param>
+            <param name="contract">A optional contract value which will indicates to only generate the value if this contract is specified.</param>
+            <returns>The resolver.</returns>
+        </member>
+        <member name="M:Splat.ResolverMixins.RegisterAnd``2(Splat.IMutableDependencyResolver,System.Func{``1},System.String)">
+            <summary>
+            Registers a factory for the given <typeparamref name="T" />.
+            </summary>
+            <typeparam name="TAs">The type to register as.</typeparam>
+            <typeparam name="T">The service type to register for.</typeparam>
+            <param name="resolver">The resolver to register the service type with.</param>
+            <param name="factory">A factory method for generating a object of the specified type.</param>
+            <param name="contract">A optional contract value which will indicates to only generate the value if this contract is specified.</param>
+            <returns>The resolver.</returns>
+        </member>
+        <member name="M:Splat.ResolverMixins.RegisterConstantAnd(Splat.IMutableDependencyResolver,System.Object,System.Type,System.String)">
+            <summary>
+            Registers a constant value which will always return the specified object instance.
+            </summary>
+            <param name="resolver">The resolver to register the service type with.</param>
+            <param name="value">The specified instance to always return.</param>
+            <param name="serviceType">The type of service to register.</param>
+            <param name="contract">A optional contract value which will indicates to only return the value if this contract is specified.</param>
+            <returns>The resolver.</returns>
+        </member>
+        <member name="M:Splat.ResolverMixins.RegisterConstantAnd``1(Splat.IMutableDependencyResolver,System.String)">
+            <summary>
+            Registers a constant value which will always return the specified object instance.
+            </summary>
+            <typeparam name="T">The service type to register for.</typeparam>
+            <param name="resolver">The resolver to register the service type with.</param>
+            <param name="contract">A optional contract value which will indicates to only return the value if this contract is specified.</param>
+            <returns>The resolver.</returns>
+        </member>
+        <member name="M:Splat.ResolverMixins.RegisterConstantAnd``1(Splat.IMutableDependencyResolver,``0,System.String)">
+            <summary>
+            Registers a constant value which will always return the specified object instance.
+            </summary>
+            <typeparam name="T">The service type to register for.</typeparam>
+            <param name="resolver">The resolver to register the service type with.</param>
+            <param name="value">The specified instance to always return.</param>
+            <param name="contract">A optional contract value which will indicates to only return the value if this contract is specified.</param>
+            <returns>The resolver.</returns>
+        </member>
+        <member name="M:Splat.ResolverMixins.RegisterLazySingletonAnd(Splat.IMutableDependencyResolver,System.Func{System.Object},System.Type,System.String)">
+            <summary>
+            Registers a lazy singleton value which will always return the specified object instance once created.
+            The value is only generated once someone requests the service from the resolver.
+            </summary>
+            <param name="resolver">The resolver to register the service type with.</param>
+            <param name="valueFactory">A factory method for generating a object of the specified type.</param>
+            <param name="serviceType">The type of service to register.</param>
+            <param name="contract">A optional contract value which will indicates to only return the value if this contract is specified.</param>
+            <returns>The resolver.</returns>
+        </member>
+        <member name="M:Splat.ResolverMixins.RegisterLazySingletonAnd``1(Splat.IMutableDependencyResolver,System.String)">
+            <summary>
+            Registers a lazy singleton value which will always return the specified object instance once created.
+            The value is only generated once someone requests the service from the resolver.
+            </summary>
+            <typeparam name="T">The service type to register for.</typeparam>
+            <param name="resolver">The resolver to register the service type with.</param>
+            <param name="contract">A optional contract value which will indicates to only return the value if this contract is specified.</param>
+            <returns>The resolver.</returns>
+        </member>
+        <member name="M:Splat.ResolverMixins.RegisterLazySingletonAnd``1(Splat.IMutableDependencyResolver,System.Func{``0},System.String)">
+            <summary>
+            Registers a lazy singleton value which will always return the specified object instance once created.
+            The value is only generated once someone requests the service from the resolver.
+            </summary>
+            <typeparam name="T">The service type to register for.</typeparam>
+            <param name="resolver">The resolver to register the service type with.</param>
+            <param name="valueFactory">A factory method for generating a object of the specified type.</param>
+            <param name="contract">A optional contract value which will indicates to only return the value if this contract is specified.</param>
+            <returns>The resolver.</returns>
         </member>
         <member name="T:Splat.ServiceLocationInitialization">
             <summary>

@@ -178,14 +178,15 @@ namespace SCTBuilder
                     // Pass the single row of SSD data to the writing programs
                     if (dvSSD.Count != 0)
                         BuildSSD(dvSSD);
-                    if (BigResult.Length == 0) BigResult = CycleInfo.CycleHeader;
+                    if (BigResult.Length == 0) BigResult = CycleInfo.CycleHeader + cr;
                     if (InfoSection.IncludeSidStarReferences)
                         WriteSSDrefs();
                     // Is this a SID or STAR section?  The 1st character will tell
                     string Section = "STAR";
                     if (SSDID.Substring(0, 1) == "D") Section = "SID";
-                    BigResult += cr + "[" + Section + "]" + cr;
+                    BigResult += "[" + Section + "]" + cr;
                     WriteSSDLines();          // Since Labels depend on lines, call them there
+                    BigResult += WriteFooter(dvSSD[0]["SSDcode"].ToString());
                 }
                 OutputTextBox.Text = BigResult;
             }
@@ -296,7 +297,7 @@ namespace SCTBuilder
             // This is the header references
             // Write the file for this SSD
             string[] strOut = new string[6];
-            BigResult += cr + "[AIRPORT]" + cr;
+            BigResult += "[AIRPORT]" + cr;
             DataView dvAPT = new DataView(Form1.APT);
             DataView dvTWR = new DataView(Form1.TWR);
             foreach (string Arpt in APTsUsed)
@@ -383,6 +384,14 @@ namespace SCTBuilder
             result = result.PadRight(Pad) + DummyCoords;
             if (Comment.Length != 0) result += " ; " + Comment;
             return result;
+        }
+
+        private static string WriteFooter(string RegionTitle)
+        {
+            string footer = "; ======= END COMPUTED DATA * Do not remove this footer * ========" + cr +
+                            "; " + CycleInfo.AIRAC + " " + RegionTitle + cr +
+                            "; ================================================================" + cr;
+            return footer;
         }
 
         private static List<string> Add2ListIfNew(List<string> Fixes, string NewFix)

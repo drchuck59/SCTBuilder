@@ -419,26 +419,25 @@ namespace SCTBuilder
         }
 
         private static string cycleHeader;
+        
         public static string CycleHeader
         {
             get {return cycleHeader; }
             set
             {
                 cycleHeader =
-                "; ================================================================" + cr +
-                "; AIRAC CYCLE: " + CycleInfo.AIRAC + cr +
-                "; Cycle: " + CycleInfo.CycleStart.ToShortDateString() + " to " + CycleInfo.CycleEnd.ToShortDateString() + cr +
-                "; ================================================================" + cr;
+                    "; ================================================================" + cr +
+                    "; AIRAC " + CycleInfo.AIRAC + " (" + CycleInfo.CycleStart.ToShortDateString() + " to " + CycleInfo.CycleEnd.ToShortDateString() + ")" + cr +
+                    "; ================================================================";
             }
         }
 
         private static void BuildCycleHeader()
         {
             cycleHeader =
-            "; ================================================================" + cr +
-            "; AIRAC CYCLE: " + CycleInfo.AIRAC + cr +
-            "; Cycle: " + CycleInfo.CycleStart.ToShortDateString() + " to " + CycleInfo.CycleEnd.ToShortDateString() + cr +
-            "; ================================================================" + cr;
+                    "; ================================================================" + cr +
+                    "; AIRAC " + CycleInfo.AIRAC + " (" + CycleInfo.CycleStart.ToShortDateString() + " to " + CycleInfo.CycleEnd.ToShortDateString() + ")" + cr +
+                    "; ================================================================";
         }
     }
 }

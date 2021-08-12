@@ -342,6 +342,7 @@ namespace SCTBuilder
         {
             if (PreviewButtonReady())
             {
+                SCTcommon.UpdateLabel(WaitForCycleLabel, "Please wait for gridviews to load...");
                 string lastTab = "APTtabPage";
                 Cursor.Current = Cursors.WaitCursor;
                 SetChecked();               // Save all checkboxes to COMMON
@@ -385,7 +386,7 @@ namespace SCTBuilder
                 if (SCTchecked.ChkVOR)
                 {
                         SelectTableItems(VOR, filter);
-                        SCTcommon.UpdateLabel(UpdatingLabel, "Building VOR grid view from selection");
+                        SCTcommon.UpdateLabel(UpdatingLabel, "Building VOR grid view from selection", 1000);
                         lastTab = LoadVORGridView();
                 }
                 if (SCTchecked.ChkNDB)
@@ -467,7 +468,9 @@ namespace SCTBuilder
                     ReadNaviGraph.SelectNGTables(SetFilter(SelectNGdata));
                 }
                 SelectedTabControl.SelectedTab = SelectedTabControl.TabPages[lastTab];
+                UpdateGridCount();
                 SCTcommon.UpdateLabel(UpdatingLabel);
+                SCTcommon.UpdateLabel(WaitForCycleLabel);
                 Refresh();
                 SCTtoolStripButton.Enabled = ESEToolStripButton.Enabled = true;
             }

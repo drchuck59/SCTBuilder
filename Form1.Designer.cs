@@ -202,6 +202,10 @@
             this.label24 = new System.Windows.Forms.Label();
             this.WaitForCycleLabel = new System.Windows.Forms.Label();
             this.VORNDBPanel = new System.Windows.Forms.Panel();
+            this.VORStateTextBox = new System.Windows.Forms.TextBox();
+            this.label36 = new System.Windows.Forms.Label();
+            this.VORCityTextBox = new System.Windows.Forms.TextBox();
+            this.label35 = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
             this.VORClassTextBox = new System.Windows.Forms.TextBox();
             this.label34 = new System.Windows.Forms.Label();
@@ -223,10 +227,7 @@
             this.label26 = new System.Windows.Forms.Label();
             this.label25 = new System.Windows.Forms.Label();
             this.VORNameTextBox = new System.Windows.Forms.TextBox();
-            this.VORCityTextBox = new System.Windows.Forms.TextBox();
-            this.label35 = new System.Windows.Forms.Label();
-            this.VORStateTextBox = new System.Windows.Forms.TextBox();
-            this.label36 = new System.Windows.Forms.Label();
+            this.label37 = new System.Windows.Forms.Label();
             this.panelSUAs.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.AllMarginsNumericUpDown)).BeginInit();
             this.FilterGroupBox.SuspendLayout();
@@ -453,9 +454,9 @@
             this.chkbxShowAll.Location = new System.Drawing.Point(855, 791);
             this.chkbxShowAll.Margin = new System.Windows.Forms.Padding(3, 1, 3, 1);
             this.chkbxShowAll.Name = "chkbxShowAll";
-            this.chkbxShowAll.Size = new System.Drawing.Size(219, 21);
+            this.chkbxShowAll.Size = new System.Drawing.Size(298, 21);
             this.chkbxShowAll.TabIndex = 28;
-            this.chkbxShowAll.Text = "Ignore filter in gridview display";
+            this.chkbxShowAll.Text = "Show all items in selected  gridview display";
             this.toolTip1.SetToolTip(this.chkbxShowAll, "Check to see all items in table");
             this.chkbxShowAll.UseVisualStyleBackColor = false;
             this.chkbxShowAll.CheckedChanged += new System.EventHandler(this.ChkbxShowAll_CheckedChanged);
@@ -481,7 +482,7 @@
             this.panelSUAs.Controls.Add(this.label6);
             this.panelSUAs.Enabled = false;
             this.panelSUAs.Location = new System.Drawing.Point(589, 197);
-            this.panelSUAs.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.panelSUAs.Margin = new System.Windows.Forms.Padding(4);
             this.panelSUAs.Name = "panelSUAs";
             this.panelSUAs.Size = new System.Drawing.Size(243, 111);
             this.panelSUAs.TabIndex = 47;
@@ -492,7 +493,7 @@
             // 
             this.SUA_DangerCheckBox.AutoSize = true;
             this.SUA_DangerCheckBox.Location = new System.Drawing.Point(111, 80);
-            this.SUA_DangerCheckBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.SUA_DangerCheckBox.Margin = new System.Windows.Forms.Padding(4);
             this.SUA_DangerCheckBox.Name = "SUA_DangerCheckBox";
             this.SUA_DangerCheckBox.Size = new System.Drawing.Size(77, 21);
             this.SUA_DangerCheckBox.TabIndex = 6;
@@ -503,7 +504,7 @@
             // 
             this.SUA_ProhibitedCheckBox.AutoSize = true;
             this.SUA_ProhibitedCheckBox.Location = new System.Drawing.Point(111, 58);
-            this.SUA_ProhibitedCheckBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.SUA_ProhibitedCheckBox.Margin = new System.Windows.Forms.Padding(4);
             this.SUA_ProhibitedCheckBox.Name = "SUA_ProhibitedCheckBox";
             this.SUA_ProhibitedCheckBox.Size = new System.Drawing.Size(94, 21);
             this.SUA_ProhibitedCheckBox.TabIndex = 5;
@@ -514,7 +515,7 @@
             // 
             this.SUA_RestrictedCheckBox.AutoSize = true;
             this.SUA_RestrictedCheckBox.Location = new System.Drawing.Point(111, 36);
-            this.SUA_RestrictedCheckBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.SUA_RestrictedCheckBox.Margin = new System.Windows.Forms.Padding(4);
             this.SUA_RestrictedCheckBox.Name = "SUA_RestrictedCheckBox";
             this.SUA_RestrictedCheckBox.Size = new System.Drawing.Size(94, 21);
             this.SUA_RestrictedCheckBox.TabIndex = 4;
@@ -527,7 +528,7 @@
             this.SUA_ClassDCheckBox.Checked = true;
             this.SUA_ClassDCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
             this.SUA_ClassDCheckBox.Location = new System.Drawing.Point(20, 80);
-            this.SUA_ClassDCheckBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.SUA_ClassDCheckBox.Margin = new System.Windows.Forms.Padding(4);
             this.SUA_ClassDCheckBox.Name = "SUA_ClassDCheckBox";
             this.SUA_ClassDCheckBox.Size = new System.Drawing.Size(78, 21);
             this.SUA_ClassDCheckBox.TabIndex = 3;
@@ -540,7 +541,7 @@
             this.SUA_ClassCCheckBox.Checked = true;
             this.SUA_ClassCCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
             this.SUA_ClassCCheckBox.Location = new System.Drawing.Point(20, 57);
-            this.SUA_ClassCCheckBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.SUA_ClassCCheckBox.Margin = new System.Windows.Forms.Padding(4);
             this.SUA_ClassCCheckBox.Name = "SUA_ClassCCheckBox";
             this.SUA_ClassCCheckBox.Size = new System.Drawing.Size(77, 21);
             this.SUA_ClassCCheckBox.TabIndex = 2;
@@ -553,7 +554,7 @@
             this.SUA_ClassBCheckBox.Checked = true;
             this.SUA_ClassBCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
             this.SUA_ClassBCheckBox.Location = new System.Drawing.Point(20, 36);
-            this.SUA_ClassBCheckBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.SUA_ClassBCheckBox.Margin = new System.Windows.Forms.Padding(4);
             this.SUA_ClassBCheckBox.Name = "SUA_ClassBCheckBox";
             this.SUA_ClassBCheckBox.Size = new System.Drawing.Size(77, 21);
             this.SUA_ClassBCheckBox.TabIndex = 1;
@@ -737,22 +738,22 @@
             // 
             this.QuickSearchLabel.AutoSize = true;
             this.QuickSearchLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.QuickSearchLabel.Location = new System.Drawing.Point(1121, 342);
+            this.QuickSearchLabel.Location = new System.Drawing.Point(1284, 346);
             this.QuickSearchLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.QuickSearchLabel.Name = "QuickSearchLabel";
             this.QuickSearchLabel.Size = new System.Drawing.Size(110, 20);
             this.QuickSearchLabel.TabIndex = 60;
             this.QuickSearchLabel.Text = "QuickSearch:";
-            this.toolTip1.SetToolTip(this.QuickSearchLabel, "Searches ALL selected and UNselected items ");
+            this.toolTip1.SetToolTip(this.QuickSearchLabel, "Searches ALL items of the sorted column");
             // 
             // QuickSearchTextBox
             // 
-            this.QuickSearchTextBox.Location = new System.Drawing.Point(1241, 338);
-            this.QuickSearchTextBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.QuickSearchTextBox.Location = new System.Drawing.Point(1394, 345);
+            this.QuickSearchTextBox.Margin = new System.Windows.Forms.Padding(4);
             this.QuickSearchTextBox.Name = "QuickSearchTextBox";
-            this.QuickSearchTextBox.Size = new System.Drawing.Size(132, 22);
+            this.QuickSearchTextBox.Size = new System.Drawing.Size(75, 22);
             this.QuickSearchTextBox.TabIndex = 61;
-            this.toolTip1.SetToolTip(this.QuickSearchTextBox, "Searches ALL selected and UNselected items \r\nin last-sorted column.");
+            this.toolTip1.SetToolTip(this.QuickSearchTextBox, "Searches ALL items of the sorted column");
             this.QuickSearchTextBox.TextChanged += new System.EventHandler(this.QuickSearchTextBox_TextChanged);
             // 
             // OceanicCheckBox
@@ -794,7 +795,7 @@
             // 
             this.ESSSDCheckBox.AutoSize = true;
             this.ESSSDCheckBox.Location = new System.Drawing.Point(113, 25);
-            this.ESSSDCheckBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.ESSSDCheckBox.Margin = new System.Windows.Forms.Padding(4);
             this.ESSSDCheckBox.Name = "ESSSDCheckBox";
             this.ESSSDCheckBox.Size = new System.Drawing.Size(97, 21);
             this.ESSSDCheckBox.TabIndex = 1;
@@ -807,7 +808,7 @@
             // 
             this.ESdataCheckBox.AutoSize = true;
             this.ESdataCheckBox.Location = new System.Drawing.Point(9, 25);
-            this.ESdataCheckBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.ESdataCheckBox.Margin = new System.Windows.Forms.Padding(4);
             this.ESdataCheckBox.Name = "ESdataCheckBox";
             this.ESdataCheckBox.Size = new System.Drawing.Size(89, 21);
             this.ESdataCheckBox.TabIndex = 0;
@@ -1134,6 +1135,7 @@
             this.SelectedTabControl.SelectedIndex = 0;
             this.SelectedTabControl.Size = new System.Drawing.Size(621, 416);
             this.SelectedTabControl.TabIndex = 34;
+            this.toolTip1.SetToolTip(this.SelectedTabControl, "Click on column title to sort");
             // 
             // APTtabPage
             // 
@@ -1365,9 +1367,9 @@
             // 
             this.OceanicTabPage.Controls.Add(this.dgvOceanic);
             this.OceanicTabPage.Location = new System.Drawing.Point(4, 29);
-            this.OceanicTabPage.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.OceanicTabPage.Margin = new System.Windows.Forms.Padding(4);
             this.OceanicTabPage.Name = "OceanicTabPage";
-            this.OceanicTabPage.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.OceanicTabPage.Padding = new System.Windows.Forms.Padding(4);
             this.OceanicTabPage.Size = new System.Drawing.Size(613, 383);
             this.OceanicTabPage.TabIndex = 8;
             this.OceanicTabPage.Text = "Oceanic";
@@ -1798,7 +1800,7 @@
             // 
             this.ClassOtherCheckBox.AutoSize = true;
             this.ClassOtherCheckBox.Location = new System.Drawing.Point(345, 135);
-            this.ClassOtherCheckBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.ClassOtherCheckBox.Margin = new System.Windows.Forms.Padding(4);
             this.ClassOtherCheckBox.Name = "ClassOtherCheckBox";
             this.ClassOtherCheckBox.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.ClassOtherCheckBox.Size = new System.Drawing.Size(82, 21);
@@ -1813,7 +1815,7 @@
             this.ClassDCheckBox.Checked = true;
             this.ClassDCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
             this.ClassDCheckBox.Location = new System.Drawing.Point(292, 135);
-            this.ClassDCheckBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.ClassDCheckBox.Margin = new System.Windows.Forms.Padding(4);
             this.ClassDCheckBox.Name = "ClassDCheckBox";
             this.ClassDCheckBox.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.ClassDCheckBox.Size = new System.Drawing.Size(40, 21);
@@ -1828,7 +1830,7 @@
             this.ClassCCheckBox.Checked = true;
             this.ClassCCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
             this.ClassCCheckBox.Location = new System.Drawing.Point(240, 135);
-            this.ClassCCheckBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.ClassCCheckBox.Margin = new System.Windows.Forms.Padding(4);
             this.ClassCCheckBox.Name = "ClassCCheckBox";
             this.ClassCCheckBox.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.ClassCCheckBox.Size = new System.Drawing.Size(39, 21);
@@ -1843,7 +1845,7 @@
             this.ClassBCheckBox.Checked = true;
             this.ClassBCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
             this.ClassBCheckBox.Location = new System.Drawing.Point(99, 135);
-            this.ClassBCheckBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.ClassBCheckBox.Margin = new System.Windows.Forms.Padding(4);
             this.ClassBCheckBox.Name = "ClassBCheckBox";
             this.ClassBCheckBox.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.ClassBCheckBox.Size = new System.Drawing.Size(128, 21);
@@ -1970,11 +1972,11 @@
             this.UpdatingLabel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(224)))), ((int)(((byte)(192)))));
             this.UpdatingLabel.Enabled = false;
             this.UpdatingLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.UpdatingLabel.Location = new System.Drawing.Point(856, 337);
+            this.UpdatingLabel.Location = new System.Drawing.Point(856, 345);
             this.UpdatingLabel.Name = "UpdatingLabel";
-            this.UpdatingLabel.Size = new System.Drawing.Size(19, 20);
+            this.UpdatingLabel.Size = new System.Drawing.Size(126, 20);
             this.UpdatingLabel.TabIndex = 59;
-            this.UpdatingLabel.Text = "  ";
+            this.UpdatingLabel.Text = "  UpdatingLabel";
             this.UpdatingLabel.Visible = false;
             // 
             // exitToolStripMenuItem
@@ -1989,9 +1991,9 @@
             this.groupBox2.Controls.Add(this.ESSSDCheckBox);
             this.groupBox2.Controls.Add(this.ESdataCheckBox);
             this.groupBox2.Location = new System.Drawing.Point(601, 565);
-            this.groupBox2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupBox2.Margin = new System.Windows.Forms.Padding(4);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupBox2.Padding = new System.Windows.Forms.Padding(4);
             this.groupBox2.Size = new System.Drawing.Size(231, 52);
             this.groupBox2.TabIndex = 62;
             this.groupBox2.TabStop = false;
@@ -2025,7 +2027,7 @@
             this.APTpanel.Controls.Add(this.ICAOTextBox);
             this.APTpanel.Controls.Add(this.label24);
             this.APTpanel.Location = new System.Drawing.Point(887, 86);
-            this.APTpanel.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.APTpanel.Margin = new System.Windows.Forms.Padding(4);
             this.APTpanel.Name = "APTpanel";
             this.APTpanel.Size = new System.Drawing.Size(584, 245);
             this.APTpanel.TabIndex = 63;
@@ -2035,7 +2037,7 @@
             // 
             this.ClosePanelButton.BackColor = System.Drawing.Color.Red;
             this.ClosePanelButton.Location = new System.Drawing.Point(536, 20);
-            this.ClosePanelButton.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.ClosePanelButton.Margin = new System.Windows.Forms.Padding(4);
             this.ClosePanelButton.Name = "ClosePanelButton";
             this.ClosePanelButton.Size = new System.Drawing.Size(35, 26);
             this.ClosePanelButton.TabIndex = 48;
@@ -2057,7 +2059,7 @@
             // 
             this.ElevationTextBox.Enabled = false;
             this.ElevationTextBox.Location = new System.Drawing.Point(439, 21);
-            this.ElevationTextBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.ElevationTextBox.Margin = new System.Windows.Forms.Padding(4);
             this.ElevationTextBox.Name = "ElevationTextBox";
             this.ElevationTextBox.Size = new System.Drawing.Size(53, 22);
             this.ElevationTextBox.TabIndex = 46;
@@ -2076,7 +2078,7 @@
             // 
             this.StateTextBox.Enabled = false;
             this.StateTextBox.Location = new System.Drawing.Point(152, 181);
-            this.StateTextBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.StateTextBox.Margin = new System.Windows.Forms.Padding(4);
             this.StateTextBox.Name = "StateTextBox";
             this.StateTextBox.Size = new System.Drawing.Size(340, 22);
             this.StateTextBox.TabIndex = 44;
@@ -2095,7 +2097,7 @@
             // 
             this.CityTextBox.Enabled = false;
             this.CityTextBox.Location = new System.Drawing.Point(152, 149);
-            this.CityTextBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.CityTextBox.Margin = new System.Windows.Forms.Padding(4);
             this.CityTextBox.Name = "CityTextBox";
             this.CityTextBox.Size = new System.Drawing.Size(340, 22);
             this.CityTextBox.TabIndex = 42;
@@ -2114,7 +2116,7 @@
             // 
             this.OwningARTTCTextBox.Enabled = false;
             this.OwningARTTCTextBox.Location = new System.Drawing.Point(152, 212);
-            this.OwningARTTCTextBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.OwningARTTCTextBox.Margin = new System.Windows.Forms.Padding(4);
             this.OwningARTTCTextBox.Name = "OwningARTTCTextBox";
             this.OwningARTTCTextBox.Size = new System.Drawing.Size(63, 22);
             this.OwningARTTCTextBox.TabIndex = 40;
@@ -2143,7 +2145,7 @@
             // 
             this.LonSCTTextBox.Enabled = false;
             this.LonSCTTextBox.Location = new System.Drawing.Point(360, 117);
-            this.LonSCTTextBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.LonSCTTextBox.Margin = new System.Windows.Forms.Padding(4);
             this.LonSCTTextBox.Name = "LonSCTTextBox";
             this.LonSCTTextBox.Size = new System.Drawing.Size(132, 22);
             this.LonSCTTextBox.TabIndex = 37;
@@ -2152,7 +2154,7 @@
             // 
             this.LatSCTTextBox.Enabled = false;
             this.LatSCTTextBox.Location = new System.Drawing.Point(152, 117);
-            this.LatSCTTextBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.LatSCTTextBox.Margin = new System.Windows.Forms.Padding(4);
             this.LatSCTTextBox.Name = "LatSCTTextBox";
             this.LatSCTTextBox.Size = new System.Drawing.Size(125, 22);
             this.LatSCTTextBox.TabIndex = 36;
@@ -2161,7 +2163,7 @@
             // 
             this.LonDecTextBox.Enabled = false;
             this.LonDecTextBox.Location = new System.Drawing.Point(360, 85);
-            this.LonDecTextBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.LonDecTextBox.Margin = new System.Windows.Forms.Padding(4);
             this.LonDecTextBox.Name = "LonDecTextBox";
             this.LonDecTextBox.Size = new System.Drawing.Size(132, 22);
             this.LonDecTextBox.TabIndex = 35;
@@ -2180,7 +2182,7 @@
             // 
             this.LatDecTextBox.Enabled = false;
             this.LatDecTextBox.Location = new System.Drawing.Point(151, 85);
-            this.LatDecTextBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.LatDecTextBox.Margin = new System.Windows.Forms.Padding(4);
             this.LatDecTextBox.Name = "LatDecTextBox";
             this.LatDecTextBox.Size = new System.Drawing.Size(125, 22);
             this.LatDecTextBox.TabIndex = 33;
@@ -2199,7 +2201,7 @@
             // 
             this.DataIDTextBox.Enabled = false;
             this.DataIDTextBox.Location = new System.Drawing.Point(407, 212);
-            this.DataIDTextBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.DataIDTextBox.Margin = new System.Windows.Forms.Padding(4);
             this.DataIDTextBox.Name = "DataIDTextBox";
             this.DataIDTextBox.Size = new System.Drawing.Size(85, 22);
             this.DataIDTextBox.TabIndex = 31;
@@ -2218,7 +2220,7 @@
             // 
             this.FacIDTextBox.Enabled = false;
             this.FacIDTextBox.Location = new System.Drawing.Point(287, 21);
-            this.FacIDTextBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.FacIDTextBox.Margin = new System.Windows.Forms.Padding(4);
             this.FacIDTextBox.Name = "FacIDTextBox";
             this.FacIDTextBox.Size = new System.Drawing.Size(63, 22);
             this.FacIDTextBox.TabIndex = 29;
@@ -2237,7 +2239,7 @@
             // 
             this.NameTextBox.Enabled = false;
             this.NameTextBox.Location = new System.Drawing.Point(151, 53);
-            this.NameTextBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.NameTextBox.Margin = new System.Windows.Forms.Padding(4);
             this.NameTextBox.Name = "NameTextBox";
             this.NameTextBox.Size = new System.Drawing.Size(341, 22);
             this.NameTextBox.TabIndex = 27;
@@ -2256,7 +2258,7 @@
             // 
             this.ICAOTextBox.Enabled = false;
             this.ICAOTextBox.Location = new System.Drawing.Point(151, 21);
-            this.ICAOTextBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.ICAOTextBox.Margin = new System.Windows.Forms.Padding(4);
             this.ICAOTextBox.Name = "ICAOTextBox";
             this.ICAOTextBox.Size = new System.Drawing.Size(64, 22);
             this.ICAOTextBox.TabIndex = 25;
@@ -2275,12 +2277,12 @@
             // 
             this.WaitForCycleLabel.AutoSize = true;
             this.WaitForCycleLabel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(128)))));
-            this.WaitForCycleLabel.Location = new System.Drawing.Point(21, 181);
+            this.WaitForCycleLabel.Location = new System.Drawing.Point(21, 185);
             this.WaitForCycleLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.WaitForCycleLabel.Name = "WaitForCycleLabel";
-            this.WaitForCycleLabel.Size = new System.Drawing.Size(54, 17);
+            this.WaitForCycleLabel.Size = new System.Drawing.Size(75, 17);
             this.WaitForCycleLabel.TabIndex = 65;
-            this.WaitForCycleLabel.Text = "label26";
+            this.WaitForCycleLabel.Text = "Wait Label";
             this.WaitForCycleLabel.Visible = false;
             // 
             // VORNDBPanel
@@ -2311,17 +2313,59 @@
             this.VORNDBPanel.Controls.Add(this.label25);
             this.VORNDBPanel.Controls.Add(this.VORNameTextBox);
             this.VORNDBPanel.Location = new System.Drawing.Point(889, 87);
-            this.VORNDBPanel.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.VORNDBPanel.Margin = new System.Windows.Forms.Padding(4);
             this.VORNDBPanel.Name = "VORNDBPanel";
             this.VORNDBPanel.Size = new System.Drawing.Size(580, 244);
             this.VORNDBPanel.TabIndex = 66;
             this.VORNDBPanel.Visible = false;
             // 
+            // VORStateTextBox
+            // 
+            this.VORStateTextBox.Enabled = false;
+            this.VORStateTextBox.Location = new System.Drawing.Point(316, 153);
+            this.VORStateTextBox.Margin = new System.Windows.Forms.Padding(4);
+            this.VORStateTextBox.Name = "VORStateTextBox";
+            this.VORStateTextBox.ReadOnly = true;
+            this.VORStateTextBox.Size = new System.Drawing.Size(32, 22);
+            this.VORStateTextBox.TabIndex = 60;
+            this.VORStateTextBox.TabStop = false;
+            // 
+            // label36
+            // 
+            this.label36.AutoSize = true;
+            this.label36.Location = new System.Drawing.Point(268, 156);
+            this.label36.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label36.Name = "label36";
+            this.label36.Size = new System.Drawing.Size(41, 17);
+            this.label36.TabIndex = 59;
+            this.label36.Text = "State";
+            // 
+            // VORCityTextBox
+            // 
+            this.VORCityTextBox.Enabled = false;
+            this.VORCityTextBox.Location = new System.Drawing.Point(133, 152);
+            this.VORCityTextBox.Margin = new System.Windows.Forms.Padding(4);
+            this.VORCityTextBox.Name = "VORCityTextBox";
+            this.VORCityTextBox.ReadOnly = true;
+            this.VORCityTextBox.Size = new System.Drawing.Size(125, 22);
+            this.VORCityTextBox.TabIndex = 58;
+            this.VORCityTextBox.TabStop = false;
+            // 
+            // label35
+            // 
+            this.label35.AutoSize = true;
+            this.label35.Location = new System.Drawing.Point(87, 155);
+            this.label35.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label35.Name = "label35";
+            this.label35.Size = new System.Drawing.Size(31, 17);
+            this.label35.TabIndex = 57;
+            this.label35.Text = "City";
+            // 
             // button1
             // 
             this.button1.BackColor = System.Drawing.Color.Red;
             this.button1.Location = new System.Drawing.Point(519, 18);
-            this.button1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.button1.Margin = new System.Windows.Forms.Padding(4);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(35, 26);
             this.button1.TabIndex = 56;
@@ -2333,7 +2377,7 @@
             // 
             this.VORClassTextBox.Enabled = false;
             this.VORClassTextBox.Location = new System.Drawing.Point(342, 186);
-            this.VORClassTextBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.VORClassTextBox.Margin = new System.Windows.Forms.Padding(4);
             this.VORClassTextBox.Name = "VORClassTextBox";
             this.VORClassTextBox.ReadOnly = true;
             this.VORClassTextBox.Size = new System.Drawing.Size(129, 22);
@@ -2354,7 +2398,7 @@
             // 
             this.VORFrequencyTextBox.Enabled = false;
             this.VORFrequencyTextBox.Location = new System.Drawing.Point(401, 154);
-            this.VORFrequencyTextBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.VORFrequencyTextBox.Margin = new System.Windows.Forms.Padding(4);
             this.VORFrequencyTextBox.Name = "VORFrequencyTextBox";
             this.VORFrequencyTextBox.ReadOnly = true;
             this.VORFrequencyTextBox.Size = new System.Drawing.Size(71, 22);
@@ -2385,7 +2429,7 @@
             // 
             this.VOROwningARTCCTextBox.Enabled = false;
             this.VOROwningARTCCTextBox.Location = new System.Drawing.Point(133, 186);
-            this.VOROwningARTCCTextBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.VOROwningARTCCTextBox.Margin = new System.Windows.Forms.Padding(4);
             this.VOROwningARTCCTextBox.Name = "VOROwningARTCCTextBox";
             this.VOROwningARTCCTextBox.ReadOnly = true;
             this.VOROwningARTCCTextBox.Size = new System.Drawing.Size(63, 22);
@@ -2406,7 +2450,7 @@
             // 
             this.VORTypeTextBox.Enabled = false;
             this.VORTypeTextBox.Location = new System.Drawing.Point(261, 20);
-            this.VORTypeTextBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.VORTypeTextBox.Margin = new System.Windows.Forms.Padding(4);
             this.VORTypeTextBox.Name = "VORTypeTextBox";
             this.VORTypeTextBox.ReadOnly = true;
             this.VORTypeTextBox.Size = new System.Drawing.Size(212, 22);
@@ -2437,7 +2481,7 @@
             // 
             this.VORLonSCTTextbox.Enabled = false;
             this.VORLonSCTTextbox.Location = new System.Drawing.Point(341, 118);
-            this.VORLonSCTTextbox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.VORLonSCTTextbox.Margin = new System.Windows.Forms.Padding(4);
             this.VORLonSCTTextbox.Name = "VORLonSCTTextbox";
             this.VORLonSCTTextbox.ReadOnly = true;
             this.VORLonSCTTextbox.Size = new System.Drawing.Size(132, 22);
@@ -2448,7 +2492,7 @@
             // 
             this.VORLatSCTTextbox.Enabled = false;
             this.VORLatSCTTextbox.Location = new System.Drawing.Point(133, 118);
-            this.VORLatSCTTextbox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.VORLatSCTTextbox.Margin = new System.Windows.Forms.Padding(4);
             this.VORLatSCTTextbox.Name = "VORLatSCTTextbox";
             this.VORLatSCTTextbox.ReadOnly = true;
             this.VORLatSCTTextbox.Size = new System.Drawing.Size(125, 22);
@@ -2459,7 +2503,7 @@
             // 
             this.VORLonDECTextBoc.Enabled = false;
             this.VORLonDECTextBoc.Location = new System.Drawing.Point(341, 86);
-            this.VORLonDECTextBoc.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.VORLonDECTextBoc.Margin = new System.Windows.Forms.Padding(4);
             this.VORLonDECTextBoc.Name = "VORLonDECTextBoc";
             this.VORLonDECTextBoc.ReadOnly = true;
             this.VORLonDECTextBoc.Size = new System.Drawing.Size(132, 22);
@@ -2480,7 +2524,7 @@
             // 
             this.VORLatDECTextBox.Enabled = false;
             this.VORLatDECTextBox.Location = new System.Drawing.Point(132, 86);
-            this.VORLatDECTextBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.VORLatDECTextBox.Margin = new System.Windows.Forms.Padding(4);
             this.VORLatDECTextBox.Name = "VORLatDECTextBox";
             this.VORLatDECTextBox.ReadOnly = true;
             this.VORLatDECTextBox.Size = new System.Drawing.Size(125, 22);
@@ -2501,7 +2545,7 @@
             // 
             this.VORIDTextbox.Enabled = false;
             this.VORIDTextbox.Location = new System.Drawing.Point(133, 20);
-            this.VORIDTextbox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.VORIDTextbox.Margin = new System.Windows.Forms.Padding(4);
             this.VORIDTextbox.Name = "VORIDTextbox";
             this.VORIDTextbox.ReadOnly = true;
             this.VORIDTextbox.Size = new System.Drawing.Size(63, 22);
@@ -2531,54 +2575,22 @@
             // VORNameTextBox
             // 
             this.VORNameTextBox.Location = new System.Drawing.Point(135, 52);
-            this.VORNameTextBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.VORNameTextBox.Margin = new System.Windows.Forms.Padding(4);
             this.VORNameTextBox.Name = "VORNameTextBox";
             this.VORNameTextBox.ReadOnly = true;
             this.VORNameTextBox.Size = new System.Drawing.Size(339, 22);
             this.VORNameTextBox.TabIndex = 0;
             this.VORNameTextBox.TabStop = false;
             // 
-            // VORCityTextBox
+            // label37
             // 
-            this.VORCityTextBox.Enabled = false;
-            this.VORCityTextBox.Location = new System.Drawing.Point(133, 152);
-            this.VORCityTextBox.Margin = new System.Windows.Forms.Padding(4);
-            this.VORCityTextBox.Name = "VORCityTextBox";
-            this.VORCityTextBox.ReadOnly = true;
-            this.VORCityTextBox.Size = new System.Drawing.Size(125, 22);
-            this.VORCityTextBox.TabIndex = 58;
-            this.VORCityTextBox.TabStop = false;
-            // 
-            // label35
-            // 
-            this.label35.AutoSize = true;
-            this.label35.Location = new System.Drawing.Point(87, 155);
-            this.label35.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label35.Name = "label35";
-            this.label35.Size = new System.Drawing.Size(31, 17);
-            this.label35.TabIndex = 57;
-            this.label35.Text = "City";
-            // 
-            // VORStateTextBox
-            // 
-            this.VORStateTextBox.Enabled = false;
-            this.VORStateTextBox.Location = new System.Drawing.Point(316, 153);
-            this.VORStateTextBox.Margin = new System.Windows.Forms.Padding(4);
-            this.VORStateTextBox.Name = "VORStateTextBox";
-            this.VORStateTextBox.ReadOnly = true;
-            this.VORStateTextBox.Size = new System.Drawing.Size(32, 22);
-            this.VORStateTextBox.TabIndex = 60;
-            this.VORStateTextBox.TabStop = false;
-            // 
-            // label36
-            // 
-            this.label36.AutoSize = true;
-            this.label36.Location = new System.Drawing.Point(268, 156);
-            this.label36.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label36.Name = "label36";
-            this.label36.Size = new System.Drawing.Size(41, 17);
-            this.label36.TabIndex = 59;
-            this.label36.Text = "State";
+            this.label37.AutoSize = true;
+            this.label37.BackColor = System.Drawing.Color.Transparent;
+            this.label37.Location = new System.Drawing.Point(1264, 794);
+            this.label37.Name = "label37";
+            this.label37.Size = new System.Drawing.Size(93, 17);
+            this.label37.TabIndex = 67;
+            this.label37.Text = "Displayed/All:";
             // 
             // Form1
             // 
@@ -2588,6 +2600,7 @@
             this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(1511, 826);
+            this.Controls.Add(this.label37);
             this.Controls.Add(this.VORNDBPanel);
             this.Controls.Add(this.WaitForCycleLabel);
             this.Controls.Add(this.APTpanel);
@@ -2869,6 +2882,7 @@
         private System.Windows.Forms.Label label36;
         private System.Windows.Forms.TextBox VORCityTextBox;
         private System.Windows.Forms.Label label35;
+        private System.Windows.Forms.Label label37;
     }
 }
 
