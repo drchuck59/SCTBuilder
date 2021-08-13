@@ -178,14 +178,15 @@ namespace SCTBuilder
                     // Pass the single row of SSD data to the writing programs
                     if (dvSSD.Count != 0)
                         BuildSSD(dvSSD);
-                    if (BigResult.Length == 0) BigResult = CycleInfo.CycleHeader;
+                    if (BigResult.Length == 0) BigResult = CycleInfo.CycleHeader + cr;
                     if (InfoSection.IncludeSidStarReferences)
                         WriteSSDrefs();
                     // Is this a SID or STAR section?  The 1st character will tell
                     string Section = "STAR";
                     if (SSDID.Substring(0, 1) == "D") Section = "SID";
-                    BigResult += cr + "[" + Section + "]" + cr;
+                    BigResult += "[" + Section + "]" + cr;
                     WriteSSDLines();          // Since Labels depend on lines, call them there
+                    BigResult += WriteFooter(dvSSD[0]["SSDcode"].ToString());
                 }
                 OutputTextBox.Text = BigResult;
             }
@@ -203,16 +204,31 @@ namespace SCTBuilder
             double Lat0 = -1; double Lon0 = -1;
             string lastFix = string.Empty; string curFix; string FixType0;
             string FixType1; string SSDname; string TransitionName;
-            string SSDcode; string TransitionCode;
-            int FixCount0; int FixCount1;
+            string SSDcode; string TransitionCode; char Prefix = '\0';
+            int FixCount0; int FixCount1; int MarkCount = 0;
 
             // Get the name and code for this SSD
             SSDname = dvSSD[0]["SSDName"].ToString();
             SSDcode = dvSSD[0]["SSDcode"].ToString();
-
             SSDlines.Add(cr);
-            SSDlines.Add(SSDHeader(SSDcode, "(" + SSDname + ")", 1, '-'));
-
+            // SSDcode, SSD name, # of prefix chars, char to be used)
+            if ((bool)dvSSD[0]["IsSID"])
+            {
+                if (InfoSection.SIDprefix != '\0')
+                {
+                    Prefix = InfoSection.SIDprefix;
+                    MarkCount = 1;
+                }
+            }
+            else
+            {
+                if (InfoSection.SIDprefix != '\0')
+                {
+                    Prefix = InfoSection.STARprefix;
+                    MarkCount = 1;
+                }
+            }
+            SSDlines.Add(SSDHeader(SSDcode, "(" + SSDname + ")", MarkCount, Prefix));
             // Now loop the entire SSD to get the lines, etc.
             foreach (DataRowView SSDrow in dvSSD)
             {
@@ -281,7 +297,7 @@ namespace SCTBuilder
             // This is the header references
             // Write the file for this SSD
             string[] strOut = new string[6];
-            BigResult += cr + "[AIRPORT]" + cr;
+            BigResult += "[AIRPORT]" + cr;
             DataView dvAPT = new DataView(Form1.APT);
             DataView dvTWR = new DataView(Form1.TWR);
             foreach (string Arpt in APTsUsed)
@@ -368,6 +384,14 @@ namespace SCTBuilder
             result = result.PadRight(Pad) + DummyCoords;
             if (Comment.Length != 0) result += " ; " + Comment;
             return result;
+        }
+
+        private static string WriteFooter(string RegionTitle)
+        {
+            string footer = "; ======= END COMPUTED DATA * Do not remove this footer * ========" + cr +
+                            "; " + CycleInfo.AIRAC + " " + RegionTitle + cr +
+                            "; ================================================================" + cr;
+            return footer;
         }
 
         private static List<string> Add2ListIfNew(List<string> Fixes, string NewFix)

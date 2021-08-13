@@ -544,6 +544,8 @@ namespace SCTBuilder
         private static double southoffset = 0;
         private static double westoffset = 0;
         private static double eastoffset = 0;
+        private static char sIDprefix;
+        private static char sTARprefix;
 
         public static string SectorName
         {
@@ -632,9 +634,9 @@ namespace SCTBuilder
         public static bool UseFixesAsCoords
         {
             get { return useFixesAsCoords; }
-            set { useFixesAsCoords = value; } 
+            set { useFixesAsCoords = value; }
         }
-        
+
         public static bool DrawFixLabelsOnDiagrams
         {
             get { return drawFixLabelsOnDiagrams; }
@@ -661,7 +663,7 @@ namespace SCTBuilder
 
         public static bool UseNaviGraph
         {
-            get { return useNaviGraphData; } 
+            get { return useNaviGraphData; }
             set { useNaviGraphData = value; }
         }
         public static bool HasNaviGraph
@@ -678,7 +680,7 @@ namespace SCTBuilder
 
         public static bool RollOverLongitude
         {
-            get { return rolloverLongitude; } 
+            get { return rolloverLongitude; }
             set { rolloverLongitude = value; }
         }
 
@@ -734,6 +736,19 @@ namespace SCTBuilder
             get { return westoffset; }
             set { westoffset = value; }
         }
+
+        public static char SIDprefix
+        {
+            get { return sIDprefix; }
+            set { sIDprefix = value; }
+        }
+
+        public static char STARprefix
+        {
+            get { return sTARprefix; }
+            set { sTARprefix = value; }
+        }
+
         public static double SectorScale { get { return 1f; } }      // Always 1, ignored in VRC
     }
     public static class SCTchecked

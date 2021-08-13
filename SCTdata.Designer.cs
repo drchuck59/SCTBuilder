@@ -1631,6 +1631,8 @@ namespace SCTBuilder {
             
             private global::System.Data.DataColumn columnARTCC;
             
+            private global::System.Data.DataColumn columnCity;
+            
             private global::System.Data.DataColumn columnState;
             
             private global::System.Data.DataColumn columnMagVar;
@@ -1732,6 +1734,14 @@ namespace SCTBuilder {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn CityColumn {
+                get {
+                    return this.columnCity;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public global::System.Data.DataColumn StateColumn {
                 get {
                     return this.columnState;
@@ -1807,7 +1817,7 @@ namespace SCTBuilder {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public VORRow AddVORRow(string ID, string FacilityID, string Name, double Latitude, double Longitude, string Frequency, string ARTCC, string State, double MagVar, string FixType, string FixClass, bool Selected) {
+            public VORRow AddVORRow(string ID, string FacilityID, string Name, double Latitude, double Longitude, string Frequency, string ARTCC, string City, string State, double MagVar, string FixType, string FixClass, bool Selected) {
                 VORRow rowVORRow = ((VORRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         ID,
@@ -1817,6 +1827,7 @@ namespace SCTBuilder {
                         Longitude,
                         Frequency,
                         ARTCC,
+                        City,
                         State,
                         MagVar,
                         FixType,
@@ -1858,6 +1869,7 @@ namespace SCTBuilder {
                 this.columnLongitude = base.Columns["Longitude"];
                 this.columnFrequency = base.Columns["Frequency"];
                 this.columnARTCC = base.Columns["ARTCC"];
+                this.columnCity = base.Columns["City"];
                 this.columnState = base.Columns["State"];
                 this.columnMagVar = base.Columns["MagVar"];
                 this.columnFixType = base.Columns["FixType"];
@@ -1882,6 +1894,8 @@ namespace SCTBuilder {
                 base.Columns.Add(this.columnFrequency);
                 this.columnARTCC = new global::System.Data.DataColumn("ARTCC", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnARTCC);
+                this.columnCity = new global::System.Data.DataColumn("City", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnCity);
                 this.columnState = new global::System.Data.DataColumn("State", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnState);
                 this.columnMagVar = new global::System.Data.DataColumn("MagVar", typeof(double), null, global::System.Data.MappingType.Element);
@@ -2043,6 +2057,8 @@ namespace SCTBuilder {
             
             private global::System.Data.DataColumn columnARTCC;
             
+            private global::System.Data.DataColumn columnCity;
+            
             private global::System.Data.DataColumn columnState;
             
             private global::System.Data.DataColumn columnMagVar;
@@ -2144,6 +2160,14 @@ namespace SCTBuilder {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn CityColumn {
+                get {
+                    return this.columnCity;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public global::System.Data.DataColumn StateColumn {
                 get {
                     return this.columnState;
@@ -2219,7 +2243,7 @@ namespace SCTBuilder {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public NDBRow AddNDBRow(string ID, string FacilityID, string Name, double Latitude, double Longitude, string Frequency, string ARTCC, string State, double MagVar, string FixType, string FixClass, bool Selected) {
+            public NDBRow AddNDBRow(string ID, string FacilityID, string Name, double Latitude, double Longitude, string Frequency, string ARTCC, string City, string State, double MagVar, string FixType, string FixClass, bool Selected) {
                 NDBRow rowNDBRow = ((NDBRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         ID,
@@ -2229,6 +2253,7 @@ namespace SCTBuilder {
                         Longitude,
                         Frequency,
                         ARTCC,
+                        City,
                         State,
                         MagVar,
                         FixType,
@@ -2270,6 +2295,7 @@ namespace SCTBuilder {
                 this.columnLongitude = base.Columns["Longitude"];
                 this.columnFrequency = base.Columns["Frequency"];
                 this.columnARTCC = base.Columns["ARTCC"];
+                this.columnCity = base.Columns["City"];
                 this.columnState = base.Columns["State"];
                 this.columnMagVar = base.Columns["MagVar"];
                 this.columnFixType = base.Columns["FixType"];
@@ -2294,6 +2320,8 @@ namespace SCTBuilder {
                 base.Columns.Add(this.columnFrequency);
                 this.columnARTCC = new global::System.Data.DataColumn("ARTCC", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnARTCC);
+                this.columnCity = new global::System.Data.DataColumn("City", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnCity);
                 this.columnState = new global::System.Data.DataColumn("State", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnState);
                 this.columnMagVar = new global::System.Data.DataColumn("MagVar", typeof(double), null, global::System.Data.MappingType.Element);
@@ -7873,6 +7901,22 @@ namespace SCTBuilder {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public string City {
+                get {
+                    try {
+                        return ((string)(this[this.tableVOR.CityColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'City\' in table \'VOR\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableVOR.CityColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public string State {
                 get {
                     try {
@@ -8021,6 +8065,18 @@ namespace SCTBuilder {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public void SetARTCCNull() {
                 this[this.tableVOR.ARTCCColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsCityNull() {
+                return this.IsNull(this.tableVOR.CityColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetCityNull() {
+                this[this.tableVOR.CityColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -8207,6 +8263,22 @@ namespace SCTBuilder {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public string City {
+                get {
+                    try {
+                        return ((string)(this[this.tableNDB.CityColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'City\' in table \'NDB\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableNDB.CityColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public string State {
                 get {
                     try {
@@ -8355,6 +8427,18 @@ namespace SCTBuilder {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public void SetARTCCNull() {
                 this[this.tableNDB.ARTCCColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsCityNull() {
+                return this.IsNull(this.tableNDB.CityColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetCityNull() {
+                this[this.tableNDB.CityColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
