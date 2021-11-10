@@ -422,7 +422,7 @@ namespace SCTBuilder
 
         public static readonly DirectoryInfo INIdirectory = Directory.CreateDirectory(AppDataFolder);
 
-        public static readonly string INIFilePath = INIdirectory.FullName + "SCTBuilder.xml";
+        public static readonly string INIFilePath = INIdirectory.FullName + "\\SCTBuilder.xml";
 
     }
 
