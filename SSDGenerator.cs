@@ -19,6 +19,7 @@ namespace SCTBuilder
         private static bool IncludeSidStarReferences;
         private static bool DrawFixSymbolsOnDiagrams;
         private static bool DrawFixLabelsOnDiagrams;
+        private static char prefix = InfoSection.STARprefix;
         static readonly string cr = Environment.NewLine;
         static List<object> FixData = new List<object>();
         static List<object> VORData = new List<object>();
@@ -26,8 +27,10 @@ namespace SCTBuilder
         static List<string> SSDlines = new List<string>();
         static List<string> FixesUsed = new List<string>();
         static List<string> APTsUsed = new List<string>();
-        private static string BigResult = string.Empty;
-        private static string SSDID = string.Empty;
+        static string RefResult = string.Empty;
+        public static string BigResult = string.Empty;
+        public static string SSDID = string.Empty;
+        public static string SSDcode = string.Empty;
         public SSDGenerator()
         {
             InitializeComponent();
@@ -149,6 +152,12 @@ namespace SCTBuilder
         {
             OutputTextBox.Text = string.Empty;
             OutputTextBox.Refresh();
+            ClearVariables();
+        }
+
+        private static void ClearVariables()
+        {
+            RefResult = string.Empty;
             BigResult = string.Empty;
             FixData = new List<object>();
             VORData = new List<object>();
@@ -156,79 +165,78 @@ namespace SCTBuilder
             SSDlines = new List<string>();
             FixesUsed = new List<string>();
             APTsUsed = new List<string>();
+            prefix = InfoSection.STARprefix;
         }
 
         private void AddLinesButton_Click(object sender, EventArgs e)
         {
             if (IdentifierTextBox.Text != FixListDataGridView.CurrentRow.Cells[0].Value.ToString())
-                SCTcommon.SendMessage("Double click the desired diagram first.");
+            {
+                SCTcommon.SendMessage("Exact match required. Hint: Double click the desired procedure first.");
+                AddLinesButton.Enabled = false;
+            }
             else
             {
                 SCTcommon.UpdateLabel(UpdatingLabel, "Working on it");
                 Refresh();
                 if (FixListDataGridView.CurrentRow != null)
                 {
-                    // Clear the prior data, if any
-                    DataTable SSD = Form1.SSD;
-                    DataView dvSSD = new DataView(SSD)
-                    {
-                        RowFilter = "[ID] = '" + SSDID + "'",
-                        Sort = "Sequence",
-                    };
-                    // Pass the single row of SSD data to the writing programs
-                    if (dvSSD.Count != 0)
-                        BuildSSD(dvSSD);
-                    if (BigResult.Length == 0) BigResult = CycleInfo.CycleHeader + cr;
-                    if (InfoSection.IncludeSidStarReferences)
-                        WriteSSDrefs();
-                    // Is this a SID or STAR section?  The 1st character will tell
-                    string Section = "STAR";
-                    if (SSDID.Substring(0, 1) == "D") Section = "SID";
-                    BigResult += "[" + Section + "]" + cr;
-                    WriteSSDLines();          // Since Labels depend on lines, call them there
-                    BigResult += WriteFooter(dvSSD[0]["SSDcode"].ToString());
+                    SSDID = FixListDataGridView.CurrentRow.Cells[1].Value.ToString();
+                    WriteSidStar();
+                    if (SSDID.Substring(0, 1) == "D")
+                        prefix = InfoSection.SIDprefix;
                 }
-                OutputTextBox.Text = BigResult;
+                OutputTextBox.Text = SCTstrings.SectionHeader(SSDID + " " + SSDcode);
+                OutputTextBox.Text += cr + SSDHeader(SSDcode, string.Empty, 1, prefix);
+                OutputTextBox.Text += cr + BigResult;
+                OutputTextBox.Text += cr + SCTstrings.SectionFooter(SSDID + " " + SSDcode);
             }
             SCTcommon.UpdateLabel(UpdatingLabel);
             Refresh();
         }
-        private static void BuildSSD(DataView dvSSD)
+
+        public static void WriteSidStar()
+            // Called routine to write a SINGLE SSD diagram
+            // Diagram in BigResult
+            // Calling routine is responsible for writing file and/or headers and footers
+        {
+            DataTable SSD = Form1.SSD;
+            DataView dvSSD = new DataView(SSD)
+
+            {
+                RowFilter = "[ID] = '" + SSDID + "'",
+                Sort = "Sequence",
+            };
+            // Build the list of the SSD information 
+            if (dvSSD.Count != 0)
+                BuildSSD(dvSSD);
+            if (InfoSection.IncludeSidStarReferences)
+                WriteSSDrefs();
+            SSDLinesToBigResult();          // Since Labels depend on lines, call them here
+            if (BigResult.Length == 0)
+                BigResult = ";   No data for this procedure - possibly radar only?";
+        }
+
+        public static void BuildSSD(DataView dvSSD)
         {
             // Builds ONE SID or STAR from ONE SSD dataview (preselected)
-            // RETURNS a string for the diagram
-            // Everything goes in List<string>s first
+            // Everything goes in List<string>s first - this routine  loads the Lists
             object[] NavData;
-            // Various and sundry variables for the loop
+
+            // Various and sundry variables for the loop - and clear the others
+            ClearVariables();
             double Lat1 = -1; double Lon1 = -1; string space = new string(' ', 27);
             double Lat0 = -1; double Lon0 = -1;
             string lastFix = string.Empty; string curFix; string FixType0;
             string FixType1; string SSDname; string TransitionName;
-            string SSDcode; string TransitionCode; char Prefix = '\0';
-            int FixCount0; int FixCount1; int MarkCount = 0;
+            string TransitionCode;
+            int FixCount0; int FixCount1;
 
             // Get the name and code for this SSD
             SSDname = dvSSD[0]["SSDName"].ToString();
             SSDcode = dvSSD[0]["SSDcode"].ToString();
-            SSDlines.Add(cr);
-            // SSDcode, SSD name, # of prefix chars, char to be used)
-            if ((bool)dvSSD[0]["IsSID"])
-            {
-                if (InfoSection.SIDprefix != '\0')
-                {
-                    Prefix = InfoSection.SIDprefix;
-                    MarkCount = 1;
-                }
-            }
-            else
-            {
-                if (InfoSection.SIDprefix != '\0')
-                {
-                    Prefix = InfoSection.STARprefix;
-                    MarkCount = 1;
-                }
-            }
-            SSDlines.Add(SSDHeader(SSDcode, "(" + SSDname + ")", MarkCount, Prefix));
+            if (Convert.ToChar(dvSSD[0][0].ToString().Substring(0, 1)) == 'D') 
+                prefix = InfoSection.SIDprefix;
             // Now loop the entire SSD to get the lines, etc.
             foreach (DataRowView SSDrow in dvSSD)
             {
@@ -291,13 +299,14 @@ namespace SCTBuilder
                 SSDlines.Add(DrawFixInfo(FixesUsed));
             // Need to add the ALT and Speed items here
         }
-        private static void WriteSSDrefs()
+
+        public static string WriteSSDrefs()
         {
             // Sends the results of BuildSSD to the designated file
             // This is the header references
             // Write the file for this SSD
             string[] strOut = new string[6];
-            BigResult += "[AIRPORT]" + cr;
+            RefResult += cr + "[AIRPORT]";
             DataView dvAPT = new DataView(Form1.APT);
             DataView dvTWR = new DataView(Form1.TWR);
             foreach (string Arpt in APTsUsed)
@@ -312,7 +321,7 @@ namespace SCTBuilder
                 strOut[2] = Conversions.Degrees2SCT(Convert.ToDouble(dvAPT[0]["Latitude"]), true);
                 strOut[3] = Conversions.Degrees2SCT(Convert.ToDouble(dvAPT[0]["Longitude"]), false);
                 strOut[4] = dvAPT[0]["Name"].ToString();
-                BigResult += SCTstrings.APTout(strOut.ToArray()) + cr;
+                RefResult += cr + SCTstrings.APTout(strOut.ToArray());
             }
             dvAPT.Dispose();
             dvTWR.Dispose();
@@ -321,7 +330,7 @@ namespace SCTBuilder
             if (VORData.Count > 0)
             {
                 // NavData: ID(opt), FacilityID, Frequency(opt), Latitude, Longitude, Name, FixType
-                BigResult += cr + "[VOR]" + cr;
+                RefResult += cr + "[VOR]";
                 foreach (object[] VORs in VORData)
                 {
                     // strOut expects 0-Fix, 1-Freq, 2-Lat, 3-Lon, 4-Name, 5-Type
@@ -331,13 +340,13 @@ namespace SCTBuilder
                     strOut[3] = Conversions.Degrees2SCT(Convert.ToDouble(VORs[4]), false);
                     strOut[4] = VORs[5].ToString();
                     strOut[5] = VORs[6].ToString();
-                    BigResult += SCTstrings.VORout(strOut) + cr;
+                    RefResult += cr + SCTstrings.VORout(strOut);
                 }
             }
             // NavData: ID(opt), FacilityID, Frequency(opt), Latitude, Longitude, Name, FixType
             if (NDBData.Count > 0)
             {
-                BigResult += cr + "[NDB]" + cr;
+                RefResult += cr + "[NDB]";
                 foreach (object[] NDBs in NDBData)
                 {
                     strOut[0] = NDBs[1].ToString();
@@ -346,29 +355,40 @@ namespace SCTBuilder
                     strOut[3] = Conversions.Degrees2SCT(Convert.ToDouble(NDBs[4]), false);
                     strOut[4] = NDBs[5].ToString();
                     strOut[5] = NDBs[6].ToString();
-                    BigResult += SCTstrings.NDBout(strOut) + cr;
+                    RefResult += cr + SCTstrings.NDBout(strOut);
                 }
             }
             // NavData: ID(opt), FacilityID, Frequency(opt), Latitude, Longitude, FixUse, FixType
             if (FixData.Count > 0)
             {
-                BigResult += cr + "[FIXES]" + cr;
+                RefResult += cr + "[FIXES]";
                 foreach (object[] FIXes in FixData)
                 {
                     strOut[0] = FIXes[1].ToString();
                     strOut[2] = Conversions.Degrees2SCT(Convert.ToDouble(FIXes[3]), true);
                     strOut[3] = Conversions.Degrees2SCT(Convert.ToDouble(FIXes[4]), false);
                     strOut[4] = FIXes[5].ToString();
-                    BigResult += SCTstrings.FIXout(strOut) + cr;
+                    RefResult += cr + SCTstrings.FIXout(strOut);
                 }
             }
+            return RefResult;
         }
 
-        private static void WriteSSDLines()
+        public static void SSDLinesToBigResult()
         {
+            bool FirstLine = true;
             foreach (string Line in SSDlines)
             {
-                BigResult += Line + cr;         // These have crs on each line
+                if (Line.Length != 0)
+                {
+                    if (FirstLine)
+                    {
+                        BigResult += Line;
+                        FirstLine = false;
+                    }
+                    else
+                        BigResult += cr + Line;         // These have crs on each line
+                }
             }
         }
         private static string SSDHeader(string Header = "", string Comment = "", int MarkerCount = 0, char Marker = '=')
@@ -384,14 +404,6 @@ namespace SCTBuilder
             result = result.PadRight(Pad) + DummyCoords;
             if (Comment.Length != 0) result += " ; " + Comment;
             return result;
-        }
-
-        private static string WriteFooter(string RegionTitle)
-        {
-            string footer = "; ======= END COMPUTED DATA * Do not remove this footer * ========" + cr +
-                            "; " + CycleInfo.AIRAC + " " + RegionTitle + cr +
-                            "; ================================================================" + cr;
-            return footer;
         }
 
         private static List<string> Add2ListIfNew(List<string> Fixes, string NewFix)
@@ -445,6 +457,7 @@ namespace SCTBuilder
         {
             IdentifierTextBox.Text = FixListDataGridView.CurrentCell.Value.ToString();
             SSDID = FixListDataGridView.CurrentRow.Cells[1].Value.ToString();
+            AddLinesButton.Enabled = true;
         }
 
         private void DrawFixSymbolsOnDiagramsCheckBox_CheckedChanged(object sender, EventArgs e)
@@ -464,10 +477,33 @@ namespace SCTBuilder
 
         private void IdentifierTextBox_Validated(object sender, EventArgs e)
         {
-            if (IdentifierTextBox.Text == FixListDataGridView.CurrentRow.Cells[0].Value.ToString())
+            // If the gridview row was not selected (e.g., Pasting into the cell), must select the ID
+            // Make sure user selected a valid identifier
+            DataTable dtSSD = Form1.SSD;
+            string filter = "[SSDcode] LIKE '" + IdentifierTextBox.Text + "*" + "'";
+            DataView dvSSD = new DataView(dtSSD, filter, "SSDcode", DataViewRowState.CurrentRows);
+            if (dvSSD.Count == 0)
             {
-                SSDID = FixListDataGridView.CurrentRow.Cells[1].Value.ToString();
+                SCTcommon.SendMessage("Invalid identifier - select from list");
+                AddLinesButton.Enabled = false;
+                Refresh();
             }
+            else
+            {
+                foreach (DataGridViewRow row in FixListDataGridView.Rows)
+                {
+                    if (FixListDataGridView.CurrentRow == null)
+                    {
+                        if (row.Cells[0].ToString().Equals(IdentifierTextBox.Text))
+                        {
+                            row.Selected = true;
+                            SSDID = row.Cells[1].Value.ToString();
+                        }
+                    }
+                }
+            }
+                AddLinesButton.Enabled = true;
+            dvSSD.Dispose();
         }
     }
 }

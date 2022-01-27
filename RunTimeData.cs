@@ -404,25 +404,45 @@ namespace SCTBuilder
     }
     public class FolderMgt
     {
+        private static string userfolder = Environment.SpecialFolder.MyDocuments.ToString();
         private static string outputFolder = string.Empty;
         private static string dataFolder = string.Empty;
         public static string DataFolder
         {
-            get { return dataFolder; }
+            get 
+            {
+                if (dataFolder.Length != 0)
+                    return dataFolder;
+                else
+                {
+                    dataFolder = userfolder;
+                    return dataFolder;
+                }
+            }
             set { dataFolder = value; }
         }
 
         public static string OutputFolder
         {
-            get { return outputFolder; }
+            get 
+            {
+                if (outputFolder.Length != 0)
+                    return outputFolder;
+                else
+                {
+                    outputFolder = userfolder;
+                    return outputFolder;
+                }
+            }
             set { outputFolder = value; }
         }
+
 
         public static readonly string AppDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "//SCTbuilder";
 
         public static readonly DirectoryInfo INIdirectory = Directory.CreateDirectory(AppDataFolder);
 
-        public static readonly string INIFilePath = INIdirectory.FullName + "SCTBuilder.xml";
+        public static readonly string INIFilePath = INIdirectory.FullName + "\\SCTBuilder.xml";
 
     }
 

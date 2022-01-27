@@ -362,7 +362,6 @@ namespace SCTBuilder
                 }
                 if (SCTchecked.ChkAPT)
                 {
-                    SCTcommon.UpdateLabel(UpdatingLabel, "Building APT grid view from selection");
                     if (SCTcommon.dtHasRows(APT)) lastTab = LoadAPTDataGridView();
                 }
                 if (SCTchecked.ChkRWY)
@@ -386,20 +385,20 @@ namespace SCTBuilder
                 if (SCTchecked.ChkVOR)
                 {
                         SelectTableItems(VOR, filter);
-                        SCTcommon.UpdateLabel(UpdatingLabel, "Building VOR grid view from selection", 1000);
+                        Console.WriteLine("Building VOR grid view from selection");
                         lastTab = LoadVORGridView();
                 }
                 if (SCTchecked.ChkNDB)
                 {
                         SelectTableItems(NDB, filter);
-                        SCTcommon.UpdateLabel(UpdatingLabel, "Building NDB grid view from selection");
+                        Console.WriteLine("Building NDB grid view from selection");
                         lastTab = LoadNDBGridView();
                 }
 
                 if (SCTchecked.ChkFIX)
                 {
                     SelectTableItems(FIX, filter);
-                    SCTcommon.UpdateLabel(UpdatingLabel, "Building FIX grid view from selection");
+                    Console.WriteLine("Building FIX grid view from selection");
                     lastTab = LoadFIXGridView();
                 }
                 // AWYs must come after VOR, NDB and FIX
@@ -407,7 +406,7 @@ namespace SCTBuilder
                 {
                     if (SelectAWYs() != 0)
                     {
-                        SCTcommon.UpdateLabel(UpdatingLabel, "Building AWY grid view from selection");
+                        Console.WriteLine("Building AWY grid view from selection");
                         lastTab = LoadAWYDataGridView();
                     }
                     else ClearDataGridView(dgvAWY);
@@ -430,7 +429,7 @@ namespace SCTBuilder
                     }
                     if (SelectSSD(SID) != 0)
                     {
-                        SCTcommon.UpdateLabel(UpdatingLabel, "Building SID grid view from selection");
+                        Console.WriteLine("Building SID grid view from selection");
                         lastTab = LoadSSDDataGridView(SID);
                     }
                 }
@@ -449,27 +448,26 @@ namespace SCTBuilder
                     }
                     if (SelectSSD(STAR) != 0)
                     {
-                        SCTcommon.UpdateLabel(UpdatingLabel, "Building STAR grid view from selection");
+                        Console.WriteLine("Building STAR grid view from selection");
                         lastTab = LoadSSDDataGridView(STAR);
                     }
                 }
                 if (SCTchecked.ChkOceanic)
                 {
-                    SCTcommon.UpdateLabel(UpdatingLabel, "Building Oceanic grid view from selection");
+                    Console.WriteLine("Building Oceanic grid view from selection");
                     SelectOceanic();
-                    SCTcommon.UpdateLabel(UpdatingLabel, "Building RTE grid view from selection");
+                    Console.WriteLine("Building RTE grid view from selection");
                     lastTab = LoadOceanicDataGridView();
                 }
                 // Select the items for NaviGraph
                 if (InfoSection.UseNaviGraph)
                 {
-                    SCTcommon.UpdateLabel(UpdatingLabel, "Selecting NaviGraph APT...");
+                    Console.WriteLine("Selecting NaviGraph APT...");
                     FilterBy.Method = "Square";
                     ReadNaviGraph.SelectNGTables(SetFilter(SelectNGdata));
                 }
                 SelectedTabControl.SelectedTab = SelectedTabControl.TabPages[lastTab];
                 UpdateGridCount();
-                SCTcommon.UpdateLabel(UpdatingLabel);
                 SCTcommon.UpdateLabel(WaitForCycleLabel);
                 Refresh();
                 SCTtoolStripButton.Enabled = ESEToolStripButton.Enabled = true;
@@ -511,7 +509,7 @@ namespace SCTBuilder
                 dvRWY.RowFilter = "[ID] = '" + drvAPT["ID"].ToString() + "'";
                 if (dvRWY.Count != 0)
                 {
-                    SCTcommon.UpdateLabel(UpdatingLabel, "Selecting " + dvRWY.Count + " runways from " + drvAPT["FacilityID"]);
+                    Console.WriteLine("Selecting " + dvRWY.Count + " runways from " + drvAPT["FacilityID"]);
                     SetSelected(dvRWY, false);
                 }
             }
@@ -559,13 +557,13 @@ namespace SCTBuilder
             // Apply the square filter
             dvAWY.RowFilter = filter;
             int result = dvAWY.Count;
-            SCTcommon.UpdateLabel(UpdatingLabel, "Selecting " + result + " airway segmentss...");
+            Console.WriteLine("Selecting " + result + " airway segmentss...");
             // Select all components inside the square
             SetSelected(dvAWY, true);
             // This filter shouldn't do anything...
             dvAWY.RowFilter = "[Selected]";
             result = dvAWY.Count;
-            SCTcommon.UpdateLabel(UpdatingLabel, "Selected " + result + " airway segments...");
+            Console.WriteLine("Selected " + result + " airway segments...");
             // Build a unique list of airways
             DataTable dtAWYcheck = dvAWY.ToTable(true, "AWYID");
             // Loop the list of Airways to extend a leg beyond the square...
@@ -613,13 +611,13 @@ namespace SCTBuilder
             // Apply the square filter
             dvRTE.RowFilter = filter;
             int result = dvRTE.Count;
-            SCTcommon.UpdateLabel(UpdatingLabel, "Selecting " + result + " airway segmentss...");
+            Console.WriteLine("Selecting " + result + " airway segmentss...");
             // Select all components inside the square
             SetSelected(dvRTE, true);
             // This filter shouldn't do anything...
             dvRTE.RowFilter = "[Selected]";
             result = dvRTE.Count;
-            SCTcommon.UpdateLabel(UpdatingLabel, "Selected " + result + " airway segments...");
+            Console.WriteLine("Selected " + result + " airway segments...");
             // Build a unique list of airways
             DataTable dtRTEcheck = dvRTE.ToTable(true, "AWYID");
             // Loop the list of Airways to extend a leg beyond the square...
@@ -752,7 +750,7 @@ namespace SCTBuilder
         private int SelectSSD(bool isSID)
         {
             string proc = "STARs"; if (isSID) proc = "SIDs";
-            SCTcommon.UpdateLabel(UpdatingLabel, "Clearing prior selections in " + proc);
+            Console.WriteLine("Clearing prior selections in " + proc);
             // Create the SSD view for the SID or STAR
             DataView dvSSD = new DataView(SSD)
             {
@@ -784,7 +782,7 @@ namespace SCTBuilder
                         foreach (DataRow data in IDdata.AsEnumerable())
                         {
                             dvSSD.RowFilter = "[ID] = '" + data[0].ToString() + "'";
-                            SCTcommon.UpdateLabel(UpdatingLabel, "Selecting " + dvSSD[0]["SSDname"].ToString() + " for " + dtAptRow["FacilityID"].ToString());
+                            Console.WriteLine("Selecting " + dvSSD[0]["SSDname"].ToString() + " for " + dtAptRow["FacilityID"].ToString());
                             SetSelected(dvSSD);
                         }
                     }
@@ -919,7 +917,7 @@ namespace SCTBuilder
                 Counter++;
                 row["Selected"] = true;
                 if (Label)
-                    SCTcommon.UpdateLabel(UpdatingLabel, "Selecting " + result + " rows from " + dv.Table.TableName +
+                    Console.WriteLine("Selecting " + result + " rows from " + dv.Table.TableName +
                        " (" + (Counter * 100 / dv.Count).ToString() + "% done)"); ;
             }
         }
@@ -1419,21 +1417,30 @@ namespace SCTBuilder
 
         private void AboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Form form = new About();
+            Form form = new About()
+            {
+                StartPosition = ActiveForm.StartPosition
+            };
             form.ShowDialog(this);
             form.Dispose();
         }
 
         private void XML2SCTToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Form form = new XML2SCT();
+            Form form = new XML2SCT()
+            {
+                StartPosition = ActiveForm.StartPosition
+            };
             form.ShowDialog();
             form.Dispose();
         }
 
         private void LineGeneratorToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Form form = new LineGenerator();
+            Form form = new LineGenerator()
+            {
+                StartPosition = ActiveForm.StartPosition
+            };
             form.ShowDialog();
             form.Dispose();
         }
@@ -1878,17 +1885,22 @@ namespace SCTBuilder
 
         private void SCTtoolStripButton_Click(object sender, EventArgs e)
         {
-            SCTtoolStripButton.ToolTipText = "Please wait for the completion message."; Refresh();
-            SCTcommon.UpdateLabel(UpdatingLabel, "Writing files. Please wait for completion message.");
+            SCTtoolStripButton.ToolTipText = "Please wait for the completion message."; 
+            SCTcommon.UpdateLabel(WaitForCycleLabel, "Writing files. Please wait for completion message.");
+            WaitForCycleLabel.Refresh();
             UseWaitCursor = true;
-            SCToutput.WriteSCT();
-            SCTcommon.UpdateLabel(UpdatingLabel);
+            SCToutput.WriteSCT(WaitForCycleLabel);
+            SCTcommon.UpdateLabel(WaitForCycleLabel);
+            SCTtoolStripButton.ToolTipText = string.Empty;
             UseWaitCursor = false;
         }
 
         private void LabelGeneratorforDiagramsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Form DrawLabel = new DrawLabels();
+            Form DrawLabel = new DrawLabels()
+            {
+                StartPosition = ActiveForm.StartPosition
+            };
             DrawLabel.Show();
         }
 
@@ -1911,7 +1923,10 @@ namespace SCTBuilder
 
         private void DMSDecDegToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Form ConvertDMS = new CoordConverter();
+            Form ConvertDMS = new CoordConverter()
+            {
+                StartPosition = ActiveForm.StartPosition
+            };
             ConvertDMS.Show();
         }
 
@@ -1990,10 +2005,10 @@ namespace SCTBuilder
         private void ESEToolStripButton_Click(object sender, EventArgs e)
         {
             ESEToolStripButton.ToolTipText = "Please wait for the completion message."; Refresh();
-            SCTcommon.UpdateLabel(UpdatingLabel, "Writing files. Please wait for completion message.");
+            SCTcommon.UpdateLabel(WaitForCycleLabel, "Writing files. Please wait for completion message.");
             UseWaitCursor = true;
             ESEoutput.WriteESE();
-            SCTcommon.UpdateLabel(UpdatingLabel);
+            SCTcommon.UpdateLabel(WaitForCycleLabel);
             UseWaitCursor = false;
         }
 
@@ -2072,7 +2087,10 @@ namespace SCTBuilder
 
         private void SSDGeneratorToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Form form = new SSDGenerator();
+            Form form = new SSDGenerator
+            {
+                StartPosition = ActiveForm.StartPosition
+            };
             form.ShowDialog();
             form.Dispose();
         }
@@ -2130,21 +2148,30 @@ namespace SCTBuilder
 
         private void RacetrackholdToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Form form = new Racetrack();
+            Form form = new Racetrack()
+            {
+                StartPosition = ActiveForm.StartPosition
+            };
             form.ShowDialog();
             form.Dispose();
         }
 
         private void POFManagerToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Form form = new POFmanager();
+            Form form = new POFmanager()
+            {
+                StartPosition = ActiveForm.StartPosition
+            };
             form.ShowDialog();
             form.Dispose();
         }
 
         private void ArcGeneratorToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Form form = new ArcGenerator();
+            Form form = new ArcGenerator()
+            {
+                StartPosition = ActiveForm.StartPosition
+            };
             form.ShowDialog();
             form.Dispose();
         }

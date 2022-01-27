@@ -48,7 +48,7 @@ namespace SCTBuilder
         private readonly string cr = Environment.NewLine;
         // Same as above, but a constant string
         private const string DecimalDegrees = @"^ (?<negate>(\-))?(?<Degrees>\d{1,3})(\.)? (?<Decimals>\d+)?$";
-        private const string DegDecimalMinutes = @"^(?<latSuf>[NS])?(?<latDeg>\d{1,3})[D\*\u00B0\u00BA\-\s](?<latMin>\d{1,2})[M'\u2032\u2019\s](?<latSuf>[NS])?$";
+        private const string DegDecimalMinutes = @"^(?<latSuf>[NS])?(?<latDeg>\d{1,3})[D\*\u00B0\u00BA\-\s](?<latMin>\d{1,2})[M'\u2032\u2019\u0027\s](?<latSuf>[NS])?$";
         private const string DecDegree2 = @"^(?<latNegate>(\-))?(?<latDegrees>\d{1,3})(\.)?(?<latDecimals>\d+)?(\s+)?(?<lonNegate>(\-))?(?<lonDegrees>\d{1,3})(\.)?(?<lonDecimals>\d+)?$";
         private const string LatLonDMS = @"^(?<latSuf>[NS])?(?<latDeg>\d{1,3})[D\*\u00B0\u00BA\-\.\s](?<latMin>\d{1,2})[M'\.\u2032\u2019\s](?<latSec>.+?)[\u0022\u2033\u201D]?(?<latSuf>[NS])?(\s+)?(?<lonSuf>[EW])?(?<lonDeg>\d{1,3})[D\*\u00B0\u00BA\-\.\s](?<lonMin>\d{1,2})[M'\.\u2032\u2019\s](?<lonSec>.+?)[\u0022\u2033\u201D]?(?<lonSuf>[EW])?$";
         private const string LatitudeDMS = @"^(?<latSuf>[NS])?(?<latDeg>\d{1,3})[D\*\u00B0\u00BA\-\.\s](?<latMin>\d{1,2})[M'\.\u2032\u2019\s](?<latSec>.+?)[\u0022\u2033\u201D]?(?<latSuf>[NS])?$";

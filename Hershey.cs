@@ -6,6 +6,8 @@ namespace SCTBuilder
 {
     public class Hershey
     {
+        static readonly string cr = Environment.NewLine;
+        static readonly string space = new string(' ', 27);
 
         public static float[] Adjust (float lat, float lon, 
             float LeftRightSeconds, float UpDownSeconds, int Angle = 0, float Scale = 1)
@@ -67,7 +69,6 @@ namespace SCTBuilder
         {
             // FixData contains: ID(opt), FacilityID, Frequency(opt), Latitude, Longitude, NameOrUse, FixType
             string Lat0; string Lon0; string Lat1; string Lon1;
-            string cr = Environment.NewLine; string space = new string(' ', 27);
             int angle = (int)InfoSection.MagneticVariation;
             string Fix = FixData[1].ToString();
             string FixType = FixData[6].ToString();
@@ -114,7 +115,7 @@ namespace SCTBuilder
             }
             // Now write out the symbol strings in typical end-to-start rotation
             PointF start = PointF.Empty; PointF end;
-            string Result = space + "; Symbol for " + FixType + " " + Fix + cr;
+            string Result = space + "; Symbol for " + FixType + " " + Fix;
             foreach (PointF pointF in Coords)
             {
                 if (pointF != PenUp)
@@ -127,7 +128,7 @@ namespace SCTBuilder
                     Lat1 = Conversions.Degrees2SCT(end.Y, true);
                     Lon0 = Conversions.Degrees2SCT(start.X, false);
                     Lon1 = Conversions.Degrees2SCT(end.X, false);
-                    Result += SCTstrings.SSDout(Lat0, Lon0, Lat1, Lon1) + cr;
+                    Result += cr + SCTstrings.SSDout(Lat0, Lon0, Lat1, Lon1);
                 }
                 start = end;
             }
@@ -143,8 +144,6 @@ namespace SCTBuilder
             PointF nextChar = origin;
             float scale = Scale / 3600F;
             int angle = (int)InfoSection.MagneticVariation + Angle;
-            string space = new string(' ', 27);
-            string cr = Environment.NewLine;
             int AsciiC; int[] SmplxC; 
             string Result = string.Empty;
             foreach (char c in Message)
@@ -161,7 +160,7 @@ namespace SCTBuilder
                 nextChar = LatLongCalc.RotatePoint(nextChar, origin, angle);
                 origin = nextChar;
             }
-            return space + "; Label " + Message + cr + Result;
+            return cr + space + "; Label " + Message + cr + Result;
         }
 
         private static string DrawChar(char c, int[] hFont, PointF origin, int Angle, float Scale)
@@ -169,7 +168,7 @@ namespace SCTBuilder
             // Each vector needs to be (a) rotate to the angle of the line of text and (b) Scaled
             // One unit vector = 1 second or 90-100 feet.  Use the Scale function to adjust.
             string result = string.Empty; float X; float Y; 
-            bool isFirst = true; string cr = Environment.NewLine;
+            bool isFirst = true;
             int angle = (int)InfoSection.MagneticVariation + Angle;
             float scale = Scale / 3600F;
             PointF end; PointF start = PointF.Empty; 
@@ -185,9 +184,10 @@ namespace SCTBuilder
                     end = PointF.Add(origin, vector);
                     end = LatLongCalc.RotatePoint(end, origin, angle);
                 }
-                    if (!(start.IsEmpty) && !(end.IsEmpty))
-                    {
-                    result += 
+                if (!(start.IsEmpty) && !(end.IsEmpty))
+                {
+                    if (result.Length != 0) result += cr;
+                    result +=
                         SCTstrings.CharOut(Conversions.Degrees2SCT(start.Y, true), Conversions.Degrees2SCT(start.X, false),
                         Conversions.Degrees2SCT(end.Y, true), Conversions.Degrees2SCT(end.X, false));
                     if (isFirst)
@@ -195,8 +195,7 @@ namespace SCTBuilder
                         result += ";" + c.ToString();
                         isFirst = false;
                     }
-                    result += cr;
-                    }
+                }
                 start = end;                            // No matter what happened, move End to Start
             }
             return result;                                      // Lat Long string to draw ONE character!  (Sheesh)

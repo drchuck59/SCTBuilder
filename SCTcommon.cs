@@ -10,15 +10,13 @@ using System.Text.RegularExpressions;
 using System.Globalization;
 using System.Media;
 using SCTBuilder;
-using System.Text;
-using Org.BouncyCastle.Asn1.Crmf;
+
 
 namespace SCTBuilder
 {
     class SCTcommon
     {
-        private const int LatTest = 1;
-        private const int LonTest = 2;
+
         public static void DefineColorConstants(DataTable dT)
         // Color name, Decimal color code
         {
@@ -166,7 +164,10 @@ namespace SCTBuilder
         public static DialogResult SendMessage(string Msg,
                 MessageBoxIcon icon = MessageBoxIcon.Warning, MessageBoxButtons buttons = MessageBoxButtons.OK)
         {
-            return MessageBox.Show(Msg, VersionInfo.Title, buttons, icon);
+            DialogResult result;
+            // Form1.ActiveForm.TopMost = true;
+            result = MessageBox.Show(Msg, VersionInfo.Title, buttons, icon);
+            return result;
         }
 
         public static void UpdateLabel(Label lbl, string Message = "", int msSecWait = 0)
@@ -178,14 +179,17 @@ namespace SCTBuilder
             {
                 lbl.Text = Message;
                 lbl.Visible = true;
+                lbl.Refresh();
                 if (msSecWait != 0)
                 {
                     SCTcommon.Wait(msSecWait);
                     lbl.Visible = false;
+                    lbl.Refresh();
                 }
             }
             else
                 lbl.Visible = false;
+            lbl.Refresh();
         }
 
         public static void Wait(int milliseconds)
@@ -1061,7 +1065,32 @@ namespace SCTBuilder
 
     public static class SCTstrings
     {
+        static readonly string BeginDataPrefix = "; ======= BEGIN COMPUTED DATA ";
+        static readonly string EndDataPrefix = "; ======= END COMPUTED DATA ";
+        static readonly string DoNotRemoveSufix = " ** DO NOT REMOVE THIS LINE ** =======";
+        static readonly string curCycle = CycleInfo.AIRAC.ToString() + " ";
         public static string cr = Environment.NewLine;
+
+        public static string SectionHeader(string section)
+        {
+            return BeginDataPrefix + curCycle + section + DoNotRemoveSufix;
+        }
+
+        public static string SectionFooter(string section)
+        {
+            return EndDataPrefix + curCycle + section + DoNotRemoveSufix;
+        }
+
+        public static void WriteSectionHeader(StreamWriter sw, string section)
+        {
+            sw.WriteLine(SectionHeader(section));
+        }
+
+        public static void WriteSectionFooter(StreamWriter sw, string section)
+        {
+            sw.WriteLine(SectionFooter(section));
+        }
+
         public static string APTout(string[] strOut, string Apt = "", string Freq = "", 
             string Lat = "", string Lon = "", string Name = "", string Comment = "")
         {
@@ -1374,17 +1403,17 @@ public static class SCTcolors
             return GetPath(knownFolder, false);
         }
 
-        /// <summary>
-        /// Gets the current path to the specified known folder as currently configured. This does
-        /// not require the folder to be existent.
-        /// </summary>
-        /// <param name="knownFolder">The known folder which current path will be returned.</param>
-        /// <param name="defaultUser">Specifies if the paths of the default user (user profile
-        ///     template) will be used. This requires administrative rights.</param>
-        /// <returns>The default path of the known folder.</returns>
-        /// <exception cref="System.Runtime.InteropServices.ExternalException">Thrown if the path
-        ///     could not be retrieved.</exception>
-        public static string GetPath(KnownFolder knownFolder, bool defaultUser)
+    /// <summary>
+    /// Gets the current path to the specified known folders as currently configured. 
+    /// NOTE: This does not require the folder to exist!
+    /// </summary>
+    /// <param name="knownFolder">The known folder which current path will be returned.</param>
+    /// <param name="defaultUser">Specifies if the paths of the default user (user profile
+    ///     template) will be used. This requires administrative rights.</param>
+    /// <returns>The default path of the known folder.</returns>
+    /// <exception cref="System.Runtime.InteropServices.ExternalException">Thrown if the path
+    ///     could not be retrieved.</exception>
+    public static string GetPath(KnownFolder knownFolder, bool defaultUser)
         {
             return GetPath(knownFolder, KnownFolderFlags.DontVerify, defaultUser);
         }

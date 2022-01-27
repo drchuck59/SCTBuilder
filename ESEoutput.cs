@@ -105,14 +105,14 @@ namespace SCTBuilder
                 if (SCTchecked.ChkSID)
                 {
                     Console.WriteLine("SIDS...");
-                    SCToutput.WriteSIDSTAR(PartialPath, IsSID: true);
+                    SCToutput.FileSIDSTAR(PartialPath, IsSID: true);
                     if (CombineIntoOneFile) TextFiles.Add(path);
                 }
 
                 if (SCTchecked.ChkSTAR)
                 {
                     Console.WriteLine("STARS...");
-                    SCToutput.WriteSIDSTAR(PartialPath, IsSID: false);
+                    SCToutput.FileSIDSTAR(PartialPath, IsSID: false);
                     if (CombineIntoOneFile) TextFiles.Add(path);
                 }
             }

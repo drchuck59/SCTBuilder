@@ -25,7 +25,13 @@ namespace SCTBuilder
 
         public static void WriteINIxml()
         {
-            XmlWriter xml = XmlWriter.Create(FolderMgt.INIFilePath);
+            XmlWriterSettings settings = new XmlWriterSettings
+            {
+                Indent = true,
+                CloseOutput = true,
+                NewLineOnAttributes = true
+            };
+            XmlWriter xml = XmlWriter.Create(FolderMgt.INIFilePath, settings);
             xml.WriteStartDocument();
             xml.WriteStartElement("SCT_Builder");
             WriteXmlElement(xml, "Version", VersionInfo.Title.ToString());
@@ -87,9 +93,13 @@ namespace SCTBuilder
         }
         private static void WriteXmlElement(XmlWriter xml, string Element, string Value)
         {
-            xml.WriteStartElement(Element);
-            xml.WriteString(Value);
-            xml.WriteEndElement();
+            if (Element != null)
+            {
+                xml.WriteStartElement(Element);
+                if (Value != "\0")
+                    xml.WriteString(Value);
+                xml.WriteEndElement();
+            }
         }
 
         public static int ReadINIxml()
@@ -102,194 +112,203 @@ namespace SCTBuilder
             if (File.Exists(FolderMgt.INIFilePath))
             {
                 XmlDocument doc = new XmlDocument();
-                doc.Load(FolderMgt.INIFilePath);
-                foreach (XmlNode node in doc.DocumentElement)
+                try
                 {
-                    if (node.Name != "Version")
+                    doc.Load(FolderMgt.INIFilePath);
+
+                    foreach (XmlNode node in doc.DocumentElement)
                     {
-                        string value = node.InnerText;
-                        switch (node.Name)
+                        if (node.Name != "Version")
                         {
-                            case "LastAIRAC":
-                                result = Convert.ToInt32(value);
-                                if ((result.ToString().Length == 0) || (result == 1501))
-                                    result = 0;     // This file is corrupted.
-                                break;
-                            case "DataFolder":
-                                temp = value;
-                                if ((temp.Length != 0) && (Directory.Exists(value)))
-                                    FolderMgt.DataFolder = value;
-                                else result = 0;    // This file is corrupted.
-                                break;
-                            case "OutputFolder":
-                                temp = value;
-                                if ((temp.Length != 0) && (Directory.Exists(value)))
-                                    FolderMgt.OutputFolder = value;
-                                else FolderMgt.OutputFolder = string.Empty;
-                                break;
-                            case "SponsorARTCC":
-                                temp = value;
-                                if (temp.Length != 0)
-                                    InfoSection.SponsorARTCC = value;
-                                else InfoSection.SponsorARTCC = string.Empty;
-                                break;
-                            case "DefaultAirport":
-                                temp = value;
-                                if (temp.Length != 0)
-                                    InfoSection.DefaultAirport = value;
-                                else InfoSection.DefaultAirport = string.Empty;
-                                break;
-                            case "FacilityEngineer":
-                                temp = value;
-                                if (temp.Length != 0)
-                                    InfoSection.FacilityEngineer = value;
-                                else InfoSection.FacilityEngineer = "Facility Engineer name";
-                                break;
-                            case "AsstFacilityEngineer":
-                                temp = value;
-                                if (temp.Length != 0)
-                                    InfoSection.AsstFacilityEngineer = value;
-                                else InfoSection.AsstFacilityEngineer = string.Empty;
-                                break;
-                            case "ChkOneSCTFile":
-                                SCTchecked.ChkOneVRCFile = Convert.ToBoolean(value);
-                                break;
-                            case "ChkOneESFile":
-                                SCTchecked.ChkOneESFile = Convert.ToBoolean(value);
-                                break;
-                            case "ChkConfirmOverwrite":
-                                SCTchecked.ChkConfirmOverwrite = Convert.ToBoolean(value);
-                                break;
-                            case "ChkAPT":
-                                SCTchecked.ChkAPT = Convert.ToBoolean(value);
-                                break;
-                            case "LimitAPT2ARTCC":
-                                SCTchecked.LimitAPT2ARTC = Convert.ToBoolean(value);
-                                break;
-                            case "ChkARB":
-                                SCTchecked.ChkARB = Convert.ToBoolean(value);
-                                break;
-                            case "ChkAWY":
-                                SCTchecked.ChkAWY = Convert.ToBoolean(value);
-                                break;
-                            case "ChkFIX":
-                                SCTchecked.ChkFIX = Convert.ToBoolean(value);
-                                break;
-                            case "ChkNDB":
-                                SCTchecked.ChkNDB = Convert.ToBoolean(value);
-                                break;
-                            case "ChkRWY":
-                                SCTchecked.ChkRWY = Convert.ToBoolean(value);
-                                break;
-                            case "ChkSID":
-                                SCTchecked.ChkSID = Convert.ToBoolean(value);
-                                break;
-                            case "ChkSTAR":
-                                SCTchecked.ChkSTAR = Convert.ToBoolean(value);
-                                break;
-                            case "ChkSSDname":
-                                SCTchecked.ChkSSDname = Convert.ToBoolean(value);
-                                break;
-                            case "ChkSUA":
-                                SCTchecked.ChkSUA = Convert.ToBoolean(value);
-                                break;
-                            case "ChkSUA_ClassB":
-                                SCTchecked.ChkSUA_ClassB = Convert.ToBoolean(value);
-                                break;
-                            case "ChkSUA_ClassC":
-                                SCTchecked.ChkSUA_ClassC = Convert.ToBoolean(value);
-                                break;
-                            case "ChkSUA_ClassD":
-                                SCTchecked.ChkSUA_ClassD = Convert.ToBoolean(value);
-                                break;
-                            case "ChkSUA_Danger":
-                                SCTchecked.ChkSUA_Danger = Convert.ToBoolean(value);
-                                break;
-                            case "ChkSUA_Prohibited":
-                                SCTchecked.ChkSUA_Prohibited = Convert.ToBoolean(value);
-                                break;
-                            case "ChkSUA_Restricted":
-                                SCTchecked.ChkSUA_Restricted = Convert.ToBoolean(value);
-                                break;
-                            case "ChkES_SCTfile":
-                                SCTchecked.ChkES_SCTfile = Convert.ToBoolean(value);
-                                break;
-                            case "ChkES_SSDfile":
-                                SCTchecked.ChkES_SSDfile = Convert.ToBoolean(value);
-                                break;
-                            case "ChkVOR":
-                                SCTchecked.ChkVOR = Convert.ToBoolean(value);
-                                break;
-                            case "ChkOceanic":
-                                SCTchecked.ChkOceanic = Convert.ToBoolean(value);
-                                break;
-                            case "UseFixesAsCoords":
-                                InfoSection.UseFixesAsCoords = Convert.ToBoolean(value);
-                                break;
-                            case "UseNaviGraphData":
-                                InfoSection.UseNaviGraph = Convert.ToBoolean(value);
-                                break;
-                            case "OneFilePerSidStar":
-                                InfoSection.OneFilePerSidStar = Convert.ToBoolean(value);
-                                break;
-                            case "DrawFixSymbolsOnDiagrams":
-                                InfoSection.DrawFixSymbolsOnDiagrams = Convert.ToBoolean(value);
-                                break;
-                            case "DrawFixLabelsOnDiagrams":
-                                InfoSection.DrawFixLabelsOnDiagrams = Convert.ToBoolean(value);
-                                break;
-                            case "DrawAltRestrictsOnDiagrams":
-                                InfoSection.DrawAltRestrictsOnDiagrams = Convert.ToBoolean(value);
-                                break;
-                            case "DrawSpeedRestrictsOnDiagrams":
-                                InfoSection.DrawSpeedRestrictsOnDiagrams = Convert.ToBoolean(value);
-                                break;
-                            case "IncludeSidStarReferences":
-                                InfoSection.IncludeSidStarReferences = Convert.ToBoolean(value);
-                                break;
-                            case "NorthLimit":
-                                InfoSection.NorthLimit = Convert.ToDouble(value);
-                                break;
-                            case "SouthLimit":
-                                InfoSection.SouthLimit = Convert.ToDouble(value);
-                                break;
-                            case "WestLimit":
-                                InfoSection.WestLimit = Convert.ToDouble(value);
-                                break;
-                            case "EastLimit":
-                                InfoSection.EastLimit = Convert.ToDouble(value);
-                                break;
-                            case "NorthOffset":
-                                InfoSection.NorthOffset = Convert.ToDouble(value);
-                                break;
-                            case "SouthOffset":
-                                InfoSection.SouthOffset = Convert.ToDouble(value);
-                                break;
-                            case "WestOffset":
-                                InfoSection.WestOffset = Convert.ToDouble(value);
-                                break;
-                            case "EastOffset":
-                                InfoSection.EastOffset = Convert.ToDouble(value);
-                                break;
-                            case "CenterLatitude_Dec":
-                                InfoSection.CenterLatitude_Dec = Convert.ToDouble(value);
-                                break;
-                            case "CenterLongitude_Dec":
-                                InfoSection.CenterLongitude_Dec = Convert.ToDouble(value);
-                                break;
-                            case "RollOverLon":
-                                InfoSection.RollOverLongitude = Convert.ToBoolean(value);
-                                break;
-                            case "SIDprefix":
-                                InfoSection.SIDprefix = Convert.ToChar(value);
-                                break;
-                            case "STARprefix":
-                                InfoSection.STARprefix = Convert.ToChar(value);
-                                break;
-                            default:
-                                break;
+                            string value = node.InnerText;
+                            switch (node.Name)
+                            {
+                                case "LastAIRAC":
+                                    result = Convert.ToInt32(value);
+                                    if ((result.ToString().Length == 0) || (result == 1501))
+                                        result = 0;     // This file is new.
+                                    break;
+                                case "DataFolder":
+                                    temp = value;
+                                    if ((temp.Length != 0) && (Directory.Exists(value)))
+                                        FolderMgt.DataFolder = value;
+                                    else result = 0;    // This file is corrupted.
+                                    break;
+                                case "OutputFolder":
+                                    temp = value;
+                                    if ((temp.Length != 0) && (Directory.Exists(value)))
+                                        FolderMgt.OutputFolder = value;
+                                    else FolderMgt.OutputFolder = string.Empty;
+                                    break;
+                                case "SponsorARTCC":
+                                    temp = value;
+                                    if (temp.Length != 0)
+                                        InfoSection.SponsorARTCC = value;
+                                    else InfoSection.SponsorARTCC = string.Empty;
+                                    break;
+                                case "DefaultAirport":
+                                    temp = value;
+                                    if (temp.Length != 0)
+                                        InfoSection.DefaultAirport = value;
+                                    else InfoSection.DefaultAirport = string.Empty;
+                                    break;
+                                case "FacilityEngineer":
+                                    temp = value;
+                                    if (temp.Length != 0)
+                                        InfoSection.FacilityEngineer = value;
+                                    else InfoSection.FacilityEngineer = "Facility Engineer name";
+                                    break;
+                                case "AsstFacilityEngineer":
+                                    temp = value;
+                                    if (temp.Length != 0)
+                                        InfoSection.AsstFacilityEngineer = value;
+                                    else InfoSection.AsstFacilityEngineer = string.Empty;
+                                    break;
+                                case "ChkOneSCTFile":
+                                    SCTchecked.ChkOneVRCFile = Convert.ToBoolean(value);
+                                    break;
+                                case "ChkOneESFile":
+                                    SCTchecked.ChkOneESFile = Convert.ToBoolean(value);
+                                    break;
+                                case "ChkConfirmOverwrite":
+                                    SCTchecked.ChkConfirmOverwrite = Convert.ToBoolean(value);
+                                    break;
+                                case "ChkAPT":
+                                    SCTchecked.ChkAPT = Convert.ToBoolean(value);
+                                    break;
+                                case "LimitAPT2ARTCC":
+                                    SCTchecked.LimitAPT2ARTC = Convert.ToBoolean(value);
+                                    break;
+                                case "ChkARB":
+                                    SCTchecked.ChkARB = Convert.ToBoolean(value);
+                                    break;
+                                case "ChkAWY":
+                                    SCTchecked.ChkAWY = Convert.ToBoolean(value);
+                                    break;
+                                case "ChkFIX":
+                                    SCTchecked.ChkFIX = Convert.ToBoolean(value);
+                                    break;
+                                case "ChkNDB":
+                                    SCTchecked.ChkNDB = Convert.ToBoolean(value);
+                                    break;
+                                case "ChkRWY":
+                                    SCTchecked.ChkRWY = Convert.ToBoolean(value);
+                                    break;
+                                case "ChkSID":
+                                    SCTchecked.ChkSID = Convert.ToBoolean(value);
+                                    break;
+                                case "ChkSTAR":
+                                    SCTchecked.ChkSTAR = Convert.ToBoolean(value);
+                                    break;
+                                case "ChkSSDname":
+                                    SCTchecked.ChkSSDname = Convert.ToBoolean(value);
+                                    break;
+                                case "ChkSUA":
+                                    SCTchecked.ChkSUA = Convert.ToBoolean(value);
+                                    break;
+                                case "ChkSUA_ClassB":
+                                    SCTchecked.ChkSUA_ClassB = Convert.ToBoolean(value);
+                                    break;
+                                case "ChkSUA_ClassC":
+                                    SCTchecked.ChkSUA_ClassC = Convert.ToBoolean(value);
+                                    break;
+                                case "ChkSUA_ClassD":
+                                    SCTchecked.ChkSUA_ClassD = Convert.ToBoolean(value);
+                                    break;
+                                case "ChkSUA_Danger":
+                                    SCTchecked.ChkSUA_Danger = Convert.ToBoolean(value);
+                                    break;
+                                case "ChkSUA_Prohibited":
+                                    SCTchecked.ChkSUA_Prohibited = Convert.ToBoolean(value);
+                                    break;
+                                case "ChkSUA_Restricted":
+                                    SCTchecked.ChkSUA_Restricted = Convert.ToBoolean(value);
+                                    break;
+                                case "ChkES_SCTfile":
+                                    SCTchecked.ChkES_SCTfile = Convert.ToBoolean(value);
+                                    break;
+                                case "ChkES_SSDfile":
+                                    SCTchecked.ChkES_SSDfile = Convert.ToBoolean(value);
+                                    break;
+                                case "ChkVOR":
+                                    SCTchecked.ChkVOR = Convert.ToBoolean(value);
+                                    break;
+                                case "ChkOceanic":
+                                    SCTchecked.ChkOceanic = Convert.ToBoolean(value);
+                                    break;
+                                case "UseFixesAsCoords":
+                                    InfoSection.UseFixesAsCoords = Convert.ToBoolean(value);
+                                    break;
+                                case "UseNaviGraphData":
+                                    InfoSection.UseNaviGraph = Convert.ToBoolean(value);
+                                    break;
+                                case "OneFilePerSidStar":
+                                    InfoSection.OneFilePerSidStar = Convert.ToBoolean(value);
+                                    break;
+                                case "DrawFixSymbolsOnDiagrams":
+                                    InfoSection.DrawFixSymbolsOnDiagrams = Convert.ToBoolean(value);
+                                    break;
+                                case "DrawFixLabelsOnDiagrams":
+                                    InfoSection.DrawFixLabelsOnDiagrams = Convert.ToBoolean(value);
+                                    break;
+                                case "DrawAltRestrictsOnDiagrams":
+                                    InfoSection.DrawAltRestrictsOnDiagrams = Convert.ToBoolean(value);
+                                    break;
+                                case "DrawSpeedRestrictsOnDiagrams":
+                                    InfoSection.DrawSpeedRestrictsOnDiagrams = Convert.ToBoolean(value);
+                                    break;
+                                case "IncludeSidStarReferences":
+                                    InfoSection.IncludeSidStarReferences = Convert.ToBoolean(value);
+                                    break;
+                                case "NorthLimit":
+                                    InfoSection.NorthLimit = Convert.ToDouble(value);
+                                    break;
+                                case "SouthLimit":
+                                    InfoSection.SouthLimit = Convert.ToDouble(value);
+                                    break;
+                                case "WestLimit":
+                                    InfoSection.WestLimit = Convert.ToDouble(value);
+                                    break;
+                                case "EastLimit":
+                                    InfoSection.EastLimit = Convert.ToDouble(value);
+                                    break;
+                                case "NorthOffset":
+                                    InfoSection.NorthOffset = Convert.ToDouble(value);
+                                    break;
+                                case "SouthOffset":
+                                    InfoSection.SouthOffset = Convert.ToDouble(value);
+                                    break;
+                                case "WestOffset":
+                                    InfoSection.WestOffset = Convert.ToDouble(value);
+                                    break;
+                                case "EastOffset":
+                                    InfoSection.EastOffset = Convert.ToDouble(value);
+                                    break;
+                                case "CenterLatitude_Dec":
+                                    InfoSection.CenterLatitude_Dec = Convert.ToDouble(value);
+                                    break;
+                                case "CenterLongitude_Dec":
+                                    InfoSection.CenterLongitude_Dec = Convert.ToDouble(value);
+                                    break;
+                                case "RollOverLon":
+                                    InfoSection.RollOverLongitude = Convert.ToBoolean(value);
+                                    break;
+                                case "SIDprefix":
+                                    InfoSection.SIDprefix = Convert.ToChar(value);
+                                    break;
+                                case "STARprefix":
+                                    InfoSection.STARprefix = Convert.ToChar(value);
+                                    break;
+                                default:
+                                    break;
+                            }
                         }
                     }
+                }
+                catch
+                {
+                    SCTcommon.SendMessage("Corrupted XML init file - file ignored");
+                    result = -1;
                 }
             }
             return result;
