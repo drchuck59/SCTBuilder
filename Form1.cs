@@ -147,10 +147,11 @@ namespace SCTBuilder
         private void PostLoadTasks()
         {
             // Assumes we have a fresh FAA text folder and need to update
+            SCTcommon.UpdateLabel(WaitForCycleLabel, "Please wait until SCTBuilder imports the cycle");
             SetForm1Defaults();
             UpdateEngineers();
-            //SCTcommon.UpdateLabel(UpdatingLabel);
             SCTcommon.UpdateLabel(CycleInfoLabel, CycleInfo.CycleText);
+            SCTcommon.UpdateLabel(WaitForCycleLabel);
         }
 
         private int LoadFAATextData()
@@ -530,6 +531,7 @@ namespace SCTBuilder
             DataView dvNavAPT = new DataView(ReadNaviGraph.wpNavAPT);
             foreach (DataRowView drv in dvAirports)
             {
+                Debug.WriteLine(drv["FacilityID"].ToString());
                 dvNavAPT.RowFilter = "[FacilityID] = '" + drv["FacilityID"].ToString();
                 if (dvNavAPT.Count != 0)
                 {
