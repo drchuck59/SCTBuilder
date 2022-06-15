@@ -68,6 +68,7 @@ namespace SCTBuilder
         public static string DrawSymbol(object[] FixData)
         {
             // FixData contains: ID(opt), FacilityID, Frequency(opt), Latitude, Longitude, NameOrUse, FixType
+            string Result = cr;  // " (DrawSymbol StartCR) " + 
             string Lat0; string Lon0; string Lat1; string Lon1;
             int angle = (int)InfoSection.MagneticVariation;
             string Fix = FixData[1].ToString();
@@ -115,7 +116,7 @@ namespace SCTBuilder
             }
             // Now write out the symbol strings in typical end-to-start rotation
             PointF start = PointF.Empty; PointF end;
-            string Result = space + "; Symbol for " + FixType + " " + Fix;
+            Result += space + "; Symbol for " + FixType + " " + Fix;
             foreach (PointF pointF in Coords)
             {
                 if (pointF != PenUp)
@@ -128,9 +129,15 @@ namespace SCTBuilder
                     Lat1 = Conversions.Degrees2SCT(end.Y, true);
                     Lon0 = Conversions.Degrees2SCT(start.X, false);
                     Lon1 = Conversions.Degrees2SCT(end.X, false);
-                    Result += cr + SCTstrings.SSDout(Lat0, Lon0, Lat1, Lon1);
+                    if (Result.IndexOf(cr, Result.Length - 1) == -1) Result += cr;   // "(DrawSymbol add cr)" + 
+                    Result += SCTstrings.SSDout(Lat0, Lon0, Lat1, Lon1);
                 }
                 start = end;
+            }
+            // Strip trailing crs
+            while (Result.IndexOf(cr, Result.Length - 1) != -1)
+            {
+                Result = Result.Substring(0, Result.Length - 1);
             }
             return Result;
         }
@@ -160,14 +167,15 @@ namespace SCTBuilder
                 nextChar = LatLongCalc.RotatePoint(nextChar, origin, angle);
                 origin = nextChar;
             }
-            return cr + space + "; Label " + Message + cr + Result;
+            return cr + space + "; Label " + Message +  Result;  // "(WriteHF no cr)" +
         }
 
         private static string DrawChar(char c, int[] hFont, PointF origin, int Angle, float Scale)
         {
             // Each vector needs to be (a) rotate to the angle of the line of text and (b) Scaled
             // One unit vector = 1 second or 90-100 feet.  Use the Scale function to adjust.
-            string result = string.Empty; float X; float Y; 
+            string result = string.Empty;
+            float X; float Y; 
             bool isFirst = true;
             int angle = (int)InfoSection.MagneticVariation + Angle;
             float scale = Scale / 3600F;
@@ -186,7 +194,7 @@ namespace SCTBuilder
                 }
                 if (!(start.IsEmpty) && !(end.IsEmpty))
                 {
-                    if (result.Length != 0) result += cr;
+                     result += cr;   //if (result.IndexOf(cr, result.Length - 1) == -1) "(DrawChar add cr)" + 
                     result +=
                         SCTstrings.CharOut(Conversions.Degrees2SCT(start.Y, true), Conversions.Degrees2SCT(start.X, false),
                         Conversions.Degrees2SCT(end.Y, true), Conversions.Degrees2SCT(end.X, false));
@@ -197,6 +205,11 @@ namespace SCTBuilder
                     }
                 }
                 start = end;                            // No matter what happened, move End to Start
+            }
+            while (result.IndexOf(cr, result.Length - 1) != -1)
+            {
+                result = result.Substring(0, result.Length - 1) + "(DrawChar remove cr)";
+
             }
             return result;                                      // Lat Long string to draw ONE character!  (Sheesh)
         }

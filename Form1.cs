@@ -76,6 +76,17 @@ namespace SCTBuilder
                 // Load the subscription data
                 if (LoadFAATextData() != -1) PostLoadTasks();
                 CheckNG();
+                if (InfoSection.UseNaviGraph)
+                {
+                    OceanicCheckBox.Enabled = true;
+                    //  oceanicAirwayGeneratorToolStripMenuItem.Enabled = true;
+                }
+                else
+                {
+                    OceanicCheckBox.Checked = false;
+                    OceanicCheckBox.Enabled = false;
+                    // oceanicAirwayGeneratorToolStripMenuItem.Enabled = false;
+                }
             }
             // No data folder or did not install a data set
             else
@@ -725,6 +736,7 @@ namespace SCTBuilder
             foreach (DataGridViewColumn dc in dgvFIX.Columns) dc.ReadOnly = true;
             dgvFIX.Columns[0].ReadOnly = false;
             dgvFIX.Columns[1].HeaderText = "ID";
+            dgvFIX.Sort(dgvFIX.Columns[1], ListSortDirection.Ascending);
             dgvFIX.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
             dvFIX.Dispose();
             return "FIXtabPage";
@@ -1454,10 +1466,10 @@ namespace SCTBuilder
             {
                 if (IdentifierTextBox.TextLength != 0)
                 {
-                    // First, be sure there is data in the database!
                     DataTable dtVOR = VOR;
                     DataTable dtNDB = NDB;
                     DataTable dtFIX = FIX;
+                    // First, be sure there is data in the database!
                     if ((dtFIX.Rows.Count != 0) && (dtVOR.Rows.Count != 0) && (dtNDB.Rows.Count != 0))
                     {
                         // Load the gridview - can be sorted later.  Future: add [Selected]
@@ -2305,6 +2317,17 @@ namespace SCTBuilder
         private void CloseAPTPanelButton_Click(object sender, EventArgs e)
         {
             APTpanel.Visible = false;
+        }
+
+        private void oceanicAirwayGeneratorToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // Creates the requested Airway from NaviGraph
+           // Form form = new OceanicAirwayGenerator
+           // {
+           //     StartPosition = ActiveForm.StartPosition
+            //};
+            //form.ShowDialog();
+            //form.Dispose();
         }
     }
 }

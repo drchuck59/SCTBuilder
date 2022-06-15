@@ -147,6 +147,7 @@
             this.dMSDecDegToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.sCTColorMgrToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pOFManagerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.dTTPmanagerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.goToFAA28dayNASRToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -227,6 +228,7 @@
             this.label25 = new System.Windows.Forms.Label();
             this.VORNameTextBox = new System.Windows.Forms.TextBox();
             this.label37 = new System.Windows.Forms.Label();
+            this.oceanicAirwayGeneratorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panelSUAs.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.AllMarginsNumericUpDown)).BeginInit();
             this.SelectedTabControl.SuspendLayout();
@@ -738,7 +740,7 @@
             this.QuickSearchLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.QuickSearchLabel.Location = new System.Drawing.Point(963, 281);
             this.QuickSearchLabel.Name = "QuickSearchLabel";
-            this.QuickSearchLabel.Size = new System.Drawing.Size(88, 16);
+            this.QuickSearchLabel.Size = new System.Drawing.Size(87, 16);
             this.QuickSearchLabel.TabIndex = 60;
             this.QuickSearchLabel.Text = "QuickSearch:";
             this.toolTip1.SetToolTip(this.QuickSearchLabel, "Searches ALL items of the sorted column");
@@ -755,13 +757,12 @@
             // OceanicCheckBox
             // 
             this.OceanicCheckBox.AutoSize = true;
-            this.OceanicCheckBox.Location = new System.Drawing.Point(87, 104);
+            this.OceanicCheckBox.Location = new System.Drawing.Point(13, 104);
             this.OceanicCheckBox.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
             this.OceanicCheckBox.Name = "OceanicCheckBox";
-            this.OceanicCheckBox.Size = new System.Drawing.Size(66, 17);
+            this.OceanicCheckBox.Size = new System.Drawing.Size(164, 17);
             this.OceanicCheckBox.TabIndex = 32;
-            this.OceanicCheckBox.Text = "Oceanic";
-            this.toolTip1.SetToolTip(this.OceanicCheckBox, "VORs, NDB, and FIXes must be enabled to select airways");
+            this.OceanicCheckBox.Text = "Oceanic (requires Navigraph)";
             this.OceanicCheckBox.UseVisualStyleBackColor = true;
             this.OceanicCheckBox.CheckedChanged += new System.EventHandler(this.OceanicCheckBox_CheckedChanged);
             // 
@@ -1048,7 +1049,7 @@
             this.OceanicTabPage.Controls.Add(this.dgvOceanic);
             this.OceanicTabPage.Location = new System.Drawing.Point(4, 26);
             this.OceanicTabPage.Name = "OceanicTabPage";
-            this.OceanicTabPage.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            this.OceanicTabPage.Padding = new System.Windows.Forms.Padding(3);
             this.OceanicTabPage.Size = new System.Drawing.Size(458, 308);
             this.OceanicTabPage.TabIndex = 8;
             this.OceanicTabPage.Text = "Oceanic";
@@ -1580,7 +1581,9 @@
             this.xML2SCTToolStripMenuItem,
             this.dMSDecDegToolStripMenuItem,
             this.sCTColorMgrToolStripMenuItem,
-            this.pOFManagerToolStripMenuItem});
+            this.pOFManagerToolStripMenuItem,
+            this.dTTPmanagerToolStripMenuItem,
+            this.oceanicAirwayGeneratorToolStripMenuItem});
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
             this.toolsToolStripMenuItem.Size = new System.Drawing.Size(46, 22);
             this.toolsToolStripMenuItem.Text = "Tools";
@@ -1656,6 +1659,12 @@
             this.pOFManagerToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
             this.pOFManagerToolStripMenuItem.Text = "POF manager";
             this.pOFManagerToolStripMenuItem.Click += new System.EventHandler(this.POFManagerToolStripMenuItem_Click);
+            // 
+            // dTTPmanagerToolStripMenuItem
+            // 
+            this.dTTPmanagerToolStripMenuItem.Name = "dTTPmanagerToolStripMenuItem";
+            this.dTTPmanagerToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
+            this.dTTPmanagerToolStripMenuItem.Text = "dTTP manager";
             // 
             // helpToolStripMenuItem
             // 
@@ -2518,6 +2527,13 @@
             this.label37.TabIndex = 67;
             this.label37.Text = "Displayed/All:";
             // 
+            // oceanicAirwayGeneratorToolStripMenuItem
+            // 
+            this.oceanicAirwayGeneratorToolStripMenuItem.Name = "oceanicAirwayGeneratorToolStripMenuItem";
+            this.oceanicAirwayGeneratorToolStripMenuItem.Size = new System.Drawing.Size(210, 22);
+            this.oceanicAirwayGeneratorToolStripMenuItem.Text = "Oceanic Airway generator";
+            this.oceanicAirwayGeneratorToolStripMenuItem.Click += new System.EventHandler(this.oceanicAirwayGeneratorToolStripMenuItem_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2807,6 +2823,8 @@
         private System.Windows.Forms.TextBox VORCityTextBox;
         private System.Windows.Forms.Label label35;
         private System.Windows.Forms.Label label37;
+        private System.Windows.Forms.ToolStripMenuItem dTTPmanagerToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem oceanicAirwayGeneratorToolStripMenuItem;
     }
 }
 
