@@ -48,7 +48,56 @@ namespace SCTBuilder
             return (dT.Rows.Count > 0);
         }
 
-        public static int dtHasXSelectedRows(DataTable dt)
+        public static void ClearSelected(DataView dv)
+        {
+            // Sets all [Selected] in the dataview to false
+            // Note that filtering of the dv is done prior to calling
+            // Called by Form1 and NGRunTime
+            foreach (DataRowView row in dv)
+            {
+                row["Selected"] = false;
+            }
+        }
+        public static void SetSelected(DataView dv, bool chkFIX = false)
+        {
+            // Sets all [Selected] in the dataview to true
+            // Note that filtering of the dv is done prior to calling
+            // Called by Form1 and NGRunTime
+            int result = dv.Count; int Counter = 0;
+            foreach (DataRowView dvRow in dv)
+            {
+                Counter++;
+                dvRow["Selected"] = true;
+                if (chkFIX)
+                    SelectFIX(dvRow);
+            }
+        }
+
+        private static void SelectFIX(DataRowView dvRow)
+        {
+            // Need to look at fix, determine if VOR, NDB or FIX, and make sure it's [Selected]
+            string filter = "[FacilityID] = " + dvRow["NAVAID"];
+            DataView dvFIX = new DataView(Form1.VOR)
+            {
+                RowFilter = filter
+            };
+            if (dvFIX.Count == 1)
+                dvFIX[0]["Selected"] = true;
+            dvFIX = new DataView(Form1.NDB)
+            {
+                RowFilter = filter
+            };
+            if (dvFIX.Count == 1)
+                dvFIX[0]["Selected"] = true;
+            dvFIX = new DataView(Form1.FIX)
+            {
+                RowFilter = filter
+            };
+            if (dvFIX.Count == 1)
+                dvFIX[0]["Selected"] = true;
+        }
+
+            public static int dtHasXSelectedRows(DataTable dt)
         {
             DataView dv = new DataView(dt)
             {

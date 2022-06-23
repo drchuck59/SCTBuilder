@@ -86,12 +86,19 @@ namespace SCTBuilder
             {
                 path = SCTcommon.CheckFile(PartialPath, "AirwayLow");
                 Console.WriteLine("Low AirWays...");
-                WriteAWY(path, IsLow: true);
+                WriteAWY(path, "Low");
                 TextFiles.Add(path);
 
                 path = SCTcommon.CheckFile(PartialPath, "AirwayHigh");
                 Console.WriteLine("High AirWays...");
-                WriteAWY(path, IsLow: false);
+                WriteAWY(path, "High");
+                TextFiles.Add(path);
+            }
+            if (SCTchecked.ChkOceanic)
+            {
+                path = SCTcommon.CheckFile(PartialPath, "Oceanic");
+                Console.WriteLine("Oceanic AirWays...");
+                WriteOceanic(path);
                 TextFiles.Add(path);
             }
             if (SCTchecked.ChkSID)
@@ -412,16 +419,18 @@ namespace SCTBuilder
             dvRWY.Dispose();
         }
 
-        public static void WriteAWY(string path, bool IsLow)
+        public static void WriteAWY(string path, string LowHigh)
         {
-            DataTable AWY = Form1.AWY;
+            DataTable AWY;
+            if (LowHigh == "Oceanic") AWY = NaviGraph.wpNavRTE;
+                else AWY = Form1.AWY;
             string Awy0 = string.Empty; string Awy1;
             string NavAid0 = string.Empty; string NavAid1;
             double Lat0=-1; double Lat1; 
             double Lon0=-1; double Lon1; 
             bool IsBreak; string section;
             string filter = "[Selected]";
-            if (IsLow)
+            if (LowHigh == "Low")
             {
                 section = "[LOW AIRWAY]";
                 filter += " AND [IsLow]";
@@ -478,6 +487,66 @@ namespace SCTBuilder
             }
             dvAWY.Dispose();
         }
+
+        public static void WriteOceanic(string path)
+        {
+            
+            string Awy0 = string.Empty; string Awy1;
+            string NavAid0 = string.Empty; string NavAid1;
+            double Lat0 = -1; double Lat1;
+            double Lon0 = -1; double Lon1;
+            string section;
+            string filter = "[Selected]";
+            section = "[Oceanic]";
+
+            DataView dvOceanic = new DataView(NaviGraph.wpNavRTE)
+            {
+                RowFilter = filter,
+                Sort = "AWYID, Sequence",
+            };
+            // Rotate output as in other output loops
+            using (StreamWriter sw = new StreamWriter(path))
+            {
+                SCTstrings.WriteSectionHeader(sw, section);
+                sw.WriteLine(section);
+                foreach (DataRowView rowAWY in dvOceanic)
+                {
+                    Awy1 = rowAWY["AWYID"].ToString();
+                    NavAid1 = rowAWY["NAVAID"].ToString();
+
+                    Lat1 = Convert.ToSingle(rowAWY["Latitude"]);
+                    Lon1 = Convert.ToSingle(rowAWY["Longitude"]);
+
+                    if (Awy1 != Awy0) 
+                        Lat0 = -199f;       // New air, last segment was written (but save this coord)
+                    {
+                        // Don't enter a line with the same NavAid (zero-length line) or if Lat/Lon undefined
+                        if ((NavAid0 != NavAid1) && (Lat0 != -199) && (Lat1 != -199))
+                        {
+                            // Limit the extension so we don't draw across the Atlantic
+                             if (LatLongCalc.Distance(Lat0, Lon0, Lat1, Lon1) <= 150)
+                             {
+                                // Make sure Lon1 isn't outside the working quadrant (e.g., crosses +/-180)
+                                 if (Conversions.LonQuadChanged(InfoSection.CenterLongitude_Dec, Lon1))
+                                     Lon1 = Conversions.FlipCoord(Lon0, Lon1);
+                                sw.WriteLine(SCTstrings.AWYout(Awy1,
+                                    Conversions.Degrees2SCT(Convert.ToSingle(Lat0), true),
+                                    Conversions.Degrees2SCT(Convert.ToSingle(Lon0), false),
+                                    Conversions.Degrees2SCT(Convert.ToSingle(Lat1), true),
+                                    Conversions.Degrees2SCT(Convert.ToSingle(Lon1), false),
+                                    NavAid0, NavAid1));
+                             }
+                        }
+                    }
+                    // Shift all items
+                    Awy0 = Awy1; NavAid0 = NavAid1;
+                    Lat0 = Lat1; Lon0 = Lon1;
+                }
+                SCTstrings.WriteSectionFooter(sw, section);
+            }
+            dvOceanic.Dispose();
+        }
+
 
         public static void FileSIDSTAR(string PartialPath, bool IsSID)
         {

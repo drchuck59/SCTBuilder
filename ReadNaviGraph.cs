@@ -8,7 +8,7 @@ using System.Globalization;
 
 namespace SCTBuilder
 {
-    class ReadNaviGraph
+    class NaviGraph
     {
         static string Line = string.Empty;
         static string Airport = string.Empty;
@@ -32,10 +32,10 @@ namespace SCTBuilder
 
         public static void SelectNGTables(string filter)
         {
-            SelectNGItems(ReadNaviGraph.airports, filter);
-            SelectNGItems(ReadNaviGraph.wpNavAID, filter);
-            SelectNGItems(ReadNaviGraph.wpNavAPT, filter);
-            SelectNGItems(ReadNaviGraph.wpNavFIX, filter);
+            SelectNGItems(NaviGraph.airports, filter);
+            SelectNGItems(NaviGraph.wpNavAID, filter);
+            SelectNGItems(NaviGraph.wpNavAPT, filter);
+            SelectNGItems(NaviGraph.wpNavFIX, filter);
         }
 
         private static int SelectNGItems(DataTable dt, string filter)

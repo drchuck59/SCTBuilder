@@ -9,6 +9,7 @@ using System.Media;
 using System.Drawing;
 using System.Diagnostics;
 
+
 namespace SCTBuilder
 {
     public partial class Form1 : Form
@@ -105,7 +106,7 @@ namespace SCTBuilder
         private static void CheckNG()
         {
             // Check the Navigraph data after loading FAA data
-            InfoSection.NG_AIRAC = ReadNaviGraph.AIRAC();
+            InfoSection.NG_AIRAC = NaviGraph.AIRAC();
             int NG = InfoSection.NG_AIRAC;
             int DA = CycleInfo.AIRAC;
             if ((NG != -1) && (DA != NG))
@@ -129,11 +130,11 @@ namespace SCTBuilder
             // Updates existing data with NG data
             // As the files are used differently, some are preloaded, others are loaded as needed
             // This routine runs in background while Form is loading
-            ReadNaviGraph.NavRTE();
-            ReadNaviGraph.NavFIX();
-            ReadNaviGraph.NavAID();
-            ReadNaviGraph.Airports();
-            ReadNaviGraph.NavAPT();
+            NaviGraph.NavRTE();
+            NaviGraph.NavFIX();
+            NaviGraph.NavAID();
+            NaviGraph.Airports();
+            NaviGraph.NavAPT();
         }
 
         private void NoXMLmessage()
@@ -378,9 +379,9 @@ namespace SCTBuilder
                 }
                 if (SCTchecked.ChkRWY)
                 {
-                    if (InfoSection.UseNaviGraph && (SCTcommon.dtHasXSelectedRows(ReadNaviGraph.airports) > 0))
+                    if (InfoSection.UseNaviGraph && (SCTcommon.dtHasXSelectedRows(NaviGraph.airports) > 0))
                     {
-                        if (SCTcommon.dtHasXSelectedRows(ReadNaviGraph.airports) > 0) SelectNGRWYs();
+                        if (SCTcommon.dtHasXSelectedRows(NaviGraph.airports) > 0) SelectNGRWYs();
                     }
                     if (SCTcommon.dtHasRows(APT))
                     {
@@ -467,7 +468,7 @@ namespace SCTBuilder
                 if (SCTchecked.ChkOceanic)
                 {
                     Console.WriteLine("Building Oceanic grid view from selection");
-                    SelectOceanic();
+                    CallSelectOceanic();
                     Console.WriteLine("Building RTE grid view from selection");
                     lastTab = LoadOceanicDataGridView();
                 }
@@ -476,7 +477,7 @@ namespace SCTBuilder
                 {
                     Console.WriteLine("Selecting NaviGraph APT...");
                     FilterBy.Method = "Square";
-                    ReadNaviGraph.SelectNGTables(SetFilter(SelectNGdata));
+                    NaviGraph.SelectNGTables(SetFilter(SelectNGdata));
                 }
                 SelectedTabControl.SelectedTab = SelectedTabControl.TabPages[lastTab];
                 UpdateGridCount();
@@ -500,10 +501,10 @@ namespace SCTBuilder
         private int SelectTableItems(DataTable dt, string filter)
         {
             DataView dataView = new DataView(dt);
-            ClearSelected(dataView);
+            SCTcommon.ClearSelected(dataView);
             dataView.RowFilter = filter;
             int result = dataView.Count;
-            SetSelected(dataView, true);
+            SCTcommon.SetSelected(dataView);
             dataView.Dispose();
             return result;
         }
@@ -515,14 +516,14 @@ namespace SCTBuilder
                 RowFilter = "[Selected]"
             };
             DataView dvRWY = new DataView(RWY);
-            ClearSelected(dvRWY);
+            SCTcommon.ClearSelected(dvRWY);
             foreach (DataRowView drvAPT in dvAPT)
             {
                 dvRWY.RowFilter = "[ID] = '" + drvAPT["ID"].ToString() + "'";
                 if (dvRWY.Count != 0)
                 {
                     Console.WriteLine("Selecting " + dvRWY.Count + " runways from " + drvAPT["FacilityID"]);
-                    SetSelected(dvRWY, false);
+                    SCTcommon.SetSelected(dvRWY);
                 }
             }
             dvRWY.RowFilter = "[Selected]";
@@ -535,18 +536,18 @@ namespace SCTBuilder
 
         private int SelectNGRWYs()
         {
-            DataView dvAirports = new DataView(ReadNaviGraph.airports)
+            DataView dvAirports = new DataView(NaviGraph.airports)
             {
                 RowFilter = "[Selected]"
             };
-            DataView dvNavAPT = new DataView(ReadNaviGraph.wpNavAPT);
+            DataView dvNavAPT = new DataView(NaviGraph.wpNavAPT);
             foreach (DataRowView drv in dvAirports)
             {
                 Debug.WriteLine(drv["FacilityID"].ToString());
                 dvNavAPT.RowFilter = "[FacilityID] = '" + drv["FacilityID"].ToString();
                 if (dvNavAPT.Count != 0)
                 {
-                    SetSelected(dvNavAPT, false);
+                    SCTcommon.SetSelected(dvNavAPT);
                 }
             }
             dvNavAPT.RowFilter = "[Selected]";
@@ -566,13 +567,13 @@ namespace SCTBuilder
             string filter = SetFilter();
             // Clear prior selected
             DataView dvAWY = new DataView(AWY);
-            ClearSelected(dvAWY);
+            SCTcommon.ClearSelected(dvAWY);
             // Apply the square filter
             dvAWY.RowFilter = filter;
             int result = dvAWY.Count;
             Console.WriteLine("Selecting " + result + " airway segmentss...");
             // Select all components inside the square
-            SetSelected(dvAWY, true);
+            SCTcommon.SetSelected(dvAWY, chkFIX: true);
             // This filter shouldn't do anything...
             dvAWY.RowFilter = "[Selected]";
             result = dvAWY.Count;
@@ -597,12 +598,12 @@ namespace SCTBuilder
                 if (MinSeqNo < MinSelSeqNo)
                 {
                     dvAWY.RowFilter = awyFilter + seqFilter + (MinSelSeqNo - 10).ToString() + ")";
-                    SetSelected(dvAWY);
+                    SCTcommon.SetSelected(dvAWY, chkFIX: true);
                 }
                 if (MaxSeqNo > MaxSelSeqNo)
                 {
                     dvAWY.RowFilter = awyFilter + seqFilter + (MaxSelSeqNo + 10).ToString() + ")";
-                    SetSelected(dvAWY);
+                    SCTcommon.SetSelected(dvAWY, chkFIX: true);
                 }
             }
             // Clean up
@@ -610,37 +611,49 @@ namespace SCTBuilder
             return result;
         }
 
-        private int SelectOceanic()
+        private void CallSelectOceanic()
+        {
+            // Calling Routine to develop the offshore aiway routes
+            // ** ONLY available if user has NaviGraph data AIRAC = FAA AIRAC **
+            // Clear prior selected
+            DataView dv = new DataView(NaviGraph.wpNavRTE);
+            SCTcommon.ClearSelected(dv);
+            dv.Dispose();
+            // Select all components inside the square
+            FilterBy.Method = "Square";
+            string filter =  " AND " + SetFilter();
+            // Call selection for each airway
+            SelectOceanic(filter, "AR");
+            SelectOceanic(filter, "L");
+            SelectOceanic(filter, "M");
+            SelectOceanic(filter, "U");
+            SelectOceanic(filter, "Y");
+        }
+
+        private int SelectOceanic(string filter, string AwyPrefix)
         {
             int MaxSeqNo; int MinSeqNo; int MaxSelSeqNo; int MinSelSeqNo;
-            string awy1; string awyFilter;
+            string awy1; string awyFilter; 
             string seqFilter = " AND ([Sequence] = ";
-            // Set the filter
-            FilterBy.Method = "Square";
-            string filter = SetFilter();
-            // Clear prior selected
-            DataView dvRTE = new DataView(ReadNaviGraph.wpNavRTE);
-            ClearSelected(dvRTE);
-            // Apply the square filter
-            dvRTE.RowFilter = filter;
+            DataView dvRTE = new DataView(NaviGraph.wpNavRTE);
+
+            // Apply the  filter
+            string rowFilter = "( [AWYID] LIKE '" + AwyPrefix + "*' ) " + filter;
+            dvRTE.RowFilter = rowFilter;
             int result = dvRTE.Count;
-            Console.WriteLine("Selecting " + result + " airway segmentss...");
-            // Select all components inside the square
-            SetSelected(dvRTE, true);
-            // This filter shouldn't do anything...
-            dvRTE.RowFilter = "[Selected]";
-            result = dvRTE.Count;
-            Console.WriteLine("Selected " + result + " airway segments...");
+            Console.WriteLine(result + " rows found using [AWYID] LIKE '" + AwyPrefix);
+            SCTcommon.SetSelected(dvRTE);
+
             // Build a unique list of airways
             DataTable dtRTEcheck = dvRTE.ToTable(true, "AWYID");
             // Loop the list of Airways to extend a leg beyond the square...
             foreach (DataRow dataRow in dtRTEcheck.Rows)
             {
                 // change filter to just one airway
-                awy1 = dataRow[0].ToString();
+                awy1 = dataRow["AWYID"].ToString();
                 awyFilter = "([AWYID] = '" + awy1 + "')";
                 dvRTE.RowFilter = awyFilter;
-                // Get the range of sequence numbers
+                // Get the range of sequence numbers for the entire airway
                 MinSeqNo = SCTcommon.GetMinDataView(dvRTE, "Sequence");
                 MaxSeqNo = SCTcommon.GetMaxDataView(dvRTE, "Sequence");
                 // Filter out the SELECTED for the SELECTED range of sequence numbers
@@ -648,15 +661,22 @@ namespace SCTBuilder
                 MinSelSeqNo = SCTcommon.GetMinDataView(dvRTE, "Sequence");
                 MaxSelSeqNo = SCTcommon.GetMaxDataView(dvRTE, "Sequence");
                 // Extend one leg outside the square, if able (Doesn't matter if only one waypoint found)
+                // Also, do NOT add the extension if it is ridiculously far away
+                double BoxDiagLength = LatLongCalc.Distance(InfoSection.NorthLimit, InfoSection.WestLimit, InfoSection.SouthLimit, InfoSection.EastLimit);
+                double MaxDistance = BoxDiagLength / 1.5; double TestDistance;
                 if (MinSeqNo < MinSelSeqNo)
                 {
-                    dvRTE.RowFilter = awyFilter + seqFilter + (MinSelSeqNo - 10).ToString() + ")";
-                    SetSelected(dvRTE);
+                    dvRTE.RowFilter = awyFilter + seqFilter + (MinSelSeqNo - 1).ToString() + ")";
+                    TestDistance = LatLongCalc.Distance(InfoSection.CenterLatitude_Dec, InfoSection.CenterLongitude_Dec, (double)dvRTE[0]["Latitude"], (double)dvRTE[0]["Longitude"]);
+                    if (TestDistance < MaxDistance)
+                        SCTcommon.SetSelected(dvRTE);
                 }
                 if (MaxSeqNo > MaxSelSeqNo)
                 {
-                    dvRTE.RowFilter = awyFilter + seqFilter + (MaxSelSeqNo + 10).ToString() + ")";
-                    SetSelected(dvRTE);
+                    dvRTE.RowFilter = awyFilter + seqFilter + (MaxSelSeqNo + 1).ToString() + ")";
+                    TestDistance = LatLongCalc.Distance(InfoSection.CenterLatitude_Dec, InfoSection.CenterLongitude_Dec, (double)dvRTE[0]["Latitude"], (double)dvRTE[0]["Longitude"]);
+                    if (TestDistance < MaxDistance)
+                        SCTcommon.SetSelected(dvRTE);
                 }
             }
             // Clean up
@@ -770,7 +790,7 @@ namespace SCTBuilder
             {
                 RowFilter = "[IsSID] = " + isSID
             };
-            ClearSelected(dvSSD);
+            SCTcommon.ClearSelected(dvSSD);
             Application.DoEvents();
 
             // Get 'selected' airports and build a unique list
@@ -797,7 +817,7 @@ namespace SCTBuilder
                         {
                             dvSSD.RowFilter = "[ID] = '" + data[0].ToString() + "'";
                             Console.WriteLine("Selecting " + dvSSD[0]["SSDname"].ToString() + " for " + dtAptRow["FacilityID"].ToString());
-                            SetSelected(dvSSD);
+                            SCTcommon.SetSelected(dvSSD);
                         }
                     }
                 }
@@ -855,8 +875,8 @@ namespace SCTBuilder
 
         private string LoadOceanicDataGridView()
         {
-            DataView dvOceanic = new DataView(ReadNaviGraph.wpNavRTE);
-            DataTable dtOceanic = dvOceanic.ToTable(true, "Selected", "AWYID", "NAVAID");
+            DataView dvOceanic = new DataView(NaviGraph.wpNavRTE);
+            DataTable dtOceanic = dvOceanic.ToTable(true, "Selected", "AWYID", "NAVAID", "Sequence");
             dgvOceanic.DataSource = dtOceanic;
             (dgvOceanic.DataSource as DataTable).DefaultView.RowFilter = "[Selected]";
             foreach (DataGridViewColumn dc in dgvVOR.Columns) dc.ReadOnly = true;
@@ -911,30 +931,29 @@ namespace SCTBuilder
         //    return Filter + AddlFilter;
         //}
 
-        private void ClearSelected(DataView dv)
-        {
-            // DataView arrives filtered (or not)
-            // otherwise, ALL the selected boxes are false
-            foreach (DataRowView row in dv)
-            {
-                row["Selected"] = false;
-            }
-        }
-        private void SetSelected(DataView dv, bool Label = false)
-        {
-            // If the filter is applied, selected boxes are true
-            // otherwise, ALL the selected boxes are false
-            // But if the ShowAll box is checked, ignore the update
-            int result = dv.Count; int Counter = 0;
-            foreach (DataRowView row in dv)
-            {
-                Counter++;
-                row["Selected"] = true;
-                if (Label)
-                    Console.WriteLine("Selecting " + result + " rows from " + dv.Table.TableName +
-                       " (" + (Counter * 100 / dv.Count).ToString() + "% done)"); ;
-            }
-        }
+        //private void SCTcommon.ClearSelected(DataView dv)
+        //{
+        //    // Sets all [Selected] in the dataview to false
+        //    // Note that filtering of the dv is done prior to calling
+        //    foreach (DataRowView row in dv)
+        //    {
+        //        row["Selected"] = false;
+        //    }
+        //}
+        //private void SCTcommon.SetSelected(DataView dv, bool Label = false)
+        //{
+        //    // Sets all [Selected] in the dataview to true
+        //    // Note that filtering of the dv is done prior to calling
+        //    int result = dv.Count; int Counter = 0;
+        //    foreach (DataRowView row in dv)
+        //    {
+        //        Counter++;
+        //        row["Selected"] = true;
+        //        if (Label)
+        //            Console.WriteLine("Selecting " + result + " rows from " + dv.Table.TableName +
+        //               " (" + (Counter * 100 / dv.Count).ToString() + "% done)"); ;
+        //    }
+        //}
 
         private void UpdateGridCount()
         {
@@ -965,7 +984,7 @@ namespace SCTBuilder
                     txtGridViewCount.Text = dgvSTAR.Rows.Count.ToString() + " / " + SSD.Rows.Count.ToString();
                     break;
                 case "Oceanic":
-                    txtGridViewCount.Text = dgvOceanic.Rows.Count.ToString() + " / " + ReadNaviGraph.wpNavRTE.Rows.Count.ToString();
+                    txtGridViewCount.Text = dgvOceanic.Rows.Count.ToString() + " / " + NaviGraph.wpNavRTE.Rows.Count.ToString();
                     break;
                 default:
                     txtGridViewCount.Text = "Tab not found)";
@@ -978,7 +997,7 @@ namespace SCTBuilder
             string result = string.Empty;
             if (NGdata)
             {
-                SetFilterBy();
+                SetFilterBy();              // Ensure the corners are in the FilterBy set
                 result = result +
                     " ( ([Latitude] <= " + FilterBy.NorthLimit.ToString() + ")" +
                     " AND  ([Latitude] >= " + FilterBy.SouthLimit.ToString() + ")" +
@@ -2055,7 +2074,7 @@ namespace SCTBuilder
                 {
                     RowFilter = "[ID] = '" + SSDIDvalue + "'"
                 };
-                if (Selected) SetSelected(dvSSD); else ClearSelected(dvSSD);
+                if (Selected) SCTcommon.SetSelected(dvSSD); else SCTcommon.ClearSelected(dvSSD);
                 dvSSD.Dispose();
                 SSDIDvalue = string.Empty;
             }
@@ -2070,7 +2089,7 @@ namespace SCTBuilder
                 {
                     RowFilter = "[ID] = '" + SSDIDvalue + "'"
                 };
-                if (Selected) SetSelected(dvSSD); else ClearSelected(dvSSD);
+                if (Selected) SCTcommon.SetSelected(dvSSD); else SCTcommon.ClearSelected(dvSSD);
                 dvSSD.Dispose();
                 SSDIDvalue = string.Empty;
             }

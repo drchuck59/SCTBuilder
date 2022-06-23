@@ -93,12 +93,12 @@ namespace SCTBuilder
                 {
                     Console.WriteLine("Low AirWays...");
                     path = SCTcommon.CheckFile(PartialPath, "AirwayLow");
-                    SCToutput.WriteAWY(path, IsLow: true);
+                    SCToutput.WriteAWY(path, "Low");
                     if (CombineIntoOneFile) TextFiles.Add(path);
 
                     path = SCTcommon.CheckFile(PartialPath, "AirwayHigh");
                     Console.WriteLine("High AirWays...");
-                    SCToutput.WriteAWY(path, IsLow: false);
+                    SCToutput.WriteAWY(path, "High");
                     if (CombineIntoOneFile) TextFiles.Add(path);
                 }
 
@@ -270,11 +270,11 @@ namespace SCTBuilder
             List<string> SSDcodes = new List<string>();
             string SIDout = string.Empty; string STARout = string.Empty;
             DataTable APT = Form1.APT;
-            DataView dvNGSID = new DataView(ReadNaviGraph.pmdgSID);
-            DataView dvNGSIDTransition = new DataView(ReadNaviGraph.pmdgSIDTransition);
-            DataView dvNGSTAR = new DataView(ReadNaviGraph.pmdgSTAR);
-            DataView dvNGSTARTransition = new DataView(ReadNaviGraph.pmdgSTARTransition);
-            DataView dvNGRWYS = new DataView(ReadNaviGraph.RWYs);
+            DataView dvNGSID = new DataView(NaviGraph.pmdgSID);
+            DataView dvNGSIDTransition = new DataView(NaviGraph.pmdgSIDTransition);
+            DataView dvNGSTAR = new DataView(NaviGraph.pmdgSTAR);
+            DataView dvNGSTARTransition = new DataView(NaviGraph.pmdgSTARTransition);
+            DataView dvNGRWYS = new DataView(NaviGraph.RWYs);
             // Using the SELECTED airports, select the SIDS from NG
             // Get the list of Selected Airports
             DataView dvAPT = new DataView(APT)
@@ -291,7 +291,7 @@ namespace SCTBuilder
                     string FullFilename = SCTcommon.GetFullPathname(FolderMgt.DataFolder, ICOAapt + ".txt");
                     if (FullFilename.IndexOf("ERROR") == -1)
                     {
-                        if (ReadNaviGraph.SIDSTARS(ICOAapt, FullFilename))
+                        if (NaviGraph.SIDSTARS(ICOAapt, FullFilename))
                         {
                             // Now we have ONE airport of SIDS and STARS in their respective tables
                             if (dvNGSID.Count > 0)
