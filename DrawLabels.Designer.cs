@@ -111,7 +111,6 @@
             this.LatTextBox.Name = "LatTextBox";
             this.LatTextBox.Size = new System.Drawing.Size(135, 23);
             this.LatTextBox.TabIndex = 4;
-            this.LatTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.LatTextBox_KeyPress);
             this.LatTextBox.Validated += new System.EventHandler(this.LatTextBox_Validated);
             // 
             // LonTextBox
@@ -289,7 +288,6 @@
             this.ScaleTextBox.TabIndex = 19;
             this.ScaleTextBox.Text = "1.0";
             this.toolTip1.SetToolTip(this.ScaleTextBox, "Scaling only! Default 1=0.25 NM square");
-            this.ScaleTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.ScaleTextBox_KeyPress);
             this.ScaleTextBox.Validated += new System.EventHandler(this.ScaleTextBox_Validated);
             // 
             // label3
@@ -327,7 +325,7 @@
             // 
             this.UpdateLabel.AutoSize = true;
             this.UpdateLabel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(128)))));
-            this.UpdateLabel.Location = new System.Drawing.Point(49, 725);
+            this.UpdateLabel.Location = new System.Drawing.Point(41, 197);
             this.UpdateLabel.Name = "UpdateLabel";
             this.UpdateLabel.Size = new System.Drawing.Size(35, 13);
             this.UpdateLabel.TabIndex = 21;

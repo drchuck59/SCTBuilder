@@ -458,6 +458,11 @@ namespace SCTBuilder
             }
             return maxValue;
         }
+
+        public static int RoundUpTo10(float x)
+        {
+            return (int)Math.Round(x / 10.0) * 10;
+        }
     }
 
     public class Conversions

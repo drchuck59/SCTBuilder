@@ -224,25 +224,19 @@ namespace SCTBuilder
         }
 
 
-
-        public static PointF RotatePoint(PointF pointToRotate, PointF centerPoint, double angleInDegrees)
+        public static PointF RotatePointF(PointF pointToRotate, PointF centerPoint, double angleInDegrees)
         {
             // Given a center point and point to rotate (aka a line), rotate the line X degrees
-            double radians = LatLongCalc.Deg2Rad(angleInDegrees);
-            double sin = Math.Sin(radians);
-            double cos = Math.Cos(radians);
-
-            // Translate point back to origin
-            pointToRotate.X -= centerPoint.X;
-            pointToRotate.Y -= centerPoint.Y;
-
-            // Rotate point
-            double xnew = pointToRotate.X * cos - pointToRotate.Y * sin;
-            double ynew = pointToRotate.X * sin + pointToRotate.Y * cos;
-
-            // Translate point back
-            PointF newPoint = new PointF((float)xnew + centerPoint.X, (float)ynew + centerPoint.Y);
-            return newPoint;
+            double angleInRadians = LatLongCalc.Deg2Rad(angleInDegrees);
+            double sinTheta = Math.Sin(angleInRadians);
+            double cosTheta = Math.Cos(angleInRadians);
+            return new PointF
+            {
+                X = (float)(cosTheta * (pointToRotate.X - centerPoint.X) +
+                sinTheta * (pointToRotate.Y - centerPoint.Y)) + centerPoint.X,
+                Y = (float)(sinTheta * -1 * (pointToRotate.X - centerPoint.X) +
+                cosTheta * (pointToRotate.Y - centerPoint.Y) ) + centerPoint.Y,
+            };
         }
 
         public static double Distance(double lat1, double lon1, double lat2, double lon2, char unit = 'N')
@@ -302,7 +296,7 @@ namespace SCTBuilder
             }
         }
 
-        public static double[] Destination(double Latitude, double Longitude, double Dist, double Brg, char Type)
+        public static double[] Destination(double Latitude, double Longitude, double Dist, double Brg, char Type = 'N')
         {
             // Destination coordinates given distance and bearing from starting point
             // Calculates using Haversine formula (spherical earth) - up to 3% error
@@ -414,36 +408,39 @@ namespace SCTBuilder
             return Segment(Lat1, Lon1, Lat2, Lon2);
         }
 
-        public static PointF Centroid(PointF[] Coords)
+        public static PointF Centroid(PointF[] Coords, int numCoords)
         {
-            // Calculates the Centroid of a closed polygon
-            // All symbols return to their origin on the first pass
+            // Calculates the Centroid of a closed polygon from our Fix symbols
+            float area = 0.0f;
+            float Cx = 0; 
+            float Cy = 0;
+            float tmp;
+            int numPoints = 0; int k;
+            // While some symbols are complex, the first draw pattern is always simple
+            // That is, look for a return to the origin on the first pass (a -1/-1 point)
             // After that pass, can ignore the other points
-            float[] result = new float[2];
-            float lastX = 0; float lastY = 0;
-            int numPoints = 0;
-            for (int i = 0; i < Coords.Length; i++)
+            for (int i = 2; i < numCoords; i++)
             {
                 if (Coords[i].X == -1)
                 {
                     break;
                 }
-                else
-                {
-                    result[0] += Coords[i].X;
-                    result[1] += Coords[i].Y;
-                    lastX = Coords[i].X;
-                    lastY = Coords[i].Y;
-                    numPoints++;
-                }
+                else numPoints += 1;
             }
-            // regardless of how I got here, back out the closing point and reduce point count
-            result[0] -= lastX;
-            result[1] -= lastY;
-            numPoints--;
-            result[0] = result[0] / numPoints;
-            result[1] = result[1] / numPoints;
-            return new PointF(result[0], result[1]);
+            // Now we have a simple polygon to calculate the centroid
+            for (int i = 0; i <= numPoints; i++)
+            {
+                k = (i + 1) % (numPoints + 1);
+                tmp = Coords[i].X * Coords[k].Y -
+                      Coords[k].X * Coords[i].Y;
+                area += tmp;
+                Cx += (Coords[i].X + Coords[k].X) * tmp;
+                Cy += (Coords[i].Y + Coords[k].Y) * tmp;
+            }
+            area *= 0.5f;
+            Cx *= 1.0f / (6.0f * area);
+            Cy *= 1.0f / (6.0f * area);
+            return new PointF(Cx, Cy);
         }
 
         private static double NormalizedLon(double radLon)

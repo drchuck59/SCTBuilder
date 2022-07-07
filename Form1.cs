@@ -1587,7 +1587,7 @@ namespace SCTBuilder
                 switch (method)
                 {
                     case 1:
-                        result = CrossForm.TestTextBox(tb, method: LatTest);
+                        result = CrossForm.TestCoordTextBox(tb, method: LatTest);
                         if (!result)
                             if (echo)
                             {
@@ -1596,7 +1596,7 @@ namespace SCTBuilder
                             }
                         break;
                     case 2:
-                        result = CrossForm.TestTextBox(tb, method: LonTest);
+                        result = CrossForm.TestCoordTextBox(tb, method: LonTest);
                         if (!result)
                             if (echo)
                             {
@@ -1708,7 +1708,7 @@ namespace SCTBuilder
             TextBox tb = CenterLatTextBox;
             if (tb.TextLength != 0)
             {
-                if (CrossForm.TestTextBox(tb))
+                if (CrossForm.TestCoordTextBox(tb))
                     if (TestCoordInbounds(tb, LatTest))
                     {
                         InfoSection.CenterLatitude_Dec = CrossForm.Lat;
@@ -1723,7 +1723,7 @@ namespace SCTBuilder
             TextBox tb = CenterLonTextBox;
             if (tb.TextLength != 0)
             {
-                if (CrossForm.TestTextBox(tb))
+                if (CrossForm.TestCoordTextBox(tb))
                     if (TestCoordInbounds(tb, LonTest))
                     {
                         InfoSection.CenterLongitude_Dec = CrossForm.Lon;

@@ -328,10 +328,10 @@ namespace SCTBuilder
     public class MapSymbols
     {
         // At Scale = 1, 1 unit = 30 seconds DMS, or 30/3600 degrees
-        // First value is # of vectors, second is width, third is angle offset, next pair is center
+        // First value is # of vectors, second is width
         // Triangle - RNAV Fix
         public static int[] FIX = new int[]
-        { 4, 22, 1,1, 15,30, 30,1, 1,1 };
+        { 4, 30, 1,1, 15,30, 30,1, 1,1 };
         // VOR symbol - hexagon
         public static int[] VOR = new int[]
             {7, 30, 1,9, 1,15, 9,30, 21,30, 30,15, 21,1, 1,9};
@@ -341,7 +341,7 @@ namespace SCTBuilder
             -1,-1, 1,17, 7,27, -1,-1, 23,27, 29,17, -1,-1, 9,1, 23,1};
         // TACAN - outline of the VORTAC
         public static int[] TACAN = new int[]
-            {19, 25, 3,11, 11,11, 8,17, 1,24, 7,30, 12,25, 19,25,
+            {19, 30, 3,11, 11,11, 8,17, 1,24, 7,30, 12,25, 19,25,
             24,30, 30,24, 17,23, 20,11, 20,3, 11,3, -1,-1, 
                 15,16, 15,18, 17,18, 17,16, 15,17};
         // VOR-DME - hexagon inside a square
@@ -353,7 +353,7 @@ namespace SCTBuilder
             {5, 21, 5,1, 1,30, 30,30, 1,30, 1,1};
         // Waypoint - weird star
         public static int[] WAYPOINT = new int[]
-            {28, 30,  
+            {28, 29,  
                 1,15, 2,15, 6,16, 10,17, 13,20, 14,24, 15,29, 15,30, 
                 15,29, 16,24, 17,20, 21,17, 25,16, 29,15, 30,15, 
                 29,15, 25,14, 21,13, 16,6, 15,2, 15,1,
@@ -807,7 +807,7 @@ namespace SCTBuilder
         public static double Distance { get; set; }
         public static double Bearing { get; set; }
 
-        public static bool TestTextBox(TextBox tb, int method = 0)
+        public static bool TestCoordTextBox(TextBox tb, int method = 0)
         {
             // Tests the string for correct coordinate format
             // Places Lat and/or Lon in public field above

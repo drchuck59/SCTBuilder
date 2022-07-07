@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Drawing;
 
 
@@ -8,6 +9,8 @@ namespace SCTBuilder
     {
         static readonly string cr = Environment.NewLine;
         static readonly string space = new string(' ', 27);
+        public static string result;
+        public static int width;
 
         public static float[] Adjust (float lat, float lon, 
             float LeftRightSeconds, float UpDownSeconds, int Angle = 0, float Scale = 1)
@@ -16,10 +19,10 @@ namespace SCTBuilder
             // Latitude is Y and Longitude is X
             float[] result = new float[2];
             PointF Origin = new PointF(lon, lat);
-            SizeF Offset = new SizeF(LeftRightSeconds/3600, UpDownSeconds/3600);
+            SizeF Offset = new SizeF(LeftRightSeconds/360, UpDownSeconds/360);
             PointF Coord = PointF.Add(Origin, Offset);
             int angle = (int)InfoSection.MagneticVariation + Angle;
-            Coord = LatLongCalc.RotatePoint(Coord, Origin, angle);
+            Coord = LatLongCalc.RotatePointF(Coord, Origin, angle);
             result[0] = Coord.Y; result[1] = Coord.X;
             return result;
         }
@@ -65,12 +68,13 @@ namespace SCTBuilder
             return Symbol;
         }
 
-        public static string DrawSymbol(object[] FixData)
+        public static string DrawSymbol(object[] FixData, float Scale = 1f)
         {
             // FixData contains: ID(opt), FacilityID, Frequency(opt), Latitude, Longitude, NameOrUse, FixType
             string Result = cr;  // " (DrawSymbol StartCR) " + 
+            PointF PenUp = new PointF(-1, -1);
             string Lat0; string Lon0; string Lat1; string Lon1;
-            int angle = (int)InfoSection.MagneticVariation;
+            // int angle = SCTcommon.RoundUpTo10((float)InfoSection.MagneticVariation);
             string Fix = FixData[1].ToString();
             string FixType = FixData[6].ToString();
             if (FixType == "FIX")
@@ -78,8 +82,11 @@ namespace SCTBuilder
             float lat = Convert.ToSingle(FixData[3]);
             float lon = Convert.ToSingle(FixData[4]);
             int[] Symbol = SymbolRef(FixType);
-            // Declare values used in loop below
-            PointF[] Coords = new PointF[Symbol[0]];
+            // Declare values used in loops below
+            int numCoords = Symbol[0];
+            Hershey.width = Symbol[1];
+            Hershey.result = string.Empty;
+            PointF[] Coords = new PointF[numCoords];
             float myX; float myY;                      
             // Loop through the symbol points, creating the initial pattern
             int Counter = 0; 
@@ -87,23 +94,14 @@ namespace SCTBuilder
             {
                 myX = Symbol[i + 1]; myY = Symbol[i];           // Lat is Y, Lon is X
                 if ((myY != -1) && (myX != -1))
-                    Coords[Counter] = new PointF(myX /= 3600F, myY /= 3600F);
+                    Coords[Counter] = new PointF(myX /= 3600F * Scale, myY /= 3600F * Scale);
                 else
                     Coords[Counter] = new PointF(-1F, -1F);
                 Counter++;
             }
-            // Rotate the symbol to True North - with the first point as the origin (skip breaks)
-            // WHY is Mag Var correct, but rotation is NOT?
-            PointF PenUp = new PointF(-1, -1);
-            for (int i = 0; i < Coords.Length; i++)
-            {
-                if (Coords[i] != PenUp)
-                {
-                    Coords[i] = LatLongCalc.RotatePoint(Coords[i], Coords[0], angle);
-                }
-            }
             // Get the centroid
-            PointF centroid = LatLongCalc.Centroid(Coords);
+
+            PointF centroid = LatLongCalc.Centroid(Coords, numCoords);
             // Find the offset of the centroid from the FIX
             SizeF CentOffset = new SizeF(lon-centroid.X, lat - centroid.Y);
             // Move the symbol so it appears over the FIX
@@ -112,6 +110,16 @@ namespace SCTBuilder
                 if (Coords[i] != PenUp)
                 {
                     Coords[i] = PointF.Add(Coords[i], CentOffset);
+                }
+            }
+            // Get the new centroid
+            centroid = LatLongCalc.Centroid(Coords, numCoords);
+            // Rotate the symbol to True North around the Centroid
+            for (int i = 0; i < Coords.Length; i++)
+            {
+                if (Coords[i] != PenUp)
+                {
+                    Coords[i] = LatLongCalc.RotatePointF(Coords[i], Coords[0], InfoSection.MagneticVariation);
                 }
             }
             // Now write out the symbol strings in typical end-to-start rotation
@@ -139,6 +147,7 @@ namespace SCTBuilder
             {
                 Result = Result.Substring(0, Result.Length - 1);
             }
+            Hershey.result = Result;
             return Result;
         }
 
@@ -148,37 +157,41 @@ namespace SCTBuilder
             float curLat = (float)Lat;
             float curLon = (float)Lon;
             PointF origin = new PointF(curLon, curLat);
-            PointF nextChar = origin;
+            PointF charAnchor = origin;
             float scale = Scale / 3600F;
-            int angle = (int)InfoSection.MagneticVariation + Angle;
             int AsciiC; int[] SmplxC; 
-            string Result = string.Empty;
+            string Result = Hershey.result = string.Empty;
+            Hershey.width = 0;
             foreach (char c in Message)
             {
+                // The string must be drawn along a line.
+                // Therefore, each char must start along that line
                 AsciiC = c;
                 if ((AsciiC - 32 >= 0) & (AsciiC - 32 < 95))
                     AsciiC -= 32;
                 else AsciiC = 10;     // 10 is '*' for 'error'
                 SmplxC = RomanSimplex.Simplex[AsciiC];
-                Result += DrawChar(c, SmplxC, nextChar, Angle, Scale);
+                Hershey.width += SmplxC[1];
+                // SmplxC[1] is the width of this character
+                Result += DrawChar(c, SmplxC, charAnchor, Angle, scale);
                 // Use points to update here
                 SizeF offset = new SizeF(SmplxC[1] * scale, 0);
-                nextChar = PointF.Add(nextChar, offset);
-                nextChar = LatLongCalc.RotatePoint(nextChar, origin, angle);
-                origin = nextChar;
+                // The new origin will be the first origin plus the width of the next char
+                charAnchor = PointF.Add(charAnchor, offset);
+                charAnchor = LatLongCalc.RotatePointF(charAnchor, origin, Angle);
+                origin = charAnchor;
             }
+            Hershey.result = Result;
             return cr + space + "; Label " + Message +  Result;  // "(WriteHF no cr)" +
         }
 
-        private static string DrawChar(char c, int[] hFont, PointF origin, int Angle, float Scale)
+        private static string DrawChar(char c, int[] hFont, PointF origin, int angle, float scale)
         {
             // Each vector needs to be (a) rotate to the angle of the line of text and (b) Scaled
             // One unit vector = 1 second or 90-100 feet.  Use the Scale function to adjust.
             string result = string.Empty;
             float X; float Y; 
             bool isFirst = true;
-            int angle = (int)InfoSection.MagneticVariation + Angle;
-            float scale = Scale / 3600F;
             PointF end; PointF start = PointF.Empty; 
             // Rotate through vectors in usual manner
             for (int i = 2; i < hFont.Length; i += 2)
@@ -190,7 +203,7 @@ namespace SCTBuilder
                 {
                     SizeF vector = new SizeF(X * scale, Y * scale);
                     end = PointF.Add(origin, vector);
-                    end = LatLongCalc.RotatePoint(end, origin, angle);
+                    end = LatLongCalc.RotatePointF(end, origin, angle);
                 }
                 if (!(start.IsEmpty) && !(end.IsEmpty))
                 {
@@ -198,6 +211,7 @@ namespace SCTBuilder
                     result +=
                         SCTstrings.CharOut(Conversions.Degrees2SCT(start.Y, true), Conversions.Degrees2SCT(start.X, false),
                         Conversions.Degrees2SCT(end.Y, true), Conversions.Degrees2SCT(end.X, false));
+                    // If first point of character draw, add semi-colon and character
                     if (isFirst)
                     {
                         result += ";" + c.ToString();

@@ -417,7 +417,7 @@ namespace SCTBuilder
             return Fixes;
         }
 
-        private static string DrawFixInfo(List<string> FixNames, int Angle = 0, float Scale = 1f)
+        private static string DrawFixInfo(List<string> FixNames)
         {
             // Calling function for fixes in diagrams
             // Because labels and/or symbols might be drawn
@@ -425,7 +425,7 @@ namespace SCTBuilder
             string result = string.Empty;
             float Latitude;
             float Longitude;
-            float[] AdjustedCoords = null;
+            double[] AdjustedCoords = null;
             foreach (string Fix in FixNames)
             {
                 // FixInfo returns: 0-Fix (calling ID), 1-Freq, 2-Lat, 3-Lon, 4-Name or Use, 5-Type
@@ -439,13 +439,16 @@ namespace SCTBuilder
                         if (InfoSection.DrawFixSymbolsOnDiagrams)
                         {
                             result += Hershey.DrawSymbol(FixData);
-                            AdjustedCoords = Hershey.Adjust(Latitude, Longitude, 15, -30);
+                            float charWidth = Hershey.width / 60f;
+                            AdjustedCoords = LatLongCalc.Destination(Latitude, Longitude, charWidth, 90, 'N');
                         }
                         if (InfoSection.DrawFixLabelsOnDiagrams)
                         {
                             if (!InfoSection.DrawFixSymbolsOnDiagrams)
-                                AdjustedCoords = Hershey.Adjust(Latitude, Longitude, 5, 0);
-                            result += Hershey.WriteHF(Fix, AdjustedCoords[0], AdjustedCoords[1], Angle, Scale);
+                            {
+                                AdjustedCoords = LatLongCalc.Destination(Latitude, Longitude, 45, 90, 'N');
+                            }
+                            result += Hershey.WriteHF(Fix, AdjustedCoords[0], AdjustedCoords[1], (int)InfoSection.MagneticVariation);
                         }
                     }
                 }

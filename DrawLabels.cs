@@ -77,20 +77,18 @@ namespace SCTBuilder
 
         private void LatTextBox_Validated(object sender, EventArgs e)
         {
-            if (CrossForm.TestTextBox(LatTextBox))
+            if (CrossForm.TestCoordTextBox(LatTextBox))
             {
                 LabelLat = CrossForm.Lat;
-                LatTextBox.Text = Conversions.Degrees2SCT(LabelLat, true);
                 CheckGenerate();
             }
         }
 
         private void LonTextBox_Validated(object sender, EventArgs e)
         {
-            if (CrossForm.TestTextBox(LatTextBox))
+            if (CrossForm.TestCoordTextBox(LonTextBox))
             {
                 LabelLon = CrossForm.Lon;
-                LatTextBox.Text = Conversions.Degrees2SCT(LabelLon, false);
                 CheckGenerate();
             }
         }
@@ -132,11 +130,12 @@ namespace SCTBuilder
 
         private void DrawButton_Click(object sender, EventArgs e)
         {
+            SCTcommon.UpdateLabel(UpdateLabel, "Working on it");
             string result = string.Empty;
             object[] NavData; string curFix;
             double Lat1 = Conversions.DMS2Degrees(LatTextBox.Text, ".");
             double Lon1 = Conversions.DMS2Degrees(LonTextBox.Text, ".");
-            int Brg = Convert.ToInt32(BearingTextBox.Text) - 90;            // Rotation in addition to MagVar
+            int Brg = Convert.ToInt32(BearingTextBox.Text) - 90 + (int)InfoSection.MagneticVariation;
             float Scale = Convert.ToSingle(ScaleTextBox.Text);              // Scaling beyond internal 1/3600
             if (IncludeSymbolCheckBox.Checked && (FixListDataGridView.CurrentRow != null))
             {
@@ -144,8 +143,12 @@ namespace SCTBuilder
                 NavData = SCTcommon.GetNavData(curFix);
                 result += Hershey.DrawSymbol(NavData);
             }
+            float charWidth = Hershey.width * Scale / 60f;
+            double[] coords = LatLongCalc.Destination(Lat1, Lon1, charWidth, 90, 'N');
+            Lat1 = coords[0]; Lon1 = coords[1];
             result += Hershey.WriteHF(LabelTextBox.Text, Lat1, Lon1, Brg, Scale);
             OutputTextBox.Text = result;
+            SCTcommon.UpdateLabel(UpdateLabel);
         }
 
         private void ClearOutputButton_Click(object sender, EventArgs e)
@@ -180,36 +183,21 @@ namespace SCTBuilder
                 e.Handled = true;
         }
 
-        private void ScaleTextBox_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            if (Extensions.CharIsDecimal(e.KeyChar, ref ScaleTextBox, 1))
-                e.Handled = false;
-            else
-                e.Handled = true;
-        }
-
-        private void LatTextBox_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            if (Extensions.IsValidDecCoordKey(e.KeyChar, LatTextBox))
-                e.Handled = false;
-            else
-                e.Handled = true;
-        }
-
         private void Copy2ClipboardButton_Click(object sender, EventArgs e)
         {
-            string Msg;
+            string Msg; int TimeInMS = 1000;
             if (OutputTextBox.TextLength != 0)
             {
                 Clipboard.Clear();
                 Clipboard.SetText(OutputTextBox.Text.ToString());
                 Msg = "Contents of output textbox copied to clipboard";
+                TimeInMS = 500;
             }
             else
             {
                 Msg = "No text in output textbox to copy!";
             }
-            SCTcommon.UpdateLabel(UpdateLabel, Msg, 1000);
+            SCTcommon.UpdateLabel(UpdateLabel, Msg, TimeInMS);
         }
 
         private void SaveOutput2FileButton_Click(object sender, EventArgs e)
@@ -245,5 +233,6 @@ namespace SCTBuilder
                 SCTcommon.SendMessage(Msg);
             }
         }
+
     }
 }

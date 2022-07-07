@@ -132,7 +132,7 @@ namespace SCTBuilder
 
         private void PasteToTextBox_Validated(object sender, EventArgs e)
         {
-            CopyToHoldButton.Enabled = CrossForm.TestTextBox(PasteToTextBox);
+            CopyToHoldButton.Enabled = CrossForm.TestCoordTextBox(PasteToTextBox);
         }
 
         private void RightTurnRadioButton_CheckedChanged(object sender, EventArgs e)
@@ -152,7 +152,7 @@ namespace SCTBuilder
 
         private void HoldLatitudeTextBox_Validated(object sender, EventArgs e)
         {
-            if (CrossForm.TestTextBox(HoldLatitudeTextBox))
+            if (CrossForm.TestCoordTextBox(HoldLatitudeTextBox))
             {
                 HoldLat = CrossForm.Lat;
             }
@@ -160,7 +160,7 @@ namespace SCTBuilder
 
         private void HoldLongitudeTextBox_Validated(object sender, EventArgs e)
         {
-            if (CrossForm.TestTextBox(HoldLongitudeTextBox))
+            if (CrossForm.TestCoordTextBox(HoldLongitudeTextBox))
             {
                 HoldLon = CrossForm.Lat;
             }

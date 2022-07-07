@@ -459,7 +459,7 @@ namespace SCTBuilder
         private void StartLatitudeTextBox_Validated(object sender, EventArgs e)
         {
             
-            if (CrossForm.TestTextBox(StartLatitudeTextBox))
+            if (CrossForm.TestCoordTextBox(StartLatitudeTextBox))
             {
                 StartLat = CrossForm.Lat;
                 if (CrossForm.Lon != -1) StartLon = CrossForm.Lon;
@@ -469,7 +469,7 @@ namespace SCTBuilder
 
         private void StartLongitudeTextBox_Validated(object sender, EventArgs e)
         {
-            if (CrossForm.TestTextBox(StartLongitudeTextBox))
+            if (CrossForm.TestCoordTextBox(StartLongitudeTextBox))
             {
                 StartLon = CrossForm.Lon;
                 if (CrossForm.Lat != -1) StartLat = CrossForm.Lat;
@@ -479,7 +479,7 @@ namespace SCTBuilder
 
         private void EndLatitudeTextBox_Validated(object sender, EventArgs e)
         {
-            if (CrossForm.TestTextBox(EndLatitudeTextBox))
+            if (CrossForm.TestCoordTextBox(EndLatitudeTextBox))
             {
                 EndLat = CrossForm.Lat;
                 if (CrossForm.Lon != -1) EndLon = CrossForm.Lon;
@@ -489,7 +489,7 @@ namespace SCTBuilder
 
         private void EndLongitudeTextBox_Validated(object sender, EventArgs e)
         {
-            if (CrossForm.TestTextBox(EndLongitudeTextBox))
+            if (CrossForm.TestCoordTextBox(EndLongitudeTextBox))
             {
                 EndLon = CrossForm.Lon;
                 if (CrossForm.Lat != -199) EndLat = CrossForm.Lat;
@@ -768,7 +768,7 @@ namespace SCTBuilder
 
         private void PasteToTextBox_Validated(object sender, EventArgs e)
         {
-            if (CrossForm.TestTextBox(PasteToTextBox))
+            if (CrossForm.TestCoordTextBox(PasteToTextBox))
             {
                 PasteToEndButton.Enabled = PasteToStartButton.Enabled = true;
                 PasteLat = CrossForm.Lat;

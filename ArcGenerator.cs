@@ -407,7 +407,7 @@ namespace SCTBuilder
 
         private void CenterLatitudeTextBox_Validated(object sender, EventArgs e)
         {
-            if (CrossForm.TestTextBox(CenterLatitudeTextBox))
+            if (CrossForm.TestCoordTextBox(CenterLatitudeTextBox))
             {
                 CenterLat = CrossForm.Lat;
                 UpdateStats();
@@ -416,7 +416,7 @@ namespace SCTBuilder
 
         private void CenterLongitudeTextBox_Validated(object sender, EventArgs e)
         {
-            if (CrossForm.TestTextBox(CenterLongitudeTextBox))
+            if (CrossForm.TestCoordTextBox(CenterLongitudeTextBox))
             {
                 CenterLon = CrossForm.Lon;
                 UpdateStats();
@@ -425,7 +425,7 @@ namespace SCTBuilder
 
         private void StartLatitudeTextBox_Validated(object sender, EventArgs e)
         {
-            if (CrossForm.TestTextBox(StartLatitudeTextBox))
+            if (CrossForm.TestCoordTextBox(StartLatitudeTextBox))
             {
                 StartLat = CrossForm.Lat;
                 UpdateStats();
@@ -434,7 +434,7 @@ namespace SCTBuilder
 
         private void StartLongitudeTextBox_Validated(object sender, EventArgs e)
         {
-            if (CrossForm.TestTextBox(StartLongitudeTextBox))
+            if (CrossForm.TestCoordTextBox(StartLongitudeTextBox))
             {
                 StartLon = CrossForm.Lon;
                 UpdateStats();
@@ -443,7 +443,7 @@ namespace SCTBuilder
 
         private void EndLatitudeTextBox_Validated(object sender, EventArgs e)
         {
-            if (CrossForm.TestTextBox(EndLatitudeTextBox))
+            if (CrossForm.TestCoordTextBox(EndLatitudeTextBox))
             {
                 EndLat = CrossForm.Lat;
                 UpdateStats();
@@ -452,7 +452,7 @@ namespace SCTBuilder
 
         private void EndLongitudeTextBox_Validated(object sender, EventArgs e)
         {
-            if (CrossForm.TestTextBox(EndLongitudeTextBox))
+            if (CrossForm.TestCoordTextBox(EndLongitudeTextBox))
             {
                 EndLon = CrossForm.Lon;
                 UpdateStats();
@@ -461,7 +461,7 @@ namespace SCTBuilder
 
         private void PasteToTextBox_Validated(object sender, EventArgs e)
         {
-            PasteToCenterButton.Enabled = PasteToEndButton.Enabled = PasteToStartButton.Enabled = CrossForm.TestTextBox(PasteToTextBox);
+            PasteToCenterButton.Enabled = PasteToEndButton.Enabled = PasteToStartButton.Enabled = CrossForm.TestCoordTextBox(PasteToTextBox);
         }
 
         private void PasteToCenterButton_Click(object sender, EventArgs e)
