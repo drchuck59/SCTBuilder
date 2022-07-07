@@ -45,8 +45,18 @@
             this.UseFixesAsCoordsCheckBox = new System.Windows.Forms.CheckBox();
             this.AddLinesButton = new System.Windows.Forms.Button();
             this.UpdatingLabel = new System.Windows.Forms.Label();
+            this.SymbolScale_numericUpDown1 = new System.Windows.Forms.NumericUpDown();
+            this.LabelScale_numericUpDown1 = new System.Windows.Forms.NumericUpDown();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.LabelBearing_numericUpDown1 = new System.Windows.Forms.NumericUpDown();
+            this.label5 = new System.Windows.Forms.Label();
             this.FixImportGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.FixListDataGridView)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.SymbolScale_numericUpDown1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.LabelScale_numericUpDown1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.LabelBearing_numericUpDown1)).BeginInit();
             this.SuspendLayout();
             // 
             // FixImportGroupBox
@@ -122,7 +132,7 @@
             // IncludeSidStarReferencesCheckBox
             // 
             this.IncludeSidStarReferencesCheckBox.AutoSize = true;
-            this.IncludeSidStarReferencesCheckBox.Location = new System.Drawing.Point(25, 245);
+            this.IncludeSidStarReferencesCheckBox.Location = new System.Drawing.Point(13, 245);
             this.IncludeSidStarReferencesCheckBox.Name = "IncludeSidStarReferencesCheckBox";
             this.IncludeSidStarReferencesCheckBox.Size = new System.Drawing.Size(211, 17);
             this.IncludeSidStarReferencesCheckBox.TabIndex = 41;
@@ -133,22 +143,22 @@
             // DrawFixSymbolsOnDiagramsCheckBox
             // 
             this.DrawFixSymbolsOnDiagramsCheckBox.AutoSize = true;
-            this.DrawFixSymbolsOnDiagramsCheckBox.Location = new System.Drawing.Point(25, 269);
+            this.DrawFixSymbolsOnDiagramsCheckBox.Location = new System.Drawing.Point(13, 269);
             this.DrawFixSymbolsOnDiagramsCheckBox.Name = "DrawFixSymbolsOnDiagramsCheckBox";
-            this.DrawFixSymbolsOnDiagramsCheckBox.Size = new System.Drawing.Size(169, 17);
+            this.DrawFixSymbolsOnDiagramsCheckBox.Size = new System.Drawing.Size(65, 17);
             this.DrawFixSymbolsOnDiagramsCheckBox.TabIndex = 42;
-            this.DrawFixSymbolsOnDiagramsCheckBox.Text = "Include Symbols over Navaids";
+            this.DrawFixSymbolsOnDiagramsCheckBox.Text = "Symbols";
             this.DrawFixSymbolsOnDiagramsCheckBox.UseVisualStyleBackColor = true;
             this.DrawFixSymbolsOnDiagramsCheckBox.CheckedChanged += new System.EventHandler(this.DrawFixSymbolsOnDiagramsCheckBox_CheckedChanged);
             // 
             // DrawFixLabelsOnDiagramsCheckBox
             // 
             this.DrawFixLabelsOnDiagramsCheckBox.AutoSize = true;
-            this.DrawFixLabelsOnDiagramsCheckBox.Location = new System.Drawing.Point(25, 293);
+            this.DrawFixLabelsOnDiagramsCheckBox.Location = new System.Drawing.Point(13, 293);
             this.DrawFixLabelsOnDiagramsCheckBox.Name = "DrawFixLabelsOnDiagramsCheckBox";
-            this.DrawFixLabelsOnDiagramsCheckBox.Size = new System.Drawing.Size(172, 17);
+            this.DrawFixLabelsOnDiagramsCheckBox.Size = new System.Drawing.Size(57, 17);
             this.DrawFixLabelsOnDiagramsCheckBox.TabIndex = 43;
-            this.DrawFixLabelsOnDiagramsCheckBox.Text = "Include Labels next to Navaids";
+            this.DrawFixLabelsOnDiagramsCheckBox.Text = "Labels";
             this.DrawFixLabelsOnDiagramsCheckBox.UseVisualStyleBackColor = true;
             this.DrawFixLabelsOnDiagramsCheckBox.CheckedChanged += new System.EventHandler(this.DrawFixLabelsOnDiagramsCheckBox_CheckedChanged);
             // 
@@ -214,7 +224,7 @@
             // UseFixesAsCoordsCheckBox
             // 
             this.UseFixesAsCoordsCheckBox.AutoSize = true;
-            this.UseFixesAsCoordsCheckBox.Location = new System.Drawing.Point(25, 317);
+            this.UseFixesAsCoordsCheckBox.Location = new System.Drawing.Point(13, 317);
             this.UseFixesAsCoordsCheckBox.Name = "UseFixesAsCoordsCheckBox";
             this.UseFixesAsCoordsCheckBox.Size = new System.Drawing.Size(200, 17);
             this.UseFixesAsCoordsCheckBox.TabIndex = 49;
@@ -243,12 +253,124 @@
             this.UpdatingLabel.Text = "Working on it!";
             this.UpdatingLabel.Visible = false;
             // 
+            // SymbolScale_numericUpDown1
+            // 
+            this.SymbolScale_numericUpDown1.Location = new System.Drawing.Point(194, 264);
+            this.SymbolScale_numericUpDown1.Maximum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.SymbolScale_numericUpDown1.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.SymbolScale_numericUpDown1.Name = "SymbolScale_numericUpDown1";
+            this.SymbolScale_numericUpDown1.Size = new System.Drawing.Size(39, 20);
+            this.SymbolScale_numericUpDown1.TabIndex = 52;
+            this.SymbolScale_numericUpDown1.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.SymbolScale_numericUpDown1.ValueChanged += new System.EventHandler(this.SymbolScale_numericUpDown1_ValueChanged);
+            // 
+            // LabelScale_numericUpDown1
+            // 
+            this.LabelScale_numericUpDown1.Location = new System.Drawing.Point(195, 290);
+            this.LabelScale_numericUpDown1.Maximum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.LabelScale_numericUpDown1.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.LabelScale_numericUpDown1.Name = "LabelScale_numericUpDown1";
+            this.LabelScale_numericUpDown1.Size = new System.Drawing.Size(39, 20);
+            this.LabelScale_numericUpDown1.TabIndex = 53;
+            this.LabelScale_numericUpDown1.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.LabelScale_numericUpDown1.ValueChanged += new System.EventHandler(this.LabelScale_numericUpDown1_ValueChanged);
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(124, 337);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(109, 13);
+            this.label2.TabIndex = 54;
+            this.label2.Text = "* Scale (1 = 0.25 NM)";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(156, 269);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(38, 13);
+            this.label3.TabIndex = 55;
+            this.label3.Text = "Scale*";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(156, 294);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(38, 13);
+            this.label4.TabIndex = 56;
+            this.label4.Text = "Scale*";
+            // 
+            // LabelBearing_numericUpDown1
+            // 
+            this.LabelBearing_numericUpDown1.Location = new System.Drawing.Point(108, 290);
+            this.LabelBearing_numericUpDown1.Maximum = new decimal(new int[] {
+            360,
+            0,
+            0,
+            0});
+            this.LabelBearing_numericUpDown1.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.LabelBearing_numericUpDown1.Name = "LabelBearing_numericUpDown1";
+            this.LabelBearing_numericUpDown1.Size = new System.Drawing.Size(42, 20);
+            this.LabelBearing_numericUpDown1.TabIndex = 57;
+            this.LabelBearing_numericUpDown1.Value = new decimal(new int[] {
+            90,
+            0,
+            0,
+            0});
+            this.LabelBearing_numericUpDown1.ValueChanged += new System.EventHandler(this.LabelBearing_numericUpDown1_ValueChanged);
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(82, 294);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(23, 13);
+            this.label5.TabIndex = 58;
+            this.label5.Text = "Brg";
+            // 
             // SSDGenerator
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
             this.ClientSize = new System.Drawing.Size(759, 380);
+            this.Controls.Add(this.label5);
+            this.Controls.Add(this.LabelBearing_numericUpDown1);
+            this.Controls.Add(this.label4);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.LabelScale_numericUpDown1);
+            this.Controls.Add(this.SymbolScale_numericUpDown1);
             this.Controls.Add(this.UpdatingLabel);
             this.Controls.Add(this.AddLinesButton);
             this.Controls.Add(this.UseFixesAsCoordsCheckBox);
@@ -269,6 +391,9 @@
             this.FixImportGroupBox.ResumeLayout(false);
             this.FixImportGroupBox.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.FixListDataGridView)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.SymbolScale_numericUpDown1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.LabelScale_numericUpDown1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.LabelBearing_numericUpDown1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -292,5 +417,12 @@
         private System.Windows.Forms.Button AddLinesButton;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label UpdatingLabel;
+        private System.Windows.Forms.NumericUpDown SymbolScale_numericUpDown1;
+        private System.Windows.Forms.NumericUpDown LabelScale_numericUpDown1;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.NumericUpDown LabelBearing_numericUpDown1;
+        private System.Windows.Forms.Label label5;
     }
 }

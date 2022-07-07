@@ -31,6 +31,10 @@ namespace SCTBuilder
         public static string BigResult = string.Empty;
         public static string SSDID = string.Empty;
         public static string SSDcode = string.Empty;
+        private static float SymbolScale;
+        private static float LabelScale;
+        private static float LabelBearing;
+
         public SSDGenerator()
         {
             InitializeComponent();
@@ -39,6 +43,9 @@ namespace SCTBuilder
         private void SSDGenerator_Load(object sender, EventArgs e)
         {
             SaveSettings();
+            SymbolScale = (float)SymbolScale_numericUpDown1.Value;
+            LabelScale = (float)LabelScale_numericUpDown1.Value;
+            LabelBearing = (float)LabelBearing_numericUpDown1.Value;
         }
 
         private void SaveSettings()
@@ -438,7 +445,7 @@ namespace SCTBuilder
                     {
                         if (InfoSection.DrawFixSymbolsOnDiagrams)
                         {
-                            result += Hershey.DrawSymbol(FixData);
+                            result += Hershey.DrawSymbol(FixData, SymbolScale);
                             float charWidth = Hershey.width / 60f;
                             AdjustedCoords = LatLongCalc.Destination(Latitude, Longitude, charWidth, 90, 'N');
                         }
@@ -448,7 +455,8 @@ namespace SCTBuilder
                             {
                                 AdjustedCoords = LatLongCalc.Destination(Latitude, Longitude, 45, 90, 'N');
                             }
-                            result += Hershey.WriteHF(Fix, AdjustedCoords[0], AdjustedCoords[1], (int)InfoSection.MagneticVariation);
+                            int Brg = (int)(LabelBearing - 90 + InfoSection.MagneticVariation);
+                            result += Hershey.WriteHF(Fix, AdjustedCoords[0], AdjustedCoords[1], Brg, LabelScale);
                         }
                     }
                 }
@@ -507,6 +515,21 @@ namespace SCTBuilder
             }
                 AddLinesButton.Enabled = true;
             dvSSD.Dispose();
+        }
+
+        private void SymbolScale_numericUpDown1_ValueChanged(object sender, EventArgs e)
+        {
+            SymbolScale = (float)SymbolScale_numericUpDown1.Value;
+        }
+
+        private void LabelScale_numericUpDown1_ValueChanged(object sender, EventArgs e)
+        {
+            LabelScale = (float)LabelScale_numericUpDown1.Value;
+        }
+
+        private void LabelBearing_numericUpDown1_ValueChanged(object sender, EventArgs e)
+        {
+            LabelBearing = (float)LabelBearing_numericUpDown1.Value;
         }
     }
 }
