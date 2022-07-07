@@ -76,25 +76,31 @@ namespace SCTBuilder
         private static void SelectFIX(DataRowView dvRow)
         {
             // Need to look at fix, determine if VOR, NDB or FIX, and make sure it's [Selected]
-            string filter = "[FacilityID] = " + dvRow["NAVAID"];
-            DataView dvFIX = new DataView(Form1.VOR)
+            string filter = "[FacilityID] = '" + dvRow["NAVAID"] + "'";
+            DataView dvFIX = new DataView(Form1.FIX)
             {
                 RowFilter = filter
             };
             if (dvFIX.Count == 1)
                 dvFIX[0]["Selected"] = true;
-            dvFIX = new DataView(Form1.NDB)
+            else
             {
-                RowFilter = filter
-            };
-            if (dvFIX.Count == 1)
-                dvFIX[0]["Selected"] = true;
-            dvFIX = new DataView(Form1.FIX)
-            {
-                RowFilter = filter
-            };
-            if (dvFIX.Count == 1)
-                dvFIX[0]["Selected"] = true;
+                dvFIX = new DataView(Form1.VOR)
+                {
+                    RowFilter = filter
+                };
+                if (dvFIX.Count == 1)
+                    dvFIX[0]["Selected"] = true;
+                else
+                {
+                    dvFIX = new DataView(Form1.NDB)
+                    {
+                        RowFilter = filter
+                    };
+                    if (dvFIX.Count == 1)
+                        dvFIX[0]["Selected"] = true;
+                }
+            }
         }
 
             public static int dtHasXSelectedRows(DataTable dt)
