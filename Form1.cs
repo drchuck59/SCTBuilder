@@ -1809,6 +1809,7 @@ namespace SCTBuilder
                     {
                         getAIRAC.Dispose();
                         PostLoadTasks();
+                        CheckNG();              // Navigraph is likely out of date now
                     }
                 }
                 else if (dialogResult == DialogResult.Abort)
