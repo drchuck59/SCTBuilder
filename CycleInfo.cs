@@ -3,6 +3,7 @@ using System.Xml;
 using System.IO;
 using System.Globalization;
 using System.Diagnostics;
+using System.ComponentModel.DataAnnotations;
 
 namespace SCTBuilder
 {
@@ -112,8 +113,8 @@ namespace SCTBuilder
             if (File.Exists(FolderMgt.INIFilePath))
             {
                 XmlDocument doc = new XmlDocument();
-                try
-                {
+                //try
+                //{
                     doc.Load(FolderMgt.INIFilePath);
 
                     foreach (XmlNode node in doc.DocumentElement)
@@ -261,55 +262,83 @@ namespace SCTBuilder
                                     InfoSection.IncludeSidStarReferences = Convert.ToBoolean(value);
                                     break;
                                 case "NorthLimit":
+                                    if (value.Length > 0)
                                     InfoSection.NorthLimit = Convert.ToDouble(value);
+                                    else InfoSection.NorthLimit = 0;
                                     break;
                                 case "SouthLimit":
+                                    if(value.Length > 0)
                                     InfoSection.SouthLimit = Convert.ToDouble(value);
+                                    else InfoSection.SouthLimit = 0;
                                     break;
                                 case "WestLimit":
+                                if (value.Length > 0)
                                     InfoSection.WestLimit = Convert.ToDouble(value);
+                                else InfoSection.WestLimit = 0;
                                     break;
                                 case "EastLimit":
+                                if (value.Length > 0)
                                     InfoSection.EastLimit = Convert.ToDouble(value);
+                                else InfoSection.EastLimit = 0;
                                     break;
                                 case "NorthOffset":
+                                if (value.Length > 0)
                                     InfoSection.NorthOffset = Convert.ToDouble(value);
+                                    else InfoSection.NorthOffset = 0;
                                     break;
                                 case "SouthOffset":
+                                if (value.Length > 0)
                                     InfoSection.SouthOffset = Convert.ToDouble(value);
+                                else InfoSection.SouthOffset = 0;  
                                     break;
                                 case "WestOffset":
+                                if (value.Length > 0)
                                     InfoSection.WestOffset = Convert.ToDouble(value);
+                                else
+                                    InfoSection.WestOffset = 0;
                                     break;
                                 case "EastOffset":
+                                if (value.Length > 0)
                                     InfoSection.EastOffset = Convert.ToDouble(value);
+                                else InfoSection.EastOffset = 0;
                                     break;
                                 case "CenterLatitude_Dec":
+                                if (value.Length > 0)
                                     InfoSection.CenterLatitude_Dec = Convert.ToDouble(value);
+                                else
+                                    InfoSection.CenterLatitude_Dec = 0;
                                     break;
                                 case "CenterLongitude_Dec":
+                                if (value.Length > 0)
                                     InfoSection.CenterLongitude_Dec = Convert.ToDouble(value);
+                                else InfoSection.CenterLongitude_Dec= 0;
                                     break;
                                 case "RollOverLon":
                                     InfoSection.RollOverLongitude = Convert.ToBoolean(value);
                                     break;
                                 case "SIDprefix":
+                                if (value.Length > 0)
                                     InfoSection.SIDprefix = Convert.ToChar(value);
+                                else
+                                    InfoSection.SIDprefix = '-';
                                     break;
                                 case "STARprefix":
+                                if (value.Length > 0)
                                     InfoSection.STARprefix = Convert.ToChar(value);
+                                else
+                                    InfoSection.STARprefix = '+';
                                     break;
                                 default:
                                     break;
                             }
                         }
                     }
-                }
-                catch
-                {
-                    SCTcommon.SendMessage("Corrupted XML init file - file ignored");
-                    result = -1;
-                }
+                //}
+                //catch
+                //{
+                //    SCTcommon.SendMessage("Corrupted XML init file - file ignored");
+                //    result = -1;
+                //}
             }
             return result;
         }
