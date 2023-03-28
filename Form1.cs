@@ -663,7 +663,7 @@ namespace SCTBuilder
                 // Extend one leg outside the square, if able (Doesn't matter if only one waypoint found)
                 // Also, do NOT add the extension if it is ridiculously far away
                 double BoxDiagLength = LatLongCalc.Distance(InfoSection.NorthLimit, InfoSection.WestLimit, InfoSection.SouthLimit, InfoSection.EastLimit);
-                double MaxDistance = BoxDiagLength / 1.5; double TestDistance;
+                double MaxDistance = BoxDiagLength; double TestDistance;
                 if (MinSeqNo < MinSelSeqNo)
                 {
                     dvRTE.RowFilter = awyFilter + seqFilter + (MinSelSeqNo - 1).ToString() + ")";

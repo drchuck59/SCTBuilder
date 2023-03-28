@@ -165,6 +165,8 @@ namespace SCTBuilder
                 "; Assistant Facilities Engineer:" + InfoSection.AsstFacilityEngineer + cr +
                 "; AIRAC CYCLE: " + CycleInfo.AIRAC + cr +
                 "; Cycle: " + CycleInfo.CycleStart + " to " + CycleInfo.CycleEnd + cr +
+                "; Console Limits: N: " + Conversions.Degrees2SCT(InfoSection.NorthLimit,true) + ", W: " + Conversions.Degrees2SCT(InfoSection.WestLimit, false) + cr +
+                  "                  S: " + Conversions.Degrees2SCT(InfoSection.SouthLimit, true)+ ", E: " + Conversions.Degrees2SCT(InfoSection.EastLimit,false) + cr +
                 "; <Contributors and archived comments located at end of this file>";
                 sw.WriteLine(Message);
                 SCTstrings.WriteSectionFooter(sw, section);
@@ -495,9 +497,9 @@ namespace SCTBuilder
             string NavAid0 = string.Empty; string NavAid1;
             double Lat0 = -1; double Lat1;
             double Lon0 = -1; double Lon1;
-            string section;
+            string section = "[HIGH AIRWAY]";
             string filter = "[Selected]";
-            section = "[Oceanic]";
+            string section_alias = "[Oceanic]";
 
             DataView dvOceanic = new DataView(NaviGraph.wpNavRTE)
             {
@@ -507,7 +509,7 @@ namespace SCTBuilder
             // Rotate output as in other output loops
             using (StreamWriter sw = new StreamWriter(path))
             {
-                SCTstrings.WriteSectionHeader(sw, section);
+                SCTstrings.WriteSectionHeader(sw, section_alias);
                 sw.WriteLine(section);
                 foreach (DataRowView rowAWY in dvOceanic)
                 {
